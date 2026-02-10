@@ -55,6 +55,11 @@ in Walmart computer system.
    discrepancy.
 1. **08:50** — Driver cleared through gate.
 
+
+CASE-05 → CLAIM-08: System shocks absorbed by operational actors
+CASE-06 → CLAIM-02: Absence of formal reporting ≠ absence of event
+CASE-07 → CLAIM-04: Ecological dynamics outpace centralized policy
+
 ### Visible impact
 
 - Single truck delay: 50 minutes
