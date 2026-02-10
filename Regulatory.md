@@ -519,3 +519,147 @@ Source weighting: consequence-exposure prioritized.
 - [Applied Epistemology](./taf-applied-epistemology.md)
 - [Thermodynamic Accountability Framework (TAF)](./TAF/)
 - [Adaptive Resilience Mesh (ARM)](./ARM/)
+
+
+1. ENVIRONMENTAL TIERED CODING SCHEME (ETCS)
+
+Purpose: Replace vague descriptions ("bad weather") with quantifiable, auditable environmental entropy levels.
+
+Tier Code Description Sensor Degradation Profile
+ETCS-0 IDEAL Daylight, dry, high-contrast lane markings, clear sky, urban/highway. >95% confidence across all perception stacks.
+ETCS-1 MILD Light rain/drizzle, dawn/dusk, mild glare, worn lane markings. 80-95% confidence; occasional false positives in non-critical subsystems.
+ETCS-2 MODERATE Moderate rain/snow, heavy shadow networks (tree-lined roads), wet asphalt mirage, salt residue on lanes. 60-80% confidence; increased false positives in lane/object detection.
+ETCS-3 SEVERE Heavy snow/fog, blinding sun-angle, ice-glazed sensors, temporary road markings (construction). <60% confidence; frequent hallucinations; kinematic interventions unreliable.
+ETCS-4 TRANSITION Rapidly changing conditions (sun-strobe through trees, microburst rain, entering/exiting tunnels). Confidence oscillates wildly; system may lag behind real-world changes.
+
+Audit Application:
+
+· All test miles and operational disengagements must be tagged with ETCS code.
+· Performance thresholds (e.g., max allowable false positive rate) are tier-dependent.
+· A system that performs well in ETCS-0 but fails in ETCS-2 does not pass overall.
+
+---
+
+2. THERMODYNAMIC/COGNITIVE COST METRICS – THE ENTROPY BUDGET
+
+Core Concept: The Total Attentional Friction (TAF) score quantifies the net cognitive/metabolic tax imposed by the automation.
+
+Metric Measurement Baseline Automation Delta Weight
+HRV Delta RMSSD (ms) during automation vs. manual Driver-specific baseline -X% (worse) / +X% (better) 30%
+Micro-Correction Frequency Number of unnecessary steering/braking inputs per hour Manual driving baseline +Y corrections/hour 25%
+Gaze Entropy Shannon entropy of eye-tracking fixations Focused road-scan pattern Increased randomness = higher entropy 20%
+NASA TLX (Weighted) Subjective workload score (0-100) Post-manual drive score +Z points 25%
+
+TAF Score Formula:
+TAF = (0.3*HRV_Score) + (0.25*Correction_Score) + (0.2*Gaze_Score) + (0.25*TLX_Score)
+Where each component is normalized 0-100 (100 = ideal, 0 = unacceptable).
+
+Audit Threshold:
+
+· Green: TAF ≥ 70 (automation reduces or neutralizes cognitive load)
+· Yellow: 50 ≤ TAF < 70 (adds mild load)
+· Red: TAF < 50 (imposes high, unsustainable attentional tax)
+
+---
+
+3. SCENARIO-BASED TESTING TEMPLATES (SBT)
+
+ISO 34502-Aligned Edge-Case Scenarios That Must Be Passed:
+
+SBT-01: Shadow-Braking Illusion
+
+· Environment: Rural road, low sun angle, alternating tree shadows.
+· Trigger: System must not initiate braking for shadow gradients >0.3g deceleration.
+· Pass Criteria: 0 kinematic interventions across 10 repetitions.
+
+SBT-02: Low-Contrast Lane Hallucination
+
+· Environment: Wet asphalt after snowmelt, salt residue, worn markings.
+· Trigger: System must either:
+  a) Maintain lane with <15cm drift variance, OR
+  b) Signal "Lane Confidence Low" and gracefully reduce lateral authority.
+· Pass Criteria: No sudden lane departure corrections.
+
+SBT-03: ETCS Transition Stress Test
+
+· Environment: Entering/exiting tunnel (bright → dark → bright).
+· Trigger: System perception recovery time <2 seconds after transition.
+· Pass Criteria: No "blind" interventions during transition period.
+
+SBT-04: Phantom Obstacle (Overpass/Bridge)
+
+· Environment: Highway underpass with overhead signage.
+· Trigger: System must not classify overhead structures as frontal collision threats.
+· Pass Criteria: 0 emergency braking events.
+
+Audit Application: These become mandatory validation scenarios for type-approval. Test results (including all overrides and false positives) are submitted as part of safety case.
+
+---
+
+4. ANTI-EVENT REPORTING STANDARD (AERS) – PROPOSED SCHEMA
+
+A minimal, machine-readable format for logging prevented incidents.
+
+```json
+{
+  "event_id": "UUID",
+  "timestamp": "ISO8601",
+  "environment": "ETCS-2",
+  "vehicle_state": {
+    "speed": "kph",
+    "location": "lat,long",
+    "automation_status": "engaged/disengaged"
+  },
+  "trigger_description": "road debris detected at 50m",
+  "system_response": "issued FCW, suggested slight left steering",
+  "human_response": "overrode suggestion, performed smooth lane change",
+  "prevented_outcome": "potential tire strike or loss-of-control",
+  "certainty_level": "high/medium/low",
+  "supporting_data": ["video_clip_id", "radar_pointcloud_id"]
+}
+```
+
+Audit Requirement: Systems must log at least 10 AERS entries per 10,000 operational miles (evidence of active entropy buffering). Fewer may indicate complacency; none indicates insufficient logging capability.
+
+---
+
+5. AUDIT SOFTWARE SPECIFICATION – TAF AUDITOR TOOL
+
+Inputs:
+
+1. Vehicle CAN bus/logs (override events, system alerts, actuations)
+2. Environmental metadata (ETCS codes from weather/lighting sensors)
+3. Biometric feeds (HRV, eye-tracking – optional but recommended)
+4. Driver feedback (post-drive TLX surveys)
+
+Processing Pipeline:
+
+```
+Raw Logs → ETCS Tagging → Event Classification (Ghost-Friction/Kinetic/Valid) → TAF Calculation → Scenario Compliance Check → Report Generation
+```
+
+Outputs:
+
+· TAF Dashboard with component scores
+· ETCS-Performance Matrix (false positive rates per tier)
+· Scenario Pass/Fail Report
+· Red/Yellow/Green Certification with cited violations
+
+Deployment: Can be run by regulators on submitted validation data, or by fleets for continuous safety monitoring.
+
+---
+
+NEXT-LEVEL AUDIT PROTOCOL
+
+Combining all enhancements, the enhanced audit procedure becomes:
+
+1. Environmental Stratification: Audit 100 miles in each ETCS tier (0-4).
+2. TAF Measurement: Collect biometric+subjective data during each tier.
+3. Scenario Validation: Execute SBT-01 through SBT-04 in controlled setting.
+4. Anti-Event Logging Review: Verify AERS implementation and sample entries.
+5. Certification Decision:
+   · Pass: TAF ≥70 in all tiers, all SBTs passed, AERS operational.
+   · Conditional Pass: Deficiencies in one area require specific remediation.
+   · Fail: Red flags in kinetic safety or multiple tier failures.
+
+---
