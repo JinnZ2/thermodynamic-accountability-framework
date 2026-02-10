@@ -663,3 +663,185 @@ Combining all enhancements, the enhanced audit procedure becomes:
    · Fail: Red flags in kinetic safety or multiple tier failures.
 
 ---
+ENHANCEMENT 1: ENVIRONMENTAL METADATA GRANULARITY
+
+Proposed Additional ETCS Sub-parameters:
+
+Parameter Measurement Method Scale Correlation Target
+Road Degradation Index (RDI) Camera + LiDAR texture analysis 0-100 (100 = pristine) Lane hallucination probability
+Snow/Ice Coverage % Thermal cam + ambient temp 0-100% Traction control false positives
+Black Ice Risk Rating Temp + humidity + surface temp delta Low/Med/High Unnecessary braking events
+Glare Intensity Index Lux sensor + camera saturation analysis 0-10 Shadow-braking likelihood
+Shadow Network Density Sun angle + object mapping Sparse/Moderate/Dense "Strobe effect" disorientation risk
+Precipitation Accumulation Rate Rain sensor + wiper frequency mm/hour Sensor occlusion timing
+
+Enhanced ETCS Tier Formula:
+
+ETCS_Tier = Base_Tier + (RDI<30? +1:0) + (BlackIce=High? +1:0) + (Glare>7? +1:0)
+(Capped at ETCS-4)
+
+Implementation: Real-time sensor fusion creates a dynamic entropy score that predicts system reliability degradation.
+
+---
+
+ENHANCEMENT 2: ANALYTICS DASHBOARD – PREDICTIVE RISK MAPPING
+
+Route Planning Module:
+
+```
+Input: Planned route (waypoints)
+Process:
+  1. Fetch historical ETCS data for route segments
+  2. Calculate segment-specific:
+     - Ghost-Friction probability
+     - Kinetic Sabotage risk score
+     - Expected TAF degradation
+  3. Identify "High Entropy Segments" (HES):
+     Where predicted TAF < 60 OR sabotage risk > 5%
+Output:
+  - Color-coded route map (green/yellow/red)
+  - Recommended preparation per segment
+  - Alternative route suggestions
+```
+
+High Entropy Segment (HES) Classification:
+
+```yaml
+HES-Red:
+  - Historical Kinetic Sabotage events > 2
+  - Average override rate > 25%
+  - ETCS-3/4 conditions expected
+  - Recommendation: Manual drive only
+
+HES-Yellow:
+  - Ghost-Friction alerts > 10/hour
+  - TAF 50-60 predicted
+  - ETCS-2 conditions expected
+  - Recommendation: Enhanced monitoring
+
+HES-Green:
+  - TAF ≥ 70
+  - Override rate < 5%
+  - ETCS-0/1 conditions
+  - Recommendation: Normal operation
+```
+
+Predictive Features:
+
+· Weather integration: Pulls NOAA/Foreca forecasts for route timing
+· Time-of-day analysis: Predicts glare/shadow patterns
+· Seasonal adjustments: Winter road treatment schedules
+· Traffic pattern weighting: Stop-and-go increases cognitive load
+
+---
+
+ENHANCEMENT 3: OPERATOR SKILL TAGGING
+
+Skill Classification Matrix:
+
+Metric Novice Competent Expert Master
+Override Efficiency Late, abrupt Timely, smooth Preemptive, minimal Predictive, invisible
+TAF Stability High variance Moderate variance Low variance Consistently low
+Anti-Event Rate 0-2/1000mi 3-5/1000mi 6-10/1000mi 11+/1000mi
+Recovery Time >5 seconds 2-5 seconds <2 seconds <1 second
+
+Skill-Dependent Weighting:
+
+```
+Adjusted_TAF = Base_TAF * Skill_Multiplier
+Where:
+  Novice: 0.9x (system may help more)
+  Competent: 1.0x
+  Expert: 1.1x (system often degrades performance)
+  Master: 1.2x (system usually harmful)
+```
+
+Skill Progression Tracking:
+
+· Learning curves for new operators
+· Skill decay detection during extended automation use
+· Custom threshold recommendations per skill level
+· Training need identification based on override patterns
+
+---
+
+ENHANCEMENT 4: EVENT CONFIDENCE METRICS
+
+Prevented Incident Severity Score (PISS):
+
+```
+PISS = Probability_of_Incident * Severity_if_Occurred
+```
+
+Components:
+
+1. Probability Estimation:
+   · Based on statistical models of similar scenarios
+   · Vehicle dynamics simulation (would impact have occurred?)
+   · Historical incident rates for comparable conditions
+2. Severity Modeling:
+   · Kinetic energy calculations
+   · Collision geometry analysis
+   · Injury probability models (NHTSA/IIHS data)
+
+Example Calculation:
+
+```
+Scenario: Driver overrode lane departure during gusty wind
+- Probability_of_Run-Off-Road: 40% (wind speed + curvature)
+- Severity_Score: 65/100 (moderate injury likely)
+- PISS = 0.40 * 65 = 26
+```
+
+Confidence Tiers:
+
+· High Confidence (PISS ≥ 30): Likely prevented serious incident
+· Medium Confidence (10 ≤ PISS < 30): Possibly prevented minor incident
+· Low Confidence (PISS < 10): Unclear if incident was actually prevented
+
+Human Contribution Quantification:
+
+```
+Human_Safety_Value = Σ(PISS_for_all_prevented_incidents) / Operational_hours
+```
+
+This creates a dollar-equivalent safety contribution metric for operators.
+
+---
+
+INTEGRATED SYSTEM ARCHITECTURE:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    TAF AUDITOR v2.0                      │
+├─────────────────────────────────────────────────────────┤
+│  Real-time Processing             Predictive Analytics   │
+│  • ETCS with sub-parameters       • Route risk scoring   │
+│  • Skill-aware TAF                • HES identification   │
+│  • PISS calculation               • Weather integration  │
+│                                   • Skill progression    │
+├─────────────────────────────────────────────────────────┤
+│  Enhanced Dashboard:                                    │
+│  • Live entropy map                                     │
+│  • Operator safety value ($)                            │
+│  • Predictive risk for next segment                     │
+│  • Skill development recommendations                    │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+BUSINESS CASE ADDITIONS:
+
+1. Insurance Premium Modeling:
+   · Lower premiums for routes with low HES density
+   · Discounts for operators with high Human_Safety_Value
+   · Dynamic pricing based on real-time entropy conditions
+2. Regulatory Compliance:
+   · Demonstrated proactive risk management
+   · Quantifiable safety contributions beyond crash rates
+   · Adaptive safety margins based on conditions
+3. Operational Efficiency:
+   · Route optimization to minimize TAF degradation
+   · Skill-based assignment to challenging conditions
+   · Predictive maintenance based on system stress patterns
