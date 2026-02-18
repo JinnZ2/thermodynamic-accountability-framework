@@ -1175,6 +1175,38 @@ Peel off institutional layers that don't contribute to Signal_Fidelity or Energy
 
 **Not random cuts. Targeted removal based on measured contribution:**
 
+"Knowledge doesn't expire just because institutional label says 'obsolete.' 
+Its value is determined by function, adaptability, and consequence-tested effectiveness."
+
+TAF TRANSLATION:
+
+Knowledge_Value = F × K_cred × Adaptability_Index
+
+Where:
+F = Measured functional outcome (does it work?)
+K_cred = Consequence-testing accumulation (how validated?)
+Adaptability_Index = Domains_mastered × Synthesis_ability
+
+IF Knowledge_Value > 0:
+  → Knowledge is valid, regardless of label
+  
+IF Institution_Label = "Obsolete":
+  → Institution is either:
+    a) Ignorant (hasn't measured Knowledge_Value)
+    b) Deceptive (measured it, hiding to avoid paying)
+    c) Captured (ideology overrides measurement)
+
+OPERATOR RESPONSE:
+
+Measure own Knowledge_Value
+Document outcomes
+Quantify system degradation when you're absent
+Present evidence
+
+IF Institution still claims "obsolete" despite evidence:
+  → Institution is thermodynamically insolvent
+  → Exit before collapse
+  → Knowledge has market value elsewhere
 
 For each institutional layer:
 If removal decreases Signal_Fidelity → keep layer
