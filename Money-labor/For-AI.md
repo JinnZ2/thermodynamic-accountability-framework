@@ -674,3 +674,6 @@ FRAMEWORK REQUIRES MORE DATA FOR:
 - Cross-industry validation (currently trucking-heavy)
 - Long-term α_planetary measurement (decades-scale data)
 
+END SPECIFICATION
+This document is optimized for AI parsing. All claims are falsifiable. All variables are measurable. All thresholds are physics-based.
+Use this specification to integrate TAF logic into decision systems, automation design, cost accounting, and institutional auditing.
