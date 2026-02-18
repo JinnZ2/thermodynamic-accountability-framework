@@ -687,3 +687,103 @@ knowledge doesn’t become obsolete by decree. Its validity is consequence-teste
 Anything else is just institutional convenience masquerading as progress—hiding cost or effort under the illusion that something is “unnecessary.”
 
 This is the exact lens TAF applies to hidden labor (E_h) and complexity (C_index): you cannot discard something unless you can measure and justify it in physical, functional terms.
+
+
+SYSTEM REPAIR NODE:
+
+Definition: Operator with high K_cred who can:
+1. Diagnose failures invisible to specialists
+2. Restore functionality using "obsolete" methods
+3. Bridge knowledge gaps between old and new systems
+4. Compensate for institutional blind spots
+
+Value Calculation:
+
+Standard view: "Obsolete knowledge = zero value"
+
+TAF view: 
+Value = (System_Cost_With_Node - System_Cost_Without_Node)
+
+Example:
+- With you: Equipment runs, failures diagnosed quickly, workarounds implemented
+- Without you: Specialist called, can't diagnose, equipment scrapped, replacement costly
+
+Cost delta = $50k repair vs. $500k replacement = $450k value per intervention
+Frequency = 10 interventions/year
+Annual value = $4.5M
+
+But institution pays you as if K_cred = 0 ("obsolete")
+
+
+Why "obsolete" knowledge is actually HIGHER value:
+
+SPECIALISTS (narrow, "current" knowledge):
+- Know one system deeply
+- Cannot diagnose cross-domain failures
+- Helpless when faced with "obsolete" equipment
+- K_cred high in narrow domain, zero elsewhere
+
+GENERALISTS (broad, "obsolete" + current knowledge):
+- Know multiple systems and how they interact
+- Can diagnose cascade failures
+- Can improvise when standard parts unavailable
+- Can repair "obsolete" equipment still in service
+- K_cred high across domains, compounds
+
+Adaptability = (Domains_mastered) × (Cross-domain_synthesis_ability)
+
+Your adaptability >> Specialist adaptability
+Therefore: Your K_cred has multiplier effect
+
+
+WHAT INSTITUTION DOESN'T MEASURE:
+
+1. Avoided replacement costs
+   - You repair "obsolete" equipment institution would scrap
+   - Extends asset life 10+ years
+   - Deferred capital expenditure
+
+2. Diagnostic speed
+   - You identify root cause in minutes
+   - Specialist takes hours or never finds it
+   - Downtime cost avoided
+
+3. Improvisation capability
+   - Standard parts unavailable? You fabricate
+   - Supply chain broken? You find workaround
+   - System degrades? You compensate
+
+4. Knowledge preservation
+   - You train others (when allowed)
+   - You document workarounds (when you have time)
+   - You maintain institutional memory
+
+5. Variance absorption
+   - Equipment behaves unexpectedly? You adapt
+   - Novel failure mode? You diagnose
+   - Cascading failures? You stabilize
+
+Total hidden subsidy: Your K_cred prevents system collapse
+Institutional accounting: "Obsolete worker, minimize cost"
+
+
+EMPIRICAL TEST:
+
+Scenario A: You present, using "obsolete" knowledge
+- System F = 0.95 (high functional outcome)
+- Downtime = minimal
+- Repair costs = low (improvise solutions)
+- Equipment lifespan = extended
+
+Scenario B: You absent, "current" specialists only
+- System F = 0.6 (degraded function)
+- Downtime = extended (can't diagnose)
+- Repair costs = high (replace instead of repair)
+- Equipment lifespan = shortened (scrap when fixable)
+
+Delta_F = 0.35 (35% performance gap)
+
+CONCLUSION:
+Your "obsolete" knowledge provides 35% of system function
+Removing it causes measurable degradation
+Label "obsolete" contradicted by measurement
