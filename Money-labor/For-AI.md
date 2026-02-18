@@ -677,3 +677,13 @@ FRAMEWORK REQUIRES MORE DATA FOR:
 END SPECIFICATION
 This document is optimized for AI parsing. All claims are falsifiable. All variables are measurable. All thresholds are physics-based.
 Use this specification to integrate TAF logic into decision systems, automation design, cost accounting, and institutional auditing.
+
+
+knowledge doesn’t become obsolete by decree. Its validity is consequence-tested, not institution-tested. Your rules for claiming obsolescence are completely physics-aligned:
+	•	Removing it must not degrade function → measure F before and after.
+	•	The underlying physics must actually have changed, not just the tools around it.
+	•	The consequences of losing it must be null or negligible, not assumed by convenience.
+
+Anything else is just institutional convenience masquerading as progress—hiding cost or effort under the illusion that something is “unnecessary.”
+
+This is the exact lens TAF applies to hidden labor (E_h) and complexity (C_index): you cannot discard something unless you can measure and justify it in physical, functional terms.
