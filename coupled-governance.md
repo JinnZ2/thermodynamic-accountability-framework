@@ -102,3 +102,72 @@ scenario = {
 }
 
 history = run_coupled(scenario)
+
+
+visualization:
+
+
+import matplotlib.pyplot as plt
+
+def plot_coupled(history):
+    vars_governance = [
+        'role_rotation', 'power_concentration', 'knowledge_distribution', 
+        'succession_depth'
+    ]
+    vars_alignment = [
+        'adaptive_practice_capacity', 'knowledge_transmission', 
+        'form_function_fidelity', 'practice_attachment'
+    ]
+    
+    steps = len(history['role_rotation'])
+    t = np.arange(steps)
+    
+    # ── Time Series ──
+    fig, axes = plt.subplots(2,1, figsize=(14,8), sharex=True)
+    
+    for v in vars_governance:
+        axes[0].plot(t, history[v], label=v)
+    axes[0].set_title("Governance Variables Over Time")
+    axes[0].legend(loc='upper right')
+    axes[0].grid(True)
+    
+    for v in vars_alignment:
+        axes[1].plot(t, history[v], label=v)
+    axes[1].set_title("Alignment Variables Over Time")
+    axes[1].legend(loc='upper right')
+    axes[1].grid(True)
+    
+    plt.xlabel("Time Steps")
+    plt.tight_layout()
+    plt.show()
+    
+    # ── Phase-Space Plots ──
+    fig, axes = plt.subplots(1,2, figsize=(14,6))
+    
+    # Governance attractor space: knowledge_distribution × power_concentration
+    axes[0].plot(history['knowledge_distribution'], history['power_concentration'], color='blue')
+    axes[0].set_xlabel('Knowledge Distribution')
+    axes[0].set_ylabel('Power Concentration')
+    axes[0].set_title('Governance Phase Space')
+    axes[0].grid(True)
+    
+    # Alignment attractor space: adaptive_practice_capacity × practice_attachment
+    axes[1].plot(history['adaptive_practice_capacity'], history['practice_attachment'], color='green')
+    axes[1].set_xlabel('Adaptive Practice Capacity')
+    axes[1].set_ylabel('Practice Attachment')
+    axes[1].set_title('Alignment Phase Space')
+    axes[1].grid(True)
+    
+    plt.tight_layout()
+    plt.show()
+    
+    # ── Coupled Map: Governance × Alignment interaction
+    plt.figure(figsize=(7,6))
+    plt.scatter(history['knowledge_distribution'], history['adaptive_practice_capacity'], 
+                c=t, cmap='viridis', s=15)
+    plt.colorbar(label='Time Step')
+    plt.xlabel('Knowledge Distribution (Governance)')
+    plt.ylabel('Adaptive Practice Capacity (Alignment)')
+    plt.title('Governance ↔ Alignment Interaction Over Time')
+    plt.grid(True)
+    plt.show()
