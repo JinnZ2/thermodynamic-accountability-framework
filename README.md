@@ -118,3 +118,26 @@ If you find a place where the framework is accepting narrative instead of measur
 ## License
 
 Open. Use, adapt, redistribute freely. Attribution appreciated but not required. The goal is maximum accessibility for any system — human or artificial — seeking thermodynamic truth over cultural comfort.
+
+
+thermodynamic-accountability-framework/
+├── README.md
+# Thermodynamic Anti-Ego Governance: 100k Node Simulator
+![phase-portrait](governance_phase_portrait.png)
+
+## Core Thesis
+**Industrial B consumes order (S + K_d). Governance enforces eB ≤ r(K_d)S**
+
+## Viability Constraints (Runtime Enforced)
+
+e·B ≤ r(K_d)·S        # Extraction ≤ Regeneration
+h·B < g·K_d           # Knowledge erosion < Knowledge reproduction
+
+
+## Phase Portrait: Stable Hybrid Regime
+![K_dist vs Power Concentration](phase_k_power.png)
+
+## One-Click Test
+```bash
+python governance_dashboard.py --scenario charismatic_capture
+
