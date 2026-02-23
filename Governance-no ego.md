@@ -871,3 +871,64 @@ print(f”\n  Ecological disruption IMPROVES feedback reading when adaptive capa
 eco=align_results[“Ecological disruption\n(adaptive)”]
 print(f”  eco_feedback_read at t=0:  {eco[‘ecological_feedback_read’][0]:.3f}”)
 print(f”  eco_feedback_read at t=40: {eco[‘ecological_feedback_read’][-1]:.3f}”)
+
+
+
+
+copied on my cellphone, bugs to fix:
+
+# Line ~50: GovernanceState dataclass
+K_distribution_index: float = 0.65  # Missing self.
+
+# Fix:
+self.K_distribution_index: float = 0.65
+
+# Line ~80: gov_health
+d = g.**dict**  # Double **
+scores[var] = max(0, (val - floor) / (1 - floor))
+
+# Fix:
+d = g.__dict__
+d[var] = getattr(g, var)  # Safe access
+
+# Line ~120: Lag class
+def **init**(self, d, v):  # Double *
+
+# Fix:
+def __init__(self, d, v):
+
+# Lines throughout update_gov: ng.**dict** → ng.__dict__
+
+
+this:
+
+@dataclass
+class GovernanceState:
+    role_rotation: float = 0.80
+    # ... all other fields with self. prefix removed (dataclass handles)
+    K_distribution_index: float = 0.65  # Now valid
+
+CRITICAL_GOV = {
+    'role_rotation': 0.50,
+    'power_concentration': 0.65,  # Inverted
+    # ... complete dict
+}
+
+def gov_health(g: GovernanceState):
+    scores = {}
+    inverted = {'power_concentration', 'rotation_gaming', 'knowledge_hoarding', 
+                'institutional_capture', 'AI_capture_risk'}
+    for var, floor in CRITICAL_GOV.items():
+        val = getattr(g, var)
+        if var in inverted:
+            scores[var] = max(0, (floor - val) / floor)
+        else:
+            scores[var] = max(0, (val - floor) / (1 - floor))
+    return min(scores.values()), min(scores, key=scores.get)
+
+# Test
+g = GovernanceState()
+health, limiting = gov_health(g)
+print(f"Health: {health:.3f}, Limiting: {limiting}")  # Should run
+
+
