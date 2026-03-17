@@ -1,0 +1,28 @@
+Module 1 — Aristotelian Logic (3 proofs)
+  1.1  Self-interest axiom is self-refuting
+       (publishing the theory violated the theory)
+  1.2  Universal application annihilates itself
+       (Universal(A1) → ¬Exists(A1))
+  1.3  Circular reasoning via definitional filter
+       (defines away counterevidence, calls it confirmation)
+
+Module 2 — Set Theory (1 proof)
+  2.1  Covers 9.1% of motivation space
+       (either systematically wrong or tautologically empty)
+
+Module 3 — Information Theory (1 proof)
+  3.1  Prescribes entropy maximization
+       (thermodynamic opposite of knowledge creation)
+
+Module 4 — Evolutionary Mathematics (1 proof)
+  4.1  Evolution selects against GT's "rational" strategy
+       (99% cooperators after 200 generations)
+
+Module 5 — Scientific Method (1 proof)
+  5.1  Fails falsifiability, reproducibility,
+       predictive accuracy, AND compatibility
+       with science itself
+
+Module 6 — Synthesis (1 proof)
+  6.1  Operational consequence for AI systems
+       built on this framework
