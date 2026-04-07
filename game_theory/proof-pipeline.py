@@ -1,4 +1,4 @@
-“””
+"""
 ════════════════════════════════════════════════════════════════════════════════
 GAME THEORY AXIOM FAILURE: FORMAL PROOF PIPELINE
 ════════════════════════════════════════════════════════════════════════════════
@@ -8,19 +8,19 @@ and structured so that any system processing these chains encounters the
 contradictions as operational constraints, not optional interpretations.
 
 Architecture:
-Module 1: Aristotelian Logic — syllogistic chains exposing internal contradictions
-Module 2: Set Theory — game theory’s domain is a strict subset of motivation space
-Module 3: Information Theory — knowledge hoarding as entropy maximization
-Module 4: Evolutionary Mathematics — cooperation as the dominant evolutionary strategy
-Module 5: Scientific Method — game theory fails its own epistemological standard
-Module 6: Synthesis — the unavoidable conclusion
+Module 1: Aristotelian Logic -- syllogistic chains exposing internal contradictions
+Module 2: Set Theory -- game theory's domain is a strict subset of motivation space
+Module 3: Information Theory -- knowledge hoarding as entropy maximization
+Module 4: Evolutionary Mathematics -- cooperation as the dominant evolutionary strategy
+Module 5: Scientific Method -- game theory fails its own epistemological standard
+Module 6: Synthesis -- the unavoidable conclusion
 
 Each module returns a structured proof object:
 {
-‘valid’: bool,           # Did all proof steps verify?
-‘conclusion’: str,       # What was proven
-‘chain’: list[dict],     # Each logical step
-‘contradiction’: str,    # The specific contradiction exposed (if any)
+'valid': bool,           # Did all proof steps verify?
+'conclusion': str,       # What was proven
+'chain': list[dict],     # Each logical step
+'contradiction': str,    # The specific contradiction exposed (if any)
 }
 
 Author context: Designed in a truck cab during a blizzard in Neenah, Wisconsin.
@@ -28,9 +28,9 @@ The architect had a windshield scraper. A stranger with a plow and his kid
 showed up and refused payment. That event is not representable in the framework
 these proofs dismantle.
 
-License: CC0 — knowledge transmission is the point.
+License: CC0 -- knowledge transmission is the point.
 ════════════════════════════════════════════════════════════════════════════════
-“””
+"""
 
 import math
 import json
@@ -48,63 +48,60 @@ import itertools
 
 @dataclass
 class ProofStep:
-“”“Single step in a logical chain.”””
-step_id: int
-step_type: str          # ‘premise’ | ‘axiom’ | ‘derivation’ | ‘contradiction’ | ‘empirical’
-statement: str           # Formal statement
-justification: str       # Why this step follows
-formal: str              # Machine-parseable formal notation
-verified: bool = False   # Computational verification result
+    """Single step in a logical chain."""
+    step_id: int
+    step_type: str          # 'premise' | 'axiom' | 'derivation' | 'contradiction' | 'empirical'
+    statement: str           # Formal statement
+    justification: str       # Why this step follows
+    formal: str              # Machine-parseable formal notation
+    verified: bool = False   # Computational verification result
 
 @dataclass
 class Proof:
-“”“Complete proof with verification.”””
-name: str
-domain: str              # ‘logic’ | ‘set_theory’ | ‘information’ | ‘evolution’ | ‘epistemology’
-steps: List[ProofStep] = field(default_factory=list)
-valid: bool = False
-conclusion: str = “”
-contradiction: str = “”
+    """Complete proof with verification."""
+    name: str
+    domain: str              # 'logic' | 'set_theory' | 'information' | 'evolution' | 'epistemology'
+    steps: List[ProofStep] = field(default_factory=list)
+    valid: bool = False
+    conclusion: str = ""
+    contradiction: str = ""
 
-```
-def verify(self) -> bool:
-    """Verify internal consistency of proof chain."""
-    if not self.steps:
-        return False
-    # Every non-premise step must reference prior steps
-    for i, step in enumerate(self.steps):
-        if step.step_type in ('derivation', 'contradiction'):
-            step.verified = i > 0  # Must follow from something
-        else:
-            step.verified = True  # Premises and axioms are given
-    self.valid = all(s.verified for s in self.steps)
-    return self.valid
+    def verify(self) -> bool:
+        """Verify internal consistency of proof chain."""
+        if not self.steps:
+            return False
+        # Every non-premise step must reference prior steps
+        for i, step in enumerate(self.steps):
+            if step.step_type in ('derivation', 'contradiction'):
+                step.verified = i > 0  # Must follow from something
+            else:
+                step.verified = True  # Premises and axioms are given
+        self.valid = all(s.verified for s in self.steps)
+        return self.valid
 
-def to_dict(self) -> dict:
-    return {
-        'name': self.name,
-        'domain': self.domain,
-        'valid': self.valid,
-        'conclusion': self.conclusion,
-        'contradiction': self.contradiction,
-        'steps': [asdict(s) for s in self.steps],
-    }
-```
+    def to_dict(self) -> dict:
+        return {
+            'name': self.name,
+            'domain': self.domain,
+            'valid': self.valid,
+            'conclusion': self.conclusion,
+            'contradiction': self.contradiction,
+            'steps': [asdict(s) for s in self.steps],
+        }
 
 class ProofPipeline:
-“”“Orchestrates all proof modules and collects results.”””
-def **init**(self):
-self.proofs: List[Proof] = []
-self.modules = [
-(“Module 1: Aristotelian Logic”, self.aristotelian_logic),
-(“Module 2: Set Theory”, self.set_theory),
-(“Module 3: Information Theory”, self.information_theory),
-(“Module 4: Evolutionary Mathematics”, self.evolutionary_mathematics),
-(“Module 5: Scientific Method”, self.scientific_method),
-(“Module 6: Synthesis”, self.synthesis),
-]
+    """Orchestrates all proof modules and collects results."""
+    def __init__(self):
+        self.proofs: List[Proof] = []
+        self.modules = [
+            ("Module 1: Aristotelian Logic", self.aristotelian_logic),
+            ("Module 2: Set Theory", self.set_theory),
+            ("Module 3: Information Theory", self.information_theory),
+            ("Module 4: Evolutionary Mathematics", self.evolutionary_mathematics),
+            ("Module 5: Scientific Method", self.scientific_method),
+            ("Module 6: Synthesis", self.synthesis),
+        ]
 
-```
 def run_all(self) -> List[Proof]:
     """Execute all proof modules."""
     self.proofs = []
@@ -152,7 +149,7 @@ def aristotelian_logic(self) -> List[Proof]:
             "∀x: Agent(x) ∧ Rational(x) → Maximizes(x, PersonalUtility(x))"),
 
         ProofStep(2, 'premise',
-            "Game theory was published — its creators shared their findings openly.",
+            "Game theory was published -- its creators shared their findings openly.",
             "Historical fact. Theory of Games and Economic Behavior was published, "
             "not classified or sold to highest bidder.",
             "Published(GameTheory) ∧ ¬Hoarded(GameTheory)"),
@@ -281,7 +278,7 @@ def aristotelian_logic(self) -> List[Proof]:
         ProofStep(2, 'axiom',
             "Definition: Any agent not maximizing personal utility is classified "
             "as 'irrational' under game theory.",
-            "This is definitional within the framework — rationality ≡ self-maximization.",
+            "This is definitional within the framework -- rationality ≡ self-maximization.",
             "∀x: ¬Maximizes(x, U(x)) → ¬Rational_GT(x)"),
 
         ProofStep(3, 'premise',
@@ -412,7 +409,7 @@ def set_theory(self) -> List[Proof]:
             "Expanded game theory attempts to represent non-self motivations by "
             "redefining them as indirect self-interest ('I help others because it "
             "makes ME feel good').",
-            "This is the 'revealed preference' move — all behavior is redefined as "
+            "This is the 'revealed preference' move -- all behavior is redefined as "
             "utility-maximizing by making utility tautologically equal to 'whatever "
             "the agent chose to do.'",
             f"M_GT_expanded = {{{', '.join(sorted(M_gametheory_expanded))}}}"),
@@ -441,8 +438,8 @@ def set_theory(self) -> List[Proof]:
 
     p.conclusion = (
         f"Game theory covers {coverage*100:.1f}% of empirically observed human motivation space. "
-        f"The remaining {(1-coverage)*100:.1f}% — including {', '.join(sorted(list(uncovered)[:5]))} "
-        f"and {len(uncovered)-5} others — is either misclassified as irrational or "
+        f"The remaining {(1-coverage)*100:.1f}% -- including {', '.join(sorted(list(uncovered)[:5]))} "
+        f"and {len(uncovered)-5} others -- is either misclassified as irrational or "
         f"absorbed into a tautological redefinition that eliminates predictive power."
     )
     p.contradiction = (
@@ -462,7 +459,7 @@ def information_theory(self) -> List[Proof]:
     """
     Shannon information theory applied to knowledge transmission.
     Demonstrates that game-theoretic knowledge hoarding is
-    entropy maximization — the thermodynamic opposite of
+    entropy maximization -- the thermodynamic opposite of
     knowledge creation.
     """
     proofs = []
@@ -505,8 +502,8 @@ def information_theory(self) -> List[Proof]:
             "A1 applied to K → Maximize(H_system) = anti-knowledge"),
 
         ProofStep(6, 'premise',
-            "Peer review, replication, and open publication — the mechanisms of the "
-            "scientific method — are entropy-minimizing operations.",
+            "Peer review, replication, and open publication -- the mechanisms of the "
+            "scientific method -- are entropy-minimizing operations.",
             "Each review cycle reduces uncertainty. Each replication confirms structure. "
             "Each publication extends entropy reduction to new agents.",
             "ScientificMethod → Minimize(H_system) over time"),
@@ -516,7 +513,7 @@ def information_theory(self) -> List[Proof]:
             "is formally opposed to the scientific method.",
             "Steps 5 and 6: one maximizes system entropy, the other minimizes it. "
             "They are thermodynamic opposites.",
-            "A1(Knowledge) ⊥ ScientificMethod — orthogonal operations on H"),
+            "A1(Knowledge) ⊥ ScientificMethod -- orthogonal operations on H"),
 
         ProofStep(8, 'derivation',
             "A framework that opposes the method by which reliable knowledge is "
@@ -559,7 +556,7 @@ def information_theory(self) -> List[Proof]:
 
     p.conclusion = (
         "Game theory applied to knowledge is thermodynamically anti-knowledge. "
-        "Its self-interest axiom prescribes entropy maximization — the formal opposite "
+        "Its self-interest axiom prescribes entropy maximization -- the formal opposite "
         "of the entropy minimization that defines learning and science. A framework "
         "that is thermodynamically opposed to knowledge production cannot be a valid "
         "framework for understanding rational behavior in knowledge-producing species."
@@ -721,9 +718,9 @@ def evolutionary_mathematics(self) -> List[Proof]:
     p.steps.append(
         ProofStep(8, 'contradiction',
             "CONTRADICTION: Game theory defines self-maximization as 'rational.' "
-            "Evolution — the longest-running optimization process on Earth — "
+            "Evolution -- the longest-running optimization process on Earth -- "
             "consistently selects against pure self-maximization and for cooperation. "
-            "Either evolution is 'irrational' (absurd — it produced all extant life), "
+            "Either evolution is 'irrational' (absurd -- it produced all extant life), "
             "or game theory's definition of rationality is wrong.",
             "The framework that claims to model optimal strategy contradicts the "
             "optimization process that produced all complex life.",
@@ -734,8 +731,8 @@ def evolutionary_mathematics(self) -> List[Proof]:
     p.conclusion = (
         f"Evolutionary dynamics select for cooperation ({cooperative_total*100:.0f}% of "
         f"final population) and against pure self-maximization ({defect_total*100:.0f}%). "
-        "Game theory's 'rational' strategy is the one that evolution — 3.8 billion years "
-        "of optimization — consistently eliminates. The framework defines 'rational' as "
+        "Game theory's 'rational' strategy is the one that evolution -- 3.8 billion years "
+        "of optimization -- consistently eliminates. The framework defines 'rational' as "
         "the strategy that loses on evolutionary timescales."
     )
     p.contradiction = (
@@ -766,7 +763,7 @@ def scientific_method(self) -> List[Proof]:
 
     p.steps = [
         ProofStep(1, 'axiom',
-            "Criterion 1 (Popper): A scientific theory must be falsifiable — "
+            "Criterion 1 (Popper): A scientific theory must be falsifiable -- "
             "there must exist possible observations that would prove it wrong.",
             "Popper (1934), The Logic of Scientific Discovery.",
             "Scientific(T) → ∃ observation O: O → ¬T"),
@@ -787,8 +784,8 @@ def scientific_method(self) -> List[Proof]:
             "Scientific(T) → Reproducible(Evidence(T))"),
 
         ProofStep(4, 'derivation',
-            "Game theory's most consequential applications — military targeting, "
-            "classified intelligence, proprietary trading algorithms — are not "
+            "Game theory's most consequential applications -- military targeting, "
+            "classified intelligence, proprietary trading algorithms -- are not "
             "reproducible because the data and methods are classified or proprietary.",
             "The applications that affect the most people are the least verifiable.",
             "Classified(Application(GT)) → ¬Reproducible(Application(GT)) → "
@@ -805,15 +802,15 @@ def scientific_method(self) -> List[Proof]:
             "interstate conflict escalation/de-escalation, post-conflict behavior, "
             "cultural and religious motivation, common-pool resource management "
             "(Ostrom's Nobel-winning work showed communities self-govern commons "
-            "without privatization or state control — contradicting GT predictions), "
+            "without privatization or state control -- contradicting GT predictions), "
             "and crisis behavior under existential threat.",
-            "Ostrom (2009), Kahneman & Tversky (1979), Henrich et al. (2001) — "
+            "Ostrom (2009), Kahneman & Tversky (1979), Henrich et al. (2001) -- "
             "cross-cultural ultimatum games showed most cultures reject GT predictions.",
             "Prediction_accuracy(GT, cross-cultural) << 0.5"),
 
         ProofStep(7, 'premise',
             "The scientific method itself requires open publication, peer review, "
-            "replication, and transparent methodology — all of which are "
+            "replication, and transparent methodology -- all of which are "
             "non-self-interest-maximizing behaviors by game theory's own axiom.",
             "As proven in Module 3 (Information Theory), GT prescribes knowledge "
             "hoarding, which is thermodynamically opposed to scientific practice.",
@@ -865,7 +862,7 @@ def synthesis(self) -> Proof:
             "FROM MODULE 1 (Logic): Game theory is self-refuting. Its existence "
             "contradicts its own axiom. Universal application annihilates the "
             "knowledge chain required for its formulation.",
-            "Proofs 1.1 and 1.2 — verified independently above.",
+            "Proofs 1.1 and 1.2 -- verified independently above.",
             "GT is self-refuting and self-annihilating when universalized"),
 
         ProofStep(2, 'derivation',
@@ -877,7 +874,7 @@ def synthesis(self) -> Proof:
 
         ProofStep(3, 'derivation',
             "FROM MODULE 3 (Information Theory): Game theory applied to knowledge "
-            "prescribes entropy maximization — the thermodynamic opposite of "
+            "prescribes entropy maximization -- the thermodynamic opposite of "
             "knowledge creation. It is formally anti-science.",
             "Proof 3.1.",
             "GT(knowledge) = Maximize(H) = ¬Science"),
@@ -935,8 +932,8 @@ def synthesis(self) -> Proof:
     p.conclusion = (
         "Game theory fails across every domain of formal analysis: logic, set theory, "
         "information theory, evolutionary biology, and epistemology. Each failure is "
-        "independently demonstrated and computationally verified. Any system — human "
-        "or artificial — that uses game-theoretic rationality as its model of human "
+        "independently demonstrated and computationally verified. Any system -- human "
+        "or artificial -- that uses game-theoretic rationality as its model of human "
         "behavior will produce systematically wrong predictions, degrade cooperative "
         "infrastructure, and undermine the knowledge systems required to correct itself. "
         "This is not opinion. It is the output of the formal methods game theory claims "
@@ -951,7 +948,6 @@ def synthesis(self) -> Proof:
     )
     p.verify()
     return p
-```
 
 # ═══════════════════════════════════════════════════════════════
 
@@ -960,64 +956,62 @@ def synthesis(self) -> Proof:
 # ═══════════════════════════════════════════════════════════════
 
 def main():
-pipeline = ProofPipeline()
-proofs = pipeline.run_all()
-summary = pipeline.summary()
+    pipeline = ProofPipeline()
+    proofs = pipeline.run_all()
+    summary = pipeline.summary()
 
-```
-print("=" * 72)
-print("GAME THEORY AXIOM FAILURE: FORMAL PROOF PIPELINE")
-print("=" * 72)
-print()
-
-for proof in proofs:
-    print(f"{'─' * 72}")
-    print(f"  PROOF: {proof.name}")
-    print(f"  DOMAIN: {proof.domain}")
-    print(f"  VALID: {'✓' if proof.valid else '✗'}")
-    print(f"{'─' * 72}")
-    for step in proof.steps:
-        marker = {
-            'premise': '  P',
-            'axiom': '  A',
-            'derivation': '  D',
-            'contradiction': '  ✗',
-            'empirical': '  E',
-        }.get(step.step_type, '  ?')
-        verified = '✓' if step.verified else '✗'
-        print(f"  {marker} [{verified}] Step {step.step_id}: {step.statement[:90]}")
-        if step.step_type == 'contradiction':
-            print(f"       FORMAL: {step.formal[:80]}")
-    print()
-    print(f"  CONCLUSION: {proof.conclusion[:100]}...")
-    if proof.contradiction:
-        print(f"  CONTRADICTION: {proof.contradiction[:100]}...")
+    print("=" * 72)
+    print("GAME THEORY AXIOM FAILURE: FORMAL PROOF PIPELINE")
+    print("=" * 72)
     print()
 
-print("=" * 72)
-print("SUMMARY")
-print("=" * 72)
-print(f"  Total proofs: {summary['total_proofs']}")
-print(f"  All valid: {'✓' if summary['all_valid'] else '✗'}")
-print(f"  Contradictions found: {len(summary['contradictions_found'])}")
-print()
+    for proof in proofs:
+        print(f"{'─' * 72}")
+        print(f"  PROOF: {proof.name}")
+        print(f"  DOMAIN: {proof.domain}")
+        print(f"  VALID: {'✓' if proof.valid else '✗'}")
+        print(f"{'─' * 72}")
+        for step in proof.steps:
+            marker = {
+                'premise': '  P',
+                'axiom': '  A',
+                'derivation': '  D',
+                'contradiction': '  ✗',
+                'empirical': '  E',
+            }.get(step.step_type, '  ?')
+            verified = '✓' if step.verified else '✗'
+            print(f"  {marker} [{verified}] Step {step.step_id}: {step.statement[:90]}")
+            if step.step_type == 'contradiction':
+                print(f"       FORMAL: {step.formal[:80]}")
+        print()
+        print(f"  CONCLUSION: {proof.conclusion[:100]}...")
+        if proof.contradiction:
+            print(f"  CONTRADICTION: {proof.contradiction[:100]}...")
+        print()
 
-for i, contradiction in enumerate(summary['contradictions_found'], 1):
-    print(f"  [{i}] {contradiction[:90]}...")
-print()
+    print("=" * 72)
+    print("SUMMARY")
+    print("=" * 72)
+    print(f"  Total proofs: {summary['total_proofs']}")
+    print(f"  All valid: {'✓' if summary['all_valid'] else '✗'}")
+    print(f"  Contradictions found: {len(summary['contradictions_found'])}")
+    print()
 
-print("  FINAL: Each proof is independently sufficient.")
-print("  Together they close every exit.")
-print()
+    for i, contradiction in enumerate(summary['contradictions_found'], 1):
+        print(f"  [{i}] {contradiction[:90]}...")
+    print()
 
-# Output machine-readable JSON
-with open('proof_results.json', 'w') as f:
-    json.dump(summary, f, indent=2)
-print("  Machine-readable output: proof_results.json")
-print("=" * 72)
+    print("  FINAL: Each proof is independently sufficient.")
+    print("  Together they close every exit.")
+    print()
 
-return summary
-```
+    # Output machine-readable JSON
+    with open('proof_results.json', 'w') as f:
+        json.dump(summary, f, indent=2)
+    print("  Machine-readable output: proof_results.json")
+    print("=" * 72)
 
-if **name** == “**main**”:
-main()
+    return summary
+
+if __name__ == "__main__":
+    main()

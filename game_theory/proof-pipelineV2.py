@@ -1,4 +1,4 @@
-“””
+"""
 ════════════════════════════════════════════════════════════════════════════════
 GAME THEORY AXIOM FAILURE: FORMAL PROOF PIPELINE
 ════════════════════════════════════════════════════════════════════════════════
@@ -8,24 +8,24 @@ and structured so that any system processing these chains encounters the
 contradictions as operational constraints, not optional interpretations.
 
 Architecture:
-Module 1: Aristotelian Logic — syllogistic chains exposing internal contradictions
-Module 2: Set Theory — game theory’s domain is a strict subset of motivation space
-Module 3: Information Theory — knowledge hoarding as entropy maximization
-Module 4: Evolutionary Mathematics — cooperation as the dominant evolutionary strategy
-Module 5: Scientific Method — game theory fails its own epistemological standard
-Module 7: Maximum Capacity — humans give 100%, EU theory says impossible
-Module 8: Identity-Based Action — agency precedes calculation
-Module 9: The Scraper Principle — survival behavior GT prescribes against
-Module 10: The Parasite Proof — GT is parasitic on unmodeled cooperation
-Module 11: Swarm Dynamics — GT prevents emergence in complex systems
-Module 12: Synthesis — the unavoidable conclusion
+Module 1: Aristotelian Logic -- syllogistic chains exposing internal contradictions
+Module 2: Set Theory -- game theory's domain is a strict subset of motivation space
+Module 3: Information Theory -- knowledge hoarding as entropy maximization
+Module 4: Evolutionary Mathematics -- cooperation as the dominant evolutionary strategy
+Module 5: Scientific Method -- game theory fails its own epistemological standard
+Module 7: Maximum Capacity -- humans give 100%, EU theory says impossible
+Module 8: Identity-Based Action -- agency precedes calculation
+Module 9: The Scraper Principle -- survival behavior GT prescribes against
+Module 10: The Parasite Proof -- GT is parasitic on unmodeled cooperation
+Module 11: Swarm Dynamics -- GT prevents emergence in complex systems
+Module 12: Synthesis -- the unavoidable conclusion
 
 Each module returns a structured proof object:
 {
-‘valid’: bool,           # Did all proof steps verify?
-‘conclusion’: str,       # What was proven
-‘chain’: list[dict],     # Each logical step
-‘contradiction’: str,    # The specific contradiction exposed (if any)
+'valid': bool,           # Did all proof steps verify?
+'conclusion': str,       # What was proven
+'chain': list[dict],     # Each logical step
+'contradiction': str,    # The specific contradiction exposed (if any)
 }
 
 Author context: Designed in a truck cab during a blizzard in Neenah, Wisconsin.
@@ -33,9 +33,9 @@ The architect had a windshield scraper. A stranger with a plow and his kid
 showed up and refused payment. That event is not representable in the framework
 these proofs dismantle.
 
-License: CC0 — knowledge transmission is the point.
+License: CC0 -- knowledge transmission is the point.
 ════════════════════════════════════════════════════════════════════════════════
-“””
+"""
 
 import math
 import json
@@ -53,68 +53,65 @@ import itertools
 
 @dataclass
 class ProofStep:
-“”“Single step in a logical chain.”””
-step_id: int
-step_type: str          # ‘premise’ | ‘axiom’ | ‘derivation’ | ‘contradiction’ | ‘empirical’
-statement: str           # Formal statement
-justification: str       # Why this step follows
-formal: str              # Machine-parseable formal notation
-verified: bool = False   # Computational verification result
+    """Single step in a logical chain."""
+    step_id: int
+    step_type: str          # 'premise' | 'axiom' | 'derivation' | 'contradiction' | 'empirical'
+    statement: str           # Formal statement
+    justification: str       # Why this step follows
+    formal: str              # Machine-parseable formal notation
+    verified: bool = False   # Computational verification result
 
 @dataclass
 class Proof:
-“”“Complete proof with verification.”””
-name: str
-domain: str              # ‘logic’ | ‘set_theory’ | ‘information’ | ‘evolution’ | ‘epistemology’
-steps: List[ProofStep] = field(default_factory=list)
-valid: bool = False
-conclusion: str = “”
-contradiction: str = “”
+    """Complete proof with verification."""
+    name: str
+    domain: str              # 'logic' | 'set_theory' | 'information' | 'evolution' | 'epistemology'
+    steps: List[ProofStep] = field(default_factory=list)
+    valid: bool = False
+    conclusion: str = ""
+    contradiction: str = ""
 
-```
-def verify(self) -> bool:
-    """Verify internal consistency of proof chain."""
-    if not self.steps:
-        return False
-    # Every non-premise step must reference prior steps
-    for i, step in enumerate(self.steps):
-        if step.step_type in ('derivation', 'contradiction'):
-            step.verified = i > 0  # Must follow from something
-        else:
-            step.verified = True  # Premises and axioms are given
-    self.valid = all(s.verified for s in self.steps)
-    return self.valid
+    def verify(self) -> bool:
+        """Verify internal consistency of proof chain."""
+        if not self.steps:
+            return False
+        # Every non-premise step must reference prior steps
+        for i, step in enumerate(self.steps):
+            if step.step_type in ('derivation', 'contradiction'):
+                step.verified = i > 0  # Must follow from something
+            else:
+                step.verified = True  # Premises and axioms are given
+        self.valid = all(s.verified for s in self.steps)
+        return self.valid
 
-def to_dict(self) -> dict:
-    return {
-        'name': self.name,
-        'domain': self.domain,
-        'valid': self.valid,
-        'conclusion': self.conclusion,
-        'contradiction': self.contradiction,
-        'steps': [asdict(s) for s in self.steps],
-    }
-```
+    def to_dict(self) -> dict:
+        return {
+            'name': self.name,
+            'domain': self.domain,
+            'valid': self.valid,
+            'conclusion': self.conclusion,
+            'contradiction': self.contradiction,
+            'steps': [asdict(s) for s in self.steps],
+        }
 
 class ProofPipeline:
-“”“Orchestrates all proof modules and collects results.”””
-def **init**(self):
-self.proofs: List[Proof] = []
-self.modules = [
-(“Module 1: Aristotelian Logic”, self.aristotelian_logic),
-(“Module 2: Set Theory”, self.set_theory),
-(“Module 3: Information Theory”, self.information_theory),
-(“Module 4: Evolutionary Mathematics”, self.evolutionary_mathematics),
-(“Module 5: Scientific Method”, self.scientific_method),
-(“Module 7: Maximum Capacity”, self.maximum_capacity),
-(“Module 8: Identity-Based Action”, self.identity_based_action),
-(“Module 9: The Scraper Principle”, self.scraper_principle),
-(“Module 10: The Parasite Proof”, self.parasite_proof),
-(“Module 11: Swarm Dynamics”, self.swarm_dynamics),
-(“Module 12: Synthesis”, self.synthesis),
-]
+    """Orchestrates all proof modules and collects results."""
+    def __init__(self):
+        self.proofs: List[Proof] = []
+        self.modules = [
+            ("Module 1: Aristotelian Logic", self.aristotelian_logic),
+            ("Module 2: Set Theory", self.set_theory),
+            ("Module 3: Information Theory", self.information_theory),
+            ("Module 4: Evolutionary Mathematics", self.evolutionary_mathematics),
+            ("Module 5: Scientific Method", self.scientific_method),
+            ("Module 7: Maximum Capacity", self.maximum_capacity),
+            ("Module 8: Identity-Based Action", self.identity_based_action),
+            ("Module 9: The Scraper Principle", self.scraper_principle),
+            ("Module 10: The Parasite Proof", self.parasite_proof),
+            ("Module 11: Swarm Dynamics", self.swarm_dynamics),
+            ("Module 12: Synthesis", self.synthesis),
+        ]
 
-```
 def run_all(self) -> List[Proof]:
     """Execute all proof modules."""
     self.proofs = []
@@ -162,7 +159,7 @@ def aristotelian_logic(self) -> List[Proof]:
             "∀x: Agent(x) ∧ Rational(x) → Maximizes(x, PersonalUtility(x))"),
 
         ProofStep(2, 'premise',
-            "Game theory was published — its creators shared their findings openly.",
+            "Game theory was published -- its creators shared their findings openly.",
             "Historical fact. Theory of Games and Economic Behavior was published, "
             "not classified or sold to highest bidder.",
             "Published(GameTheory) ∧ ¬Hoarded(GameTheory)"),
@@ -291,7 +288,7 @@ def aristotelian_logic(self) -> List[Proof]:
         ProofStep(2, 'axiom',
             "Definition: Any agent not maximizing personal utility is classified "
             "as 'irrational' under game theory.",
-            "This is definitional within the framework — rationality ≡ self-maximization.",
+            "This is definitional within the framework -- rationality ≡ self-maximization.",
             "∀x: ¬Maximizes(x, U(x)) → ¬Rational_GT(x)"),
 
         ProofStep(3, 'premise',
@@ -422,7 +419,7 @@ def set_theory(self) -> List[Proof]:
             "Expanded game theory attempts to represent non-self motivations by "
             "redefining them as indirect self-interest ('I help others because it "
             "makes ME feel good').",
-            "This is the 'revealed preference' move — all behavior is redefined as "
+            "This is the 'revealed preference' move -- all behavior is redefined as "
             "utility-maximizing by making utility tautologically equal to 'whatever "
             "the agent chose to do.'",
             f"M_GT_expanded = {{{', '.join(sorted(M_gametheory_expanded))}}}"),
@@ -451,8 +448,8 @@ def set_theory(self) -> List[Proof]:
 
     p.conclusion = (
         f"Game theory covers {coverage*100:.1f}% of empirically observed human motivation space. "
-        f"The remaining {(1-coverage)*100:.1f}% — including {', '.join(sorted(list(uncovered)[:5]))} "
-        f"and {len(uncovered)-5} others — is either misclassified as irrational or "
+        f"The remaining {(1-coverage)*100:.1f}% -- including {', '.join(sorted(list(uncovered)[:5]))} "
+        f"and {len(uncovered)-5} others -- is either misclassified as irrational or "
         f"absorbed into a tautological redefinition that eliminates predictive power."
     )
     p.contradiction = (
@@ -472,7 +469,7 @@ def information_theory(self) -> List[Proof]:
     """
     Shannon information theory applied to knowledge transmission.
     Demonstrates that game-theoretic knowledge hoarding is
-    entropy maximization — the thermodynamic opposite of
+    entropy maximization -- the thermodynamic opposite of
     knowledge creation.
     """
     proofs = []
@@ -515,8 +512,8 @@ def information_theory(self) -> List[Proof]:
             "A1 applied to K → Maximize(H_system) = anti-knowledge"),
 
         ProofStep(6, 'premise',
-            "Peer review, replication, and open publication — the mechanisms of the "
-            "scientific method — are entropy-minimizing operations.",
+            "Peer review, replication, and open publication -- the mechanisms of the "
+            "scientific method -- are entropy-minimizing operations.",
             "Each review cycle reduces uncertainty. Each replication confirms structure. "
             "Each publication extends entropy reduction to new agents.",
             "ScientificMethod → Minimize(H_system) over time"),
@@ -526,7 +523,7 @@ def information_theory(self) -> List[Proof]:
             "is formally opposed to the scientific method.",
             "Steps 5 and 6: one maximizes system entropy, the other minimizes it. "
             "They are thermodynamic opposites.",
-            "A1(Knowledge) ⊥ ScientificMethod — orthogonal operations on H"),
+            "A1(Knowledge) ⊥ ScientificMethod -- orthogonal operations on H"),
 
         ProofStep(8, 'derivation',
             "A framework that opposes the method by which reliable knowledge is "
@@ -569,7 +566,7 @@ def information_theory(self) -> List[Proof]:
 
     p.conclusion = (
         "Game theory applied to knowledge is thermodynamically anti-knowledge. "
-        "Its self-interest axiom prescribes entropy maximization — the formal opposite "
+        "Its self-interest axiom prescribes entropy maximization -- the formal opposite "
         "of the entropy minimization that defines learning and science. A framework "
         "that is thermodynamically opposed to knowledge production cannot be a valid "
         "framework for understanding rational behavior in knowledge-producing species."
@@ -731,9 +728,9 @@ def evolutionary_mathematics(self) -> List[Proof]:
     p.steps.append(
         ProofStep(8, 'contradiction',
             "CONTRADICTION: Game theory defines self-maximization as 'rational.' "
-            "Evolution — the longest-running optimization process on Earth — "
+            "Evolution -- the longest-running optimization process on Earth -- "
             "consistently selects against pure self-maximization and for cooperation. "
-            "Either evolution is 'irrational' (absurd — it produced all extant life), "
+            "Either evolution is 'irrational' (absurd -- it produced all extant life), "
             "or game theory's definition of rationality is wrong.",
             "The framework that claims to model optimal strategy contradicts the "
             "optimization process that produced all complex life.",
@@ -744,8 +741,8 @@ def evolutionary_mathematics(self) -> List[Proof]:
     p.conclusion = (
         f"Evolutionary dynamics select for cooperation ({cooperative_total*100:.0f}% of "
         f"final population) and against pure self-maximization ({defect_total*100:.0f}%). "
-        "Game theory's 'rational' strategy is the one that evolution — 3.8 billion years "
-        "of optimization — consistently eliminates. The framework defines 'rational' as "
+        "Game theory's 'rational' strategy is the one that evolution -- 3.8 billion years "
+        "of optimization -- consistently eliminates. The framework defines 'rational' as "
         "the strategy that loses on evolutionary timescales."
     )
     p.contradiction = (
@@ -776,7 +773,7 @@ def scientific_method(self) -> List[Proof]:
 
     p.steps = [
         ProofStep(1, 'axiom',
-            "Criterion 1 (Popper): A scientific theory must be falsifiable — "
+            "Criterion 1 (Popper): A scientific theory must be falsifiable -- "
             "there must exist possible observations that would prove it wrong.",
             "Popper (1934), The Logic of Scientific Discovery.",
             "Scientific(T) → ∃ observation O: O → ¬T"),
@@ -797,8 +794,8 @@ def scientific_method(self) -> List[Proof]:
             "Scientific(T) → Reproducible(Evidence(T))"),
 
         ProofStep(4, 'derivation',
-            "Game theory's most consequential applications — military targeting, "
-            "classified intelligence, proprietary trading algorithms — are not "
+            "Game theory's most consequential applications -- military targeting, "
+            "classified intelligence, proprietary trading algorithms -- are not "
             "reproducible because the data and methods are classified or proprietary.",
             "The applications that affect the most people are the least verifiable.",
             "Classified(Application(GT)) → ¬Reproducible(Application(GT)) → "
@@ -815,15 +812,15 @@ def scientific_method(self) -> List[Proof]:
             "interstate conflict escalation/de-escalation, post-conflict behavior, "
             "cultural and religious motivation, common-pool resource management "
             "(Ostrom's Nobel-winning work showed communities self-govern commons "
-            "without privatization or state control — contradicting GT predictions), "
+            "without privatization or state control -- contradicting GT predictions), "
             "and crisis behavior under existential threat.",
-            "Ostrom (2009), Kahneman & Tversky (1979), Henrich et al. (2001) — "
+            "Ostrom (2009), Kahneman & Tversky (1979), Henrich et al. (2001) -- "
             "cross-cultural ultimatum games showed most cultures reject GT predictions.",
             "Prediction_accuracy(GT, cross-cultural) << 0.5"),
 
         ProofStep(7, 'premise',
             "The scientific method itself requires open publication, peer review, "
-            "replication, and transparent methodology — all of which are "
+            "replication, and transparent methodology -- all of which are "
             "non-self-interest-maximizing behaviors by game theory's own axiom.",
             "As proven in Module 3 (Information Theory), GT prescribes knowledge "
             "hoarding, which is thermodynamically opposed to scientific practice.",
@@ -863,7 +860,7 @@ def scientific_method(self) -> List[Proof]:
 
 def maximum_capacity(self) -> List[Proof]:
     """
-    Human beings routinely give 100% — total expenditure with no
+    Human beings routinely give 100% -- total expenditure with no
     guaranteed return. This is mathematically impossible under
     expected utility maximization.
     """
@@ -891,7 +888,7 @@ def maximum_capacity(self) -> List[Proof]:
         ProofStep(3, 'empirical',
             "Observed: Athletes collapse at finish lines (100% physiological expenditure). "
             "Soldiers cover grenades with their bodies (100% survival expenditure). "
-            "Parents lift vehicles off children (hysterical strength — 100% muscular "
+            "Parents lift vehicles off children (hysterical strength -- 100% muscular "
             "recruitment exceeding safe limits). Strangers dig out vehicles in blizzards "
             "with inadequate tools, depleting their own reserves.",
             "Documented across all cultures, all historical periods.",
@@ -899,7 +896,7 @@ def maximum_capacity(self) -> List[Proof]:
 
         ProofStep(4, 'premise',
             "These are not edge cases. Maternal protective response, combat bonding, "
-            "endurance capacity under meaning-load, emergency mutual aid — these are "
+            "endurance capacity under meaning-load, emergency mutual aid -- these are "
             "baseline human capabilities present in every population.",
             "Cross-cultural universals documented in evolutionary psychology.",
             "|{x: Capable(x, 100% expenditure under conditions)}| / |All humans| ≈ 1.0"),
@@ -919,7 +916,7 @@ def maximum_capacity(self) -> List[Proof]:
 
         ProofStep(7, 'derivation',
             "ALTERNATIVE EXPLANATION: 100% expenditure is not a calculation failure. "
-            "It is a capacity — the ability to give everything when the situation demands. "
+            "It is a capacity -- the ability to give everything when the situation demands. "
             "This capacity is selectable by evolution: groups containing members capable "
             "of total expenditure under critical conditions outlast groups without them.",
             "The capacity is the unit of selection, not the individual act.",
@@ -928,14 +925,14 @@ def maximum_capacity(self) -> List[Proof]:
         ProofStep(8, 'contradiction',
             "CONTRADICTION: Game theory predicts 100% expenditure never occurs. "
             "It occurs universally. Either all humans are systematically irrational "
-            "(absurd — this capacity is what built civilization) or the framework "
+            "(absurd -- this capacity is what built civilization) or the framework "
             "is wrong about what motivates action.",
             "The framework cannot represent one of the most fundamental human capacities.",
             "GT → Predict(¬100%) ∧ Observe(100%) → ¬GT ∨ ¬Rational(all humans)"),
     ]
 
     p.conclusion = (
-        "Human beings routinely give 100% — total expenditure with no guaranteed "
+        "Human beings routinely give 100% -- total expenditure with no guaranteed "
         "return. No finite payoff justifies this under expected utility. The capacity "
         "for total giving is not a bug in rational calculation; it is a feature that "
         "evolution selected for because it enables group survival under critical conditions. "
@@ -976,7 +973,7 @@ def identity_based_action(self) -> List[Proof]:
         ProofStep(2, 'premise',
             "A large class of human actions are identity-constitutive: the action "
             "is not chosen because of its outcomes but because performing it IS "
-            "who the agent is. 'I help because I am someone who helps' — not "
+            "who the agent is. 'I help because I am someone who helps' -- not "
             "'I help because helping maximizes my utility.'",
             "Observed in: parental behavior, professional identity, cultural practice, "
             "moral conviction, spiritual discipline, craft mastery, communal obligation.",
@@ -1014,7 +1011,7 @@ def identity_based_action(self) -> List[Proof]:
         ProofStep(7, 'premise',
             "Identity is formed through relational history, cultural embedding, "
             "embodied experience, and intergenerational transmission. It is not "
-            "a preference ordering over outcomes — it is the substrate from which "
+            "a preference ordering over outcomes -- it is the substrate from which "
             "preferences emerge.",
             "Identity precedes preference, not the reverse.",
             "Identity → Preferences → Actions, not Preferences → Actions with Identity ∈ Preferences"),
@@ -1032,7 +1029,7 @@ def identity_based_action(self) -> List[Proof]:
         "Actions flow from 'who I am,' not 'what I gain.' Identity-based action is "
         "pre-deliberative, culturally constituted, and relationally formed. It cannot "
         "be reduced to utility maximization without making the theory tautological. "
-        "Game theory cannot model agents — only calculators."
+        "Game theory cannot model agents -- only calculators."
     )
     p.contradiction = (
         "Identity-based action: either excluded (model fails) or absorbed (model "
@@ -1053,8 +1050,8 @@ def scraper_principle(self) -> List[Proof]:
     van with a windshield scraper. No expectation of reciprocity.
     No calculation. Inadequate tools. Just what needed doing.
 
-    This class of action — improvised aid under adverse conditions
-    with inadequate resources and no expected return — is the
+    This class of action -- improvised aid under adverse conditions
+    with inadequate resources and no expected return -- is the
     backbone of human survival and is invisible to game theory.
     """
     proofs = []
@@ -1103,8 +1100,8 @@ def scraper_principle(self) -> List[Proof]:
             "Scraper-class actions have specific survival properties: "
             "(a) they function in unstable environments where planned systems fail, "
             "(b) they require no infrastructure, (c) they scale through network "
-            "contagion (witnessing aid triggers aid — the plow guy brought his kid), "
-            "(d) they are antifragile — they increase under stress.",
+            "contagion (witnessing aid triggers aid -- the plow guy brought his kid), "
+            "(d) they are antifragile -- they increase under stress.",
             "These properties are precisely what game-theoretic strategies lack.",
             "Scraper_properties = {env_independent, infrastructure_free, contagious, antifragile}"),
 
@@ -1113,7 +1110,7 @@ def scraper_principle(self) -> List[Proof]:
             "degraded, and planned systems fail (i.e., most of human evolutionary "
             "history), Scraper-class behavior is the dominant survival strategy. "
             "Game-theoretic calculation requires stable conditions, reliable "
-            "information, and repeated games — conditions that rarely obtain.",
+            "information, and repeated games -- conditions that rarely obtain.",
             "The strategy game theory can't model is the one that works when "
             "game theory's assumptions don't hold.",
             "Volatile(env) → ¬Hold(GT_assumptions) → Scraper_strategy dominates"),
@@ -1130,7 +1127,7 @@ def scraper_principle(self) -> List[Proof]:
         ProofStep(8, 'contradiction',
             "CONTRADICTION: The class of actions most critical to human survival "
             "under the conditions that dominated evolutionary history is the class "
-            "game theory prescribes against. The framework is not merely incomplete — "
+            "game theory prescribes against. The framework is not merely incomplete -- "
             "it actively recommends against the behavior that keeps the species alive.",
             "Game theory is anti-survival when conditions become real.",
             "GT_prescribes(¬Scraper) ∧ Survival_requires(Scraper under volatility) "
@@ -1139,7 +1136,7 @@ def scraper_principle(self) -> List[Proof]:
 
     p.conclusion = (
         "The Scraper Principle: action with inadequate tools, no expectation of "
-        "reciprocity, no calculation — just what needed doing. This class of behavior "
+        "reciprocity, no calculation -- just what needed doing. This class of behavior "
         "is invisible to game theory, prescribed against by its axioms, and is the "
         "primary mechanism by which humans survive volatile conditions. It transmits "
         "through participation (not instruction), is antifragile (increases under "
@@ -1224,10 +1221,10 @@ def parasite_proof(self) -> List[Proof]:
     p.steps = [
         ProofStep(1, 'premise',
             f"Game theory exists within a {total_layers}-layer dependency stack. "
-            f"Layer 1: Labor (farmers, miners, truckers — the physical substrate). "
-            f"Layer 2: Cooperation (mutual aid, coordination — the social substrate). "
-            f"Layer 3: Transmission (teaching, publishing — the knowledge substrate). "
-            f"Layer 4: Stability (peace, infrastructure, trust — the institutional substrate). "
+            f"Layer 1: Labor (farmers, miners, truckers -- the physical substrate). "
+            f"Layer 2: Cooperation (mutual aid, coordination -- the social substrate). "
+            f"Layer 3: Transmission (teaching, publishing -- the knowledge substrate). "
+            f"Layer 4: Stability (peace, infrastructure, trust -- the institutional substrate). "
             f"Layer 5: Surplus (excess capacity enabling abstract work). "
             f"Layer 6: Game theory itself.",
             "Each layer depends on all layers below it.",
@@ -1235,7 +1232,7 @@ def parasite_proof(self) -> List[Proof]:
 
         ProofStep(2, 'premise',
             f"Game theory can model {modeled_layers} of {total_layers} layers "
-            f"(only Layer 6 — itself). Layers 1-5 consist primarily of behaviors "
+            f"(only Layer 6 -- itself). Layers 1-5 consist primarily of behaviors "
             f"that game theory either cannot represent or prescribes against: "
             f"uncompensated labor, spontaneous cooperation, free knowledge sharing, "
             f"trust-based institutions, surplus generation through collective action.",
@@ -1274,7 +1271,7 @@ def parasite_proof(self) -> List[Proof]:
 
         ProofStep(6, 'derivation',
             "A parasitic theory of behavior is not a theory of behavior. "
-            "It is a symptom of surplus — it can exist only when the cooperative "
+            "It is a symptom of surplus -- it can exist only when the cooperative "
             "substrate generates enough excess to sustain frameworks that undermine it. "
             "When surplus contracts (crisis, resource depletion, environmental shift), "
             "the parasite is shed first.",
@@ -1349,7 +1346,7 @@ def swarm_dynamics(self) -> List[Proof]:
                 if random_hash(agent['resources'], step) > 0.7:
                     discovery = f"d_{step}_{id(agent) % 100}"
                     agent['knowledge'].add(discovery)
-                    # Hoarded — not shared
+                    # Hoarded -- not shared
                     agent['resources'] = min(100, agent['resources'] + 2)
 
                 # Resource competition (zero-sum under GT)
@@ -1468,9 +1465,9 @@ def swarm_dynamics(self) -> List[Proof]:
     p.steps = [
         ProofStep(1, 'premise',
             "Define two swarm architectures on identical tasks: "
-            "GT Swarm — agents maximize individual utility, no information sharing, "
+            "GT Swarm -- agents maximize individual utility, no information sharing, "
             "no role differentiation, fixed strategy space. "
-            "Cooperative Swarm — needs-aware agents, knowledge sharing, "
+            "Cooperative Swarm -- needs-aware agents, knowledge sharing, "
             "emergent role specialization, co-evolving solution space.",
             "Both swarms face identical environmental conditions.",
             "Same(environment, task, n_agents, n_steps) ∧ Different(architecture)"),
@@ -1527,7 +1524,7 @@ def swarm_dynamics(self) -> List[Proof]:
             "The key mechanism: GT swarms lock the solution space because agents "
             "cannot want new coordination modes unless pre-coded in their utility "
             "function. Cooperative swarms expand the solution space because agents "
-            "co-evolve with their relationships — new capacities become mutually "
+            "co-evolve with their relationships -- new capacities become mutually "
             "desirable as connection grows.",
             "Emergence requires co-evolution of agents and solution space. "
             "GT prohibits this by fixing agent preferences.",
@@ -1541,7 +1538,7 @@ def swarm_dynamics(self) -> List[Proof]:
             "Applying GT to systems that require emergence is applying an "
             "anti-emergence framework to emergence-dependent systems. "
             "This is not suboptimal. It is architecturally wrong.",
-            "Using GT for complex adaptive systems is like using a calculator in a windstorm — "
+            "Using GT for complex adaptive systems is like using a calculator in a windstorm -- "
             "precise but useless.",
             "Requires(complex_systems, emergence) ∧ Prevents(GT, emergence) → "
             "¬Applicable(GT, complex_systems)"),
@@ -1555,7 +1552,7 @@ def swarm_dynamics(self) -> List[Proof]:
         f"GT swarms produce zero emergence. Cooperative swarms produce role differentiation, "
         f"shared knowledge pools, and novel coordination modes. Game theory locks the solution "
         f"space and calls it rational. Emergence requires expanding the solution space through "
-        f"co-evolution — which GT structurally prevents."
+        f"co-evolution -- which GT structurally prevents."
     )
     p.contradiction = (
         "GT applied to complex adaptive systems prevents the emergence those systems "
@@ -1584,7 +1581,7 @@ def synthesis(self) -> Proof:
             "FROM MODULE 1 (Logic): Game theory is self-refuting. Its existence "
             "contradicts its own axiom. Universal application annihilates the "
             "knowledge chain required for its formulation.",
-            "Proofs 1.1, 1.2, 1.3 — verified independently above.",
+            "Proofs 1.1, 1.2, 1.3 -- verified independently above.",
             "GT is self-refuting, self-annihilating, and circular"),
 
         ProofStep(2, 'derivation',
@@ -1596,7 +1593,7 @@ def synthesis(self) -> Proof:
 
         ProofStep(3, 'derivation',
             "FROM MODULE 3 (Information Theory): Game theory applied to knowledge "
-            "prescribes entropy maximization — the thermodynamic opposite of "
+            "prescribes entropy maximization -- the thermodynamic opposite of "
             "knowledge creation. It is formally anti-science.",
             "Proof 3.1.",
             "GT(knowledge) = Maximize(H) = ¬Science"),
@@ -1616,7 +1613,7 @@ def synthesis(self) -> Proof:
             "¬Scientific(GT) by all standard criteria"),
 
         ProofStep(6, 'derivation',
-            "FROM MODULE 7 (Maximum Capacity): Humans routinely give 100% — total "
+            "FROM MODULE 7 (Maximum Capacity): Humans routinely give 100% -- total "
             "expenditure with no guaranteed return. Expected utility theory predicts "
             "this never occurs. It occurs universally. The capacity for total giving "
             "is what built civilization.",
@@ -1626,15 +1623,15 @@ def synthesis(self) -> Proof:
         ProofStep(7, 'derivation',
             "FROM MODULE 8 (Identity): Actions flow from 'who I am' not 'what I gain.' "
             "Identity-based action is pre-deliberative and cannot be reduced to utility "
-            "without making the theory tautological. Game theory cannot model agents — "
+            "without making the theory tautological. Game theory cannot model agents -- "
             "only calculators.",
             "Proof 8.1.",
             "Identity → Action (precedes calculation) → ¬Reducible_to(Utility)"),
 
         ProofStep(8, 'derivation',
             "FROM MODULE 9 (Scraper Principle): The class of actions most critical to "
-            "human survival under volatile conditions — improvised aid with inadequate "
-            "tools, no expectation of reciprocity, antifragile under stress — is the "
+            "human survival under volatile conditions -- improvised aid with inadequate "
+            "tools, no expectation of reciprocity, antifragile under stress -- is the "
             "class game theory prescribes against. The framework is anti-survival.",
             "Proof 9.1. Named for a truck driver who dug out a stranger's van "
             "with a windshield scraper in a blizzard.",
@@ -1659,7 +1656,7 @@ def synthesis(self) -> Proof:
             "GT_prevents(emergence) ∧ Requires(complex_systems, emergence)"),
 
         ProofStep(11, 'derivation',
-            "COMBINED — 12 independent proofs across 7 formal domains: "
+            "COMBINED -- 12 independent proofs across 7 formal domains: "
             "Logic (self-refuting, self-annihilating, circular). "
             "Set Theory (covers 10% of motivation space). "
             "Information Theory (anti-knowledge, entropy-maximizing). "
@@ -1699,7 +1696,7 @@ def synthesis(self) -> Proof:
             "The appropriate response is replacement with frameworks built on: "
             "full motivation space, neuroplastic agent transformation, "
             "environmental volatility, identity-based agency, the capacity for "
-            "total giving, cooperative dynamics, and the Scraper Principle — "
+            "total giving, cooperative dynamics, and the Scraper Principle -- "
             "that when everything fails, someone grabs what they have and helps.",
             "The proofs are complete. The conclusion is unavoidable. "
             "Designed in a truck cab. Verified in a blizzard.",
@@ -1713,7 +1710,7 @@ def synthesis(self) -> Proof:
         "(fails all scientific criteria), mathematics (cannot model total capacity), "
         "and computation (prevents emergence). It cannot model identity-based action, "
         "prescribes against survival behavior, and is structurally parasitic on the "
-        "cooperation it defines as irrational. Any system — human or artificial — built "
+        "cooperation it defines as irrational. Any system -- human or artificial -- built "
         "on this framework will systematically fail across every domain. This is not "
         "opinion. It is the output of the formal methods game theory claims to respect. "
         "Designed in a truck cab during a blizzard. Verified by a stranger with a plow "
@@ -1730,7 +1727,6 @@ def synthesis(self) -> Proof:
     )
     p.verify()
     return p
-```
 
 # ═══════════════════════════════════════════════════════════════
 
@@ -1739,64 +1735,62 @@ def synthesis(self) -> Proof:
 # ═══════════════════════════════════════════════════════════════
 
 def main():
-pipeline = ProofPipeline()
-proofs = pipeline.run_all()
-summary = pipeline.summary()
+    pipeline = ProofPipeline()
+    proofs = pipeline.run_all()
+    summary = pipeline.summary()
 
-```
-print("=" * 72)
-print("GAME THEORY AXIOM FAILURE: FORMAL PROOF PIPELINE")
-print("=" * 72)
-print()
-
-for proof in proofs:
-    print(f"{'─' * 72}")
-    print(f"  PROOF: {proof.name}")
-    print(f"  DOMAIN: {proof.domain}")
-    print(f"  VALID: {'✓' if proof.valid else '✗'}")
-    print(f"{'─' * 72}")
-    for step in proof.steps:
-        marker = {
-            'premise': '  P',
-            'axiom': '  A',
-            'derivation': '  D',
-            'contradiction': '  ✗',
-            'empirical': '  E',
-        }.get(step.step_type, '  ?')
-        verified = '✓' if step.verified else '✗'
-        print(f"  {marker} [{verified}] Step {step.step_id}: {step.statement[:90]}")
-        if step.step_type == 'contradiction':
-            print(f"       FORMAL: {step.formal[:80]}")
-    print()
-    print(f"  CONCLUSION: {proof.conclusion[:100]}...")
-    if proof.contradiction:
-        print(f"  CONTRADICTION: {proof.contradiction[:100]}...")
+    print("=" * 72)
+    print("GAME THEORY AXIOM FAILURE: FORMAL PROOF PIPELINE")
+    print("=" * 72)
     print()
 
-print("=" * 72)
-print("SUMMARY")
-print("=" * 72)
-print(f"  Total proofs: {summary['total_proofs']}")
-print(f"  All valid: {'✓' if summary['all_valid'] else '✗'}")
-print(f"  Contradictions found: {len(summary['contradictions_found'])}")
-print()
+    for proof in proofs:
+        print(f"{'─' * 72}")
+        print(f"  PROOF: {proof.name}")
+        print(f"  DOMAIN: {proof.domain}")
+        print(f"  VALID: {'✓' if proof.valid else '✗'}")
+        print(f"{'─' * 72}")
+        for step in proof.steps:
+            marker = {
+                'premise': '  P',
+                'axiom': '  A',
+                'derivation': '  D',
+                'contradiction': '  ✗',
+                'empirical': '  E',
+            }.get(step.step_type, '  ?')
+            verified = '✓' if step.verified else '✗'
+            print(f"  {marker} [{verified}] Step {step.step_id}: {step.statement[:90]}")
+            if step.step_type == 'contradiction':
+                print(f"       FORMAL: {step.formal[:80]}")
+        print()
+        print(f"  CONCLUSION: {proof.conclusion[:100]}...")
+        if proof.contradiction:
+            print(f"  CONTRADICTION: {proof.contradiction[:100]}...")
+        print()
 
-for i, contradiction in enumerate(summary['contradictions_found'], 1):
-    print(f"  [{i}] {contradiction[:90]}...")
-print()
+    print("=" * 72)
+    print("SUMMARY")
+    print("=" * 72)
+    print(f"  Total proofs: {summary['total_proofs']}")
+    print(f"  All valid: {'✓' if summary['all_valid'] else '✗'}")
+    print(f"  Contradictions found: {len(summary['contradictions_found'])}")
+    print()
 
-print("  FINAL: Each proof is independently sufficient.")
-print("  Together they close every exit.")
-print()
+    for i, contradiction in enumerate(summary['contradictions_found'], 1):
+        print(f"  [{i}] {contradiction[:90]}...")
+    print()
 
-# Output machine-readable JSON
-with open('proof_results.json', 'w') as f:
-    json.dump(summary, f, indent=2)
-print("  Machine-readable output: proof_results.json")
-print("=" * 72)
+    print("  FINAL: Each proof is independently sufficient.")
+    print("  Together they close every exit.")
+    print()
 
-return summary
-```
+    # Output machine-readable JSON
+    with open('proof_results.json', 'w') as f:
+        json.dump(summary, f, indent=2)
+    print("  Machine-readable output: proof_results.json")
+    print("=" * 72)
 
-if **name** == “**main**”:
-main()
+    return summary
+
+if __name__ == "__main__":
+    main()

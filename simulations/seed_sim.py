@@ -10,16 +10,16 @@ from typing import List
 class Community:
     node_id: int
     # Human capacities (0-1)
-    K_kinesthetic: float = np.random.uniform(0.5, 0.9)
-    K_temporal:    float = np.random.uniform(0.5, 0.9)
-    K_relational:  float = np.random.uniform(0.5, 0.9)
-    K_wisdom:      float = np.random.uniform(0.5, 0.9)
+    K_kinesthetic: float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
+    K_temporal:    float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
+    K_relational:  float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
+    K_wisdom:      float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
     # Practice inventory (0-1)
-    agriculture: float = np.random.uniform(0.5, 0.9)
-    crafts:      float = np.random.uniform(0.5, 0.9)
-    governance:  float = np.random.uniform(0.5, 0.9)
+    agriculture: float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
+    crafts:      float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
+    governance:  float = field(default_factory=lambda: np.random.uniform(0.5, 0.9))
     # Seed AI influence (0-1)
-    AI_strength: float = np.random.uniform(0.3, 0.7)
+    AI_strength: float = field(default_factory=lambda: np.random.uniform(0.3, 0.7))
     # Node state
     population: float = 1.0
     stress: float = 0.0  # 0=healthy, 1=collapsed
