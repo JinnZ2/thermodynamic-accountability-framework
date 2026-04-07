@@ -1,43 +1,34 @@
-import math
+from fatigue_model import FatigueModel
 
 # --- HUMAN SYSTEM COLLAPSE MODULE WITH DISTANCE METRIC ---
-class HumanSystemModel:
+# Delegates fatigue computation to FatigueModel (DRY).
+# Adds distance-to-collapse metric and full assessment output.
+
+class HumanSystemCollapseModel:
     """
     Models human energy ledger, fatigue, and system collapse thresholds,
     plus distance-to-collapse metric.
+
+    Delegates multiplier math to FatigueModel. Adds:
+    - compute_distance_to_collapse(): 0-1 scale distance metric
+    - assess_system(): full assessment with flags
     """
 
     def __init__(self, energy_input=100):
-        self.energy_input = energy_input  # baseline energy humans can expend safely
+        self.energy_input = energy_input
+        self._fatigue = FatigueModel(energy_input)
 
-    # Hidden variable multiplier
-    def hidden_var_multiplier(self, hidden_count):
-        return 1.0 if hidden_count <= 0 else 1 + 0.1 * hidden_count ** 1.5
-
-    # Automation cognitive load multiplier
-    def automation_multiplier(self, automation_count, reliability=0.9):
-        return 1 + automation_count * (1 - reliability) * 0.5
-
-    # Environmental stress multiplier
-    def environment_multiplier(self, temp_celsius, wind_mps):
-        temp_stress = max(0, (15 - temp_celsius) * 0.05)
-        wind_stress = wind_mps * 0.02
-        return 1 + temp_stress + wind_stress
-
-    # Compute fatigue and total energy load
     def compute_fatigue(self, physical_load, cognitive_load,
                         hidden_count=0, automation_count=0, automation_reliability=0.9,
                         temp_celsius=20, wind_mps=0):
-        total_load = physical_load + cognitive_load
-        total_load *= self.hidden_var_multiplier(hidden_count)
-        total_load *= self.automation_multiplier(automation_count, automation_reliability)
-        total_load *= self.environment_multiplier(temp_celsius, wind_mps)
+        """Returns (fatigue_score, total_load)."""
+        result = self._fatigue.compute_fatigue_score(
+            physical_load, cognitive_load,
+            hidden_count, automation_count, automation_reliability,
+            temp_celsius, wind_mps
+        )
+        return result["fatigue_score"], result["adjusted_load"]
 
-        deficit = total_load - self.energy_input
-        fatigue_score = max(0, min(10, deficit / self.energy_input * 10))
-        return round(fatigue_score, 1), total_load
-
-    # Compute distance to collapse
     def compute_distance_to_collapse(self, total_load):
         """
         Returns a 0-1 scale:
@@ -48,7 +39,6 @@ class HumanSystemModel:
         distance = max(0.0, min(1.0, (health_threshold - total_load) / health_threshold))
         return round(distance, 2)
 
-    # Full assessment
     def assess_system(self, physical_load, cognitive_load,
                       hidden_count=0, automation_count=0, automation_reliability=0.9,
                       temp_celsius=20, wind_mps=0):
@@ -59,7 +49,6 @@ class HumanSystemModel:
         )
         distance_to_collapse = self.compute_distance_to_collapse(total_load)
 
-        # Determine flags
         flags = []
         prod_threshold = 1.2 * self.energy_input
         safety_threshold = 1.4 * self.energy_input
@@ -81,9 +70,13 @@ class HumanSystemModel:
             "flags": flags
         }
 
+
+# Backwards compatibility alias
+HumanSystemModel = HumanSystemCollapseModel
+
 # --- EXAMPLE USAGE ---
 if __name__ == "__main__":
-    human_system = HumanSystemModel(energy_input=100)
+    human_system = HumanSystemCollapseModel(energy_input=100)
 
     # Scenario
     physical_load = 30
