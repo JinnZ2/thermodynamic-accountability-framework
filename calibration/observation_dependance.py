@@ -31,3 +31,13 @@ Input schema:
 “timestamp”: str (ISO),
 “context”: “witnessed”|“silent”|“recorded”|“certified”|“uncertified”,
 “consequence_real”: bool
+
+
+  refinement for public skills:
+
+            # Domain-specific witness weights
+WITNESS_WEIGHT = {
+    "performance": 0.3,   # public speaking, debate, music — audience is the test
+    "physical": 0.5,      # fire building, welding — physics is the test
+    "cognitive": 0.7,     # mathematics, coding — peer review is calibration
+}
