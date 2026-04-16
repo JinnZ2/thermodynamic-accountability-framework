@@ -16,9 +16,14 @@ thermodynamic-accountability-framework/
 │   ├── data_logger.py             # Parasitic energy debt accounting
 │   ├── heat_leak_case.py          # TAF diagnostic engine (institutional friction)
 │   ├── automation_assessment.py   # Hidden variable entropy + automation load
-│   └── atbs/                      # Advanced Trust-Based Systems
-│       ├── functional_detector.py # Gauge-invariant system detector
-│       └── test_v2.py             # Comprehensive test suite
+│   ├── atbs/                      # Advanced Trust-Based Systems
+│   │   ├── functional_detector.py # Gauge-invariant system detector
+│   │   └── test_v2.py             # Comprehensive test suite
+│   └── integrations/              # Cross-repo couplings + substrate-agnostic models
+│       ├── biological_extraction_model.py  # Substrate-agnostic extraction physics
+│       ├── ferret_fieldlink.py    # Bridge to Logic-Ferret (rhetorical camouflage)
+│       ├── geometric_fieldlink.py # Bridge to Geometric-to-Binary (G2B)
+│       └── haas_fieldlink.py      # Bridge to HAAS-Q (control environment)
 │
 ├── simulations/                   # Simulation modules (require numpy/matplotlib)
 │   ├── full_coupled_system.py     # v3 node: ecology + K-tensor + IPI + AI + governance
@@ -35,12 +40,26 @@ thermodynamic-accountability-framework/
 │   ├── proof-resultV2.json       # V2 results
 │   └── proof-did.txt             # Author context
 │
+├── labor_thermodynamics/          # Workforce attribution audit (markdown specs)
+│   ├── README.md                 # Five compounding measurement failures
+│   ├── failure_modes.md          # Detailed L1-L5 mechanism specs
+│   └── measurement_problem.md    # Metrology critique
+│
+├── political_audit/               # Six Sigma for Governance (snake_case)
+│   ├── README.md                 # Protocol overview
+│   ├── audit_protocol.md         # Full audit protocol v1.0
+│   ├── Pull_Request.md           # Submission template
+│   └── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
+│
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
 │   ├── conflict_sim.jsx          # Conflict simulation component
-│   └── cold_idle_cost_2026.html  # Cold idle cost calculator
+│   ├── attribution_sim.jsx       # Labor attribution simulator (React)
+│   ├── cold_idle_cost_2026.html  # Cold idle cost calculator
+│   └── labor_audit_protocol.html # Labor thermodynamics audit (rendered HTML)
 │
 ├── docs/
+│   ├── audit_2026_04_07.md       # Repository audit notes
 │   ├── theory/                    # Core theoretical framework
 │   │   ├── functional_epistemology_framework.md  # Core executable module (1700+ lines)
 │   │   ├── lhri.md               # Longitudinal Human Resilience Index
@@ -59,8 +78,11 @@ thermodynamic-accountability-framework/
 │   │   ├── entropy_example.md    # Worked entropy example
 │   │   ├── example.md            # Framework application
 │   │   ├── fatigue_model.md      # Fatigue model theory
+│   │   ├── ferret_fieldlink.md   # Logic-Ferret bridge spec
+│   │   ├── haas_fieldlink.md     # HAAS-Q bridge spec
 │   │   ├── gaps.md               # Known limitations
 │   │   ├── integration.md        # Integration approach
+│   │   ├── notes.md              # Working theory notes / drafts
 │   │   └── addons.md             # Extension modules
 │   │
 │   ├── governance/                # Governance theory
@@ -187,9 +209,11 @@ When C_index > 2 -> automatic decay until C_index <= 2
 
 ### Dependencies
 - **core/**: Pure Python (stdlib only — `math`, `datetime`)
+- **core/integrations/**: Pure Python (stdlib only — `math`, `datetime`)
 - **simulations/**: `numpy`, `matplotlib`, `dataclasses`
 - **simulations/lhri_sim.py**: Also requires `networkx`
 - **game_theory/**: `numpy`, `scipy`, `json`
+- **political_audit/**: Pure Python (stdlib only)
 
 ### Running
 ```bash
@@ -199,9 +223,18 @@ python core/human_system_collapse_model.py
 python core/data_logger.py
 python core/heat_leak_case.py
 
+# Integrations / field-link bridges (no deps)
+python core/integrations/biological_extraction_model.py
+python core/integrations/ferret_fieldlink.py
+python core/integrations/geometric_fieldlink.py
+python core/integrations/haas_fieldlink.py
+
 # Simulations (require numpy/matplotlib)
 python simulations/full_coupled_system.py
 python simulations/federation.py
+
+# Political-audit tools (no deps)
+python political_audit/c_cam_calculator.py
 
 # Tests
 python core/atbs/test_v2.py
@@ -224,3 +257,16 @@ python core/atbs/test_v2.py
 - 50+ root-level files organized into `core/`, `simulations/`, `docs/`, `visualizations/`
 - `Signal -distortion.md` (space in filename) preserved as `signal_distortion_extended.md`
 - `Leyer0.md` (typo) preserved as `layer0.md`
+
+### Audit Notes (2026-04-16)
+- `political-audit/` renamed to `political_audit/` to match snake_case convention
+- `core/integrations/` created; `biological_extraction_model.py` and the three
+  `*_fieldlink.py` bridges (Ferret / Geometric / HAAS) moved there
+- `Notes.md` (root) moved to `docs/theory/notes.md`
+- `labor_thermodynamics/attribution_sim.md` was actually React/JSX —
+  renamed to `visualizations/attribution_sim.jsx` (note: file contains
+  Unicode smart quotes that need to be straightened before it will run)
+- `labor_thermodynamics/audit_protocol.md` was actually an HTML document —
+  renamed to `visualizations/labor_audit_protocol.html`
+- `labor_thermodynamics/` now contains only the real markdown specs
+  (README, failure_modes, measurement_problem)

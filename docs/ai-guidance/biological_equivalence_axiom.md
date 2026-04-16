@@ -142,10 +142,10 @@ If the equivalence is uncomfortable, the discomfort is diagnostic.
 
 ## Implementation
 
-See `core/biological_extraction_model.py` for the executable version.
+See `core/integrations/biological_extraction_model.py` for the executable version.
 
 ```python
-from core.biological_extraction_model import BiologicalExtractionModel
+from core.integrations.biological_extraction_model import BiologicalExtractionModel
 
 # Same extraction regime, applied to different species
 model = BiologicalExtractionModel("human_warehouse")

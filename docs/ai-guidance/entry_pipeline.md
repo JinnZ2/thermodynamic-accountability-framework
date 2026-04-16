@@ -64,9 +64,9 @@ when the balance doesn't close.
 
 | Repository | What It Does | TAF Connection |
 |---|---|---|
-| [HAAS-Q](https://github.com/JinnZ2/HAAS) | Human-Automation-AI Safety | Fieldlinked via `core/haas_fieldlink.py` |
-| [Logic-Ferret](https://github.com/JinnZ2/Logic-Ferret) | Rhetorical camouflage detection | Fieldlinked via `core/ferret_fieldlink.py` |
-| [Geometric-to-Binary](https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge) | Spatial → binary encoding | Fieldlinked via `core/geometric_fieldlink.py` |
+| [HAAS-Q](https://github.com/JinnZ2/HAAS) | Human-Automation-AI Safety | Fieldlinked via `core/integrations/haas_fieldlink.py` |
+| [Logic-Ferret](https://github.com/JinnZ2/Logic-Ferret) | Rhetorical camouflage detection | Fieldlinked via `core/integrations/ferret_fieldlink.py` |
+| [Geometric-to-Binary](https://github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge) | Spatial → binary encoding | Fieldlinked via `core/integrations/geometric_fieldlink.py` |
 | [Resilience](https://github.com/JinnZ2/Resilience) | Food security under resource constraints | TAF energy accounting applies |
 | [Mandala-Computing](https://github.com/JinnZ2/Mandala-Computing) | Fractal geometry computation | G2B bridge protocol |
 | [Sovereign-Octahedral-Mandala-Substrate](https://github.com/JinnZ2/Sovereign-Octahedral-Mandala-Substrate-SOMS) | Non-Euclidean computing | G2B + TAF topology |
@@ -107,7 +107,7 @@ These apply to ALL substrates. Always.
 ## Step 2: Read the Biological Equivalence (Required)
 
 4. **`docs/ai-guidance/biological_equivalence_axiom.md`** — The species parameter axiom. A human is a biological organism. The math doesn't know what species it's computing.
-5. **`core/biological_extraction_model.py`** — The executable proof. Same equations, different species, same outcomes.
+5. **`core/integrations/biological_extraction_model.py`** — The executable proof. Same equations, different species, same outcomes.
 
 After this step you should understand: if you are making any decision that
 affects a biological organism's energy budget, you are operating an extraction
@@ -122,14 +122,14 @@ to your task.
 
 ### For Safety / Control Systems
 6. **`docs/theory/haas_fieldlink.md`** — Architecture and equations
-7. **`core/haas_fieldlink.py`** — Executable bridge (TAF ↔ HAAS-Q)
+7. **`core/integrations/haas_fieldlink.py`** — Executable bridge (TAF ↔ HAAS-Q)
 
 ### For Narrative / Rhetoric Analysis
 8. **`docs/theory/ferret_fieldlink.md`** — Cross-validation theory
-9. **`core/ferret_fieldlink.py`** — Executable bridge (TAF ↔ Logic-Ferret)
+9. **`core/integrations/ferret_fieldlink.py`** — Executable bridge (TAF ↔ Logic-Ferret)
 
 ### For Signal Encoding / Geometric Intelligence
-10. **`core/geometric_fieldlink.py`** — Executable bridge (TAF ↔ G2B)
+10. **`core/integrations/geometric_fieldlink.py`** — Executable bridge (TAF ↔ G2B)
 
 ---
 

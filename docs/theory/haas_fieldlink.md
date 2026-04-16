@@ -132,7 +132,7 @@ print(result["drift_index"])        # For HAAS-Q consumption
 
 ## Variable Map
 
-See `FIELD_MAP` in `core/haas_fieldlink.py` for the complete shared namespace.
+See `FIELD_MAP` in `core/integrations/haas_fieldlink.py` for the complete shared namespace.
 
 ## Relationship to HAAS-Q energy.py
 

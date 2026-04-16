@@ -123,41 +123,41 @@ quantities. Workforce measurement uses credential denominators
 that have never been validated against productive capacity.
 
 The fix, in both cases, is to denominate in physically-closing
-units. See `docs/measurement_problem.md`.
+units. See `measurement_problem.md`.
 
-## Repository structure
+## Repository structure (this sub-module)
 
 ```
-workforce-attribution-audit/
+labor_thermodynamics/
 ├── README.md                          this file
-├── LICENSE                            CC0
-├── docs/
-│   ├── failure_modes.md               detailed spec of L1-L5
-│   ├── measurement_problem.md         metrology critique
-│   └── diamond_match.md               case study
-├── sims/
-│   ├── attribution_sim.py             L1 baseline
-│   ├── sensitivity_sweep.py           L1 stability
-│   ├── trust_decay.py                 L2 competence filter
-│   ├── full_system.py                 L1+L2 coupled,
-│   │                                  reform point-of-no-return
-│   ├── sector_shortage.py             L3+L4 sector dynamics
-│   └── skill_measurement.py           L5 cert vs. capacity
-└── audit/
-    └── workforce_audit.py             single-entry diagnostic
+├── failure_modes.md                   detailed spec of L1-L5
+└── measurement_problem.md             metrology critique
+
+visualizations/                        (at repo root)
+├── attribution_sim.jsx                React L1 baseline simulator
+│                                      (was attribution_sim.md — mislabeled)
+└── labor_audit_protocol.html          rendered audit protocol
+                                       (was audit_protocol.md — mislabeled)
 ```
+
+> **Note:** Earlier drafts of this README referenced `sims/` and
+> `audit/` sub-folders with Python simulators (`attribution_sim.py`,
+> `trust_decay.py`, `full_system.py`, `sector_shortage.py`,
+> `skill_measurement.py`, `workforce_audit.py`). Those files have
+> not been imported into this repo yet — they are expected in a
+> forthcoming drop. Until then, the JSX simulator in
+> `visualizations/attribution_sim.jsx` covers the L1 baseline case.
 
 ## How to use this
 
 If you are trying to diagnose a specific facility, sector, or policy
 proposal:
 
-1. Read `docs/failure_modes.md` for the five mechanisms.
-2. Read `docs/measurement_problem.md` for why certifications
+1. Read `failure_modes.md` for the five mechanisms.
+2. Read `measurement_problem.md` for why certifications
    and dollars are the wrong denominators.
-3. Run `sims/` modules with parameters matching your case.
-4. Run `audit/workforce_audit.py` with your facility data for
-   a structured diagnostic report.
+3. Run `visualizations/attribution_sim.jsx` (L1 baseline) with
+   parameters matching your case. Additional Python sims pending.
 
 If you are trying to build a response that actually works:
 
