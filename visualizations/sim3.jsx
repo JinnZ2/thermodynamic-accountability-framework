@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from “react”;
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════
 
-const NEEDS = [“safety”, “autonomy”, “connection”, “meaning”, “resources”];
+const NEEDS = ["safety", "autonomy", "connection", "meaning", "resources"];
 
 const ENERGY = {
 BASE_METABOLIC_COST: 0.5,
@@ -13,49 +13,49 @@ RESILIENCE_GAIN: 0.2,
 };
 
 const MOTIVATION_TYPES = {
-self: { label: “Self-Max”, color: “#e05252”, icon: “◆”, weight: { self: 1.0, other: 0.0, future: 0.0, community: 0.0 } },
-relational: { label: “Relational”, color: “#52b4e0”, icon: “◇”, weight: { self: 0.3, other: 0.5, future: 0.1, community: 0.1 } },
-communal: { label: “Communal”, color: “#52e088”, icon: “○”, weight: { self: 0.15, other: 0.2, future: 0.15, community: 0.5 } },
-sacred: { label: “Sacred-Val”, color: “#e0a852”, icon: “✧”, weight: { self: 0.1, other: 0.2, future: 0.3, community: 0.4 } },
-kinship: { label: “Kinship”, color: “#b490e0”, icon: “△”, weight: { self: 0.1, other: 0.3, future: 0.35, community: 0.25 } },
+self: { label: "Self-Max", color: "#e05252", icon: "◆", weight: { self: 1.0, other: 0.0, future: 0.0, community: 0.0 } },
+relational: { label: "Relational", color: "#52b4e0", icon: "◇", weight: { self: 0.3, other: 0.5, future: 0.1, community: 0.1 } },
+communal: { label: "Communal", color: "#52e088", icon: "○", weight: { self: 0.15, other: 0.2, future: 0.15, community: 0.5 } },
+sacred: { label: "Sacred-Val", color: "#e0a852", icon: "✧", weight: { self: 0.1, other: 0.2, future: 0.3, community: 0.4 } },
+kinship: { label: "Kinship", color: "#b490e0", icon: "△", weight: { self: 0.1, other: 0.3, future: 0.35, community: 0.25 } },
 };
 
 const ENV_EVENTS = [
-{ name: “Drought”, effect: { tension: 0.3, resources: -20 }, duration: 8, prob: 0.02 },
-{ name: “Market Collapse”, effect: { tension: 0.2, resources: -30 }, duration: 12, prob: 0.015 },
-{ name: “Migration”, effect: { tension: 0.15, connection: -10 }, duration: 10, prob: 0.02 },
-{ name: “Regime Change”, effect: { tension: 0.4, safety: -25 }, duration: 15, prob: 0.01 },
-{ name: “Climate Shock”, effect: { tension: 0.25, resources: -15, safety: -10 }, duration: 20, prob: 0.015 },
-{ name: “Trade Opening”, effect: { tension: -0.15, resources: 15 }, duration: 10, prob: 0.025 },
-{ name: “Cultural Exchange”, effect: { tension: -0.1, connection: 15 }, duration: 8, prob: 0.03 },
-{ name: “Abundance”, effect: { tension: -0.2, resources: 20 }, duration: 6, prob: 0.025 },
+{ name: "Drought", effect: { tension: 0.3, resources: -20 }, duration: 8, prob: 0.02 },
+{ name: "Market Collapse", effect: { tension: 0.2, resources: -30 }, duration: 12, prob: 0.015 },
+{ name: "Migration", effect: { tension: 0.15, connection: -10 }, duration: 10, prob: 0.02 },
+{ name: "Regime Change", effect: { tension: 0.4, safety: -25 }, duration: 15, prob: 0.01 },
+{ name: "Climate Shock", effect: { tension: 0.25, resources: -15, safety: -10 }, duration: 20, prob: 0.015 },
+{ name: "Trade Opening", effect: { tension: -0.15, resources: 15 }, duration: 10, prob: 0.025 },
+{ name: "Cultural Exchange", effect: { tension: -0.1, connection: 15 }, duration: 8, prob: 0.03 },
+{ name: "Abundance", effect: { tension: -0.2, resources: 20 }, duration: 6, prob: 0.025 },
 ];
 
 const SCENARIOS = {
-resource: { name: “Resource Negotiation”, desc: “Competing for water, land, trade routes”, tension: 0.4, icon: “⛏”, enforcementBias: 0.6, structuralJustice: 0.3 },
-territorial: { name: “Territorial Dispute”, desc: “Overlapping sovereignty, historical grievances”, tension: 0.7, icon: “🗺”, enforcementBias: 0.7, structuralJustice: 0.2 },
-cultural: { name: “Cultural Friction”, desc: “Value collision — autonomy vs collective, sacred vs secular”, tension: 0.5, icon: “🌀”, enforcementBias: 0.5, structuralJustice: 0.4 },
-crisis: { name: “Active Crisis”, desc: “Military escalation, humanitarian emergency”, tension: 0.9, icon: “🔥”, enforcementBias: 0.8, structuralJustice: 0.1 },
-trade: { name: “Trade Agreement”, desc: “Economic interdependence, asymmetric power”, tension: 0.3, icon: “⚖”, enforcementBias: 0.5, structuralJustice: 0.5 },
+resource: { name: "Resource Negotiation", desc: "Competing for water, land, trade routes", tension: 0.4, icon: "⛏", enforcementBias: 0.6, structuralJustice: 0.3 },
+territorial: { name: "Territorial Dispute", desc: "Overlapping sovereignty, historical grievances", tension: 0.7, icon: "🗺", enforcementBias: 0.7, structuralJustice: 0.2 },
+cultural: { name: "Cultural Friction", desc: "Value collision — autonomy vs collective, sacred vs secular", tension: 0.5, icon: "🌀", enforcementBias: 0.5, structuralJustice: 0.4 },
+crisis: { name: "Active Crisis", desc: "Military escalation, humanitarian emergency", tension: 0.9, icon: "🔥", enforcementBias: 0.8, structuralJustice: 0.1 },
+trade: { name: "Trade Agreement", desc: "Economic interdependence, asymmetric power", tension: 0.3, icon: "⚖", enforcementBias: 0.5, structuralJustice: 0.5 },
 };
 
 // ═══════════════════════════════════════════════════════════════
 // AGENT FACTORY
 // ═══════════════════════════════════════════════════════════════
 
-function createAgent(id, framework, motivationType = “self”, powerOverrides = {}) {
-const isNvc = framework === “nvc”;
-const isHawk = motivationType === “self”;
+function createAgent(id, framework, motivationType = "self", powerOverrides = {}) {
+const isNvc = framework === "nvc";
+const isHawk = motivationType === "self";
 return {
 id, framework, motivationType,
-motWeights: { …MOTIVATION_TYPES[motivationType].weight },
+motWeights: { ...MOTIVATION_TYPES[motivationType].weight },
 needs: Object.fromEntries(NEEDS.map(n => [n, 35 + Math.random() * 30])),
 utility: 50, utilityHistory: [50], needsHistory: [],
 empathyBandwidth: isNvc ? 0.5 + Math.random() * 0.2 : 0.15 + Math.random() * 0.1,
 connectionCapacity: isNvc ? 0.5 + Math.random() * 0.15 : 0.2,
 selfAwareness: isNvc ? 0.5 : 0.2,
 neuroplasticity: isNvc ? 0.3 : 0.05,
-cooperateRate: isHawk ? 0.4 : motivationType === “communal” ? 0.75 : 0.55,
+cooperateRate: isHawk ? 0.4 : motivationType === "communal" ? 0.75 : 0.55,
 cooperateHistory: [],
 motDrift: [],
 // Energy layer
@@ -70,19 +70,19 @@ material: isNvc ? 0.3 : (isHawk ? 0.7 : 0.4),
 institutional: isNvc ? 0.2 : 0.5,
 narrative: isNvc ? 0.4 : 0.5,
 mobility: isNvc ? 0.4 : 0.6,
-…powerOverrides,
+...powerOverrides,
 },
 // Phase tracking
-phase: “active”, // active | strained | burnout | collapsed
+phase: "active", // active | strained | burnout | collapsed
 phaseHistory: [],
 };
 }
 
 function getPhase(agent) {
-if (agent.internalEnergy < 10) return “collapsed”;
-if (agent.burnoutAccumulator > 15) return “burnout”;
-if (agent.internalEnergy < 30 || agent.socialEnergy < 20) return “strained”;
-return “active”;
+if (agent.internalEnergy < 10) return "collapsed";
+if (agent.burnoutAccumulator > 15) return "burnout";
+if (agent.internalEnergy < 30 || agent.socialEnergy < 20) return "strained";
+return "active";
 }
 
 function powerIndex(agent) {
@@ -151,7 +151,7 @@ a.socialEnergy = Math.max(0, Math.min(100, a.socialEnergy + (c1 && c2 ? 0.5 : -0
 a.internalEnergyHistory.push(a.internalEnergy);
 a.socialEnergyHistory.push(a.socialEnergy);
 a.utilityHistory.push(a.utility);
-a.needsHistory.push({ …a.needs });
+a.needsHistory.push({ ...a.needs });
 a.phase = getPhase(a);
 a.phaseHistory.push(a.phase);
 });
@@ -197,7 +197,6 @@ const d1 = Math.max(0, 70 - a1.needs[need]);
 const d2 = Math.max(0, 70 - a2.needs[need]);
 const gain = creative * structuralGate * 0.4;
 
-```
 // Motivation diversity bonus — different types find more creative solutions
 const otherW1 = a1.motWeights.other + a1.motWeights.community * 0.5;
 const otherW2 = a2.motWeights.other + a2.motWeights.community * 0.5;
@@ -206,7 +205,6 @@ a1.needs[need] = Math.min(100, a1.needs[need] + d1 * gain * (1 + otherW2 * 0.3))
 a2.needs[need] = Math.min(100, a2.needs[need] + d2 * gain * (1 + otherW1 * 0.3));
 a1.needs[need] = Math.max(5, a1.needs[need] - t * 2);
 a2.needs[need] = Math.max(5, a2.needs[need] - t * 2);
-```
 
 }
 
@@ -240,7 +238,7 @@ a.empathyBandwidth = Math.max(0.1, a.empathyBandwidth - 0.008);
 });
 }
 
-[a1, a2].forEach(a => { a.motDrift.push({ …a.motWeights }); });
+[a1, a2].forEach(a => { a.motDrift.push({ ...a.motWeights }); });
 
 // 7. Utility and energy feedback
 [a1, a2].forEach(a => {
@@ -254,7 +252,7 @@ a.socialEnergy + mutualUnderstanding * 2 * structuralGate - t
 a.internalEnergyHistory.push(a.internalEnergy);
 a.socialEnergyHistory.push(a.socialEnergy);
 a.utilityHistory.push(a.utility);
-a.needsHistory.push({ …a.needs });
+a.needsHistory.push({ ...a.needs });
 a.phase = getPhase(a);
 a.phaseHistory.push(a.phase);
 });
@@ -294,12 +292,10 @@ nvcAgent.needs[need] = Math.max(5, nvcAgent.needs[need] - t * 1.5);
 }
 classAgent.utility = Math.min(100, classAgent.utility + 2 * (1 + classAgent.power.material));
 
-```
 if (effectiveRead > 0.25) {
   classAgent.cooperateRate = Math.min(0.9, classAgent.cooperateRate + 0.004 * sj);
 }
 nvcAgent.burnoutAccumulator = Math.max(0, nvcAgent.burnoutAccumulator - 0.1);
-```
 
 } else {
 for (const need of NEEDS) {
@@ -312,14 +308,14 @@ nvcAgent.burnoutAccumulator += 0.3 * (1 + eb);
 
 [nvcAgent, classAgent].forEach(a => {
 const avg = Object.values(a.needs).reduce((s, v) => s + v, 0) / NEEDS.length;
-if (a.framework === “nvc”) a.utility = avg;
+if (a.framework === "nvc") a.utility = avg;
 const dE = (avg - 50) / 100 * ENERGY.RESILIENCE_GAIN;
 a.internalEnergy = Math.max(0, Math.min(100, a.internalEnergy + dE));
 a.socialEnergy = Math.max(0, Math.min(100, a.socialEnergy + (classCoops ? 0.3 : -1) - t * 0.3));
 a.internalEnergyHistory.push(a.internalEnergy);
 a.socialEnergyHistory.push(a.socialEnergy);
 a.utilityHistory.push(a.utility);
-a.needsHistory.push({ …a.needs });
+a.needsHistory.push({ ...a.needs });
 a.phase = getPhase(a);
 a.phaseHistory.push(a.phase);
 });
@@ -348,8 +344,8 @@ function tickEnv(env, step) {
 if (env.volatile) {
 for (const tmpl of ENV_EVENTS) {
 if (Math.random() < tmpl.prob) {
-env.activeEvents.push({ …tmpl, startStep: step, endStep: step + tmpl.duration });
-env.eventLog.push({ …tmpl, step });
+env.activeEvents.push({ ...tmpl, startStep: step, endStep: step + tmpl.duration });
+env.eventLog.push({ ...tmpl, step });
 }
 }
 }
@@ -387,12 +383,12 @@ const avgEmpathy = agents.reduce((s, a) => s + a.empathyBandwidth, 0) / agents.l
 const avgBurnout = agents.reduce((s, a) => s + a.burnoutAccumulator, 0) / agents.length;
 const sg = 0.3 * env.structuralJustice + 0.7 * (1 - env.enforcementBias);
 
-if (avgEmpathy > 0.5 && sg > 0.4 && avgBurnout < 5) return { regime: “empathy-works”, color: “#52e088”, label: “Empathy Works” };
-if (avgEmpathy > 0.4 && sg < 0.2 && avgBurnout > 8) return { regime: “burnout”, color: “#e05252”, label: “Empathy Burns Out” };
-if (sg > 0.5 && avgEmpathy < 0.3) return { regime: “structure-only”, color: “#e0a852”, label: “Structure Alone (Brittle)” };
-if (avgEmpathy > 0.5 && sg > 0.3 && avgEnergy > 40) return { regime: “resilient”, color: “#52b4e0”, label: “Empathy + Structure = Resilient” };
-if (avgEnergy < 20) return { regime: “collapse”, color: “#e05252”, label: “System Collapse” };
-return { regime: “transitional”, color: “#8890a0”, label: “Transitional” };
+if (avgEmpathy > 0.5 && sg > 0.4 && avgBurnout < 5) return { regime: "empathy-works", color: "#52e088", label: "Empathy Works" };
+if (avgEmpathy > 0.4 && sg < 0.2 && avgBurnout > 8) return { regime: "burnout", color: "#e05252", label: "Empathy Burns Out" };
+if (sg > 0.5 && avgEmpathy < 0.3) return { regime: "structure-only", color: "#e0a852", label: "Structure Alone (Brittle)" };
+if (avgEmpathy > 0.5 && sg > 0.3 && avgEnergy > 40) return { regime: "resilient", color: "#52b4e0", label: "Empathy + Structure = Resilient" };
+if (avgEnergy < 20) return { regime: "collapse", color: "#e05252", label: "System Collapse" };
+return { regime: "transitional", color: "#8890a0", label: "Transitional" };
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -400,23 +396,23 @@ return { regime: “transitional”, color: “#8890a0”, label: “Transitiona
 // ═══════════════════════════════════════════════════════════════
 
 const C = {
-bg: “#08090d”, surface: “#0f1117”, surfaceAlt: “#151820”,
-border: “#1e222d”, borderLight: “#282e3a”,
-classical: “#e05252”, nvc: “#52b4e0”, green: “#52e088”,
-accent: “#e0a852”, purple: “#b490e0”, pink: “#e070a0”,
-text: “#c8cdd8”, textDim: “#4e5565”, textMid: “#7a8294”,
-danger: “#e05252”, safe: “#52e088”,
+bg: "#08090d", surface: "#0f1117", surfaceAlt: "#151820",
+border: "#1e222d", borderLight: "#282e3a",
+classical: "#e05252", nvc: "#52b4e0", green: "#52e088",
+accent: "#e0a852", purple: "#b490e0", pink: "#e070a0",
+text: "#c8cdd8", textDim: "#4e5565", textMid: "#7a8294",
+danger: "#e05252", safe: "#52e088",
 };
 
 function Spark({ data, color, w = 180, h = 32, area = false }) {
 if (!data || data.length < 2) return <svg width={w} height={h} />;
-const max = Math.max(…data, 1); const min = Math.min(…data, 0);
+const max = Math.max(...data, 1); const min = Math.min(...data, 0);
 const range = max - min || 1;
 const pts = data.map((v, i) => [(i / (data.length - 1)) * w, h - ((v - min) / range) * (h - 4) - 2]);
-const line = pts.map(p => p.join(”,”)).join(” “);
+const line = pts.map(p => p.join(",")).join(" ");
 return (
-<svg width={w} height={h} style={{ display: “block” }}>
-{area && <polygon points={`0,${h} ${line} ${w},${h}`} fill={color + “10”} />}
+<svg width={w} height={h} style={{ display: "block" }}>
+{area && <polygon points={`0,${h} ${line} ${w},${h}`} fill={color + "10"} />}
 <polyline points={line} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
 </svg>
 );
@@ -427,13 +423,13 @@ if (!needs) return null;
 const cx = size / 2, cy = size / 2, r = size / 2 - 13;
 const vals = NEEDS.map(n => (needs[n] || 0) / 100);
 const s = (Math.PI * 2) / NEEDS.length;
-const poly = (rad) => NEEDS.map((_, i) => `${cx + Math.cos(i * s - Math.PI / 2) * rad},${cy + Math.sin(i * s - Math.PI / 2) * rad}`).join(” “);
-const dp = vals.map((v, i) => `${cx + Math.cos(i * s - Math.PI / 2) * r * v},${cy + Math.sin(i * s - Math.PI / 2) * r * v}`).join(” “);
+const poly = (rad) => NEEDS.map((_, i) => `${cx + Math.cos(i * s - Math.PI / 2) * rad},${cy + Math.sin(i * s - Math.PI / 2) * rad}`).join(" ");
+const dp = vals.map((v, i) => `${cx + Math.cos(i * s - Math.PI / 2) * r * v},${cy + Math.sin(i * s - Math.PI / 2) * r * v}`).join(" ");
 return (
 <svg width={size} height={size}>
-{[0.33, 0.66, 1].map(sc => <polygon key={sc} points={poly(r * sc)} fill=“none” stroke={C.border} strokeWidth=“0.5” />)}
-{NEEDS.map((n, i) => <text key={n} x={cx + Math.cos(i * s - Math.PI / 2) * (r + 10)} y={cy + Math.sin(i * s - Math.PI / 2) * (r + 10)} textAnchor=“middle” dominantBaseline=“middle” fill={C.textDim} fontSize=“7” fontFamily=”‘JetBrains Mono’,monospace”>{n.slice(0, 4)}</text>)}
-<polygon points={dp} fill={color + “20”} stroke={color} strokeWidth=“1.5” />
+{[0.33, 0.66, 1].map(sc => <polygon key={sc} points={poly(r * sc)} fill="none" stroke={C.border} strokeWidth="0.5" />)}
+{NEEDS.map((n, i) => <text key={n} x={cx + Math.cos(i * s - Math.PI / 2) * (r + 10)} y={cy + Math.sin(i * s - Math.PI / 2) * (r + 10)} textAnchor="middle" dominantBaseline="middle" fill={C.textDim} fontSize="7" fontFamily="'JetBrains Mono',monospace">{n.slice(0, 4)}</text>)}
+<polygon points={dp} fill={color + "20"} stroke={color} strokeWidth="1.5" />
 </svg>
 );
 }
@@ -441,27 +437,27 @@ return (
 function G({ label, value, max = 100, color }) {
 return (
 <div style={{ marginBottom: 4 }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, fontSize: 9, fontFamily: “‘JetBrains Mono’,monospace”, color: C.textDim, marginBottom: 1 }}>
+<div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, fontFamily: "'JetBrains Mono',monospace", color: C.textDim, marginBottom: 1 }}>
 <span>{label}</span><span style={{ color }}>{value.toFixed(1)}</span>
 </div>
-<div style={{ height: 3, background: C.border, borderRadius: 2, overflow: “hidden” }}>
-<div style={{ height: “100%”, width: `${Math.min(100, (value / max) * 100)}%`, background: color, borderRadius: 2, transition: “width 0.2s” }} />
+<div style={{ height: 3, background: C.border, borderRadius: 2, overflow: "hidden" }}>
+<div style={{ height: "100%", width: `${Math.min(100, (value / max) * 100)}%`, background: color, borderRadius: 2, transition: "width 0.2s" }} />
 </div>
 </div>
 );
 }
 
 function MotBar({ weights }) {
-const keys = [“self”, “other”, “future”, “community”];
+const keys = ["self", "other", "future", "community"];
 const colors = { self: C.classical, other: C.nvc, future: C.accent, community: C.green };
 const total = keys.reduce((s, k) => s + (weights[k] || 0), 0) || 1;
 return (
 <div>
-<div style={{ display: “flex”, height: 6, borderRadius: 2, overflow: “hidden”, border: `1px solid ${C.border}` }}>
-{keys.map(k => <div key={k} style={{ width: `${(weights[k] / total) * 100}%`, background: colors[k], transition: “width 0.3s” }} />)}
+<div style={{ display: "flex", height: 6, borderRadius: 2, overflow: "hidden", border: `1px solid ${C.border}` }}>
+{keys.map(k => <div key={k} style={{ width: `${(weights[k] / total) * 100}%`, background: colors[k], transition: "width 0.3s" }} />)}
 </div>
-<div style={{ display: “flex”, gap: 6, marginTop: 2 }}>
-{keys.map(k => <span key={k} style={{ fontSize: 7, fontFamily: “‘JetBrains Mono’,monospace”, color: colors[k] }}>{k.slice(0, 3)} {((weights[k] / total) * 100).toFixed(0)}%</span>)}
+<div style={{ display: "flex", gap: 6, marginTop: 2 }}>
+{keys.map(k => <span key={k} style={{ fontSize: 7, fontFamily: "'JetBrains Mono',monospace", color: colors[k] }}>{k.slice(0, 3)} {((weights[k] / total) * 100).toFixed(0)}%</span>)}
 </div>
 </div>
 );
@@ -471,9 +467,9 @@ function PhaseBadge({ phase }) {
 const colors = { active: C.green, strained: C.accent, burnout: C.pink, collapsed: C.danger };
 return (
 <span style={{
-display: “inline-block”, padding: “1px 6px”, borderRadius: 3,
-fontSize: 8, fontFamily: “‘JetBrains Mono’,monospace”, fontWeight: 600,
-background: (colors[phase] || C.textDim) + “20”,
+display: "inline-block", padding: "1px 6px", borderRadius: 3,
+fontSize: 8, fontFamily: "'JetBrains Mono',monospace", fontWeight: 600,
+background: (colors[phase] || C.textDim) + "20",
 color: colors[phase] || C.textDim,
 border: `1px solid ${(colors[phase] || C.textDim) + "40"}`,
 }}>{phase.toUpperCase()}</span>
@@ -483,12 +479,12 @@ border: `1px solid ${(colors[phase] || C.textDim) + "40"}`,
 function RegimeBadge({ regime }) {
 return (
 <div style={{
-padding: “6px 10px”, borderRadius: 4,
-background: regime.color + “12”,
+padding: "6px 10px", borderRadius: 4,
+background: regime.color + "12",
 border: `1px solid ${regime.color}40`,
-fontSize: 12, fontFamily: “‘JetBrains Mono’,monospace”,
+fontSize: 12, fontFamily: "'JetBrains Mono',monospace",
 fontWeight: 600, color: regime.color,
-textAlign: “center”,
+textAlign: "center",
 }}>
 ◈ {regime.label}
 </div>
@@ -499,9 +495,9 @@ function EventBadge({ event }) {
 const pos = (event.effect.tension || 0) < 0;
 return (
 <span style={{
-display: “inline-block”, padding: “1px 6px”, borderRadius: 3,
-fontSize: 8, fontFamily: “‘JetBrains Mono’,monospace”,
-background: (pos ? C.green : C.danger) + “15”,
+display: "inline-block", padding: "1px 6px", borderRadius: 3,
+fontSize: 8, fontFamily: "'JetBrains Mono',monospace",
+background: (pos ? C.green : C.danger) + "15",
 color: pos ? C.green : C.danger,
 border: `1px solid ${(pos ? C.green : C.danger) + "30"}`,
 marginRight: 3,
@@ -513,26 +509,26 @@ marginRight: 3,
 function AgentPanel({ agent, color, label }) {
 return (
 <div style={{ flex: 1 }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, alignItems: “center”, marginBottom: 4 }}>
-<span style={{ fontSize: 10, fontFamily: “‘JetBrains Mono’,monospace”, color }}>
+<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+<span style={{ fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color }}>
 {MOTIVATION_TYPES[agent.motivationType]?.icon} {label}
 </span>
 <PhaseBadge phase={agent.phase} />
 </div>
-<div style={{ fontSize: 18, fontWeight: 600, fontFamily: “‘JetBrains Mono’,monospace”, color, marginBottom: 4 }}>
+<div style={{ fontSize: 18, fontWeight: 600, fontFamily: "'JetBrains Mono',monospace", color, marginBottom: 4 }}>
 {agent.utility.toFixed(1)}
 </div>
 <G label="Internal Energy" value={agent.internalEnergy} color={C.accent} />
 <G label="Social Energy" value={agent.socialEnergy} color={C.purple} />
-<G label=“Power Index” value={powerIndex(agent) * 100} color={C.textMid} />
-{agent.framework === “nvc” && (
+<G label="Power Index" value={powerIndex(agent) * 100} color={C.textMid} />
+{agent.framework === "nvc" && (
 <>
-<G label=“Empathy BW” value={agent.empathyBandwidth * 100} color={C.nvc} />
+<G label="Empathy BW" value={agent.empathyBandwidth * 100} color={C.nvc} />
 <G label="Burnout" value={agent.burnoutAccumulator} max={20} color={C.pink} />
 </>
 )}
-{agent.framework === “classical” && (
-<G label=“Coop Rate” value={agent.cooperateRate * 100} color={C.classical} />
+{agent.framework === "classical" && (
+<G label="Coop Rate" value={agent.cooperateRate * 100} color={C.classical} />
 )}
 <div style={{ marginTop: 4 }}><MotBar weights={agent.motWeights} /></div>
 </div>
@@ -544,7 +540,7 @@ return (
 // ═══════════════════════════════════════════════════════════════
 
 export default function ConflictSimV3() {
-const [scenario, setScenario] = useState(“resource”);
+const [scenario, setScenario] = useState("resource");
 const [running, setRunning] = useState(false);
 const [speed, setSpeed] = useState(60);
 const [step, setStep] = useState(0);
@@ -553,10 +549,10 @@ const [step, setStep] = useState(0);
 const [ebOverride, setEbOverride] = useState(null);
 const [sjOverride, setSjOverride] = useState(null);
 const [volatile, setVolatile] = useState(true);
-const [cMot1, setCMot1] = useState(“self”);
-const [cMot2, setCMot2] = useState(“self”);
-const [nMot1, setNMot1] = useState(“relational”);
-const [nMot2, setNMot2] = useState(“kinship”);
+const [cMot1, setCMot1] = useState("self");
+const [cMot2, setCMot2] = useState("self");
+const [nMot1, setNMot1] = useState("relational");
+const [nMot2, setNMot2] = useState("kinship");
 
 // State
 const [cA, setCA] = useState(null);
@@ -571,12 +567,12 @@ const [nvcRegime, setNvcRegime] = useState(null);
 const intervalRef = useRef(null);
 
 const init = useCallback(() => {
-setCA(createAgent(“C1”, “classical”, cMot1));
-setCB(createAgent(“C2”, “classical”, cMot2));
-setNA(createAgent(“N1”, “nvc”, nMot1));
-setNB(createAgent(“N2”, “nvc”, nMot2));
-setMN(createAgent(“MN”, “nvc”, nMot1));
-setMC(createAgent(“MC”, “classical”, cMot1, { material: 0.7, institutional: 0.6 }));
+setCA(createAgent("C1", "classical", cMot1));
+setCB(createAgent("C2", "classical", cMot2));
+setNA(createAgent("N1", "nvc", nMot1));
+setNB(createAgent("N2", "nvc", nMot2));
+setMN(createAgent("MN", "nvc", nMot1));
+setMC(createAgent("MC", "classical", cMot1, { material: 0.7, institutional: 0.6 }));
 const e = createEnv(scenario);
 e.volatile = volatile;
 if (ebOverride !== null) e.enforcementBias = ebOverride;
@@ -594,7 +590,6 @@ tickEnv(env, step);
 if (ebOverride !== null) env.enforcementBias = ebOverride;
 if (sjOverride !== null) env.structuralJustice = sjOverride;
 
-```
 [cA, cB, nA, nB, mN, mC].forEach(a => applyEnvNeeds(a, env));
 
 classicalInteract(cA, cB, env);
@@ -608,7 +603,6 @@ setNA({ ...nA }); setNB({ ...nB });
 setMN({ ...mN }); setMC({ ...mC });
 setEnv({ ...env });
 setStep(s => s + 1);
-```
 
 }, [cA, cB, nA, nB, mN, mC, env, step, ebOverride, sjOverride]);
 
@@ -621,8 +615,8 @@ if (!cA || !nA || !env) return null;
 
 const sc = SCENARIOS[scenario];
 const pnl = { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 5, padding: 12 };
-const lbl = { fontFamily: “‘JetBrains Mono’,monospace”, fontSize: 8, color: C.textDim, textTransform: “uppercase”, letterSpacing: “0.1em”, marginBottom: 6 };
-const sel = { background: C.surface, border: `1px solid ${C.border}`, color: C.textMid, padding: “2px 5px”, borderRadius: 3, fontFamily: “‘JetBrains Mono’,monospace”, fontSize: 9 };
+const lbl = { fontFamily: "'JetBrains Mono',monospace", fontSize: 8, color: C.textDim, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 };
+const sel = { background: C.surface, border: `1px solid ${C.border}`, color: C.textMid, padding: "2px 5px", borderRadius: 3, fontFamily: "'JetBrains Mono',monospace", fontSize: 9 };
 
 const cTotal = cA.utility + cB.utility;
 const nTotal = nA.utility + nB.utility;
@@ -634,10 +628,9 @@ const mTH = mN.utilityHistory.map((v, i) => v + (mC.utilityHistory[i] || 0));
 const sg = 0.3 * env.structuralJustice + 0.7 * (1 - env.enforcementBias);
 
 return (
-<div style={{ background: C.bg, color: C.text, minHeight: “100vh”, padding: “14px 16px”, fontFamily: “‘Inter’,sans-serif” }}>
+<div style={{ background: C.bg, color: C.text, minHeight: "100vh", padding: "14px 16px", fontFamily: "'Inter',sans-serif" }}>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
 
-```
   {/* HEADER */}
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
     <div>
@@ -874,7 +867,7 @@ return (
         {env.eventLog.length === 0 && "Awaiting perturbations..."}
         {env.eventLog.slice(-8).reverse().map((e, i) => (
           <div key={i}>
-            <span style={{ color: (e.effect.tension || 0) < 0 ? C.green : C.danger }}>{(e.effect.tension || 0) < 0 ? "+" : "−"}</span>{" "}
+            <span style={{ color: (e.effect.tension || 0) < 0 ? C.green : C.danger }}>{(e.effect.tension || 0) < 0 ? "+" : "-"}</span>{" "}
             <span style={{ color: C.textMid }}>{e.name}</span>{" "}
             <span style={{ color: C.textDim }}>@{e.step}</span>
           </div>
@@ -918,7 +911,6 @@ return (
     </div>
   )}
 </div>
-```
 
 );
 }
