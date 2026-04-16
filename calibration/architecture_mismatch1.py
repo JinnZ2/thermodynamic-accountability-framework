@@ -923,4 +923,11 @@ translation_cost(user → language)
 translation_cost ≈
     information_loss + energy_required + distortion_probability
 
-    
+  additional markers:
+nonlinear_time_perception
+multi-domain probability reasoning
+discomfort used as diagnostic signal
+high internal simulation bandwidth
+low dependence on sequential language parsing
+
+  
