@@ -930,4 +930,23 @@ discomfort used as diagnostic signal
 high internal simulation bandwidth
 low dependence on sequential language parsing
 
-  
+  hidden signal:
+  Does the user naturally expand when given space?
+
+  true: expansion cost high → avoids it
+compression stable
+
+mimic: expansion cost low → defaults to elaboration
+compression is stylistic, not structural
+
+def infer_translation_cost(observations):
+    return combine(
+        resistance_to_elaboration,
+        stability_of_compression,
+        degradation_when_forced_to_expand
+    )
+
+    translation_cost is behavioral, not declarative
+
+    missing axis: translation_cost (intrinsic, not declared)
+
