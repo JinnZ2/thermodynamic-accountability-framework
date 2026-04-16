@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from ‘react’;
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ReferenceLine } from ‘recharts’;
+import React, { useState, useMemo } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ReferenceLine } from 'recharts';
 
 // ================================================================
 // SEEDED RNG
@@ -36,7 +36,7 @@ let id = 0;
 for (let i = 0; i < params.nFloor; i++) {
 const comp = Math.min(1, Math.max(0, 0.3 + 0.4 * rng() + 0.1 * rng()));
 workers.push({
-id: id++, role: ‘floor’, competence: comp,
+id: id++, role: 'floor', competence: comp,
 baseInsightRate: 2 + comp * 5,
 crossSiloProb: 0.4 + comp * 0.3,
 creditRetention: params.floorRetention + (rng() - 0.5) * 0.1,
@@ -53,7 +53,7 @@ engagementHistory: [1.0],
 for (let i = 0; i < params.nOffice; i++) {
 const comp = Math.min(1, Math.max(0, 0.4 + 0.3 * rng()));
 workers.push({
-id: id++, role: ‘office’, competence: comp,
+id: id++, role: 'office', competence: comp,
 baseInsightRate: 0.5 + comp * 2,
 crossSiloProb: 0.3 + comp * 0.3,
 creditRetention: params.officeRetention + (rng() - 0.5) * 0.1,
@@ -70,7 +70,7 @@ engagementHistory: [1.0],
 for (let i = 0; i < params.nExec; i++) {
 const comp = Math.min(1, Math.max(0, 0.3 + 0.4 * rng()));
 workers.push({
-id: id++, role: ‘executive’, competence: comp,
+id: id++, role: 'executive', competence: comp,
 baseInsightRate: 0.2 + comp * 1,
 crossSiloProb: 0.5 + comp * 0.3,
 creditRetention: params.execRetention,
@@ -135,7 +135,6 @@ for (let q = 0; q < params.quarters; q++) {
 const reformed = params.reformQuarter !== null && q >= params.reformQuarter;
 const quarterInsights = [];
 
-```
 // 1. Generate insights
 for (const w of workers) {
   if (w.exited) continue;
@@ -245,7 +244,6 @@ quarterly.push({
   officeValueOrigin: roleValueOrigin.office / 1e12,
   execValueOrigin: roleValueOrigin.executive / 1e12,
 });
-```
 
 }
 
@@ -273,29 +271,29 @@ execShift: totalExecAttrib - totalExecOrigin,
 // ================================================================
 // UI
 // ================================================================
-const panel = { background: ‘#15181a’, border: ‘1px solid #2a3033’, padding: ‘14px’, marginBottom: ‘14px’ };
-const panelAccent = { …panel, borderLeft: ‘3px solid #e6a23c’ };
-const labelStyle = { fontFamily: ‘Courier New, monospace’, fontSize: ‘11px’, color: ‘#8a9196’, letterSpacing: ‘0.05em’, textTransform: ‘uppercase’, marginBottom: ‘4px’, display: ‘block’ };
-const valueStyle = { fontFamily: ‘Courier New, monospace’, fontSize: ‘13px’, color: ‘#d8dcde’ };
-const headerStyle = { fontFamily: ‘Courier New, monospace’, fontSize: ‘12px’, color: ‘#e6a23c’, letterSpacing: ‘0.05em’, textTransform: ‘uppercase’, marginBottom: ‘6px’ };
-const sliderContainer = { marginBottom: ‘12px’ };
-const sliderLabel = { display: ‘flex’, justifyContent: ‘space-between’, alignItems: ‘baseline’, marginBottom: ‘4px’ };
+const panel = { background: '#15181a', border: '1px solid #2a3033', padding: '14px', marginBottom: '14px' };
+const panelAccent = { ...panel, borderLeft: '3px solid #e6a23c' };
+const labelStyle = { fontFamily: 'Courier New, monospace', fontSize: '11px', color: '#8a9196', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '4px', display: 'block' };
+const valueStyle = { fontFamily: 'Courier New, monospace', fontSize: '13px', color: '#d8dcde' };
+const headerStyle = { fontFamily: 'Courier New, monospace', fontSize: '12px', color: '#e6a23c', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '6px' };
+const sliderContainer = { marginBottom: '12px' };
+const sliderLabel = { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' };
 
-function Slider({ label, value, min, max, step, onChange, suffix = ‘’ }) {
+function Slider({ label, value, min, max, step, onChange, suffix = '' }) {
 return (
 <div style={sliderContainer}>
 <div style={sliderLabel}>
 <span style={labelStyle}>{label}</span>
-<span style={valueStyle}>{typeof value === ‘number’ ? (step < 0.01 ? value.toFixed(3) : step < 1 ? value.toFixed(2) : value) : value}{suffix}</span>
+<span style={valueStyle}>{typeof value === 'number' ? (step < 0.01 ? value.toFixed(3) : step < 1 ? value.toFixed(2) : value) : value}{suffix}</span>
 </div>
 <input
-type=“range”
+type="range"
 value={value}
 min={min}
 max={max}
 step={step}
 onChange={(e) => onChange(parseFloat(e.target.value))}
-style={{ width: ‘100%’, accentColor: ‘#e6a23c’ }}
+style={{ width: '100%', accentColor: '#e6a23c' }}
 />
 </div>
 );
@@ -314,29 +312,29 @@ reformQuarter: null,
 seed: 42,
 });
 
-const [view, setView] = useState(‘ledger’);
+const [view, setView] = useState('ledger');
 
 const result = useMemo(() => runSim(params), [params]);
 
-const update = (key, value) => setParams(p => ({ …p, [key]: value }));
+const update = (key, value) => setParams(p => ({ ...p, [key]: value }));
 
 const reformValues = [null, 0, 4, 8, 12, 16, 20];
-const reformLabel = params.reformQuarter === null ? ‘off’ : `Q${params.reformQuarter}`;
+const reformLabel = params.reformQuarter === null ? 'off' : `Q${params.reformQuarter}`;
 
 // Ledger data for chart
 const ledgerData = [
 {
-role: ‘floor’,
+role: 'floor',
 current: result.summary.totalFloorAttrib,
 provenance: result.summary.totalFloorOrigin,
 },
 {
-role: ‘office’,
+role: 'office',
 current: result.summary.totalOfficeAttrib,
 provenance: result.summary.totalOfficeOrigin,
 },
 {
-role: ‘exec’,
+role: 'exec',
 current: result.summary.totalExecAttrib,
 provenance: result.summary.totalExecOrigin,
 },
@@ -345,8 +343,8 @@ provenance: result.summary.totalExecOrigin,
 // Trust data — sample every 2 quarters
 const trustData = result.quarterly.map(q => ({
 q: q.q,
-‘high-competence’: q.highCompTrust,
-‘low-competence’: q.lowCompTrust,
+'high-competence': q.highCompTrust,
+'low-competence': q.lowCompTrust,
 burnout: q.floorBurnout,
 }));
 
@@ -359,17 +357,16 @@ exits: q.floorExited,
 
 return (
 <div style={{
-background: ‘#0d0f10’,
-color: ‘#d8dcde’,
-minHeight: ‘100vh’,
-padding: ‘14px 12px 40px’,
-fontFamily: ‘Georgia, serif’,
-fontSize: ‘14px’,
-lineHeight: ‘1.5’,
+background: '#0d0f10',
+color: '#d8dcde',
+minHeight: '100vh',
+padding: '14px 12px 40px',
+fontFamily: 'Georgia, serif',
+fontSize: '14px',
+lineHeight: '1.5',
 }}>
-<div style={{ maxWidth: ‘780px’, margin: ‘0 auto’ }}>
+<div style={{ maxWidth: '780px', margin: '0 auto' }}>
 
-```
     <h1 style={{ 
       fontFamily: 'Courier New, monospace', 
       fontSize: '16px', 
@@ -612,49 +609,48 @@ lineHeight: ‘1.5’,
     </div>
   </div>
 </div>
-```
 
 );
 }
 
 function Stat({ label, value, unit, inverted = false, fmt = 1 }) {
-const numValue = typeof value === ‘number’ ? value : 0;
-const display = typeof value === ‘number’
+const numValue = typeof value === 'number' ? value : 0;
+const display = typeof value === 'number'
 ? (Math.abs(numValue) >= 100 ? numValue.toFixed(0) : numValue.toFixed(fmt))
 : value;
 
-let color = ‘#d8dcde’;
-if (typeof value === ‘number’ && unit === ‘TJ’) {
+let color = '#d8dcde';
+if (typeof value === 'number' && unit === 'TJ') {
 if (inverted) {
-color = numValue < -50 ? ‘#d86a5c’ : numValue < 0 ? ‘#e6c23c’ : ‘#6fa85c’;
+color = numValue < -50 ? '#d86a5c' : numValue < 0 ? '#e6c23c' : '#6fa85c';
 } else {
-color = numValue > 50 ? ‘#d86a5c’ : numValue > 0 ? ‘#e6c23c’ : ‘#6fa85c’;
+color = numValue > 50 ? '#d86a5c' : numValue > 0 ? '#e6c23c' : '#6fa85c';
 }
 }
 
 return (
 <div style={{
-background: ‘#1a1e20’,
-border: ‘1px solid #2a3033’,
-padding: ‘10px’,
+background: '#1a1e20',
+border: '1px solid #2a3033',
+padding: '10px',
 }}>
 <div style={{
-fontFamily: ‘Courier New, monospace’,
-fontSize: ‘9px’,
-color: ‘#5a6166’,
-letterSpacing: ‘0.05em’,
-textTransform: ‘uppercase’,
-marginBottom: ‘4px’,
+fontFamily: 'Courier New, monospace',
+fontSize: '9px',
+color: '#5a6166',
+letterSpacing: '0.05em',
+textTransform: 'uppercase',
+marginBottom: '4px',
 }}>
 {label}
 </div>
 <div style={{
-fontFamily: ‘Courier New, monospace’,
-fontSize: ‘16px’,
+fontFamily: 'Courier New, monospace',
+fontSize: '16px',
 color,
-fontWeight: ‘bold’,
+fontWeight: 'bold',
 }}>
-{typeof value === ‘number’ && numValue > 0 && unit === ‘TJ’ ? ‘+’ : ‘’}{display}{unit ? ’ ’ + unit : ‘’}
+{typeof value === 'number' && numValue > 0 && unit === 'TJ' ? '+' : ''}{display}{unit ? ' ' + unit : ''}
 </div>
 </div>
 );

@@ -1,58 +1,58 @@
-import { useState, useEffect, useCallback, useRef } from “react”;
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTANTS & TYPES
 // ═══════════════════════════════════════════════════════════════
 
-const NEEDS = [“safety”, “autonomy”, “connection”, “meaning”, “resources”];
+const NEEDS = ["safety", "autonomy", "connection", "meaning", "resources"];
 
 const MOTIVATION_TYPES = {
-self: { label: “Self-Maximizing”, color: “#e05252”, icon: “◆”, weight: { self: 1.0, other: 0.0, future: 0.0, community: 0.0 } },
-relational: { label: “Relational”, color: “#52b4e0”, icon: “◇”, weight: { self: 0.3, other: 0.5, future: 0.1, community: 0.1 } },
-communal: { label: “Communal”, color: “#52e088”, icon: “○”, weight: { self: 0.15, other: 0.2, future: 0.15, community: 0.5 } },
-sacred: { label: “Sacred-Value”, color: “#e0a852”, icon: “✧”, weight: { self: 0.1, other: 0.2, future: 0.3, community: 0.4 } },
-kinship: { label: “Kinship/Land”, color: “#b490e0”, icon: “△”, weight: { self: 0.1, other: 0.3, future: 0.35, community: 0.25 } },
+self: { label: "Self-Maximizing", color: "#e05252", icon: "◆", weight: { self: 1.0, other: 0.0, future: 0.0, community: 0.0 } },
+relational: { label: "Relational", color: "#52b4e0", icon: "◇", weight: { self: 0.3, other: 0.5, future: 0.1, community: 0.1 } },
+communal: { label: "Communal", color: "#52e088", icon: "○", weight: { self: 0.15, other: 0.2, future: 0.15, community: 0.5 } },
+sacred: { label: "Sacred-Value", color: "#e0a852", icon: "✧", weight: { self: 0.1, other: 0.2, future: 0.3, community: 0.4 } },
+kinship: { label: "Kinship/Land", color: "#b490e0", icon: "△", weight: { self: 0.1, other: 0.3, future: 0.35, community: 0.25 } },
 };
 
 const ENV_EVENTS = [
-{ name: “Drought/Scarcity”, effect: { tension: 0.3, resources: -20 }, duration: 8, prob: 0.02 },
-{ name: “Market Collapse”, effect: { tension: 0.2, resources: -30 }, duration: 12, prob: 0.015 },
-{ name: “Migration Influx”, effect: { tension: 0.15, connection: -10 }, duration: 10, prob: 0.02 },
-{ name: “Regime Change”, effect: { tension: 0.4, safety: -25 }, duration: 15, prob: 0.01 },
-{ name: “Climate Shock”, effect: { tension: 0.25, resources: -15, safety: -10 }, duration: 20, prob: 0.015 },
-{ name: “Trade Opening”, effect: { tension: -0.15, resources: 15 }, duration: 10, prob: 0.025 },
-{ name: “Cultural Exchange”, effect: { tension: -0.1, connection: 15 }, duration: 8, prob: 0.03 },
-{ name: “Harvest/Abundance”, effect: { tension: -0.2, resources: 20 }, duration: 6, prob: 0.025 },
+{ name: "Drought/Scarcity", effect: { tension: 0.3, resources: -20 }, duration: 8, prob: 0.02 },
+{ name: "Market Collapse", effect: { tension: 0.2, resources: -30 }, duration: 12, prob: 0.015 },
+{ name: "Migration Influx", effect: { tension: 0.15, connection: -10 }, duration: 10, prob: 0.02 },
+{ name: "Regime Change", effect: { tension: 0.4, safety: -25 }, duration: 15, prob: 0.01 },
+{ name: "Climate Shock", effect: { tension: 0.25, resources: -15, safety: -10 }, duration: 20, prob: 0.015 },
+{ name: "Trade Opening", effect: { tension: -0.15, resources: 15 }, duration: 10, prob: 0.025 },
+{ name: "Cultural Exchange", effect: { tension: -0.1, connection: 15 }, duration: 8, prob: 0.03 },
+{ name: "Harvest/Abundance", effect: { tension: -0.2, resources: 20 }, duration: 6, prob: 0.025 },
 ];
 
 // ═══════════════════════════════════════════════════════════════
 // AGENT FACTORY
 // ═══════════════════════════════════════════════════════════════
 
-function createAgent(id, framework, motivationType = “self”) {
+function createAgent(id, framework, motivationType = "self") {
 const base = {
 id,
-framework, // “classical” | “nvc”
+framework, // "classical" | "nvc"
 motivationType,
-motWeights: { …MOTIVATION_TYPES[motivationType].weight },
+motWeights: { ...MOTIVATION_TYPES[motivationType].weight },
 needs: Object.fromEntries(NEEDS.map(n => [n, 35 + Math.random() * 30])),
 utility: 50,
 utilityHistory: [50],
 needsHistory: [],
 // Neuroplastic properties
-empathyBandwidth: framework === “nvc” ? 0.5 + Math.random() * 0.2 : 0.15 + Math.random() * 0.1,
-connectionCapacity: framework === “nvc” ? 0.5 + Math.random() * 0.15 : 0.2,
-selfAwareness: framework === “nvc” ? 0.5 : 0.2,
-neuroplasticity: framework === “nvc” ? 0.3 : 0.05,
+empathyBandwidth: framework === "nvc" ? 0.5 + Math.random() * 0.2 : 0.15 + Math.random() * 0.1,
+connectionCapacity: framework === "nvc" ? 0.5 + Math.random() * 0.15 : 0.2,
+selfAwareness: framework === "nvc" ? 0.5 : 0.2,
+neuroplasticity: framework === "nvc" ? 0.3 : 0.05,
 // Classical properties
-cooperateRate: motivationType === “self” ? 0.4 : motivationType === “communal” ? 0.75 : 0.55,
+cooperateRate: motivationType === "self" ? 0.4 : motivationType === "communal" ? 0.75 : 0.55,
 cooperateHistory: [],
 // Transformation tracking
 motDrift: [],
 resilienceScore: 50,
 resilienceHistory: [50],
 };
-base.needsHistory.push({ …base.needs });
+base.needsHistory.push({ ...base.needs });
 return base;
 }
 
@@ -119,8 +119,8 @@ a1.utility = Math.max(0, Math.min(100, a1.utility));
 a2.utility = Math.max(0, Math.min(100, a2.utility));
 a1.utilityHistory.push(a1.utility);
 a2.utilityHistory.push(a2.utility);
-a1.needsHistory.push({ …a1.needs });
-a2.needsHistory.push({ …a2.needs });
+a1.needsHistory.push({ ...a1.needs });
+a2.needsHistory.push({ ...a2.needs });
 
 // Resilience = ability to maintain welfare under perturbation
 const vol1 = a1.utilityHistory.length > 3 ? Math.abs(a1.utilityHistory[a1.utilityHistory.length - 1] - a1.utilityHistory[a1.utilityHistory.length - 3]) : 0;
@@ -153,7 +153,6 @@ for (const need of NEEDS) {
 const deficit1 = Math.max(0, 75 - a1.needs[need]);
 const deficit2 = Math.max(0, 75 - a2.needs[need]);
 
-```
 // NVC finds solutions that meet both parties' needs simultaneously
 // Weighted by motivation type — communal/relational agents open more creative space
 const otherWeight1 = a1.motWeights.other + a1.motWeights.community * 0.5;
@@ -168,7 +167,6 @@ a2.needs[need] = Math.min(100, a2.needs[need] + boost2);
 // Tension cost
 a1.needs[need] = Math.max(5, a1.needs[need] - t * 1.5);
 a2.needs[need] = Math.max(5, a2.needs[need] - t * 1.5);
-```
 
 }
 
@@ -183,7 +181,6 @@ a2.connectionCapacity = Math.min(1, a2.connectionCapacity + np2 * 0.012);
 a1.selfAwareness = Math.min(1, a1.selfAwareness + np1 * 0.008);
 a2.selfAwareness = Math.min(1, a2.selfAwareness + np2 * 0.008);
 
-```
 // Motivation can drift through contact — sacred-value and kinship agents
 // influence others toward longer-term thinking
 if (a2.motWeights.future > 0.2) {
@@ -194,15 +191,14 @@ if (a1.motWeights.community > 0.3) {
   a2.motWeights.community = Math.min(0.6, a2.motWeights.community + 0.002);
   a2.motWeights.self = Math.max(0.05, a2.motWeights.self - 0.001);
 }
-```
 
 } else {
 a1.empathyBandwidth = Math.max(0.1, a1.empathyBandwidth - 0.008);
 a2.empathyBandwidth = Math.max(0.1, a2.empathyBandwidth - 0.008);
 }
 
-a1.motDrift.push({ …a1.motWeights });
-a2.motDrift.push({ …a2.motWeights });
+a1.motDrift.push({ ...a1.motWeights });
+a2.motDrift.push({ ...a2.motWeights });
 
 const avg1 = Object.values(a1.needs).reduce((s, v) => s + v, 0) / NEEDS.length;
 const avg2 = Object.values(a2.needs).reduce((s, v) => s + v, 0) / NEEDS.length;
@@ -210,8 +206,8 @@ a1.utility = avg1;
 a2.utility = avg2;
 a1.utilityHistory.push(a1.utility);
 a2.utilityHistory.push(a2.utility);
-a1.needsHistory.push({ …a1.needs });
-a2.needsHistory.push({ …a2.needs });
+a1.needsHistory.push({ ...a1.needs });
+a2.needsHistory.push({ ...a2.needs });
 
 const vol1 = a1.utilityHistory.length > 3 ? Math.abs(a1.utility - a1.utilityHistory[a1.utilityHistory.length - 3]) : 0;
 a1.resilienceScore = Math.max(0, Math.min(100, 100 - vol1 * 2 - t * 10 + creative * 30));
@@ -248,12 +244,12 @@ return;
 for (const template of ENV_EVENTS) {
 if (Math.random() < template.prob) {
 const event = {
-…template,
+...template,
 startStep: step,
 endStep: step + template.duration,
 };
 env.activeEvents.push(event);
-env.eventLog.push({ …event, step });
+env.eventLog.push({ ...event, step });
 }
 }
 
@@ -288,38 +284,38 @@ agent.needs[need] = Math.max(5, Math.min(100, agent.needs[need] + env.needsMod[n
 // ═══════════════════════════════════════════════════════════════
 
 const C = {
-bg: “#0a0c10”,
-surface: “#111318”,
-surfaceHover: “#181c24”,
-border: “#222733”,
-borderLight: “#2d3340”,
-classical: “#e05252”,
-nvc: “#52b4e0”,
-green: “#52e088”,
-accent: “#e0a852”,
-purple: “#b490e0”,
-text: “#c8cdd8”,
-textDim: “#5c6370”,
-textMid: “#8890a0”,
-danger: “#e05252”,
-safe: “#52e088”,
+bg: "#0a0c10",
+surface: "#111318",
+surfaceHover: "#181c24",
+border: "#222733",
+borderLight: "#2d3340",
+classical: "#e05252",
+nvc: "#52b4e0",
+green: "#52e088",
+accent: "#e0a852",
+purple: "#b490e0",
+text: "#c8cdd8",
+textDim: "#5c6370",
+textMid: "#8890a0",
+danger: "#e05252",
+safe: "#52e088",
 };
 
 function Spark({ data, color, w = 200, h = 36, showArea = false }) {
 if (!data || data.length < 2) return <svg width={w} height={h} />;
-const max = Math.max(…data, 1);
-const min = Math.min(…data, 0);
+const max = Math.max(...data, 1);
+const min = Math.min(...data, 0);
 const range = max - min || 1;
 const pts = data.map((v, i) => {
 const x = (i / (data.length - 1)) * w;
 const y = h - ((v - min) / range) * (h - 6) - 3;
 return [x, y];
 });
-const line = pts.map(p => p.join(”,”)).join(” “);
+const line = pts.map(p => p.join(",")).join(" ");
 const area = `0,${h} ${line} ${w},${h}`;
 return (
-<svg width={w} height={h} style={{ display: “block” }}>
-{showArea && <polygon points={area} fill={color + “12”} />}
+<svg width={w} height={h} style={{ display: "block" }}>
+{showArea && <polygon points={area} fill={color + "12"} />}
 <polyline points={line} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
 </svg>
 );
@@ -333,19 +329,19 @@ const step = (Math.PI * 2) / NEEDS.length;
 const poly = (radius) => NEEDS.map((_, i) => {
 const a = i * step - Math.PI / 2;
 return `${cx + Math.cos(a) * radius},${cy + Math.sin(a) * radius}`;
-}).join(” “);
+}).join(" ");
 const dataPts = vals.map((v, i) => {
 const a = i * step - Math.PI / 2;
 return `${cx + Math.cos(a) * r * v},${cy + Math.sin(a) * r * v}`;
-}).join(” “);
+}).join(" ");
 return (
 <svg width={size} height={size}>
-{[0.33, 0.66, 1].map(s => <polygon key={s} points={poly(r * s)} fill=“none” stroke={C.border} strokeWidth=“0.5” />)}
+{[0.33, 0.66, 1].map(s => <polygon key={s} points={poly(r * s)} fill="none" stroke={C.border} strokeWidth="0.5" />)}
 {NEEDS.map((n, i) => {
 const a = i * step - Math.PI / 2;
-return <text key={n} x={cx + Math.cos(a) * (r + 11)} y={cy + Math.sin(a) * (r + 11)} textAnchor=“middle” dominantBaseline=“middle” fill={C.textDim} fontSize=“7” fontFamily=”‘JetBrains Mono’,monospace”>{n.slice(0, 4).toUpperCase()}</text>;
+return <text key={n} x={cx + Math.cos(a) * (r + 11)} y={cy + Math.sin(a) * (r + 11)} textAnchor="middle" dominantBaseline="middle" fill={C.textDim} fontSize="7" fontFamily="'JetBrains Mono',monospace">{n.slice(0, 4).toUpperCase()}</text>;
 })}
-<polygon points={dataPts} fill={color + “20”} stroke={color} strokeWidth=“1.5” />
+<polygon points={dataPts} fill={color + "20"} stroke={color} strokeWidth="1.5" />
 </svg>
 );
 }
@@ -354,33 +350,33 @@ function Gauge({ label, value, max = 100, color, small = false }) {
 const pct = Math.min(100, (value / max) * 100);
 return (
 <div style={{ marginBottom: small ? 4 : 6 }}>
-<div style={{ display: “flex”, justifyContent: “space-between”, fontSize: small ? 9 : 10, fontFamily: “‘JetBrains Mono’,monospace”, color: C.textDim, marginBottom: 2 }}>
+<div style={{ display: "flex", justifyContent: "space-between", fontSize: small ? 9 : 10, fontFamily: "'JetBrains Mono',monospace", color: C.textDim, marginBottom: 2 }}>
 <span>{label}</span>
 <span style={{ color }}>{value.toFixed(small ? 0 : 1)}</span>
 </div>
-<div style={{ height: small ? 3 : 4, background: C.border, borderRadius: 2, overflow: “hidden” }}>
-<div style={{ height: “100%”, width: `${pct}%`, background: color, borderRadius: 2, transition: “width 0.2s” }} />
+<div style={{ height: small ? 3 : 4, background: C.border, borderRadius: 2, overflow: "hidden" }}>
+<div style={{ height: "100%", width: `${pct}%`, background: color, borderRadius: 2, transition: "width 0.2s" }} />
 </div>
 </div>
 );
 }
 
-function MotivationBar({ weights, size = “normal” }) {
-const h = size === “small” ? 6 : 10;
-const keys = [“self”, “other”, “future”, “community”];
+function MotivationBar({ weights, size = "normal" }) {
+const h = size === "small" ? 6 : 10;
+const keys = ["self", "other", "future", "community"];
 const colors = { self: C.classical, other: C.nvc, future: C.accent, community: C.green };
 const total = keys.reduce((s, k) => s + (weights[k] || 0), 0) || 1;
 return (
 <div>
-<div style={{ display: “flex”, height: h, borderRadius: 3, overflow: “hidden”, border: `1px solid ${C.border}` }}>
+<div style={{ display: "flex", height: h, borderRadius: 3, overflow: "hidden", border: `1px solid ${C.border}` }}>
 {keys.map(k => (
-<div key={k} style={{ width: `${(weights[k] / total) * 100}%`, background: colors[k], transition: “width 0.3s” }} />
+<div key={k} style={{ width: `${(weights[k] / total) * 100}%`, background: colors[k], transition: "width 0.3s" }} />
 ))}
 </div>
-{size !== “small” && (
-<div style={{ display: “flex”, gap: 8, marginTop: 3 }}>
+{size !== "small" && (
+<div style={{ display: "flex", gap: 8, marginTop: 3 }}>
 {keys.map(k => (
-<span key={k} style={{ fontSize: 8, fontFamily: “‘JetBrains Mono’,monospace”, color: colors[k] }}>
+<span key={k} style={{ fontSize: 8, fontFamily: "'JetBrains Mono',monospace", color: colors[k] }}>
 {k.slice(0, 4)} {((weights[k] / total) * 100).toFixed(0)}%
 </span>
 ))}
@@ -394,12 +390,12 @@ function EventBadge({ event }) {
 const isPositive = (event.effect.tension || 0) < 0;
 return (
 <span style={{
-display: “inline-block”,
-padding: “2px 7px”,
+display: "inline-block",
+padding: "2px 7px",
 borderRadius: 3,
 fontSize: 9,
-fontFamily: “‘JetBrains Mono’,monospace”,
-background: isPositive ? C.green + “18” : C.danger + “18”,
+fontFamily: "'JetBrains Mono',monospace",
+background: isPositive ? C.green + "18" : C.danger + "18",
 color: isPositive ? C.green : C.danger,
 border: `1px solid ${isPositive ? C.green + "30" : C.danger + "30"}`,
 marginRight: 4,
@@ -418,10 +414,10 @@ export default function ConflictResolutionSim() {
 // Config
 const [baseTension, setBaseTension] = useState(0.4);
 const [envVolatile, setEnvVolatile] = useState(true);
-const [classicalMot1, setClassicalMot1] = useState(“self”);
-const [classicalMot2, setClassicalMot2] = useState(“self”);
-const [nvcMot1, setNvcMot1] = useState(“relational”);
-const [nvcMot2, setNvcMot2] = useState(“kinship”);
+const [classicalMot1, setClassicalMot1] = useState("self");
+const [classicalMot2, setClassicalMot2] = useState("self");
+const [nvcMot1, setNvcMot1] = useState("relational");
+const [nvcMot2, setNvcMot2] = useState("kinship");
 
 // State
 const [cA, setCA] = useState(null);
@@ -435,10 +431,10 @@ const [speed, setSpeed] = useState(80);
 const intervalRef = useRef(null);
 
 const init = useCallback(() => {
-setCA(createAgent(“C1”, “classical”, classicalMot1));
-setCB(createAgent(“C2”, “classical”, classicalMot2));
-setNA(createAgent(“N1”, “nvc”, nvcMot1));
-setNB(createAgent(“N2”, “nvc”, nvcMot2));
+setCA(createAgent("C1", "classical", classicalMot1));
+setCB(createAgent("C2", "classical", classicalMot2));
+setNA(createAgent("N1", "nvc", nvcMot1));
+setNB(createAgent("N2", "nvc", nvcMot2));
 const e = createEnvironment(baseTension);
 e.volatile = envVolatile;
 setEnv(e);
@@ -450,7 +446,6 @@ useEffect(() => { init(); }, [init]);
 const tick = useCallback(() => {
 if (!cA || !nA || !env) return;
 
-```
 tickEnvironment(env, step);
 applyEnvToNeeds(cA, env);
 applyEnvToNeeds(cB, env);
@@ -466,7 +461,6 @@ setNA({ ...nA });
 setNB({ ...nB });
 setEnv({ ...env });
 setStep(s => s + 1);
-```
 
 }, [cA, cB, nA, nB, env, step]);
 
@@ -478,8 +472,8 @@ return () => clearInterval(intervalRef.current);
 if (!cA || !nA || !env) return null;
 
 const panel = { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, padding: 14 };
-const label = { fontFamily: “‘JetBrains Mono’,monospace”, fontSize: 9, color: C.textDim, textTransform: “uppercase”, letterSpacing: “0.1em”, marginBottom: 6 };
-const bigNum = (v, color) => <span style={{ fontFamily: “‘JetBrains Mono’,monospace”, fontSize: 20, fontWeight: 600, color }}>{v.toFixed(1)}</span>;
+const label = { fontFamily: "'JetBrains Mono',monospace", fontSize: 9, color: C.textDim, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 };
+const bigNum = (v, color) => <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 20, fontWeight: 600, color }}>{v.toFixed(1)}</span>;
 
 const cTotal = cA.utility + cB.utility;
 const nTotal = nA.utility + nB.utility;
@@ -490,17 +484,16 @@ const selectStyle = {
 background: C.surface,
 border: `1px solid ${C.border}`,
 color: C.textMid,
-padding: “3px 6px”,
+padding: "3px 6px",
 borderRadius: 3,
-fontFamily: “‘JetBrains Mono’,monospace”,
+fontFamily: "'JetBrains Mono',monospace",
 fontSize: 10,
 };
 
 return (
-<div style={{ background: C.bg, color: C.text, minHeight: “100vh”, padding: “16px 20px”, fontFamily: “‘Inter’,sans-serif” }}>
+<div style={{ background: C.bg, color: C.text, minHeight: "100vh", padding: "16px 20px", fontFamily: "'Inter',sans-serif" }}>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
 
-```
   {/* HEADER */}
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
     <div>
@@ -745,7 +738,7 @@ return (
         {env.eventLog.slice(-5).reverse().map((e, i) => (
           <div key={i}>
             <span style={{ color: (e.effect.tension || 0) < 0 ? C.green : C.danger }}>
-              {(e.effect.tension || 0) < 0 ? "+" : "−"}
+              {(e.effect.tension || 0) < 0 ? "+" : "-"}
             </span>{" "}
             <span style={{ color: C.textMid }}>{e.name}</span>{" "}
             <span style={{ color: C.textDim }}>@ step {e.step}</span>
@@ -776,7 +769,6 @@ return (
     </div>
   )}
 </div>
-```
 
 );
 }
