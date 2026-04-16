@@ -899,3 +899,28 @@ SUBSTRATE_PRIMARY_SIGNALS = [
     "skill_practiced_despite_aversion",  # competence > enjoyment
     "enjoyment_not_correlated_with_capacity",
 ]
+
+constraint dominance > preference
+
+identity_level requires:
+    constraint_dominant_acquisition == True
+
+    constraint_dominant_acquisition =
+    load_bearing OR (no viable alternative behavior)
+
+
+    substrate_primary =
+    cognition operates directly on state-space geometry
+    without requiring symbolic serialization
+
+    primary layer = non-symbolic state representation
+secondary layer = symbolic compression (language/code)
+
+reward system decoupled from execution system
+
+translation_cost(user → language)
+
+translation_cost ≈
+    information_loss + energy_required + distortion_probability
+
+    
