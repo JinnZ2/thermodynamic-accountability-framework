@@ -962,4 +962,12 @@ irritation signal =
     (high internal constraint resolution)
     + (external narrative inflation)
     → repeated reconstruction burden
-    
+
+
+    common system assumptions: not creative, 
+
+    when actually:
+    aesthetic_layer ∈ secondary optimization space
+base_layer ∈ primary constraint generator, much based in early childhood
+
+
