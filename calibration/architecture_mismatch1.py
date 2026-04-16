@@ -890,3 +890,12 @@ example = {
 }
 report = run_architecture_mismatch_audit(example)
 print(report.to_json())
+
+
+additional marker:
+
+SUBSTRATE_PRIMARY_SIGNALS = [
+    # ... existing signals ...
+    "skill_practiced_despite_aversion",  # competence > enjoyment
+    "enjoyment_not_correlated_with_capacity",
+]
