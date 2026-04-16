@@ -138,55 +138,11 @@ class FatigueModel:
 # ============================================================
 # HUMAN SYSTEM COLLAPSE MODEL
 # ============================================================
-
-class HumanSystemModel:
-    """
-    Models human energy ledger, fatigue, and system collapse thresholds.
-    Collapse thresholds:
-        120% energy_input -> productivity degradation
-        140% energy_input -> safety system breakdown
-        160% energy_input -> health collapse
-    """
-
-    def __init__(self, energy_input=100):
-        self.energy_input = energy_input
-        self._fatigue = FatigueModel(energy_input)
-
-    def compute_fatigue(self, physical_load, cognitive_load,
-                        hidden_count=0, automation_count=0, automation_reliability=0.9,
-                        temp_celsius=20, wind_mps=0):
-        """Returns (fatigue_score, total_load)."""
-        result = self._fatigue.compute_fatigue_score(
-            physical_load, cognitive_load,
-            hidden_count, automation_count, automation_reliability,
-            temp_celsius, wind_mps
-        )
-        return result["fatigue_score"], result["adjusted_load"]
-
-    def compute_collapse_risk(self, physical_load, cognitive_load,
-                              hidden_count=0, automation_count=0, automation_reliability=0.9,
-                              temp_celsius=20, wind_mps=0):
-        fatigue_score, total_load = self.compute_fatigue(
-            physical_load, cognitive_load,
-            hidden_count, automation_count, automation_reliability,
-            temp_celsius, wind_mps
-        )
-
-        prod_threshold = 1.2 * self.energy_input
-        safety_threshold = 1.4 * self.energy_input
-        health_threshold = 1.6 * self.energy_input
-
-        collapse_flags = []
-        if total_load >= health_threshold:
-            collapse_flags.append("!! HUMAN HEALTH COLLAPSE IMMINENT")
-        elif total_load >= safety_threshold:
-            collapse_flags.append("!! SAFETY SYSTEM BREAKDOWN LIKELY")
-        elif total_load >= prod_threshold:
-            collapse_flags.append("! PRODUCTIVITY DEGRADATION")
-        else:
-            collapse_flags.append("(System within sustainable limits)")
-
-        return fatigue_score, total_load, collapse_flags
+# `HumanSystemModel` lives in `human_system_collapse_model.py` (as
+# `HumanSystemCollapseModel`, with a `HumanSystemModel` alias for
+# backwards compatibility). It delegates multiplier math to `FatigueModel`
+# and adds the distance-to-collapse metric. Kept in a separate module to
+# avoid a circular import with `FatigueModel`.
 
 
 # ============================================================
@@ -246,17 +202,6 @@ if __name__ == "__main__":
         temp_celsius, wind_mps
     )
     print(f"Breakdown: {breakdown}")
-
-    # Collapse risk
-    human_system = HumanSystemModel(energy_input=100)
-    fs, total_load, flags = human_system.compute_collapse_risk(
-        physical_load, cognitive_load,
-        hidden_count, automation_count, automation_reliability,
-        temp_celsius, wind_mps
-    )
-    print(f"Total Energy Load: {round(total_load, 1)} units")
-    for flag in flags:
-        print(flag)
 
     # Compound risk
     compound, fatigue_s = compute_compound_risk_with_fatigue(

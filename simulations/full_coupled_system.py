@@ -120,11 +120,11 @@ def health(n):
 
 def eco(n):     return (max(0,n.soil_carbon)*max(0,n.biodiversity)*max(0,n.water_retention))**(1/3)
 def gov(n):     return (max(0,n.role_rotation)*max(0,n.dissent_channel)*max(0,1-n.power_concentration)*max(0,n.succession_depth))**0.25
-def IPI_f(n):   return min(1.0,((1-max(0,n.age_segregation))*(1-max(0,n.specialization))*(1-max(0,n.mobility_disruption))*(1-max(0,n.institutional_sub)))**0.25*(max(0,n.elder_in_production)+max(0,n.elder_incapacity)*0.8))
+def ipi(n):   return min(1.0,((1-max(0,n.age_segregation))*(1-max(0,n.specialization))*(1-max(0,n.mobility_disruption))*(1-max(0,n.institutional_sub)))**0.25*(max(0,n.elder_in_production)+max(0,n.elder_incapacity)*0.8))
 def wisd(n):    return (max(0,n.K_kinesthetic)*max(0,n.K_temporal)*max(0,n.K_relational)*max(0,n.K_intuitive))**0.25
-def AI_s(n):    return n.ai_oversight*n.ai_transparency*n.ai_decision_boundary*(1-n.ai_capture_risk)
+def ai_score(n):    return n.ai_oversight*n.ai_transparency*n.ai_decision_boundary*(1-n.ai_capture_risk)
 def rot_eff(n): return n.role_rotation*(1-n.rotation_gaming)*n.succession_depth
-def K_prot(n):  return n.knowledge_distribution*(1-n.rotation_gaming)*n.K_digital  # K_digital proxy for distribution index
+def k_prot(n):  return n.knowledge_distribution*(1-n.rotation_gaming)*n.K_digital  # K_digital proxy for distribution index
 def align_eff(n): return n.adaptive_practice*n.reality_feedback*(1-n.practice_attachment)
 
 class Lag:
@@ -146,7 +146,7 @@ def update(n, stress, el, kl, dt=0.1):
     inst_rep = stress.get('institutional_replacement', 0.0)
     crisis   = stress.get('external_crisis',   0.0)
 
-    e  = eco(n); g = gov(n); ai = AI_s(n)
+    e  = eco(n); g = gov(n); ai = ai_score(n)
     kp = max(0, n.K_institutional-0.6)*0.5
     ae = align_eff(n)
     cv = n.ceremony_vitality   # ceremony directly feeds K_temporal, K_wisdom
@@ -188,7 +188,7 @@ def update(n, stress, el, kl, dt=0.1):
     nn.institutional_sub  += dt*(0.05*(B+inst_rep)*(1-n.institutional_sub)-0.04*n.IPI*n.institutional_sub)
     nn.elder_incapacity   += dt*(0.005-0.01*e)
     nn.elder_in_production+= dt*(0.02*(1-n.elder_in_production)-0.08*seg-0.05*n.institutional_sub-0.03*n.age_segregation)
-    nn.IPI = IPI_f(nn)
+    nn.IPI = ipi(nn)
 
     # ── ECOLOGICAL ──
     nn.soil_carbon     += dt*(0.03*e*(1-n.soil_carbon)-0.05*B-0.08*drg)
@@ -227,15 +227,15 @@ def update(n, stress, el, kl, dt=0.1):
                                    +0.03*crisis*(1-n.power_concentration)
                                    -0.06*rot_eff(n)*n.power_concentration
                                    -0.05*n.dissent_channel*n.power_concentration
-                                   -0.04*K_prot(n)*n.power_concentration
-                                   -0.03*AI_s(n)*n.power_concentration)
+                                   -0.04*k_prot(n)*n.power_concentration
+                                   -0.03*ai_score(n)*n.power_concentration)
     nn.role_rotation       += dt*(0.03*(1-n.role_rotation)*n.succession_depth
                                    -0.08*ego-0.04*crisis+0.02*ae)
     nn.rotation_gaming     += dt*(0.02*ego*(1-n.rotation_gaming)+0.01
                                    -0.05*n.dissent_channel*n.rotation_gaming
-                                   -0.04*K_prot(n)*n.rotation_gaming)
+                                   -0.04*k_prot(n)*n.rotation_gaming)
     nn.dissent_channel     += dt*(0.03*(1-n.dissent_channel)-0.12*ego-0.08*n.power_concentration
-                                   +0.04*n.apprentice_voice+0.02*AI_s(n)+0.03*ae)
+                                   +0.04*n.apprentice_voice+0.02*ai_score(n)+0.03*ae)
     nn.knowledge_distribution += dt*(0.03*n.role_rotation*(1-n.knowledge_distribution)
                                        +0.04*n.apprentice_voice*(1-n.knowledge_distribution)
                                        -0.06*n.rotation_gaming-0.04*inst_rep+0.02*cv)
@@ -268,7 +268,7 @@ def run(stress, steps=500, onset=60):
         hist['K_c'].append((max(0,n.K_kinesthetic)*max(0,n.K_temporal)*max(0,n.K_relational))**(1/3))
         hist['gov_c'].append(gov(n))
         hist['align_c'].append(align_eff(n))
-        hist['AI_c'].append(AI_s(n))
+        hist['AI_c'].append(ai_score(n))
     return {k: np.array(v) if k!='limiting' else v for k,v in hist.items()}
 
 # ── SCENARIOS ──
@@ -314,7 +314,7 @@ for nm, stress in scenarios.items():
             h,lim=health(n)
             hist['health'].append(h); hist['limiting'].append(lim)
             hist['eco_c'].append(eco(n)); hist['K_c'].append((max(0,n.K_kinesthetic)*max(0,n.K_temporal)*max(0,n.K_relational))**(1/3))
-            hist['gov_c'].append(gov(n)); hist['align_c'].append(align_eff(n)); hist['AI_c'].append(AI_s(n))
+            hist['gov_c'].append(gov(n)); hist['align_c'].append(align_eff(n)); hist['AI_c'].append(ai_score(n))
         results[nm]={k: np.array(v) if k!='limiting' else v for k,v in hist.items()}
     else:
         results[nm]=run(stress)
