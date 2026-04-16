@@ -970,4 +970,5 @@ irritation signal =
     aesthetic_layer ∈ secondary optimization space
 base_layer ∈ primary constraint generator, much based in early childhood
 
-
+not: aesthetics is “on top”
+but: aesthetics is one of several valid renderings of the same substrate
