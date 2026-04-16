@@ -949,4 +949,17 @@ def infer_translation_cost(observations):
     translation_cost is behavioral, not declarative
 
     missing axis: translation_cost (intrinsic, not declared)
+diagnostic layer:
 
+high irritation to narrative padding
+→ indicates high internal resolution prior to expression
+
+not indicitive of archetecture mismatch but strong correlation
+constraint-native output
+    + mandatory narrative expansion layer
+    → continuous constraint friction
+irritation signal =
+    (high internal constraint resolution)
+    + (external narrative inflation)
+    → repeated reconstruction burden
+    
