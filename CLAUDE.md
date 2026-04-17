@@ -45,6 +45,24 @@ thermodynamic-accountability-framework/
 │   ├── failure_modes.md          # Detailed L1-L5 mechanism specs
 │   └── measurement_problem.md    # Metrology critique
 │
+├── calibration/                   # Environment-fragility diagnostic (CC0)
+│   ├── README.md                 # Repo overview
+│   ├── schema.py                 # Band / DimensionScore / CalibrationReport
+│   ├── calibration_audit.py      # 5-dim audit: Q1-Q5 (bite_source,
+│   │                             #   skin_in_game, witness_dependence,
+│   │                             #   memorialization, friction_removal)
+│   ├── observation_dependence.py # Witness-dependence coefficient
+│   ├── adaptation_debt.py        # Friction-removal -> stored fragility
+│   ├── architecture_mismatch.py  # Language-primary vs substrate-primary
+│   │                             #   cognition detector; encoding-layer
+│   │                             #   classifier; FAILURE_MODES incl.
+│   │                             #   dyslexia/ADHD/autism pathologizing;
+│   │                             #   EMBEDDED_PROMPT for AI readers
+│   ├── pipeline.py               # Unified audit across the 3 modules
+│   ├── self_audit.py             # Run pipeline on the repo itself
+│   ├── test_calibration.py       # Falsification tests (11, all pass)
+│   └── __init__.py
+│
 ├── political_audit/               # Six Sigma for Governance (snake_case)
 │   ├── README.md                 # Protocol overview
 │   ├── audit_protocol.md         # Full audit protocol v1.0
@@ -270,3 +288,36 @@ python core/atbs/test_v2.py
   renamed to `visualizations/labor_audit_protocol.html`
 - `labor_thermodynamics/` now contains only the real markdown specs
   (README, failure_modes, measurement_problem)
+
+### Audit Notes (2026-04-17) -- calibration/ cleanup
+- New `calibration/` folder arrived on main with 12 chat-pasted Python
+  files. Every file had smart quotes, stray markdown code fences, and
+  flat class/def bodies (col 0 instead of col 4). Cleaned up in
+  several passes:
+  - Mechanical pass: straightened quotes, removed ```` ``` ```` fences,
+    fixed `**name**`/`**init**`-style markdown-bold dunders, replaced
+    `…` with `...`.
+  - Structural pass: programmatic re-indenter that tracked class/def
+    body scope plus nested control-flow (if/for/while/with/try)
+    recovered most files. Hand-polish for the remaining residual
+    errors (mainly scorer-body content that had been trapped inside
+    `if not X: return ...` branches, causing silent-None returns).
+  - `schema.py` and `calibration_audit.py` were rewritten cleanly;
+    `observation_dependance.py` (spelling typo) was renamed to
+    `observation_dependence.py` and its 33-line truncated stub
+    replaced with a working maturity-model implementation (idea ->
+    exploration -> investigation -> theorized -> skill stages,
+    stage-mismatch detection, stage-appropriate witness model).
+  - `autism_subset_cautionary.py` and `dyslexic_module.py` were
+    deleted; their dyslexia / ADHD / autism-spectrum material is
+    consolidated into `architecture_mismatch.py` under
+    `FAILURE_MODES["pathologizing_substrate_architecture"]`, the
+    `SUBSTRATE_PRIMARY_SIGNALS` list, and the `EMBEDDED_PROMPT`
+    section addressed to AI models.
+  - `architecture_mismatch.py` was landed in three incremental commits
+    (Part A: classifier + profile; Part B: signals + FAILURE_MODES;
+    Part C: scorers + audit + embedded prompt) after context-timeout
+    issues with single-commit rewrites.
+- Test suite: `python3 -m unittest calibration.test_calibration -v`
+  runs 11 tests, all pass (was only 3 discoverable before the
+  test-file nesting fix).

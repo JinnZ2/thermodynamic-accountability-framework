@@ -82,8 +82,46 @@ def collapse_risk(fatigue, hidden_entropy):
     baseline = fatigue * 0.5 + hidden_entropy * 0.5
     return min(round(baseline, 1), 10)
 
+
 # -----------------------------
-# Example run
+# Programmatic assessment
+# -----------------------------
+def assess(base_human_energy, hidden_vars=None, automation_modules=None,
+           environment_factor=1.0):
+    """
+    Programmatic entry point. Takes data directly and returns a dict.
+    Mirrors run_example() but without any stdin interaction.
+
+    base_human_energy:     float, 0-10 scale
+    hidden_vars:           list[str] of hidden variable names
+    automation_modules:    list[dict] with keys 'name' (str), 'impact' ('helpful'|'complex')
+    environment_factor:    float, 1.0 = normal, >1 = extreme stress
+
+    Returns dict with counts, net_load, fatigue_score, collapse_risk.
+    """
+    hidden_vars = hidden_vars or []
+    automation_modules = automation_modules or []
+
+    hidden_entropy = calculate_hidden_entropy(hidden_vars)
+    net_load = total_human_load(base_human_energy, hidden_vars,
+                                automation_modules, environment_factor)
+    fatigue = fatigue_score(net_load)
+    risk = collapse_risk(fatigue, hidden_entropy)
+
+    return {
+        "hidden_var_count":   len(hidden_vars),
+        "hidden_vars":        list(hidden_vars),
+        "automation_modules": list(automation_modules),
+        "environment_factor": environment_factor,
+        "hidden_entropy":     hidden_entropy,
+        "net_load":           net_load,
+        "fatigue_score":      fatigue,
+        "collapse_risk":      risk,
+    }
+
+
+# -----------------------------
+# Interactive run (stdin-driven)
 # -----------------------------
 def run_example():
     header()
@@ -109,23 +147,24 @@ def run_example():
     # Environment factor (1=normal, >1=extreme)
     environment_factor = float(get_input("Environment stress multiplier (1=normal):"))
 
-    # Compute
-    hidden_entropy = calculate_hidden_entropy(hidden_vars)
-    net_load = total_human_load(base_human_energy, hidden_vars, automation_modules, environment_factor)
-    fatigue = fatigue_score(net_load)
-    risk = collapse_risk(fatigue, hidden_entropy)
+    # Compute using the programmatic core
+    result = assess(
+        base_human_energy=base_human_energy,
+        hidden_vars=hidden_vars if isinstance(hidden_vars, list) else [],
+        automation_modules=automation_modules,
+        environment_factor=environment_factor,
+    )
 
     # Report
     print("\n" + "-"*60)
     print("THERMODYNAMIC AUTOMATION REPORT")
     print("-"*60)
-    print(f"Hidden Variables Count: {len(hidden_vars)}")
-    if hidden_vars:
-        for v in hidden_vars:
-            print(f"  - {v}")
-    print(f"Net Human Load: {net_load}/10")
-    print(f"Estimated Fatigue Score: {fatigue}/10")
-    print(f"Estimated Collapse Risk: {risk}/10")
+    print(f"Hidden Variables Count: {result['hidden_var_count']}")
+    for v in result['hidden_vars']:
+        print(f"  - {v}")
+    print(f"Net Human Load: {result['net_load']}/10")
+    print(f"Estimated Fatigue Score: {result['fatigue_score']}/10")
+    print(f"Estimated Collapse Risk: {result['collapse_risk']}/10")
     print("-"*60)
 
 if __name__ == "__main__":
