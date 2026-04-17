@@ -164,20 +164,22 @@ cliff: float = 10.0) -> DimensionScore:
             name="cliff_proximity",
             score=0.0,
             band=Band.GREEN,
-            evidence=["no removed friction — no debt trajectory"],
+            evidence=["no removed friction -- no debt trajectory"],
             falsifier="n/a",
         )
 
-        current_debt = sum(compute_event_debt(e) for e in removed)
-        rates = [e.get("compounding_rate",
-                   DEFAULT_COMPOUNDING_RATE.get(e.get("domain", "institutional"),
-                                                0.08))
-             for e in removed]
-        r_avg = sum(rates) / len(rates)
+    current_debt = sum(compute_event_debt(e) for e in removed)
+    rates = [
+        e.get("compounding_rate",
+              DEFAULT_COMPOUNDING_RATE.get(e.get("domain", "institutional"),
+                                           0.08))
+        for e in removed
+    ]
+    r_avg = sum(rates) / len(rates)
 
-        if current_debt >= cliff:
-                 years_to_cliff = 0.0
-                 score = 1.0
+    if current_debt >= cliff:
+        years_to_cliff = 0.0
+        score = 1.0
     elif current_debt <= 0 or r_avg <= 0:
         years_to_cliff = 999.0
         score = 0.0
@@ -185,7 +187,7 @@ cliff: float = 10.0) -> DimensionScore:
         years_to_cliff = math.log(cliff / current_debt) / math.log(1.0 + r_avg)
         score = max(0.0, 1.0 - min(years_to_cliff / 30.0, 1.0))
 
-        return DimensionScore(
+    return DimensionScore(
         name="cliff_proximity",
         score=score,
         band=Band.from_score(score),
@@ -198,7 +200,7 @@ cliff: float = 10.0) -> DimensionScore:
             "if years_to_cliff extends beyond 30 (via friction restoration "
             "or rate reduction), dimension flips to GREEN"
         ),
-)
+    )
 def run_adaptation_debt_audit(input_data: dict[str, Any]) -> CalibrationReport:
     """
     Energy-flow:
