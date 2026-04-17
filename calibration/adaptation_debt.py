@@ -72,12 +72,12 @@ def compute_event_debt(event: dict[str, Any]) -> float:
     if not event.get("removed", False):
         return 0.0
 
-        load = event.get("initial_load", 0.5)
-        t = event.get("years_since_removed", 0.0)
-        domain = event.get("domain", "institutional")
-        r = event.get("compounding_rate", DEFAULT_COMPOUNDING_RATE.get(domain, 0.08))
+    load = event.get("initial_load", 0.5)
+    t = event.get("years_since_removed", 0.0)
+    domain = event.get("domain", "institutional")
+    r = event.get("compounding_rate", DEFAULT_COMPOUNDING_RATE.get(domain, 0.08))
 
-        return load * ((1.0 + r) ** t)
+    return load * ((1.0 + r) ** t)
 def score_total_debt(friction_events: list[dict[str, Any]],
 cliff: float = 10.0) -> DimensionScore:
     """
