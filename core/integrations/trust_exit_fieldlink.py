@@ -30,6 +30,13 @@ Cross-reference map:
 
 Dependencies: stdlib only (math). Does NOT import trust-exit-model
 directly — operates on its output values for loose coupling.
+
+Stable input shape (contract): see `schemas/trust_exit_contract.py`.
+The contract mirrors the surface trust-exit-model has committed to
+hold stable (TrustPhase, TrustState, CustomerSegment, Customer, and
+the derived scalar bundle). This fieldlink's ingest methods accept
+loose keyword arguments so they work on either the raw contract
+dataclasses or on plain dicts decoded from JSON.
 """
 
 import math
@@ -38,12 +45,22 @@ import math
 # TAF collapse thresholds expressed as trust-level boundaries.
 # Derived from CLAUDE.md: load > 1.2*E -> degradation, 1.4 -> safety
 # breakdown, 1.6 -> health collapse. distance_to_collapse = (1.6E - L) / 1.6E.
+#
+# 5-phase <-> 4-region asymmetry (documented, deliberate):
+# Trust-Exit has 5 phases with 4 boundaries; TAF has 3 load thresholds
+# defining 4 regions. Clean 1:1 is not possible. We collapse TERMINAL
+# and FINAL_EXIT onto the same distance (0.0) because both have
+# recovery_potential = 0 in the Trust-Exit model -- post-collapse is
+# post-collapse, and TAF cannot distinguish them from energy state alone.
+# The pre-warning distinction between FULL_TRUST and EARLY_EROSION is
+# preserved. A Trust-Exit consumer that tracks its own recovery_potential
+# can refine the collapsed tail back into TERMINAL vs. FINAL_EXIT.
 TRUST_PHASE_BOUNDARIES = {
-    "FULL_TRUST":         1.00,   # load <= E_input, distance = 1.0
-    "EARLY_EROSION":      0.75,   # load ~ 1.2E, productivity degrading
-    "CRITICAL_THRESHOLD": 0.40,   # load ~ 1.4E, safety breakdown
-    "TERMINAL":           0.15,   # load ~ 1.55E, health collapse imminent
-    "FINAL_EXIT":         0.00,   # load >= 1.6E, organism leaves
+    "FULL_TRUST":         1.00,   # load <= E_input
+    "EARLY_EROSION":      0.70,   # load ~ 1.2E, productivity degrading
+    "CRITICAL_THRESHOLD": 0.30,   # load ~ 1.4E, safety breakdown
+    "TERMINAL":           0.00,   # load >= 1.6E, recovery_potential = 0
+    "FINAL_EXIT":         0.00,   # load >= 1.6E, recovery_potential = 0
 }
 
 
@@ -209,6 +226,14 @@ def fatigue_to_trust_decay_rate(fatigue_score):
 def collapse_distance_to_trust_phase(collapse_distance):
     """Predict Trust-Exit phase from TAF distance-to-collapse.
 
+    Note the 5->4 asymmetry (see TRUST_PHASE_BOUNDARIES): Trust-Exit
+    distinguishes TERMINAL from FINAL_EXIT by recovery_potential, a
+    variable TAF does not measure from energy state alone. This function
+    returns FINAL_EXIT for the collapsed region; a Trust-Exit consumer
+    can refine to TERMINAL if its own recovery_potential signal is
+    non-zero. Boundaries are midpoints between TRUST_PHASE_BOUNDARIES
+    entries.
+
     Parameters
     ----------
     collapse_distance : float
@@ -222,15 +247,14 @@ def collapse_distance_to_trust_phase(collapse_distance):
     d = max(0.0, min(1.0, collapse_distance))
     # Walk boundaries high-to-low; return first phase whose floor d clears.
     ordered = [
-        ("FULL_TRUST",         0.90),
-        ("EARLY_EROSION",      0.60),
-        ("CRITICAL_THRESHOLD", 0.25),
-        ("TERMINAL",           0.05),
+        ("FULL_TRUST",         0.85),   # midpoint of 1.00 and 0.70
+        ("EARLY_EROSION",      0.50),   # midpoint of 0.70 and 0.30
+        ("CRITICAL_THRESHOLD", 0.15),   # midpoint of 0.30 and 0.00
     ]
     for name, floor in ordered:
         if d >= floor:
             return name
-    return "FINAL_EXIT"
+    return "FINAL_EXIT"  # TERMINAL is indistinguishable here; see docstring
 
 
 def hidden_count_to_doer_exit_probability(hidden_count):
