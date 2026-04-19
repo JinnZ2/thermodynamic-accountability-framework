@@ -428,5 +428,95 @@ class TestUnifiedAudit(unittest.TestCase):
         self.assertIn(cascade_level, ("MINIMAL", "LOW"))
 
 
+# ---------------------------------------------------------------
+# logic_ferret_contract (schemas/)
+# ---------------------------------------------------------------
+
+class TestLogicFerretContract(unittest.TestCase):
+    """Mirror surface of Logic-Ferret's schema_contract.py."""
+
+    def _import_contract(self):
+        import importlib.util
+        import pathlib
+        import sys
+        # The contract lives in schemas/ which isn't on calibration/'s
+        # import path; load it directly. Register in sys.modules before
+        # exec so @dataclass inside the module can resolve __module__.
+        path = (pathlib.Path(__file__).resolve().parent.parent
+                / "schemas" / "logic_ferret_contract.py")
+        spec = importlib.util.spec_from_file_location(
+            "logic_ferret_contract", path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        return module
+
+    def test_import_and_constants(self):
+        c = self._import_contract()
+        self.assertEqual(c.CONTRACT_VERSION, "1.0.0")
+        self.assertEqual(c.UPSTREAM_SCHEMA_VERSION, "1.0.0")
+        self.assertEqual(len(c.SENSOR_NAMES), 13)
+        self.assertEqual(len(c.LAYER_NAMES), 8)
+        self.assertEqual(c.SIGNAL_LEVELS, ("strong", "moderate", "weak"))
+        self.assertIn("Conflict Diagnosis", c.SENSOR_NAMES)
+        self.assertIn("Feedback Loops", c.LAYER_NAMES)
+
+    def test_validator_accepts_matching_surface(self):
+        c = self._import_contract()
+        surface = {
+            "schema_version": "1.0.0",
+            "sensor_names": list(c.SENSOR_NAMES),
+            "layer_names": list(c.LAYER_NAMES),
+            "signal_levels": list(c.SIGNAL_LEVELS),
+            "fallacy_names": ["ad_hominem", "strawman"],
+            "signatures": c.SIGNATURES,
+        }
+        result = c.validate_ferret_surface(surface)
+        self.assertTrue(result.compatible)
+
+    def test_validator_rejects_major_bump(self):
+        c = self._import_contract()
+        surface = {
+            "schema_version": "2.0.0",
+            "sensor_names": list(c.SENSOR_NAMES),
+            "layer_names": list(c.LAYER_NAMES),
+            "signal_levels": list(c.SIGNAL_LEVELS),
+            "fallacy_names": [],
+            "signatures": c.SIGNATURES,
+        }
+        result = c.validate_ferret_surface(surface)
+        self.assertFalse(result.compatible)
+        self.assertIn("Major-version mismatch", result.notes)
+
+    def test_validator_rejects_missing_sensor(self):
+        c = self._import_contract()
+        surface = {
+            "schema_version": "1.0.0",
+            "sensor_names": [s for s in c.SENSOR_NAMES if s != "Gatekeeping"],
+            "layer_names": list(c.LAYER_NAMES),
+            "signal_levels": list(c.SIGNAL_LEVELS),
+            "fallacy_names": [],
+            "signatures": c.SIGNATURES,
+        }
+        result = c.validate_ferret_surface(surface)
+        self.assertFalse(result.compatible)
+        self.assertIn("Gatekeeping", result.missing_sensors)
+
+    def test_validator_tolerates_additions(self):
+        """Non-breaking additions upstream should remain compatible."""
+        c = self._import_contract()
+        surface = {
+            "schema_version": "1.0.0",
+            "sensor_names": list(c.SENSOR_NAMES) + ["Future Sensor"],
+            "layer_names": list(c.LAYER_NAMES),
+            "signal_levels": list(c.SIGNAL_LEVELS),
+            "fallacy_names": [],
+            "signatures": c.SIGNATURES,
+        }
+        result = c.validate_ferret_surface(surface)
+        self.assertTrue(result.compatible)
+        self.assertIn("Future Sensor", result.extra_sensors)
+
+
 if __name__ == "__main__":
     unittest.main()

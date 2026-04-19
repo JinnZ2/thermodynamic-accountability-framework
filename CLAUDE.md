@@ -115,6 +115,17 @@ thermodynamic-accountability-framework/
 │   │                             #   knobs (thresholds, current_measured_value,
 │   │                             #   OSDI component weights) excluded. Paired
 │   │                             #   with core/integrations/economics_fieldlink.py
+│   ├── logic_ferret_contract.py  # Mirrors Logic-Ferret's stable surface
+│   │                             #   (schema_contract.py: SCHEMA_VERSION,
+│   │                             #   SENSOR_NAMES, LAYER_NAMES, SIGNAL_LEVELS,
+│   │                             #   DiagnoseResult / LayerResult TypedDicts,
+│   │                             #   CALCULATE_C3 signature). Pinned to
+│   │                             #   upstream SCHEMA_VERSION "1.0.0".
+│   │                             #   validate_ferret_surface() checks a live
+│   │                             #   ferret_surface() payload and fails on
+│   │                             #   major-version mismatch or missing
+│   │                             #   canonical constants. Paired with
+│   │                             #   core/integrations/ferret_fieldlink.py
 │   ├── negative_space.json       # Negative Space Index ledger -- declared
 │   │                             #   knowledge regions that AI systems must
 │   │                             #   NOT simulate. Evaluation infrastructure,
