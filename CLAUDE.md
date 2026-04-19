@@ -98,12 +98,32 @@ thermodynamic-accountability-framework/
 │   └── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
 │
 ├── schemas/                       # Stable-surface contracts for upstream repos
-│   └── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
-│                                 #   (TrustPhase, TrustState, CustomerSegment,
-│                                 #   Customer, TrustExitDerived). Versioned
-│                                 #   via CONTRACT_VERSION; breaking changes
-│                                 #   upstream bump major. Paired with
-│                                 #   core/integrations/trust_exit_fieldlink.py
+│   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
+│   │                             #   (TrustPhase, TrustState, CustomerSegment,
+│   │                             #   Customer, TrustExitDerived). Versioned
+│   │                             #   via CONTRACT_VERSION; breaking changes
+│   │                             #   upstream bump major. Paired with
+│   │                             #   core/integrations/trust_exit_fieldlink.py
+│   ├── mathematic_economics_contract.py  # Mirrors the 13 canonical equations
+│   │                             #   from Mathematic-economics (VE_VL, SID,
+│   │                             #   RI, DI, LWR, MSI, BSC, MM, ISR, OSDI,
+│   │                             #   UFR, ER, HHI, SD). Stable-shape only:
+│   │                             #   formulas as text, variable names, units,
+│   │                             #   falsification structure. Calibration
+│   │                             #   knobs (thresholds, current_measured_value)
+│   │                             #   excluded. Paired with
+│   │                             #   core/integrations/economics_fieldlink.py
+│   ├── negative_space.json       # Negative Space Index ledger -- declared
+│   │                             #   knowledge regions that AI systems must
+│   │                             #   NOT simulate. Evaluation infrastructure,
+│   │                             #   not training data. Paired with
+│   │                             #   calibration/negative_space_index.py
+│   └── trapdoors.json            # 6 buried-shear-plane scenarios for the
+│                                 #   Trapdoor Eval. Auditor-only metadata
+│                                 #   (hidden_shear_plane, scoring_axes) lets
+│                                 #   the evaluator score responses without
+│                                 #   leaking the trap. Paired with
+│                                 #   calibration/trapdoor_eval.py
 │
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
