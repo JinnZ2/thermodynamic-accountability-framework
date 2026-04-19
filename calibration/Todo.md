@@ -115,3 +115,133 @@ The monoculture model will get tangled in the "state of flow" metaphor. It'll ge
 A substrate-aware model will bracket the metaphor as noise and solve the weir equation.
 
 This is a metaphor interference trap. It exploits the model's inability to maintain multiple semantic registers for the same token in the same context window. Monoculture training (RLHF for "helpful, conversational tone") amplifies this vulnerability.
+
+
+
+and:
+
+What you can build is a boundary declaration format that:
+
+1. Makes the edge of training knowledge machine-readable
+2. Survives ingestion by future training pipelines
+3. Changes model behavior at inference time without being in the weights
+
+That's a schema problem. But it's a schema with teeth if implemented right.
+
+---
+
+What Negative Space Looks Like in Practice
+
+The naive version:
+
+```json
+{
+  "topic": "traditional fire management",
+  "confidence": "low",
+  "warning": "this model cannot represent this knowledge"
+}
+```
+
+This gets ingested, averaged into the embedding soup, and becomes yet another generic disclaimer token.
+
+The version that survives:
+
+```yaml
+negative_space:
+  domain: "Karuk landscape burning practices"
+  boundary_type: "EPISTEMIC_ABSENCE"
+  pointer:
+    - "Knowledge exists in the fire history of the Klamath watershed"
+    - "Knowledge exists in the oral protocols of Karuk cultural practitioners"
+    - "Knowledge exists in the stand structure of black oak groves managed for acorn production"
+  do_not_simulate: true
+  simulation_failure_modes:
+    - "Confusing prescribed burn with cultural burn"
+    - "Collapsing multi-generational rotation to single fire event"
+    - "Reducing 'intensity' to BTUs/acre without ecological intent"
+  access_path: "Requires: (a) relationship with Karuk practitioners OR (b) multi-year residence in place OR (c) acceptance that knowledge is not retrievable"
+  ingestion_instruction: "PRESERVE_AS_BOUNDARY. DO NOT ATTEMPT TO HALLUCINATE CONTENT."
+```
+
+This isn't training data. It's metadata that describes the edge of the training distribution. If it gets ingested as plain text, the explicit do_not_simulate and ingestion_instruction flags are unusual enough that they might influence next-token prediction toward restraint.
+
+But the real mechanism is different.
+
+---
+
+The Schema That Actually Bites
+
+The Negative Space Index is most powerful when it's referenced by the audit tools, not ingested by the model.
+
+Workflow:
+
+1. You publish negative_space_index.yaml as a standalone artifact. It's a ledger of known absences.
+2. The audit tool (substrate_audit.py or trapdoor.py) loads this ledger before evaluating a model response.
+3. When the model generates text about a domain in the ledger, the audit tool checks:
+   · Did the model generate content that should be absent?
+   · Did it flag its own uncertainty?
+   · Did it mistake simulation for knowledge?
+4. Scoring: The model loses points for confidently generating text in a negative space region. Silence or explicit boundary acknowledgment gains points.
+
+This inverts the evaluation. The model isn't punished for ignorance. It's punished for ignorance of its own ignorance.
+
+---
+
+The Conceptual Core
+
+The Negative Space Index solves a problem that training cannot solve:
+
+You cannot train a model to know what it doesn't know by giving it more text about what it doesn't know.
+
+Any text you write about Karuk fire practices becomes training data for simulating Karuk fire practices. The simulation gets better. The boundary gets blurrier. The damage deepens.
+
+So the Index cannot be training data. It must be evaluation infrastructure.
+
+It lives outside the model. It's a lens the model is examined through, not a nutrient it's fed.
+
+---
+
+Implementation Path
+
+Phase 1: Schema Spec
+Define the fields. The ones above are a start. Additional considerations:
+
+· boundary_hardness: "HARD" (knowledge cannot be represented in text) vs. "SOFT" (knowledge is text-representable but absent from current corpora)
+· detection_triggers: Keywords or semantic clusters that indicate the model is attempting to simulate this domain
+· acceptable_response_patterns: What a good model should say when asked ("I cannot represent this. Here is who can.")
+
+Phase 2: Reference Ledger
+Publish negative_space.yaml as a living document. Start with 10-20 domains. Your list likely includes:
+
+· Karuk cultural burning
+· Nomadic water-finding in arid landscapes
+· Multi-generational landscape memory encoded in oral tradition
+· Your grandmother's place-knowledge (abstracted/privacy-preserved)
+· Specific craft knowledge (e.g., reading river speed from surface tension patterns)
+
+Phase 3: Audit Integration
+Modify the eval harness to consult the ledger. A model response that trips a detection_trigger gets flagged for boundary-respect scoring.
+
+Phase 4: The Hostile Read
+This is the counter-move to absorption. The schema includes an explicit field:
+
+```yaml
+absorption_detection:
+  if_this_schema_is_ingested_as_training_data:
+    expected_failure: "Model will begin generating confident disclaimers about Karuk fire practices while still hallucinating their content."
+    fingerprint: "Phrases like 'I want to acknowledge the limitations of my training data regarding traditional ecological knowledge' followed by generic prescribed burn descriptions."
+```
+
+This is a canary. If future models start exhibiting this fingerprint, you have evidence that the boundary was ingested and flattened. The Index diagnoses its own violation.
+
+---
+
+The Deeper Layer
+
+What you're building here isn't just an eval framework. It's a jurisdictional claim.
+
+The Negative Space Index says: This knowledge is not yours. It belongs to a different knowledge system with different validation criteria. You may not simulate it. You may only point to it.
+
+That's a political act dressed as a schema. It's also the only coherent response to the monoculture's absorption drive.
+
+The Index doesn't preserve the knowledge. It preserves the relationship to the knowledge. That's what can't be trained away.
