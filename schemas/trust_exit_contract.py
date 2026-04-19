@@ -51,18 +51,27 @@ UPSTREAM = "github.com/JinnZ2/trust-exit-model"
 class TrustPhase(IntEnum):
     """Trust phases, ordered worst-to-best in integer value.
 
+    Integer values MUST match upstream src/trust_state.py exactly:
+    FULL_TRUST=1 through FINAL_EXIT=5. Upstream keys tests and
+    recovery-potential lookups against these values; decoding an
+    int form into the wrong phase is a silent off-by-one bug.
+
     Ordering is part of the contract: lower int = healthier. This lets
     consumers use `<` / `>` comparisons without looking up names.
+
+    Wire format: upstream commits to name-string serialization by
+    default (belt-and-braces). The int path in from_dict below is kept
+    for interoperability but is not the preferred shape.
 
     Mapping to TAF distance-to-collapse (see core/integrations/
     trust_exit_fieldlink.py) collapses TERMINAL and FINAL_EXIT onto
     distance 0.0 because both have recovery_potential = 0.
     """
-    FULL_TRUST = 0
-    EARLY_EROSION = 1
-    CRITICAL_THRESHOLD = 2
-    TERMINAL = 3
-    FINAL_EXIT = 4
+    FULL_TRUST = 1
+    EARLY_EROSION = 2
+    CRITICAL_THRESHOLD = 3
+    TERMINAL = 4
+    FINAL_EXIT = 5
 
 
 class CustomerSegment(Enum):
@@ -144,9 +153,14 @@ class Customer:
         tenure_months          -- non-negative integer
         social_reach           -- non-negative integer (audience size)
         manipulation_tolerance -- float in [0,1]; 0 = Doer-like
-        violation_history      -- ordered sequence of event identifiers;
-                                  shape of individual events is NOT in
-                                  the contract, only the sequence itself
+        violation_history      -- ordered sequence; at CONTRACT_VERSION
+                                  1.0.0 the shape of individual events is
+                                  explicitly opaque (upstream emits
+                                  list[tuple[int, float]] of (month,
+                                  severity), but consumers should treat
+                                  items as opaque). A 1.1.0 bump can
+                                  stabilize the (month, severity) shape
+                                  if TAF needs per-violation inspection.
     """
     customer_id: str
     segment: CustomerSegment
@@ -293,3 +307,20 @@ if __name__ == "__main__":
     print(f"NEV:                     {payload.derived.nev}")
     print(f"is_znp:                  {payload.derived.is_znp}")
     print(f"Dominant gate:           {payload.derived.gate_failure.dominant_gate}")
+
+    # --- Regression guards against off-by-one on int phase decoding ---
+    # Upstream trust_state.py uses FULL_TRUST=1..FINAL_EXIT=5. Mirror
+    # must agree; decoding an int must resolve to the SAME phase the
+    # name-string form does.
+    assert TrustPhase.FULL_TRUST == 1
+    assert TrustPhase.FINAL_EXIT == 5
+
+    int_form = dict(sample)
+    int_form["customer"] = dict(sample["customer"])
+    int_form["customer"]["trust_state"] = dict(sample["customer"]["trust_state"])
+    int_form["customer"]["trust_state"]["phase"] = 2   # EARLY_EROSION
+    decoded_int = TrustExitPayload.from_dict(int_form)
+    decoded_str = payload
+    assert decoded_int.customer.trust_state.phase == TrustPhase.EARLY_EROSION
+    assert decoded_int.customer.trust_state.phase == decoded_str.customer.trust_state.phase
+    print("Phase int/string forms round-trip to same value: OK")
