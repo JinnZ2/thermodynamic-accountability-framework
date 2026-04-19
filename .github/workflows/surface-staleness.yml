@@ -1,0 +1,40 @@
+name: Surface staleness check
+
+# Monitors TAF's pinned upstream-contract tags against the latest
+# tags published upstream. See calibration/surface_staleness_check.py
+# for the pin registry and the comparison logic.
+
+on:
+  # Weekly scheduled run -- catches upstream tag bumps we would
+  # otherwise miss.
+  schedule:
+    - cron: "0 12 * * 1"   # Mondays at 12:00 UTC
+
+  # Re-check whenever a PR touches the contract mirrors or the check
+  # script itself.
+  pull_request:
+    paths:
+      - "schemas/**"
+      - "calibration/surface_staleness_check.py"
+      - ".github/workflows/surface-staleness.yml"
+
+  # Allow manual trigger from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Authenticate as the workflow token so we get GitHub's higher
+    # API rate limit (1000/hr vs 60/hr anonymous). The script falls
+    # back to SKIP + exit 0 if auth isn't available.
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run staleness check
+        run: python calibration/surface_staleness_check.py
