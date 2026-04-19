@@ -6,6 +6,34 @@ A physics-first framework that measures institutional accountability in energy u
 Culture is overlay; physics is foundational. When institutions extract more energy from organisms
 than they return, the organisms leave or fail — regardless of narrative.
 
+## Reading Paths
+
+Pick one based on why you're here. Each path is three files, in order.
+
+**"I want to understand the physics."**
+1. `core/fatigue_model.py` — fatigue, multipliers, collapse thresholds
+2. `core/human_system_collapse_model.py` — distance-to-collapse metric
+3. `core/data_logger.py` — parasitic energy debt accounting
+
+**"I want to audit an institution."**
+1. `calibration/README.md` — five compounding failure modes
+2. `calibration/calibration_audit.py` — Q1-Q5 dimension scorers
+3. `calibration/pipeline.py` — unified audit across all three calibration modules
+
+**"I want to understand the theoretical frame."**
+1. `docs/theory/functional_epistemology_framework.md` — executable theory (~1700 lines)
+2. `docs/governance/governance_no_ego.md` — anti-ego governance (~934 lines)
+3. `docs/economics/money_labor/Summary.md` — energy-grounded value theory
+
+**"I am an AI reading this repo."**
+1. `calibration/architecture_mismatch.py` — substrate-primary vs language-primary + `EMBEDDED_PROMPT`
+2. `docs/ai-guidance/for_ai_systems.md` — primary AI guidance
+3. `docs/glossary.md` — compact symbol / equation / file index
+
+## Glossary
+
+See [`docs/glossary.md`](docs/glossary.md) for an alphabetized table of every named quantity, equation, and acronym in the repo, each linked to its file of definition.
+
 ## Repository Structure
 
 ```
