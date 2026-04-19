@@ -3,21 +3,48 @@ Mathematic-Economics Contract -- stable surface of the 13 canonical
 equations published by github.com/JinnZ2/Mathematic-economics.
 
 This module mirrors only what the upstream has declared as canonical
-and stable: the equation IDs, their formulas as text, their variable
-names and units, and the structure of their falsification specs. It
-does NOT mirror calibration knobs (thresholds, current_measured_value,
-weighting coefficients) -- those change without breaking the contract.
+and stable in SURFACE.md. It does NOT mirror calibration knobs
+(thresholds, current_measured_value, OSDI component weights, etc.) --
+those retune without a tag bump per ME's declared policy.
 
-ME's CLAUDE.md is explicit: "the 13 core equations and composite
-indices (OSDI) are canonical and must not be altered without explicit
-justification." This contract is a declared mirror of those exact 13;
-edits here that change semantics should be paired with an upstream
-issue.
+UPSTREAM PIN
+------------
+    math_econ_surface: equations-v1
+    math_econ_ref:     https://github.com/JinnZ2/Mathematic-economics/tree/equations-v1
+    math_econ_surface_doc:
+                       https://github.com/JinnZ2/Mathematic-economics/blob/equations-v1/SURFACE.md
+
+This mirror is pinned against the `equations-v1` tag. Per ME's policy:
+    "Changing any item below requires creating a new tag (e.g.
+     equations-v2) rather than moving or deleting the existing one."
+
+When upstream announces `equations-v2` (or any new tag), bump
+CONTRACT_VERSION major on this side and update the pin above.
+
+IN SCOPE (mirrored here, breaking changes bump CONTRACT_VERSION major):
+    - 13 structural equations (name, formula, documented meaning)
+    - OSDI composite + its five component equations
+    - equations.yaml top-level keys, unit strings, documented ranges
+    - HHI / ER conventions
+
+NOT IN SCOPE (deliberately absent from this mirror):
+    - OSDI component weights (SID 0.3, MSI 0.2, ISR 0.2, BSC 0.15, MM 0.15)
+    - Normalization constants and calibration thresholds
+    - current_measured_value / internal helper modules
+
+ALSO DECLARED STABLE UPSTREAM BUT NOT MIRRORED HERE:
+    - FieldSystemState (11 fields), YieldAnalysis (4 fields),
+      FieldSystemReport (6 fields). These live in ME's own
+      schemas/field_system_contract.py. TAF does not currently need
+      them; if it starts to, mirror them in a separate sibling file
+      rather than appending here so each upstream surface stays
+      independently versioned.
 
 Versioning:
-    CONTRACT_VERSION 1.0.0 = pin against ME at the time of writing.
-    Breaking changes to ME's equation list, formulas, or variable
-    names bump major. Calibration retunes do NOT bump.
+    CONTRACT_VERSION 1.0.0 = pin against ME equations-v1.
+    Breaking changes upstream (equations-v2, field removals, formula
+    changes, semantic reinterpretations) bump major.
+    Backward-compatible additions bump minor.
 
 Dependencies: stdlib only (dataclasses, enum, typing).
 License: CC0 1.0 Universal (public domain), preserved from upstream.
@@ -32,6 +59,11 @@ from typing import Any
 
 CONTRACT_VERSION = "1.0.0"
 UPSTREAM = "github.com/JinnZ2/Mathematic-economics"
+UPSTREAM_SURFACE_TAG = "equations-v1"
+UPSTREAM_SURFACE_DOC = (
+    "https://github.com/JinnZ2/Mathematic-economics/blob/"
+    "equations-v1/SURFACE.md"
+)
 
 
 # ---------------------------------------------------------------
@@ -349,6 +381,8 @@ class EconomicsPayload:
 if __name__ == "__main__":
     print(f"Contract mirror version: {CONTRACT_VERSION}")
     print(f"Upstream:                {UPSTREAM}")
+    print(f"Upstream surface tag:    {UPSTREAM_SURFACE_TAG}")
+    print(f"Upstream surface doc:    {UPSTREAM_SURFACE_DOC}")
     print(f"Canonical equations:     {len(CANONICAL_EQUATIONS)}")
     print()
 
