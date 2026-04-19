@@ -97,6 +97,14 @@ thermodynamic-accountability-framework/
 │   ├── Pull_Request.md           # Submission template
 │   └── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
 │
+├── schemas/                       # Stable-surface contracts for upstream repos
+│   └── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
+│                                 #   (TrustPhase, TrustState, CustomerSegment,
+│                                 #   Customer, TrustExitDerived). Versioned
+│                                 #   via CONTRACT_VERSION; breaking changes
+│                                 #   upstream bump major. Paired with
+│                                 #   core/integrations/trust_exit_fieldlink.py
+│
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
 │   ├── conflict_sim.jsx          # Conflict simulation component

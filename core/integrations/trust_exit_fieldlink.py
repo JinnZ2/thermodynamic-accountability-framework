@@ -30,6 +30,13 @@ Cross-reference map:
 
 Dependencies: stdlib only (math). Does NOT import trust-exit-model
 directly — operates on its output values for loose coupling.
+
+Stable input shape (contract): see `schemas/trust_exit_contract.py`.
+The contract mirrors the surface trust-exit-model has committed to
+hold stable (TrustPhase, TrustState, CustomerSegment, Customer, and
+the derived scalar bundle). This fieldlink's ingest methods accept
+loose keyword arguments so they work on either the raw contract
+dataclasses or on plain dicts decoded from JSON.
 """
 
 import math
