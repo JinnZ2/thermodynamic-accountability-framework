@@ -66,7 +66,7 @@ PINS = [
         "branch": "main",
         "source_file": "schema_contract.py",
         "constant_name": "SCHEMA_VERSION",
-        "pinned_version": "1.0.0",
+        "pinned_version": "1.2.0",
         "contract_file": "schemas/logic_ferret_contract.py",
     },
     {

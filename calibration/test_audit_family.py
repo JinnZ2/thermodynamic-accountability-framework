@@ -453,26 +453,101 @@ class TestLogicFerretContract(unittest.TestCase):
 
     def test_import_and_constants(self):
         c = self._import_contract()
-        self.assertEqual(c.CONTRACT_VERSION, "1.0.0")
-        self.assertEqual(c.UPSTREAM_SCHEMA_VERSION, "1.0.0")
+        self.assertEqual(c.CONTRACT_VERSION, "1.2.0")
+        self.assertEqual(c.UPSTREAM_SCHEMA_VERSION, "1.2.0")
         self.assertEqual(len(c.SENSOR_NAMES), 13)
         self.assertEqual(len(c.LAYER_NAMES), 8)
         self.assertEqual(c.SIGNAL_LEVELS, ("strong", "moderate", "weak"))
         self.assertIn("Conflict Diagnosis", c.SENSOR_NAMES)
         self.assertIn("Feedback Loops", c.LAYER_NAMES)
+        # Tier vocabulary (1.1.0+)
+        self.assertEqual(c.TIER_LEVELS, ("GREEN", "AMBER", "RED", "BLACK"))
+        self.assertEqual(c.SIGNAL_TO_TIER["strong"], "RED")
+        self.assertEqual(c.SIGNAL_TO_TIER["weak"], "GREEN")
+        # Signatures present for all helper generations
+        for sig_key in ("score_to_tier", "layer_tiers", "sensor_tiers",
+                        "discourse_collapse_detect"):
+            self.assertIn(sig_key, c.SIGNATURES)
+        # Discourse collapse constants (1.2.0+)
+        self.assertEqual(len(c.DISCOURSE_COLLAPSE_MODES), 4)
+        self.assertIn("violence_coordination", c.ELEVATION_CLAUSES)
+        self.assertTrue(c.REPORTAGE_DEESCALATED_SUFFIX.startswith("__"))
 
     def test_validator_accepts_matching_surface(self):
         c = self._import_contract()
         surface = {
-            "schema_version": "1.0.0",
+            "schema_version": "1.2.0",
             "sensor_names": list(c.SENSOR_NAMES),
             "layer_names": list(c.LAYER_NAMES),
             "signal_levels": list(c.SIGNAL_LEVELS),
             "fallacy_names": ["ad_hominem", "strawman"],
+            "tier_levels": list(c.TIER_LEVELS),
+            "signal_to_tier": dict(c.SIGNAL_TO_TIER),
+            "discourse_collapse_modes": list(c.DISCOURSE_COLLAPSE_MODES),
+            "elevation_clauses": list(c.ELEVATION_CLAUSES),
+            "reportage_deescalated_suffix": c.REPORTAGE_DEESCALATED_SUFFIX,
             "signatures": c.SIGNATURES,
         }
-        result = c.validate_ferret_surface(surface)
+        result = c.validate_ferret_surface(
+            surface, expected_schema_version="1.2.0")
         self.assertTrue(result.compatible)
+        self.assertTrue(result.tier_vocabulary_available)
+        self.assertTrue(result.discourse_collapse_available)
+
+    def test_validator_rejects_missing_collapse_mode(self):
+        """A 1.2.0-claiming surface missing a canonical collapse mode
+        must fail validation."""
+        c = self._import_contract()
+        surface = {
+            "schema_version": "1.2.0",
+            "sensor_names": list(c.SENSOR_NAMES),
+            "layer_names": list(c.LAYER_NAMES),
+            "signal_levels": list(c.SIGNAL_LEVELS),
+            "tier_levels": list(c.TIER_LEVELS),
+            "signal_to_tier": dict(c.SIGNAL_TO_TIER),
+            "discourse_collapse_modes": [
+                m for m in c.DISCOURSE_COLLAPSE_MODES
+                if m != "violence_coordination"
+            ] + ["violence_coordination"]  # actually present; check next
+            ,
+            "elevation_clauses": [
+                ec for ec in c.ELEVATION_CLAUSES
+                if ec != "violence_coordination"
+            ],  # dropped a canonical clause
+            "signatures": c.SIGNATURES,
+        }
+        result = c.validate_ferret_surface(
+            surface, expected_schema_version="1.2.0")
+        self.assertFalse(result.compatible)
+        self.assertIn("violence_coordination", result.missing_elevation_clauses)
+
+    def test_check_signatures_detects_drift(self):
+        c = self._import_contract()
+        # Matching signatures should not raise
+        c.check_signatures({"layer_tiers": c.SIGNATURES["layer_tiers"]})
+        # Drifted signature must raise
+        with self.assertRaises(c.SignatureMismatch):
+            c.check_signatures({"layer_tiers": "(wrong signature)"})
+
+    def test_pre_1_1_0_surface_compatible_but_tiers_unavailable(self):
+        """Old 1.0.0 surface (no tier_levels) still decodes under the
+        1.1.0 mirror because additions are non-breaking. We just flag
+        tier_vocabulary_available = False."""
+        c = self._import_contract()
+        legacy_surface = {
+            "schema_version": "1.0.0",
+            "sensor_names": list(c.SENSOR_NAMES),
+            "layer_names": list(c.LAYER_NAMES),
+            "signal_levels": list(c.SIGNAL_LEVELS),
+            "fallacy_names": [],
+            "signatures": {k: v for k, v in c.SIGNATURES.items()
+                           if k not in ("score_to_tier",
+                                        "layer_tiers", "sensor_tiers")},
+        }
+        result = c.validate_ferret_surface(
+            legacy_surface, expected_schema_version="1.0.0")
+        self.assertTrue(result.compatible)
+        self.assertFalse(result.tier_vocabulary_available)
 
     def test_validator_rejects_major_bump(self):
         c = self._import_contract()

@@ -31,15 +31,34 @@ Dependencies: stdlib only (math). Does NOT import Logic-Ferret modules
 directly — operates on their output values for loose coupling.
 
 Stable input shape (contract): see `schemas/logic_ferret_contract.py`.
-The contract mirrors Logic-Ferret's declared surface
-(schema_contract.SCHEMA_VERSION, SENSOR_NAMES, LAYER_NAMES,
-SIGNAL_LEVELS, DiagnoseResult / LayerResult TypedDicts, CALCULATE_C3
-signature) and provides `validate_ferret_surface()`, which any
-consumer should call on startup against Logic-Ferret's
-`ferret_surface()` output. If validate returns compatible=False
-(major version mismatch or missing canonical constants), the consumer
-should bail rather than silently decode against a stale shape.
-Pinned upstream schema version: 1.0.0.
+The contract mirrors Logic-Ferret's declared surface (SCHEMA_VERSION,
+SENSOR_NAMES, LAYER_NAMES, SIGNAL_LEVELS, tier vocabulary, 3 helper
+functions from 1.1.0, DiagnoseResult / LayerResult TypedDicts,
+CALCULATE_C3 signature). Consumers should call
+`validate_ferret_surface()` on startup against Logic-Ferret's
+`ferret_surface()` output; if compatible=False the consumer should
+bail rather than silently decode against a stale shape.
+
+Pinned upstream schema version: 1.2.0.
+
+  - 1.1.0 added the shared GREEN/AMBER/RED/BLACK tier vocabulary
+    aligning with metabolic-accounting and TAF.
+  - 1.2.0 added a Layer 9 discourse_collapse detector with four
+    sub-detector modes (semantic_inversion, self_sealing,
+    action_licensing, critical_thinking_suppression) and four
+    elevation_clauses (none, cognition_attack, violence_coordination,
+    compounding). Layer 9 is the FIRST and ONLY layer from which
+    Logic-Ferret emits BLACK on its own. The other 8 camouflage
+    layers still cap at RED. A reportage guardrail de-escalates
+    BLACK -> RED on quote/analytic framing and suffixes the
+    elevation_clause with `__deescalated_reportage`.
+
+Policy shift from 1.1.0 to 1.2.0: TAF-side consumers can now treat
+Layer 9 BLACK as a first-party irreversibility signal from Logic-
+Ferret (cognition_attack / violence_coordination / compounding are
+treated as the escalation reason). Reportage de-escalation must be
+honored -- a journalism quote about violence is not itself violence
+coordination.
 """
 
 import math
