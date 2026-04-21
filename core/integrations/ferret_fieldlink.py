@@ -31,15 +31,22 @@ Dependencies: stdlib only (math). Does NOT import Logic-Ferret modules
 directly — operates on their output values for loose coupling.
 
 Stable input shape (contract): see `schemas/logic_ferret_contract.py`.
-The contract mirrors Logic-Ferret's declared surface
-(schema_contract.SCHEMA_VERSION, SENSOR_NAMES, LAYER_NAMES,
-SIGNAL_LEVELS, DiagnoseResult / LayerResult TypedDicts, CALCULATE_C3
-signature) and provides `validate_ferret_surface()`, which any
-consumer should call on startup against Logic-Ferret's
-`ferret_surface()` output. If validate returns compatible=False
-(major version mismatch or missing canonical constants), the consumer
-should bail rather than silently decode against a stale shape.
-Pinned upstream schema version: 1.0.0.
+The contract mirrors Logic-Ferret's declared surface (SCHEMA_VERSION,
+SENSOR_NAMES, LAYER_NAMES, SIGNAL_LEVELS, tier vocabulary, 3 helper
+functions from 1.1.0, DiagnoseResult / LayerResult TypedDicts,
+CALCULATE_C3 signature). Consumers should call
+`validate_ferret_surface()` on startup against Logic-Ferret's
+`ferret_surface()` output; if compatible=False the consumer should
+bail rather than silently decode against a stale shape.
+
+Pinned upstream schema version: 1.1.0. The 1.1.0 bump is additive:
+shared GREEN/AMBER/RED/BLACK tier vocabulary aligning with
+metabolic-accounting and TAF, plus `score_to_tier` / `layer_tiers`
+/ `sensor_tiers` helpers. Upstream 1.1.0 formalizes the cross-
+framework invariant that BLACK is only elevated into by a consumer
+that fuses Ferret output with an irreversibility source (TAF
+past-cliff basins or metabolic-accounting Verdict.BLACK) -- Logic-
+Ferret does not emit BLACK on its own.
 """
 
 import math

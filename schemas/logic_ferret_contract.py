@@ -28,8 +28,25 @@ Minor bumps (1.0.0 -> 1.1.0 for additions) do NOT require a TAF-side
 bump -- the validator is forward-compatible on additions.
 
 Versioning:
-    CONTRACT_VERSION 1.0.0 = pinned against Logic-Ferret schema_contract.py
-                              SCHEMA_VERSION "1.0.0".
+    CONTRACT_VERSION 1.1.0 = pinned against Logic-Ferret schema_contract.py
+                              SCHEMA_VERSION "1.1.0".
+
+    1.1.0 adds (all additive / backward-compatible):
+      - shared tier vocabulary (GREEN/AMBER/RED/BLACK) matching
+        metabolic-accounting and TAF
+      - TIER_LEVELS, SIGNAL_TO_TIER, CAMOUFLAGE_TIER_THRESHOLDS
+      - three new helper functions: score_to_tier, layer_tiers,
+        sensor_tiers (mirrored in SIGNATURES)
+      - SignatureMismatch exception + assert_signatures() contract
+        check on the upstream side (this mirror provides an
+        equivalent check_signatures())
+
+    Upstream invariant clarified:
+      "BLACK is only ever elevated into by a consumer that fuses
+       Ferret output with an irreversibility source (e.g. TAF
+       past-cliff basins)."
+    Logic-Ferret emits GREEN/AMBER/RED from its own data; TAF/MA
+    supply the BLACK signal when present.
 
 Dependencies: stdlib only (typing, dataclasses).
 License: CC0 1.0 Universal.
@@ -41,9 +58,9 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Tuple, TypedDict
 
 
-CONTRACT_VERSION = "1.0.0"
+CONTRACT_VERSION = "1.1.0"
 UPSTREAM = "github.com/JinnZ2/Logic-Ferret"
-UPSTREAM_SCHEMA_VERSION = "1.0.0"
+UPSTREAM_SCHEMA_VERSION = "1.1.0"
 UPSTREAM_SOURCE_FILE = "schema_contract.py"
 
 
@@ -129,6 +146,44 @@ LAYER_NAMES: Tuple[str, ...] = (
 SIGNAL_LEVELS: Tuple[str, ...] = ("strong", "moderate", "weak")
 
 
+# ---------------------------------------------------------------
+# TIER VOCABULARY (added in 1.1.0)
+# ---------------------------------------------------------------
+# Shared four-level vocabulary with the sibling frameworks
+# (metabolic-accounting, TAF). String constants, not an enum --
+# strings survive JSON, IPC, and cross-framework imports cleanly.
+#
+# Logic-Ferret emits GREEN / AMBER / RED from its own data.
+# BLACK is reserved per upstream invariant: rhetoric is not
+# thermodynamically irreversible, so Logic-Ferret never produces
+# BLACK on its own. Consumers that fuse Ferret output with an
+# irreversibility source (e.g. TAF past-cliff basins or
+# metabolic-accounting Verdict.BLACK) may elevate.
+
+GREEN = "GREEN"
+AMBER = "AMBER"
+RED   = "RED"
+BLACK = "BLACK"
+
+TIER_LEVELS: Tuple[str, ...] = (GREEN, AMBER, RED, BLACK)
+
+# Per-layer signal ("strong"/"moderate"/"weak") -> Tier mapping.
+SIGNAL_TO_TIER: Dict[str, str] = {
+    "strong":   RED,
+    "moderate": AMBER,
+    "weak":     GREEN,
+}
+
+# Score thresholds on [0.0, 1.0] -> Tier. Sorted high-to-low;
+# first threshold a score meets wins. Mirrors upstream's
+# CAMOUFLAGE_TIER_THRESHOLDS verbatim.
+CAMOUFLAGE_TIER_THRESHOLDS: Tuple[Tuple[float, str], ...] = (
+    (0.70, RED),
+    (0.45, AMBER),
+    (0.00, GREEN),
+)
+
+
 # FALLACY_NAMES is dynamic upstream (derived from fallacy_overlay.
 # FALLACY_PATTERNS.keys()). We do NOT hard-code the list here; TAF
 # consumers should treat fallacy names as data from
@@ -147,7 +202,43 @@ SIGNATURES: Dict[str, str] = {
                       "{layers, fallacies, camouflage_score, verdict}"),
     "annotate_text": "(text: str) -> (str, Dict[str, int])",
     "calculate_c3":  "(Dict[str, float]) -> (float, Dict[str, float])",
+    # Added in 1.1.0
+    "score_to_tier": "(float) -> str",
+    "layer_tiers":   "(text: str) -> Dict[str, str]",
+    "sensor_tiers":  "(text: str) -> Dict[str, str]",
 }
+
+
+class SignatureMismatch(Exception):
+    """Raised when a pinned signature has drifted from this contract.
+
+    Mirrors upstream's SignatureMismatch. TAF's ferret_fieldlink can
+    keep its own SIGNATURES copy and call check_signatures() below on
+    import; any drift raises with every offending key named.
+    """
+
+
+def check_signatures(expected: Dict[str, str]) -> None:
+    """Mirror of upstream's assert_signatures() against this contract.
+
+    Consumers that pin individual signatures can call this to bail
+    loudly on drift rather than silently decoding against a stale
+    shape. Raises SignatureMismatch listing every offending key.
+    """
+    diffs = []
+    for key, want in expected.items():
+        got = SIGNATURES.get(key)
+        if got is None:
+            diffs.append(f"{key}: missing from contract (expected {want!r})")
+        elif got != want:
+            diffs.append(
+                f"{key}: expected {want!r}, contract has {got!r}"
+            )
+    if diffs:
+        raise SignatureMismatch(
+            f"Logic-Ferret schema {UPSTREAM_SCHEMA_VERSION} signature "
+            f"drift:\n  " + "\n  ".join(diffs)
+        )
 
 
 # ---------------------------------------------------------------
@@ -165,6 +256,9 @@ class SurfaceCheckResult:
     missing_layers: Tuple[str, ...] = ()
     extra_layers: Tuple[str, ...] = ()
     missing_signal_levels: Tuple[str, ...] = ()
+    # Added in 1.1.0
+    missing_tier_levels: Tuple[str, ...] = ()
+    tier_vocabulary_available: bool = False
     notes: str = ""
 
 
@@ -229,11 +323,25 @@ def validate_ferret_surface(
         s for s in SIGNAL_LEVELS if s not in upstream_signals
     )
 
+    # Tier vocabulary check (1.1.0+). Older upstreams omit tier_levels;
+    # that's backward-compatible so we treat absence as "not available"
+    # rather than incompatible.
+    upstream_tiers = tuple(surface.get("tier_levels", []))
+    if upstream_tiers:
+        missing_tier_levels = tuple(
+            t for t in TIER_LEVELS if t not in upstream_tiers
+        )
+        tier_available = not missing_tier_levels
+    else:
+        missing_tier_levels = ()
+        tier_available = False
+
     compatible = (
         major_match
         and not missing_sensors
         and not missing_layers
         and not missing_signals
+        and not missing_tier_levels
     )
 
     notes_parts = []
@@ -255,12 +363,21 @@ def validate_ferret_surface(
         notes_parts.append(
             f"Missing canonical signal levels: {list(missing_signals)}."
         )
+    if missing_tier_levels:
+        notes_parts.append(
+            f"Missing canonical tier levels: {list(missing_tier_levels)}."
+        )
     if extra_sensors or extra_layers:
         notes_parts.append(
             "Upstream has additions not in this mirror (sensors: "
             f"{list(extra_sensors)}, layers: {list(extra_layers)}). "
             "Non-breaking on our side; consider bumping minor in TAF "
             "to surface the additions to consumers."
+        )
+    if upstream_tiers and not tier_available:
+        notes_parts.append(
+            "Upstream exposes tier_levels but is missing canonical "
+            "entries."
         )
 
     return SurfaceCheckResult(
@@ -272,6 +389,8 @@ def validate_ferret_surface(
         missing_layers=missing_layers,
         extra_layers=extra_layers,
         missing_signal_levels=missing_signals,
+        missing_tier_levels=missing_tier_levels,
+        tier_vocabulary_available=tier_available,
         notes=" ".join(notes_parts) or "Surface matches contract.",
     )
 
@@ -289,18 +408,23 @@ if __name__ == "__main__":
     print(f"Signal levels:               {list(SIGNAL_LEVELS)}")
     print()
 
-    # Simulate a well-formed ferret_surface() payload (what the
-    # validator is designed to decode).
+    # Simulate a well-formed 1.1.0 ferret_surface() payload.
     ok_surface = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "sensor_names": list(SENSOR_NAMES),
         "layer_names": list(LAYER_NAMES),
         "signal_levels": list(SIGNAL_LEVELS),
         "fallacy_names": ["ad_hominem", "strawman", "false_equivalence"],
+        "tier_levels": list(TIER_LEVELS),
+        "signal_to_tier": dict(SIGNAL_TO_TIER),
+        "camouflage_tier_thresholds": [
+            list(pair) for pair in CAMOUFLAGE_TIER_THRESHOLDS
+        ],
         "signatures": SIGNATURES,
     }
-    result = validate_ferret_surface(ok_surface)
-    print(f"OK surface   -> compatible={result.compatible}  {result.notes}")
+    result = validate_ferret_surface(ok_surface, expected_schema_version="1.1.0")
+    print(f"OK 1.1.0     -> compatible={result.compatible}  "
+          f"tier_available={result.tier_vocabulary_available}")
 
     # Major-version mismatch
     bumped = dict(ok_surface, schema_version="2.0.0")
@@ -321,10 +445,25 @@ if __name__ == "__main__":
     result = validate_ferret_surface(extended)
     print(f"Extended     -> compatible={result.compatible}  {result.notes}")
 
+    # Signature drift detection (new in 1.1.0 mirror)
+    try:
+        check_signatures({"layer_tiers": "(wrong signature)"})
+        print("Signature drift -> FAILED to raise")
+    except SignatureMismatch as e:
+        print(f"Signature drift -> raises SignatureMismatch: "
+              f"{str(e).splitlines()[0]}")
+    check_signatures({"layer_tiers": SIGNATURES["layer_tiers"]})
+    print("Signature match -> no exception")
+
     # Assertions for CI
-    assert validate_ferret_surface(ok_surface).compatible
+    assert validate_ferret_surface(
+        ok_surface, expected_schema_version="1.1.0").compatible
     assert not validate_ferret_surface(bumped).compatible
     assert not validate_ferret_surface(broken).compatible
     assert validate_ferret_surface(extended).compatible
+    # Tier vocabulary present when upstream is 1.1.0+
+    assert validate_ferret_surface(
+        ok_surface, expected_schema_version="1.1.0"
+    ).tier_vocabulary_available
     print()
     print("Regression guards: OK")
