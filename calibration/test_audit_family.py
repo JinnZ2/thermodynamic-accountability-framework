@@ -820,5 +820,36 @@ class TestStudyScopeAudit(unittest.TestCase):
         self.assertIn("HIGH", report["causal_frame_fragility"])
 
 
+# ---------------------------------------------------------------
+# information_cost_audit
+# ---------------------------------------------------------------
+
+class TestInformationCostAudit(unittest.TestCase):
+    """Meta-reasoning companion to study_scope_audit. Pure data
+    module -- tests just verify the constants are accessible and
+    have the expected shape."""
+
+    def test_import_and_shape(self):
+        from information_cost_audit import (
+            GEOCENTRIC_COMFORT_STATE, ANOMALIES_UNDER_GEOCENTRISM,
+            INFORMATION_COST_ACCUMULATION, HELIOCENTRIC_UNCERTAINTY_STATE,
+            INFORMATION_COST_AUDIT, INFORMATION_THEORY_INSIGHT,
+            AI_IMPLICATIONS, HISTORICAL_PATTERN, VERDICT,
+        )
+        # Four anomalies covered under geocentrism
+        self.assertGreaterEqual(len(ANOMALIES_UNDER_GEOCENTRISM), 4)
+        self.assertIn("retrograde_motion_of_planets",
+                      ANOMALIES_UNDER_GEOCENTRISM)
+        # Cost-accumulation is a 4-stage spiral
+        self.assertEqual(len(INFORMATION_COST_ACCUMULATION), 4)
+        # Comparative audit has both paths
+        self.assertIn("geocentrism_path", INFORMATION_COST_AUDIT)
+        self.assertIn("heliocentrism_path", INFORMATION_COST_AUDIT)
+        # Verdict has the one-liner
+        self.assertIn("one_liner", VERDICT)
+        self.assertTrue(VERDICT["comfort_is_expensive"])
+        self.assertTrue(VERDICT["uncertainty_is_cheap"])
+
+
 if __name__ == "__main__":
     unittest.main()
