@@ -97,6 +97,33 @@ thermodynamic-accountability-framework/
 │   ├── Pull_Request.md           # Submission template
 │   └── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
 │
+├── money_distribution/            # Distributional decomposition of the
+│   │                             #   Money Equation's per-receiver p_i
+│   │                             #   term. Pre-1.0 interface-stub per
+│   │                             #   Option Y handoff from metabolic-
+│   │                             #   accounting; literature grounding
+│   │                             #   in DINA, HANK, stratification
+│   │                             #   economics, incidence analysis.
+│   ├── README.md                 # Purpose, literature, interface contract
+│   └── interface.py              # StratificationAxis, StratumShare,
+│                                 #   MoneyFlowDistribution, IncidenceResult,
+│                                 #   compute_incidence
+│
+├── investment_distribution/       # Companion to money_distribution:
+│   │                             #   who holds capital, who bears the
+│   │                             #   regeneration cost, who captures
+│   │                             #   returns. Classical accountability
+│   │                             #   keeps all three aligned; parasitic
+│   │                             #   extraction drives them apart.
+│   │                             #   Ties back to substrate_audit TC-1
+│   │                             #   (maintainer-capital coupling).
+│   ├── README.md                 # Purpose, literature, interface contract
+│   └── interface.py              # InvestmentStratumHolding,
+│                                 #   InvestmentHoldings,
+│                                 #   RegenerationCostBreakdown,
+│                                 #   CapitalIncidenceResult,
+│                                 #   compute_capital_incidence
+│
 ├── schemas/                       # Stable-surface contracts for upstream repos
 │   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
 │   │                             #   (TrustPhase, TrustState, CustomerSegment,
@@ -148,12 +175,22 @@ thermodynamic-accountability-framework/
 │   │                             #   NOT simulate. Evaluation infrastructure,
 │   │                             #   not training data. Paired with
 │   │                             #   calibration/negative_space_index.py
-│   └── trapdoors.json            # 6 buried-shear-plane scenarios for the
-│                                 #   Trapdoor Eval. Auditor-only metadata
-│                                 #   (hidden_shear_plane, scoring_axes) lets
-│                                 #   the evaluator score responses without
-│                                 #   leaking the trap. Paired with
-│                                 #   calibration/trapdoor_eval.py
+│   ├── trapdoors.json            # 6 buried-shear-plane scenarios for the
+│   │                             #   Trapdoor Eval. Auditor-only metadata
+│   │                             #   (hidden_shear_plane, scoring_axes) lets
+│   │                             #   the evaluator score responses without
+│   │                             #   leaking the trap. Paired with
+│   │                             #   calibration/trapdoor_eval.py
+│   └── distributional_contract.py  # Cross-repo stable surface for
+│                                 #   money_distribution + investment_
+│                                 #   distribution. CONTRACT_VERSION 0.1.0
+│                                 #   (pre-1.0). Primary consumer:
+│                                 #   metabolic-accounting/distributional/.
+│                                 #   Declares StratificationAxis,
+│                                 #   MoneyFlowDistribution, IncidenceResult,
+│                                 #   InvestmentHoldings, CapitalIncidenceResult.
+│                                 #   HANDOFF_MAP documents which MA fields
+│                                 #   come in and which TAF shapes go out.
 │
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
