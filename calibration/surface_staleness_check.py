@@ -50,12 +50,36 @@ import urllib.request
 
 PINS = [
     {
+        "kind": "tag",
         "name": "mathematic_economics",
         "owner": "JinnZ2",
         "repo": "Mathematic-economics",
         "pinned_tag": "equations-v1",
         "tag_pattern": r"^equations-v(\d+)$",
         "contract_file": "schemas/mathematic_economics_contract.py",
+    },
+    {
+        "kind": "constant",
+        "name": "logic_ferret",
+        "owner": "JinnZ2",
+        "repo": "Logic-Ferret",
+        "branch": "main",
+        "source_file": "schema_contract.py",
+        "constant_name": "SCHEMA_VERSION",
+        "pinned_version": "1.0.0",
+        "contract_file": "schemas/logic_ferret_contract.py",
+    },
+    {
+        "kind": "commit_sha",
+        "name": "metabolic_accounting",
+        "owner": "JinnZ2",
+        "repo": "metabolic-accounting",
+        "branch": "main",
+        "pinned_sha": "09382a66ce6ee63d84038c8ee35a1fbc28cda58d",
+        "contract_file": "schemas/metabolic_accounting_contract.py",
+        "notes": "Upstream has no declared version; pinned to commit SHA. "
+                 "When upstream adopts SURFACE.md, migrate to a tag or "
+                 "constant pin.",
     },
 ]
 
@@ -64,13 +88,7 @@ PINS = [
 # GITHUB API
 # ---------------------------------------------------------------
 
-def _fetch_tags(owner: str, repo: str, timeout: float = 10.0) -> list[str]:
-    """Return list of tag names for owner/repo. Stdlib only.
-
-    Reads GITHUB_TOKEN from the environment if present (raises the
-    rate limit from 60/hr to 5000/hr under CI). Anonymous otherwise.
-    """
-    url = f"https://api.github.com/repos/{owner}/{repo}/tags?per_page=100"
+def _gh_headers() -> dict:
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": "taf-surface-staleness-check",
@@ -78,10 +96,30 @@ def _fetch_tags(owner: str, repo: str, timeout: float = 10.0) -> list[str]:
     token = os.environ.get("GITHUB_TOKEN")
     if token:
         headers["Authorization"] = f"Bearer {token}"
-    req = urllib.request.Request(url, headers=headers)
+    return headers
+
+
+def _fetch_tags(owner: str, repo: str, timeout: float = 10.0) -> list[str]:
+    """Return list of tag names for owner/repo. Stdlib only.
+
+    Reads GITHUB_TOKEN from the environment if present (raises the
+    rate limit from 60/hr to 5000/hr under CI). Anonymous otherwise.
+    """
+    url = f"https://api.github.com/repos/{owner}/{repo}/tags?per_page=100"
+    req = urllib.request.Request(url, headers=_gh_headers())
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         data = json.loads(resp.read().decode("utf-8"))
     return [t["name"] for t in data]
+
+
+def _fetch_raw_file(owner: str, repo: str, branch: str, path: str,
+                    timeout: float = 10.0) -> str:
+    """Fetch raw file content from a GitHub repo."""
+    url = (f"https://raw.githubusercontent.com/{owner}/{repo}/"
+           f"{branch}/{path}")
+    req = urllib.request.Request(url, headers=_gh_headers())
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.read().decode("utf-8")
 
 
 # ---------------------------------------------------------------
@@ -89,7 +127,31 @@ def _fetch_tags(owner: str, repo: str, timeout: float = 10.0) -> list[str]:
 # ---------------------------------------------------------------
 
 def check_pin(pin: dict) -> tuple[bool, str, str]:
-    """Check one pin. Returns (ok, latest_tag, message)."""
+    """Check one pin. Returns (ok, latest_or_current, message).
+
+    Dispatches on pin['kind']:
+      - 'tag'        (default for back-compat) -- compares upstream
+                      tags against a pinned tag via a regex with an
+                      integer capture group.
+      - 'constant'   -- fetches a source file from upstream and greps
+                        for a version-constant assignment (e.g.
+                        SCHEMA_VERSION = "1.0.0"); compares upstream
+                        major to pinned major.
+      - 'commit_sha' -- fetches the latest commit SHA on a named
+                        branch and compares. Any drift is reported as
+                        ADVISORY (upstream has no declared version, so
+                        the drift may or may not be schema-affecting).
+    """
+    kind = pin.get("kind", "tag")
+    if kind == "constant":
+        return _check_constant_pin(pin)
+    if kind == "commit_sha":
+        return _check_commit_sha_pin(pin)
+    return _check_tag_pin(pin)
+
+
+def _check_tag_pin(pin: dict) -> tuple[bool, str, str]:
+    """Check a tag-based pin (the original mechanism)."""
     name = pin["name"]
     pattern = re.compile(pin["tag_pattern"])
     pinned = pin["pinned_tag"]
@@ -139,6 +201,126 @@ def check_pin(pin: dict) -> tuple[bool, str, str]:
     return (True, latest_tag,
             f"[{name}] OK: pinned {pinned!r} is current. "
             f"(Latest upstream: {latest_tag!r})")
+
+
+def _check_constant_pin(pin: dict) -> tuple[bool, str, str]:
+    """Check a constant-in-file pin.
+
+    Fetches the source file and looks for the declared constant
+    assignment. Compares major version to the pinned major version;
+    minor bumps (additions) are tolerated, major bumps fail loudly.
+    """
+    name = pin["name"]
+    constant = pin["constant_name"]
+    pinned = pin["pinned_version"]
+
+    try:
+        content = _fetch_raw_file(
+            pin["owner"], pin["repo"],
+            pin.get("branch", "main"),
+            pin["source_file"],
+        )
+    except urllib.error.HTTPError as e:
+        if e.code in (403, 429):
+            return (True, pinned,
+                    f"[{name}] SKIP: GitHub rate-limited ({e.code}).")
+        if e.code == 404:
+            return (True, pinned,
+                    f"[{name}] WARN: source file not found "
+                    f"({pin['source_file']}). Upstream may have moved it.")
+        return (True, pinned,
+                f"[{name}] SKIP: HTTP error {e.code}. Non-failing.")
+    except (urllib.error.URLError, TimeoutError) as e:
+        return (True, pinned,
+                f"[{name}] SKIP: network error ({e}). Non-failing.")
+
+    # Look for   CONSTANT_NAME = "x.y.z"   or   CONSTANT_NAME = 'x.y.z'
+    pat = re.compile(
+        rf"^\s*{re.escape(constant)}\s*=\s*[\"']([0-9]+\.[0-9]+\.[0-9]+)[\"']",
+        re.MULTILINE,
+    )
+    m = pat.search(content)
+    if not m:
+        return (True, pinned,
+                f"[{name}] WARN: {constant} not found in "
+                f"{pin['source_file']}. Upstream may have renamed it.")
+
+    upstream_version = m.group(1)
+    try:
+        upstream_major = int(upstream_version.split(".")[0])
+        pinned_major = int(pinned.split(".")[0])
+    except ValueError:
+        return (True, pinned,
+                f"[{name}] WARN: could not parse version "
+                f"({upstream_version!r} / {pinned!r}).")
+
+    if upstream_major > pinned_major:
+        return (False, upstream_version,
+                f"[{name}] STALE: pinned {pinned!r} but upstream "
+                f"{constant}={upstream_version!r}. Major bump. "
+                f"Update {pin['contract_file']}: bump CONTRACT_VERSION "
+                f"major, set UPSTREAM_SCHEMA_VERSION = "
+                f"{upstream_version!r}, and re-run "
+                f"validate_ferret_surface against the new shape.")
+    if upstream_version != pinned:
+        return (True, upstream_version,
+                f"[{name}] OK (minor drift): pinned {pinned!r}, "
+                f"upstream {upstream_version!r}. Non-breaking; "
+                f"consider bumping CONTRACT_VERSION minor in "
+                f"{pin['contract_file']} to surface additions.")
+    return (True, upstream_version,
+            f"[{name}] OK: pinned {pinned!r} matches upstream.")
+
+
+def _check_commit_sha_pin(pin: dict) -> tuple[bool, str, str]:
+    """Check a commit-SHA pin.
+
+    Used when upstream has not declared a version scheme (no tags, no
+    SCHEMA_VERSION constant). Fetches the latest SHA on a named branch
+    and reports drift. Because there is no version-schema guarantee,
+    ANY drift triggers an ADVISORY result (exit code 0, but the
+    operator is notified and should manually verify whether the drift
+    touched the schema).
+    """
+    name = pin["name"]
+    pinned = pin["pinned_sha"]
+
+    url = (f"https://api.github.com/repos/{pin['owner']}/{pin['repo']}/"
+           f"commits/{pin.get('branch', 'main')}")
+    req = urllib.request.Request(url, headers=_gh_headers())
+    try:
+        with urllib.request.urlopen(req, timeout=10.0) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code in (403, 429):
+            return (True, pinned,
+                    f"[{name}] SKIP: GitHub rate-limited ({e.code}).")
+        return (True, pinned,
+                f"[{name}] SKIP: HTTP error {e.code}. Non-failing.")
+    except (urllib.error.URLError, TimeoutError) as e:
+        return (True, pinned,
+                f"[{name}] SKIP: network error ({e}). Non-failing.")
+
+    latest_sha = str(data.get("sha", ""))
+    if not latest_sha:
+        return (True, pinned,
+                f"[{name}] WARN: could not parse commit response.")
+
+    if latest_sha == pinned:
+        return (True, latest_sha,
+                f"[{name}] OK: pinned SHA is current HEAD.")
+
+    # Drift detected. ADVISORY: upstream may or may not have touched
+    # the schema. Always non-failing (exit 0) so that a routine upstream
+    # commit doesn't break downstream CI.
+    short_pinned = pinned[:10]
+    short_latest = latest_sha[:10]
+    commit_url = (f"https://github.com/{pin['owner']}/{pin['repo']}/"
+                  f"compare/{pinned}...{latest_sha}")
+    return (True, latest_sha,
+            f"[{name}] ADVISORY: upstream main moved from "
+            f"{short_pinned} to {short_latest}. Inspect changes "
+            f"against {pin['contract_file']}: {commit_url}")
 
 
 # ---------------------------------------------------------------

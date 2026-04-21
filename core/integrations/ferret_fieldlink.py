@@ -29,6 +29,17 @@ Cross-reference map (from Logic-Ferret conflict_diagnosis.py):
 
 Dependencies: stdlib only (math). Does NOT import Logic-Ferret modules
 directly — operates on their output values for loose coupling.
+
+Stable input shape (contract): see `schemas/logic_ferret_contract.py`.
+The contract mirrors Logic-Ferret's declared surface
+(schema_contract.SCHEMA_VERSION, SENSOR_NAMES, LAYER_NAMES,
+SIGNAL_LEVELS, DiagnoseResult / LayerResult TypedDicts, CALCULATE_C3
+signature) and provides `validate_ferret_surface()`, which any
+consumer should call on startup against Logic-Ferret's
+`ferret_surface()` output. If validate returns compatible=False
+(major version mismatch or missing canonical constants), the consumer
+should bail rather than silently decode against a stale shape.
+Pinned upstream schema version: 1.0.0.
 """
 
 import math
