@@ -39,14 +39,26 @@ CALCULATE_C3 signature). Consumers should call
 `ferret_surface()` output; if compatible=False the consumer should
 bail rather than silently decode against a stale shape.
 
-Pinned upstream schema version: 1.1.0. The 1.1.0 bump is additive:
-shared GREEN/AMBER/RED/BLACK tier vocabulary aligning with
-metabolic-accounting and TAF, plus `score_to_tier` / `layer_tiers`
-/ `sensor_tiers` helpers. Upstream 1.1.0 formalizes the cross-
-framework invariant that BLACK is only elevated into by a consumer
-that fuses Ferret output with an irreversibility source (TAF
-past-cliff basins or metabolic-accounting Verdict.BLACK) -- Logic-
-Ferret does not emit BLACK on its own.
+Pinned upstream schema version: 1.2.0.
+
+  - 1.1.0 added the shared GREEN/AMBER/RED/BLACK tier vocabulary
+    aligning with metabolic-accounting and TAF.
+  - 1.2.0 added a Layer 9 discourse_collapse detector with four
+    sub-detector modes (semantic_inversion, self_sealing,
+    action_licensing, critical_thinking_suppression) and four
+    elevation_clauses (none, cognition_attack, violence_coordination,
+    compounding). Layer 9 is the FIRST and ONLY layer from which
+    Logic-Ferret emits BLACK on its own. The other 8 camouflage
+    layers still cap at RED. A reportage guardrail de-escalates
+    BLACK -> RED on quote/analytic framing and suffixes the
+    elevation_clause with `__deescalated_reportage`.
+
+Policy shift from 1.1.0 to 1.2.0: TAF-side consumers can now treat
+Layer 9 BLACK as a first-party irreversibility signal from Logic-
+Ferret (cognition_attack / violence_coordination / compounding are
+treated as the escalation reason). Reportage de-escalation must be
+honored -- a journalism quote about violence is not itself violence
+coordination.
 """
 
 import math

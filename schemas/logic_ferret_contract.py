@@ -28,25 +28,43 @@ Minor bumps (1.0.0 -> 1.1.0 for additions) do NOT require a TAF-side
 bump -- the validator is forward-compatible on additions.
 
 Versioning:
-    CONTRACT_VERSION 1.1.0 = pinned against Logic-Ferret schema_contract.py
-                              SCHEMA_VERSION "1.1.0".
+    CONTRACT_VERSION 1.2.0 = pinned against Logic-Ferret schema_contract.py
+                              SCHEMA_VERSION "1.2.0".
 
-    1.1.0 adds (all additive / backward-compatible):
+    1.1.0 added (backward-compatible):
       - shared tier vocabulary (GREEN/AMBER/RED/BLACK) matching
         metabolic-accounting and TAF
       - TIER_LEVELS, SIGNAL_TO_TIER, CAMOUFLAGE_TIER_THRESHOLDS
-      - three new helper functions: score_to_tier, layer_tiers,
-        sensor_tiers (mirrored in SIGNATURES)
-      - SignatureMismatch exception + assert_signatures() contract
-        check on the upstream side (this mirror provides an
-        equivalent check_signatures())
+      - three helper function signatures in SIGNATURES:
+        score_to_tier, layer_tiers, sensor_tiers
+      - SignatureMismatch + assert_signatures() contract check;
+        this mirror provides the equivalent check_signatures()
 
-    Upstream invariant clarified:
-      "BLACK is only ever elevated into by a consumer that fuses
-       Ferret output with an irreversibility source (e.g. TAF
-       past-cliff basins)."
-    Logic-Ferret emits GREEN/AMBER/RED from its own data; TAF/MA
-    supply the BLACK signal when present.
+    1.2.0 added (backward-compatible, but policy-shifting):
+      - Layer 9 "discourse_collapse" detector
+      - DISCOURSE_COLLAPSE_MODES: semantic_inversion, self_sealing,
+        action_licensing, critical_thinking_suppression
+      - ELEVATION_CLAUSES: none, cognition_attack, violence_coordination,
+        compounding
+      - REPORTAGE_DEESCALATED_SUFFIX suffix for elevation_clause when
+        the reportage guardrail de-escalates
+      - SubDetectorResult, ReportageResult, DiscourseCollapseResult
+        TypedDicts
+      - discourse_collapse.detect signature in SIGNATURES
+
+    Policy shift between 1.1.0 and 1.2.0:
+      1.1.0: "Logic-Ferret emits only GREEN/AMBER/RED; BLACK is
+              consumer-elevated from an irreversibility source."
+      1.2.0: "BLACK is emitted only by Layer 9 (discourse_collapse).
+              The other 8 camouflage layers still cap at RED.
+              Reportage guardrail de-escalates BLACK -> RED on strong
+              quote/analytic framing, and suffixes the elevation_clause
+              with REPORTAGE_DEESCALATED_SUFFIX."
+      TAF-side consumers should treat Layer 9 BLACK as a first-party
+      irreversibility signal (cognition_attack / violence_coordination
+      are treated as compounding markers), while still honoring the
+      reportage de-escalation -- a journalism quote about violence is
+      not itself violence coordination.
 
 Dependencies: stdlib only (typing, dataclasses).
 License: CC0 1.0 Universal.
@@ -58,9 +76,9 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Tuple, TypedDict
 
 
-CONTRACT_VERSION = "1.1.0"
+CONTRACT_VERSION = "1.2.0"
 UPSTREAM = "github.com/JinnZ2/Logic-Ferret"
-UPSTREAM_SCHEMA_VERSION = "1.1.0"
+UPSTREAM_SCHEMA_VERSION = "1.2.0"
 UPSTREAM_SOURCE_FILE = "schema_contract.py"
 
 
@@ -99,6 +117,60 @@ class DiagnoseResult(TypedDict):
     fallacies: Dict[str, int]
     camouflage_score: float
     verdict: str
+
+
+# ---------------------------------------------------------------
+# LAYER 9: DISCOURSE COLLAPSE (added in 1.2.0)
+# ---------------------------------------------------------------
+
+class SubDetectorResult(TypedDict, total=False):
+    """One sub-detector's contribution inside a DiscourseCollapseResult.
+
+    Fields are total=False; `dehumanization_hits` and
+    `dehumanization_matches` only appear on the action_licensing
+    sub-detector per upstream comment.
+    """
+    name: str
+    hits: int
+    matches: List[str]
+    signal: str
+    dehumanization_hits: int
+    dehumanization_matches: List[str]
+
+
+class ReportageResult(TypedDict):
+    """Reportage guardrail output -- detects quote/analytic framing
+    that should de-escalate an otherwise elevated collapse."""
+    hits: int
+    matches: List[str]
+    signal: str
+
+
+class DiscourseCollapseResult(TypedDict):
+    """Layer 9 output. `black_elevation` is the only path by which
+    Logic-Ferret itself emits BLACK on its own data.
+
+    Fields:
+        sub_detectors        keyed by DISCOURSE_COLLAPSE_MODES entries
+        reportage            ReportageResult from the guardrail
+        black_elevation      True iff any sub-detector elevated past
+                             the threshold AND reportage did not
+                             de-escalate
+        elevation_clause     one of ELEVATION_CLAUSES; suffixed with
+                             REPORTAGE_DEESCALATED_SUFFIX when the
+                             reportage guardrail fired
+        reportage_deescalated True iff the reportage guardrail
+                              de-escalated BLACK -> RED
+        alert                True iff collapse markers fired but no
+                             elevation occurred (consumer may still
+                             want to surface this as a soft signal)
+    """
+    sub_detectors: Dict[str, SubDetectorResult]
+    reportage: ReportageResult
+    black_elevation: bool
+    elevation_clause: str
+    reportage_deescalated: bool
+    alert: bool
 
 
 # ---------------------------------------------------------------
@@ -184,6 +256,46 @@ CAMOUFLAGE_TIER_THRESHOLDS: Tuple[Tuple[float, str], ...] = (
 )
 
 
+# ---------------------------------------------------------------
+# DISCOURSE COLLAPSE CONSTANTS (added in 1.2.0)
+# ---------------------------------------------------------------
+# Layer 9 sub-detector keys. Order mirrors upstream; consumers
+# should treat the set as part of the contract (removals would bump
+# major).
+
+DISCOURSE_COLLAPSE_MODES: Tuple[str, ...] = (
+    "semantic_inversion",
+    "self_sealing",
+    "action_licensing",
+    "critical_thinking_suppression",
+)
+
+# Elevation-clause values for DiscourseCollapseResult.elevation_clause.
+# "none" means no elevation; the other three are the reasons Layer 9
+# escalates to BLACK (pre-reportage-de-escalation).
+
+ELEVATION_CLAUSES: Tuple[str, ...] = (
+    "none",
+    "cognition_attack",
+    "violence_coordination",
+    "compounding",
+)
+
+# Suffix appended to elevation_clause when the reportage guardrail
+# de-escalates BLACK -> RED (e.g. a journalism quote about violence
+# is not itself violence coordination).
+REPORTAGE_DEESCALATED_SUFFIX = "__deescalated_reportage"
+
+# Upstream policy text (mirrored verbatim for reference):
+BLACK_ELEVATION_POLICY = (
+    "BLACK is emitted only by Layer 9 (discourse_collapse). "
+    "The other 8 camouflage layers cap at RED. "
+    "Reportage guardrail de-escalates BLACK -> RED on strong "
+    "quote/analytic framing, and suffixes the elevation_clause "
+    "with reportage_deescalated_suffix."
+)
+
+
 # FALLACY_NAMES is dynamic upstream (derived from fallacy_overlay.
 # FALLACY_PATTERNS.keys()). We do NOT hard-code the list here; TAF
 # consumers should treat fallacy names as data from
@@ -206,6 +318,11 @@ SIGNATURES: Dict[str, str] = {
     "score_to_tier": "(float) -> str",
     "layer_tiers":   "(text: str) -> Dict[str, str]",
     "sensor_tiers":  "(text: str) -> Dict[str, str]",
+    # Added in 1.2.0
+    "discourse_collapse_detect":
+        "(text: str) -> {sub_detectors, reportage, "
+        "black_elevation, elevation_clause, "
+        "reportage_deescalated, alert}",
 }
 
 
@@ -259,6 +376,10 @@ class SurfaceCheckResult:
     # Added in 1.1.0
     missing_tier_levels: Tuple[str, ...] = ()
     tier_vocabulary_available: bool = False
+    # Added in 1.2.0
+    missing_collapse_modes: Tuple[str, ...] = ()
+    missing_elevation_clauses: Tuple[str, ...] = ()
+    discourse_collapse_available: bool = False
     notes: str = ""
 
 
@@ -336,12 +457,34 @@ def validate_ferret_surface(
         missing_tier_levels = ()
         tier_available = False
 
+    # Discourse-collapse check (1.2.0+). Same backward-compat pattern:
+    # pre-1.2.0 upstreams don't ship these keys, so absence is
+    # treated as "not available" rather than incompatible.
+    upstream_modes = tuple(surface.get("discourse_collapse_modes", []))
+    upstream_clauses = tuple(surface.get("elevation_clauses", []))
+    if upstream_modes or upstream_clauses:
+        missing_collapse_modes = tuple(
+            m for m in DISCOURSE_COLLAPSE_MODES if m not in upstream_modes
+        )
+        missing_elevation_clauses = tuple(
+            c for c in ELEVATION_CLAUSES if c not in upstream_clauses
+        )
+        discourse_available = (
+            not missing_collapse_modes and not missing_elevation_clauses
+        )
+    else:
+        missing_collapse_modes = ()
+        missing_elevation_clauses = ()
+        discourse_available = False
+
     compatible = (
         major_match
         and not missing_sensors
         and not missing_layers
         and not missing_signals
         and not missing_tier_levels
+        and not missing_collapse_modes
+        and not missing_elevation_clauses
     )
 
     notes_parts = []
@@ -367,6 +510,16 @@ def validate_ferret_surface(
         notes_parts.append(
             f"Missing canonical tier levels: {list(missing_tier_levels)}."
         )
+    if missing_collapse_modes:
+        notes_parts.append(
+            f"Missing canonical discourse-collapse modes: "
+            f"{list(missing_collapse_modes)}."
+        )
+    if missing_elevation_clauses:
+        notes_parts.append(
+            f"Missing canonical elevation clauses: "
+            f"{list(missing_elevation_clauses)}."
+        )
     if extra_sensors or extra_layers:
         notes_parts.append(
             "Upstream has additions not in this mirror (sensors: "
@@ -391,6 +544,9 @@ def validate_ferret_surface(
         missing_signal_levels=missing_signals,
         missing_tier_levels=missing_tier_levels,
         tier_vocabulary_available=tier_available,
+        missing_collapse_modes=missing_collapse_modes,
+        missing_elevation_clauses=missing_elevation_clauses,
+        discourse_collapse_available=discourse_available,
         notes=" ".join(notes_parts) or "Surface matches contract.",
     )
 
@@ -408,9 +564,9 @@ if __name__ == "__main__":
     print(f"Signal levels:               {list(SIGNAL_LEVELS)}")
     print()
 
-    # Simulate a well-formed 1.1.0 ferret_surface() payload.
+    # Simulate a well-formed 1.2.0 ferret_surface() payload.
     ok_surface = {
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "sensor_names": list(SENSOR_NAMES),
         "layer_names": list(LAYER_NAMES),
         "signal_levels": list(SIGNAL_LEVELS),
@@ -420,11 +576,16 @@ if __name__ == "__main__":
         "camouflage_tier_thresholds": [
             list(pair) for pair in CAMOUFLAGE_TIER_THRESHOLDS
         ],
+        "discourse_collapse_modes": list(DISCOURSE_COLLAPSE_MODES),
+        "elevation_clauses": list(ELEVATION_CLAUSES),
+        "reportage_deescalated_suffix": REPORTAGE_DEESCALATED_SUFFIX,
+        "black_elevation_policy": BLACK_ELEVATION_POLICY,
         "signatures": SIGNATURES,
     }
-    result = validate_ferret_surface(ok_surface, expected_schema_version="1.1.0")
-    print(f"OK 1.1.0     -> compatible={result.compatible}  "
-          f"tier_available={result.tier_vocabulary_available}")
+    result = validate_ferret_surface(ok_surface, expected_schema_version="1.2.0")
+    print(f"OK 1.2.0     -> compatible={result.compatible}  "
+          f"tier={result.tier_vocabulary_available} "
+          f"discourse={result.discourse_collapse_available}")
 
     # Major-version mismatch
     bumped = dict(ok_surface, schema_version="2.0.0")
@@ -457,13 +618,16 @@ if __name__ == "__main__":
 
     # Assertions for CI
     assert validate_ferret_surface(
-        ok_surface, expected_schema_version="1.1.0").compatible
-    assert not validate_ferret_surface(bumped).compatible
-    assert not validate_ferret_surface(broken).compatible
-    assert validate_ferret_surface(extended).compatible
-    # Tier vocabulary present when upstream is 1.1.0+
+        ok_surface, expected_schema_version="1.2.0").compatible
+    assert not validate_ferret_surface(
+        bumped, expected_schema_version="1.2.0").compatible
+    assert not validate_ferret_surface(
+        broken, expected_schema_version="1.2.0").compatible
     assert validate_ferret_surface(
-        ok_surface, expected_schema_version="1.1.0"
-    ).tier_vocabulary_available
+        extended, expected_schema_version="1.2.0").compatible
+    # Tier vocabulary + discourse collapse present when upstream is 1.2.0
+    _r = validate_ferret_surface(ok_surface, expected_schema_version="1.2.0")
+    assert _r.tier_vocabulary_available
+    assert _r.discourse_collapse_available
     print()
     print("Regression guards: OK")
