@@ -518,5 +518,107 @@ class TestLogicFerretContract(unittest.TestCase):
         self.assertIn("Future Sensor", result.extra_sensors)
 
 
+# ---------------------------------------------------------------
+# metabolic_accounting_contract (schemas/)
+# ---------------------------------------------------------------
+
+class TestMetabolicAccountingContract(unittest.TestCase):
+    """Mirror surface of metabolic-accounting's docs/SCHEMAS.md."""
+
+    def _import_contract(self):
+        import importlib.util
+        import pathlib
+        import sys
+        path = (pathlib.Path(__file__).resolve().parent.parent
+                / "schemas" / "metabolic_accounting_contract.py")
+        spec = importlib.util.spec_from_file_location(
+            "metabolic_accounting_contract", path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        return module
+
+    def test_import_and_constants(self):
+        c = self._import_contract()
+        self.assertEqual(c.CONTRACT_VERSION, "0.1.0")
+        self.assertEqual(len(c.UPSTREAM_COMMIT_SHA), 40)
+        self.assertEqual(len(c.INVARIANTS), 7)
+        # BLACK distinct from RED per invariant 4
+        self.assertEqual(c.SustainableYieldSignal.BLACK.value, "BLACK")
+        self.assertNotEqual(c.SustainableYieldSignal.BLACK,
+                            c.SustainableYieldSignal.RED)
+
+    def test_round_trip_verdict(self):
+        c = self._import_contract()
+        vd = c.Verdict.from_dict({
+            "sustainable_yield_signal": "BLACK",
+            "basin_trajectory": "DEGRADING",
+            "time_to_red": 0.0,
+            "forced_drawdown": float("inf"),
+            "regeneration_debt": float("inf"),
+            "metabolic_profit": float("-inf"),
+            "reported_profit": 500.0,
+            "profit_gap": float("inf"),
+            "extraordinary_item_flagged": True,
+            "extraordinary_item_amount": 2.5,
+            "metabolic_profit_with_loss": float("-inf"),
+            "irreversible_metrics": ["soil.organic_carbon"],
+            "warnings": [],
+        })
+        self.assertEqual(vd.sustainable_yield_signal.value, "BLACK")
+        self.assertEqual(vd.basin_trajectory.value, "DEGRADING")
+        self.assertIn("soil.organic_carbon", vd.irreversible_metrics)
+
+    def test_gouy_stodola_invariant_caught(self):
+        c = self._import_contract()
+        flows = [c.ExergyFlow(source="x", sink="y",
+                              amount=1.0, destroyed=-0.1, note="")]
+        result = c.validate_invariants(exergy_flows=flows)
+        self.assertFalse(result.all_passed)
+        self.assertTrue(any("gouy_stodola" in f for f in result.failures))
+
+    def test_irreversibility_propagation_caught(self):
+        c = self._import_contract()
+        # irreversible_metrics non-empty BUT regeneration_required
+        # not math.inf AND signal not BLACK -> invariant 4 failure
+        gf = c.GlucoseFlow(
+            revenue=0, direct_operating_cost=0, regeneration_paid=0,
+            regeneration_required=100.0,  # should be inf
+            cascade_burn=0, regeneration_debt=0,
+            reserve_drawdown_cost=0, environment_loss=0,
+            cumulative_environment_loss=0,
+            irreversible_metrics=("soil.organic_carbon",),
+        )
+        vd = c.Verdict(
+            sustainable_yield_signal=c.SustainableYieldSignal.RED,
+            basin_trajectory=c.BasinTrajectory.DEGRADING,
+            time_to_red=0.0, forced_drawdown=0.0,
+            regeneration_debt=0.0, metabolic_profit=0.0,
+            reported_profit=0.0, profit_gap=0.0,
+            extraordinary_item_flagged=True,
+            extraordinary_item_amount=0.0,
+            metabolic_profit_with_loss=0.0,
+        )
+        result = c.validate_invariants(glucose_flow=gf, verdict=vd)
+        self.assertFalse(result.all_passed)
+        self.assertTrue(any("irreversibility_propagation" in f
+                            for f in result.failures))
+
+    def test_cumulative_monotonicity_caught(self):
+        c = self._import_contract()
+        gf = c.GlucoseFlow(
+            revenue=0, direct_operating_cost=0, regeneration_paid=0,
+            regeneration_required=0, cascade_burn=0,
+            regeneration_debt=0, reserve_drawdown_cost=0,
+            environment_loss=0,
+            cumulative_environment_loss=0.5,  # dropped
+        )
+        result = c.validate_invariants(
+            glucose_flow=gf, previous_cumulative_loss=1.2)
+        self.assertFalse(result.all_passed)
+        self.assertTrue(any("cumulative_monotonicity" in f
+                            for f in result.failures))
+
+
 if __name__ == "__main__":
     unittest.main()

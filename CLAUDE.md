@@ -126,6 +126,23 @@ thermodynamic-accountability-framework/
 │   │                             #   major-version mismatch or missing
 │   │                             #   canonical constants. Paired with
 │   │                             #   core/integrations/ferret_fieldlink.py
+│   ├── metabolic_accounting_contract.py  # Mirrors metabolic-accounting's
+│   │                             #   4 canonical dataclasses (ExergyFlow,
+│   │                             #   GlucoseFlow, BasinState, Verdict) and
+│   │                             #   the 7 numbered invariants from
+│   │                             #   docs/SCHEMAS.md. Pinned to upstream
+│   │                             #   commit SHA (upstream has no declared
+│   │                             #   version scheme yet; pre-release).
+│   │                             #   validate_invariants() checks the
+│   │                             #   4 runtime-enforceable invariants
+│   │                             #   (Gouy-Stodola non-negativity,
+│   │                             #   irreversibility propagation,
+│   │                             #   cumulative monotonicity, structural
+│   │                             #   currency-vs-xdu separation).
+│   │                             #   SustainableYieldSignal enum preserves
+│   │                             #   BLACK as distinct from RED per
+│   │                             #   invariant 4. Paired with
+│   │                             #   core/integrations/metabolic_fieldlink.py
 │   ├── negative_space.json       # Negative Space Index ledger -- declared
 │   │                             #   knowledge regions that AI systems must
 │   │                             #   NOT simulate. Evaluation infrastructure,
