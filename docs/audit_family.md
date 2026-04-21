@@ -30,6 +30,7 @@ These observe an existing system or output and report what they find.
 | `first_principles_audit.py`  | Python function + param ranges + specs    | Does this code work? Where does it break? What biases did the designer bake in? | DMAIC report: sensitivity Pareto, boundary failures, FMEA, Monte Carlo Cpk, overall_grade A-D |
 | `assumption_validator.py`    | State snapshot (fatigue, collapse, K_cred, ...) | Are the equations we're using still in their valid regime? What cascade risk exists? | `full_report` with per-assumption GREEN/YELLOW/RED, cascade level, confidence multiplier |
 | `monoculture_detector.py`    | Corpus (list[str])                        | Is variance collapsing across the 7 audit axes? | `AuditReport` with 7 axes GREEN/YELLOW/RED, overall status |
+| `study_scope_audit.py`       | Study claim + instrument/protocol/regime/causal frame + deployment context | Does this cited study actually apply here, or is it out-of-scope? | `audit_report()` dict with `verdict` and `scope_status_for_deployment` in_scope / edge_of_scope / out_of_scope / scope_undeclared |
 
 ## Generative tools (selection pressure)
 

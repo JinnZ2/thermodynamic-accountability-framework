@@ -695,5 +695,130 @@ class TestMetabolicAccountingContract(unittest.TestCase):
                             for f in result.failures))
 
 
+# ---------------------------------------------------------------
+# study_scope_audit
+# ---------------------------------------------------------------
+
+class TestStudyScopeAudit(unittest.TestCase):
+    """Citation-scope audit: treat studies as scope-bounded measurements."""
+
+    def _minimal_audit(self, **overrides):
+        """Build a minimal StudyScopeAudit; tests override pieces."""
+        from study_scope_audit import (
+            StudyScopeAudit, InstrumentAudit, ProtocolAudit,
+            DomainCouplingAudit, RegimeAudit, CausalModelAudit,
+            ScopeBoundary, Coupling, Regime,
+        )
+        kwargs = dict(
+            claim="test claim",
+            citation="test citation",
+            instrument=InstrumentAudit(
+                instrument_name="t", physical_quantity_measured="q",
+                measurement_range=(0, 1), resolution=0.01,
+                noise_floor=0.001, sampling_rate_hz=None,
+                spatial_resolution=None, calibration_source="",
+                calibration_traceability="", drift_rate=None,
+            ),
+            protocol=ProtocolAudit(
+                sample_preparation="", environmental_controls={},
+                excluded_conditions=[], control_group_definition="",
+                measurement_duration="1h", replication_count=1,
+                blinding=False, pre_registration=False,
+            ),
+            coupling=DomainCouplingAudit(
+                physical_domain="x",
+                instrument_coupling=Coupling.TIGHT,
+                protocol_coupling=Coupling.TIGHT,
+                substrate_coupling=Coupling.TIGHT,
+                regime_coupling=Coupling.TIGHT,
+            ),
+            regime=RegimeAudit(
+                assumed_baseline="", baseline_validity_window="",
+                regime_state=Regime.STATIONARY,
+                regime_drift_indicators=[], extrapolation_horizon="",
+            ),
+            causal_model=CausalModelAudit(
+                causal_frame="", confounders_identified=[],
+                confounders_controlled=[], confounders_unmeasured=[],
+                unknown_unknowns_acknowledged=True,
+                alternative_frames_considered=[],
+            ),
+            scope=ScopeBoundary(
+                in_scope_conditions=["lab_clean"],
+                edge_conditions=["lab_dusty"],
+                out_of_scope_conditions=["field_dirty"],
+                undeclared_scope=[], extrapolation_claims=[],
+            ),
+        )
+        kwargs.update(overrides)
+        return StudyScopeAudit(**kwargs)
+
+    def test_import_and_constants(self):
+        from study_scope_audit import (
+            PREMISE, AI_REASONING_RULE, HISTORICAL_CASES, META_INSIGHT,
+            Coupling, Regime, ScopeStatus,
+        )
+        self.assertGreater(len(PREMISE), 100)
+        self.assertGreater(len(AI_REASONING_RULE), 100)
+        self.assertGreaterEqual(len(HISTORICAL_CASES), 5)
+        self.assertIn("geocentrism", HISTORICAL_CASES)
+        self.assertEqual(len(Coupling), 4)
+        self.assertEqual(len(Regime), 4)
+        self.assertEqual(len(ScopeStatus), 4)
+
+    def test_no_context_yields_scope_undeclared_verdict(self):
+        audit = self._minimal_audit()
+        report = audit.audit_report()
+        self.assertIn("scope-undeclared", report["verdict"])
+        self.assertNotIn("scope_status_for_deployment", report)
+
+    def test_in_scope_deployment_passes(self):
+        audit = self._minimal_audit(
+            deployment_context={"lab_clean": True},
+        )
+        report = audit.audit_report()
+        self.assertEqual(report["scope_status_for_deployment"], "in_scope")
+        self.assertIn("valid within study's measured scope",
+                      report["verdict"])
+
+    def test_out_of_scope_deployment_flagged_as_category_error(self):
+        audit = self._minimal_audit(
+            deployment_context={"field_dirty": True},
+        )
+        report = audit.audit_report()
+        self.assertEqual(report["scope_status_for_deployment"],
+                         "out_of_scope")
+        self.assertIn("category error", report["verdict"])
+
+    def test_regime_risk_escalates_when_baseline_shifted(self):
+        from study_scope_audit import RegimeAudit, Regime
+        audit = self._minimal_audit(
+            regime=RegimeAudit(
+                assumed_baseline="1960s food supply",
+                baseline_validity_window="1945-1980",
+                regime_state=Regime.NON_STATIONARY,
+                regime_drift_indicators=["ultra-processed food"],
+                extrapolation_horizon="present",
+            ),
+        )
+        report = audit.audit_report()
+        self.assertIn("HIGH", report["regime_risk"])
+
+    def test_frame_fragility_high_without_unknown_unknowns(self):
+        from study_scope_audit import CausalModelAudit
+        audit = self._minimal_audit(
+            causal_model=CausalModelAudit(
+                causal_frame="linear dose-response",
+                confounders_identified=[],
+                confounders_controlled=[],
+                confounders_unmeasured=["metabolic individuality"],
+                unknown_unknowns_acknowledged=False,
+                alternative_frames_considered=[],
+            ),
+        )
+        report = audit.audit_report()
+        self.assertIn("HIGH", report["causal_frame_fragility"])
+
+
 if __name__ == "__main__":
     unittest.main()
