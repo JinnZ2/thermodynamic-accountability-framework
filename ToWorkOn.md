@@ -1,3 +1,99 @@
+Internal Consistency ≠ Reality Coupling
+
+Property Capital Markets Physical Reality
+Internal consistency High. Rules, margin requirements, protocols, clearing mechanisms all coherent. Not required.
+Stability appearance Maintained through self-reinforcing mechanisms (circuit breakers, liquidity provision, central bank backstops). Independent of underlying material conditions.
+Thermodynamic anchor None. Can drift arbitrarily far from energy, resource, or biophysical constraints. Fixed.
+Feedback from reality Only when crisis forces recognition (and even then, interpreted through schema). Continuous and non-negotiable.
+
+---
+
+The Self-Reinforcing Stability Illusion
+
+Capital markets maintain apparent stability through:
+
+Mechanism Function
+Margin requirements Constrain leverage within schema, not within thermodynamic limits
+Circuit breakers Halt trading when internal volatility exceeds threshold; reality keeps moving
+Central bank interventions Provide liquidity backstop; decouple asset prices from underlying productivity
+Accounting conventions Define what counts as value, loss, asset, liability
+Risk models Quantify risk within schema; externalities are off-model
+Rating agencies Certify internal coherence as "creditworthiness"
+
+These mechanisms reinforce each other within the schema.
+
+They do not require correspondence to:
+
+· Resource depletion
+· Ecosystem collapse
+· Energy return on investment
+· Material throughput limits
+
+---
+
+The Appearance of Stability
+
+The system can be internally coherent, self-reinforcing, and appear stable—while drifting arbitrarily far from thermodynamic reality.
+
+Stability is:
+
+· Defined by the schema (low volatility, predictable clearing, continuous liquidity)
+· Maintained by internal mechanisms (margin rules, central bank puts)
+· Perceived by participants as "the market is functioning"
+
+None of this requires coupling to physical constraints.
+
+---
+
+The Decoupling Depth
+
+Layer Coupling to Reality
+Price discovery Discovers internal consensus, not thermodynamic value
+Risk assessment Assesses schema-defined risk, not biophysical exposure
+Capital allocation Allocates to highest schema-internal return, not highest material efficiency
+Stability metrics Measure internal volatility, not distance from thermodynamic boundary
+
+The entire stack can operate indefinitely within its own terms.
+
+Until it can't.
+
+---
+
+The Crisis Moment
+
+When thermodynamic reality finally intrudes:
+
+· It appears as "exogenous shock"
+· It is interpreted through schema (market response, not reality response)
+· It is managed with schema tools (liquidity, not resource reallocation)
+· Schema adapts just enough to restore internal consistency
+· Drift resumes
+
+The system learns to absorb reality shocks without coupling to reality.
+
+---
+
+Implication for the Model
+
+Component Status
+Q_leg persistence High in capital markets (stable schema)
+Q_phys coupling None required, not maintained
+D(t) High between market reality and thermodynamic reality
+S (structural alignment) Reinforces schema internal consistency
+Enforceability High within schema, irrelevant to thermodynamics
+
+Capital markets are the purest case of:
+
+High internal fidelity + Zero external coupling + Self-reinforcing stability appearance.
+
+---
+
+Final Compression
+
+Capital markets, margin requirements, and trading protocols are internally consistent and self-reinforcing. They can maintain the appearance of stability indefinitely while drifting arbitrarily far from thermodynamic reality. Internal consistency does not require external correspondence. The system optimizes for schema-coherence, not reality-tracking. When reality intrudes, it is absorbed as an "exogenous shock" and managed with schema-internal tools. Coupling is not restored. Drift resumes. This is not a bug. It is the operational logic of a decoupled representational system.
+
+
+
 Mapping the Model experiment 
 
 Prior Term Node/Edge Equivalent Correction Implied
