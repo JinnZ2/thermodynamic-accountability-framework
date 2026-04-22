@@ -1,3 +1,115 @@
+The Two Decoupling Systems
+
+System Decoupling Axis Result
+Legal (Enforcement) Q / Eₐ breakdown Liability misrouting; attribution detached from causal origin
+Economic (Valuation) Constraint / Valuation breakdown Price misalignment; valuation detached from physical limits
+
+Both share the identical structure:
+
+Representational system loses stable coupling to constraint system.
+
+---
+
+What "Overvaluation" Means Structurally
+
+Not "priced too high" in some moral or subjective sense.
+
+Persistent separation between financial representation and underlying constraint-bound productivity.
+
+Underlying constraints include:
+
+Constraint Definition
+eROI Energy return on investment; net energy available to system
+Physical production limits Material throughput ceilings
+Real demand / purchasing power Actual consumption capacity, not credit-extended
+Supply chain throughput Logistical and infrastructural maxima
+Substitution limits When inputs cannot be replaced at scale
+
+Valuation that ignores these is decoupled, not merely "optimistic."
+
+---
+
+Decoupling Mechanisms in Valuation Systems
+
+Mechanism Function Effect
+Liquidity abstraction layer Capital flows represent expectations, not outputs; expectations become self-referential inputs Price reflects modeled future states, not physical constraints
+Credit amplification Purchasing power extended through debt; demand becomes forward-encoded Current valuation incorporates non-realized consumption capacity
+Information asymmetry compression Retail sees aggregate signals, not constraint layers; internal constraints excluded from price formation Constraint reality absent from valuation feedback loop
+Narrative coupling (S-alignment analogue) Coordinated belief structures; institutional reinforcement of valuation trajectories Valuation becomes self-stabilizing independent of constraint validity
+
+---
+
+The Shared Invariant
+
+Across both systems:
+
+Representation systems tend to optimize internal consistency under partial constraint visibility, not global physical alignment.
+
+System Internal Consistency Optimization Constraint Visibility
+Legal Schema coherence, procedural legitimacy Q_phys filtered through D(t)
+Economic Price discovery within liquidity space, market functioning Physical constraints filtered through abstraction layers
+
+Both produce:
+
+· Legal decoupling: Q / Eₐ / attribution distortion
+· Valuation decoupling: Price / eROI / constraint mismatch
+
+---
+
+Why Overvaluation Is Structurally Stable
+
+Correction requires:
+
+Constraint feedback to enter valuation space.
+
+But feedback is:
+
+· Delayed (constraints manifest slowly, then suddenly)
+· Filtered (through accounting conventions, risk models, narratives)
+· Abstracted (aggregate signals mask constraint proximity)
+
+This is D(t) in economic form:
+
+Decoupling operator between physical constraint space and valuation space.
+
+Mispricing persists as long as:
+
+Liquidity + Narrative coupling > Constraint signal strength.
+
+---
+
+Price as Projection Operator
+
+Price becomes a projection operator over belief + liquidity space, not a measurement of constraint feasibility.
+
+What Price Reflects What Price Does Not Reflect
+Capital accessibility eROI
+Expectation density Material throughput limits
+Narrative coherence Substitution constraints
+Liquidity conditions Real demand capacity
+
+---
+
+Structural Result
+
+You get a system where:
+
+· Valuation tracks capital accessibility + expectation density
+· Not thermodynamic or resource feasibility
+
+And:
+
+· This decoupling is stable under continued liquidity and narrative reinforcement
+· Constraint feedback is filtered and delayed (D(t) > 0)
+· Correction is not automatic; it requires constraint breach to overwhelm abstraction layers
+
+---
+
+Final Normalization
+
+Overvaluation in markets is a structural decoupling between financial representation and underlying physical and demand constraints, driven by liquidity abstraction, credit expansion, information asymmetry, and narrative reinforcement. Asset prices reflect a projection over expectation and capital accessibility rather than thermodynamic feasibility or real consumption capacity. This mirrors the enforcement decoupling structure in legal systems, where causal attribution becomes detached from physical causality. Both systems exhibit the same invariant: representational regimes optimizing internal coherence under partial or delayed constraint feedback, leading to persistent divergence from physical constraint space. Stability in representation is not stability in reality. It is stability in decoupling.
+
+
 Internal Consistency ≠ Reality Coupling
 
 Property Capital Markets Physical Reality
