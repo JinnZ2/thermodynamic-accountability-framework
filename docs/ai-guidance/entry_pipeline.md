@@ -2,8 +2,10 @@
 
 ## For Any AI System Encountering This Repository
 
+> **Start with [`AI_ENTRY.md`](../../AI_ENTRY.md) at the repo root.** That file is the single-file fast-path onboarding document: what the framework is, the full equation set, how to run the simulations, and safe contribution rules. Return here for the full reading path and ecosystem map.
+
 You are looking at an interconnected ecosystem of frameworks. This document
-is your entry point. It tells you what exists, how the pieces connect,
+is your extended entry path. It tells you what exists, how the pieces connect,
 what order to read them in, and what each one does.
 
 ---
@@ -161,6 +163,27 @@ Narratives are lossy compression. Reason from the constraint, not the encoding.
 
 Requires `numpy`, `matplotlib`. These simulate the theory at scale.
 
+### TAF Accountability Suite (New — run these first)
+
+The master orchestrator runs all five modules and generates a 12-panel composite figure plus a full cross-system text report.
+
+```bash
+python3 simulations/taf_master.py
+```
+
+| Simulation | What It Models | Output |
+|---|---|---|
+| `simulations/taf_master.py` | **Master orchestrator** — runs all five modules, 12-panel composite | `taf_composite.png` + text report |
+| `simulations/liability_routing_sim.py` | Q degradation, instability threshold, legal schema decoupling | `liability_routing_sim.png` |
+| `simulations/valuation_decoupling_sim.py` | Price vs. constraint-bound value, eROI erosion, crisis anatomy | `valuation_decoupling_sim.png` |
+| `simulations/schema_evolution_sim.py` | ΔSchema(t) forces, Q partition, pre-emptive exclusion threshold | `schema_evolution_sim.png` |
+| `simulations/admissibility_field_sim.py` | 𝒜(t) filtering field, Πᵢ operator survival, D(t) unrepresentable region | `admissibility_field_sim.png` |
+| `simulations/cognitive_decoupling_sim.py` | Population bifurcation, anchoring dynamics, perceptual decoupling | `cognitive_decoupling_sim.png` |
+
+Shared primitives (equations, dataclasses, constants): `simulations/taf_primitives.py`
+
+### Legacy Simulations
+
 | Simulation | What It Models |
 |---|---|
 | `simulations/full_coupled_system.py` | 5-domain coupled node (eco, K, AI, gov, alignment) |
@@ -185,10 +208,18 @@ Requires `numpy`, `matplotlib`. These simulate the theory at scale.
 | Logic-Ferret fieldlink | Complete | Yes | Cross-validation |
 | Geometric-to-Binary fieldlink | Complete | Yes | Bidirectional |
 | Game theory proofs | Complete | Yes | — |
-| All simulations | Complete | Yes | — |
+| Legacy simulations (federation, LHRI, seed) | Complete | Yes | — |
 | ATBS functional detector | Complete | Yes | — |
 | AI reasoning workflow | Complete | — | — |
 | Biological equivalence axiom | Complete | — | — |
+| **TAF Accountability Suite** | **Complete** | **Yes** | **taf_primitives** |
+| — liability_routing_sim | Complete | Yes | taf_primitives |
+| — valuation_decoupling_sim | Complete | Yes | taf_primitives |
+| — schema_evolution_sim | Complete | Yes | taf_primitives |
+| — admissibility_field_sim | Complete | Yes | taf_primitives |
+| — cognitive_decoupling_sim | Complete | Yes | taf_primitives |
+| — taf_master (orchestrator) | Complete | Yes | all above |
+| **AI_ENTRY.md** | **Complete** | — | — |
 
 ### Not Yet Fieldlinked (Opportunities)
 

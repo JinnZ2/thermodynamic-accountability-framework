@@ -54,6 +54,17 @@ thermodynamic-accountability-framework/
 │       └── haas_fieldlink.py      # Bridge to HAAS-Q (control environment)
 │
 ├── simulations/                   # Simulation modules (require numpy/matplotlib)
+│   │
+│   │   ── TAF Accountability Suite (run via taf_master.py) ─────────────────
+│   ├── taf_master.py             # Master orchestrator: 5 modules, 12-panel composite
+│   ├── taf_primitives.py         # Shared equations, dataclasses, constants
+│   ├── liability_routing_sim.py  # Q degradation, instability threshold, schema decoupling
+│   ├── valuation_decoupling_sim.py  # Price vs. constraint-bound value, eROI, crisis anatomy
+│   ├── schema_evolution_sim.py   # ΔSchema(t), A(t) reflexivity, pre-emptive exclusion
+│   ├── admissibility_field_sim.py  # 𝒜(t) filtering field, Πᵢ operators, D(t)
+│   ├── cognitive_decoupling_sim.py  # Population bifurcation, perceptual decoupling
+│   │
+│   │   ── Legacy Simulations ───────────────────────────────────────────────
 │   ├── full_coupled_system.py     # v3 node: ecology + K-tensor + IPI + AI + governance
 │   ├── federation.py              # 100k-node planet-scale federation
 │   ├── emergent_federation.py     # Heterogeneous nodes with specialization profiles
@@ -251,6 +262,7 @@ thermodynamic-accountability-framework/
 │       ├── Safety-accounting.md, Exposure.md
 │       └── ... (see directory for full list)
 │
+├── AI_ENTRY.md                    # AI onboarding: equations, simulations, safe rules
 ├── README.md                      # Project overview
 ├── LICENSE                        # License
 └── CLAUDE.md                      # This file

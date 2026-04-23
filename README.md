@@ -74,6 +74,8 @@ docs/
 
 See [CLAUDE.md](CLAUDE.md) for full file map, equations, and naming conventions.
 
+**For AI systems:** See [AI_ENTRY.md](AI_ENTRY.md) for the fast-path onboarding document — what the framework is, the full equation set, how to run the simulations, and safe contribution rules.
+
 -----
 
 ## Quick Start
