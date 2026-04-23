@@ -135,6 +135,45 @@ thermodynamic-accountability-framework/
 │                                 #   CapitalIncidenceResult,
 │                                 #   compute_capital_incidence
 │
+├── knowledge/                     # Knowledge-liberation toolkit ported from
+│   │                             #   github.com/JinnZ2/Logic-Ferret/knowledge
+│   │                             #   (CC0). Extends calibration/study_scope_
+│   │                             #   audit.py with a 6-module pipeline that
+│   │                             #   treats studies as scope-bounded
+│   │                             #   measurements rather than universal laws.
+│   ├── README.md                 # Framework overview + ASCII pipeline +
+│   │                             #   quick-start snippets
+│   ├── scope_mapper.py           # Module 1: ScopeMap + ScopeMapper. What
+│   │                             #   did the study actually measure?
+│   ├── edge_explorer.py          # Module 2: 8 edge dimensions
+│   │                             #   (ontological_reclassification,
+│   │                             #   population_inversion, time_extension,
+│   │                             #   environment_transplant,
+│   │                             #   mechanism_substitution, sign_inversion,
+│   │                             #   scale_jump, adaptation_reframe)
+│   ├── application_builder.py    # Module 3: LegitimateApplication +
+│   │                             #   Misapplication with harm vectors and
+│   │                             #   alternatives
+│   ├── knowledge_liberation.py   # Orchestrator: liberate(StudyInput)
+│   │                             #   runs all three stages end-to-end
+│   ├── interactive_navigator.py  # Playground: Session graph with 10
+│   │                             #   NodeTypes + 9 LinkTypes, walk/branch/
+│   │                             #   park/trace operations
+│   ├── shadow_catalog.py         # Playground: 12 seeded SilencePatterns
+│   │                             #   across 10 categories (selection,
+│   │                             #   measurement, temporal, causal,
+│   │                             #   ontological, contextual, population,
+│   │                             #   interpretive, structural, incentive).
+│   │                             #   Catalog.diagnose(study_description)
+│   │                             #   returns hypotheses about likely silences.
+│   └── recontextualizer.py       # Playground: UserContext ->
+│                                 #   RecontextualizedPrompt. Generic across
+│                                 #   9 ContextRoles (researcher /
+│                                 #   practitioner / field_worker /
+│                                 #   policy_maker / community_member /
+│                                 #   educator / ai_system / builder /
+│                                 #   generic).
+│
 ├── schemas/                       # Stable-surface contracts for upstream repos
 │   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
 │   │                             #   (TrustPhase, TrustState, CustomerSegment,
