@@ -31,17 +31,18 @@ from enum import IntEnum
 
 
 # ----------------------------------------------------------------------
-# OPTIONAL UPSTREAM: Geometric-to-Binary Computational Bridge
+# UPSTREAM: Geometric-to-Binary Computational Bridge
 # ----------------------------------------------------------------------
-# Ref: github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge
+# Prefer the real upstream package when installed; otherwise fall back
+# to the functional stdlib implementations in
+# schemas/geometric_bridge_contract.py. The contract provides working
+# enums, dataclasses, band tuples, Gray-code functions, and minimal
+# SensorDecoder / ActuatorController classes -- so TAF works end-to-end
+# regardless of whether the external repo is available.
 #
-# This module can translate TAF physics primitives into Geometric Bridge
-# sensor/actuator calls, but the upstream package is NOT a hard
-# dependency. Import with a guard so TAF-only consumers can still use
-# the dataclasses and primitives in this file without installing the
-# external repo. Methods that actually route through geometric_bridge
-# symbols will raise at call time with a clear error when the upstream
-# isn't available.
+# Upstream ref: github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge
+# Pinned at commit: see schemas/geometric_bridge_contract.py.
+
 try:
     from geometric_bridge import (  # type: ignore
         SensorDecoder, ActuatorController,
@@ -51,17 +52,25 @@ try:
     )
     GEOMETRIC_BRIDGE_AVAILABLE = True
 except ImportError:
-    SensorDecoder = None
-    ActuatorController = None
-    HardwareData = None
-    DrillDepth = None
-    BridgeTarget = None
-    HEALTH_BANDS = None
-    TEMP_BANDS = None
-    NOISE_BANDS = None
-    DRIFT_BANDS = None
-    gray_to_value = None
-    gray_to_binary = None
+    # Fall back to the contract's working implementations.
+    try:
+        from schemas.geometric_bridge_contract import (  # type: ignore
+            SensorDecoder, ActuatorController,
+            HardwareData, DrillDepth, BridgeTarget,
+            HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS,
+            gray_to_value, gray_to_binary,
+        )
+    except ImportError:
+        import sys as _sys
+        import pathlib as _pathlib
+        _repo_root = _pathlib.Path(__file__).resolve().parents[2]
+        _sys.path.insert(0, str(_repo_root))
+        from schemas.geometric_bridge_contract import (  # type: ignore  # noqa: E402
+            SensorDecoder, ActuatorController,
+            HardwareData, DrillDepth, BridgeTarget,
+            HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS,
+            gray_to_value, gray_to_binary,
+        )
     GEOMETRIC_BRIDGE_AVAILABLE = False
 
 # ----------------------------------------------------------------------

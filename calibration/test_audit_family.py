@@ -1010,5 +1010,104 @@ class TestKnowledgeLiberation(unittest.TestCase):
                             for s in prompt.who_to_ask))
 
 
+# ---------------------------------------------------------------
+# geometric_bridge_contract (schemas/)
+# ---------------------------------------------------------------
+
+class TestGeometricBridgeContract(unittest.TestCase):
+    """Mirror + functional fallback of the Geometric-to-Binary
+    Computational Bridge upstream surface."""
+
+    def _import_contract(self):
+        import importlib.util
+        import pathlib
+        import sys
+        path = (pathlib.Path(__file__).resolve().parent.parent
+                / "schemas" / "geometric_bridge_contract.py")
+        spec = importlib.util.spec_from_file_location(
+            "geometric_bridge_contract", path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        return module
+
+    def test_import_and_constants(self):
+        c = self._import_contract()
+        self.assertEqual(c.CONTRACT_VERSION, "0.1.0")
+        self.assertEqual(len(c.UPSTREAM_COMMIT_SHA), 40)
+        # Required symbols surface
+        for name in ("SensorDecoder", "ActuatorController",
+                     "HardwareData", "DrillDepth", "BridgeTarget",
+                     "HEALTH_BANDS", "TEMP_BANDS", "NOISE_BANDS",
+                     "DRIFT_BANDS", "gray_to_value", "gray_to_binary"):
+            self.assertIn(name, dir(c))
+        # Enum ordering
+        self.assertEqual(c.DrillDepth.PASS.value, "pass")
+        self.assertEqual(c.DrillDepth.QUARANTINE.value, "quarantine")
+
+    def test_gray_code_conversion(self):
+        c = self._import_contract()
+        # Standard Gray code identities
+        self.assertEqual(c.gray_to_binary(0), 0)
+        self.assertEqual(c.gray_to_binary(1), 1)
+        self.assertEqual(c.gray_to_binary(0b11), 2)   # Gray 3 -> binary 2
+        self.assertEqual(c.gray_to_binary(0b10), 3)   # Gray 2 -> binary 3
+        # Band lookup
+        self.assertEqual(
+            c.gray_to_value(0b11, c.HEALTH_BANDS),
+            c.HEALTH_BANDS[2],
+        )
+        # Clamping
+        self.assertEqual(
+            c.gray_to_value(0b11111111, (0.0, 0.5, 1.0)),
+            1.0,
+        )
+
+    def test_fallback_sensor_decoder_classifies(self):
+        c = self._import_contract()
+        dec = c.SensorDecoder()
+        healthy = c.HardwareData(health_score=0.95)
+        failing = c.HardwareData(health_score=0.05)
+        self.assertEqual(dec.drill_depth(healthy), c.DrillDepth.PASS)
+        self.assertEqual(dec.drill_depth(failing), c.DrillDepth.QUARANTINE)
+
+    def test_fallback_actuator_controller_records_commands(self):
+        c = self._import_contract()
+        ctrl = c.ActuatorController()
+        ok = ctrl.route(c.BridgeTarget.THERMAL, {"setpoint_c": 40.0})
+        self.assertTrue(ok)
+        self.assertEqual(len(ctrl.routed), 1)
+        self.assertEqual(ctrl.routed[0][0], c.BridgeTarget.THERMAL)
+
+    def test_validate_upstream_surface(self):
+        c = self._import_contract()
+        # Self-validate against own namespace -> compatible
+        ns = {s: getattr(c, s) for s in c.REQUIRED_SYMBOLS}
+        self.assertTrue(c.validate_upstream_surface(ns).compatible)
+        # Empty namespace -> missing everything
+        result = c.validate_upstream_surface({})
+        self.assertFalse(result.compatible)
+        self.assertEqual(
+            set(result.missing_symbols), set(c.REQUIRED_SYMBOLS)
+        )
+
+    def test_taf_bridge_uses_contract_fallback_end_to_end(self):
+        """TAFBridge should instantiate and run without the external
+        geometric_bridge package installed."""
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from core.integrations import taf_bridge
+        self.assertFalse(taf_bridge.GEOMETRIC_BRIDGE_AVAILABLE)
+        b = taf_bridge.TAFBridge()
+        self.assertIsNotNone(b.decoder)
+        self.assertIsNotNone(b.actuator)
+        # Fallback bands are real tuples, not None
+        self.assertIsInstance(taf_bridge.HEALTH_BANDS, tuple)
+        self.assertGreater(len(taf_bridge.HEALTH_BANDS), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
