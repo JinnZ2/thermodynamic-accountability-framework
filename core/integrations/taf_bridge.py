@@ -29,15 +29,40 @@ from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, List, Tuple
 from enum import IntEnum
 
-# Import from parent Geometric Bridge
-import sys
-sys.path.append('../..')
-from geometric_bridge import (
-    SensorDecoder, ActuatorController,
-    HardwareData, DrillDepth, BridgeTarget,
-    HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS,
-    gray_to_value, gray_to_binary
-)
+
+# ----------------------------------------------------------------------
+# OPTIONAL UPSTREAM: Geometric-to-Binary Computational Bridge
+# ----------------------------------------------------------------------
+# Ref: github.com/JinnZ2/Geometric-to-Binary-Computational-Bridge
+#
+# This module can translate TAF physics primitives into Geometric Bridge
+# sensor/actuator calls, but the upstream package is NOT a hard
+# dependency. Import with a guard so TAF-only consumers can still use
+# the dataclasses and primitives in this file without installing the
+# external repo. Methods that actually route through geometric_bridge
+# symbols will raise at call time with a clear error when the upstream
+# isn't available.
+try:
+    from geometric_bridge import (  # type: ignore
+        SensorDecoder, ActuatorController,
+        HardwareData, DrillDepth, BridgeTarget,
+        HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS,
+        gray_to_value, gray_to_binary,
+    )
+    GEOMETRIC_BRIDGE_AVAILABLE = True
+except ImportError:
+    SensorDecoder = None
+    ActuatorController = None
+    HardwareData = None
+    DrillDepth = None
+    BridgeTarget = None
+    HEALTH_BANDS = None
+    TEMP_BANDS = None
+    NOISE_BANDS = None
+    DRIFT_BANDS = None
+    gray_to_value = None
+    gray_to_binary = None
+    GEOMETRIC_BRIDGE_AVAILABLE = False
 
 # ----------------------------------------------------------------------
 # TAF Core Primitives

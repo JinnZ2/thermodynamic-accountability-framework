@@ -851,5 +851,164 @@ class TestInformationCostAudit(unittest.TestCase):
         self.assertTrue(VERDICT["uncertainty_is_cheap"])
 
 
+# ---------------------------------------------------------------
+# knowledge/ -- Logic-Ferret knowledge-liberation port
+# ---------------------------------------------------------------
+
+class TestKnowledgeLiberation(unittest.TestCase):
+    """Ported from github.com/JinnZ2/Logic-Ferret/knowledge (CC0).
+    Lives at repo-root knowledge/ so needs an explicit path addition."""
+
+    @classmethod
+    def setUpClass(cls):
+        import sys
+        import pathlib
+        knowledge_dir = (
+            pathlib.Path(__file__).resolve().parent.parent / "knowledge"
+        )
+        cls._path_entry = str(knowledge_dir)
+        if cls._path_entry not in sys.path:
+            sys.path.insert(0, cls._path_entry)
+
+    def test_scope_mapper_basic(self):
+        from scope_mapper import ScopeMapper, ScopeMap, MeasurementType, SelectionType
+        mapper = ScopeMapper()
+        sm = mapper.map_study(
+            claimed_finding="Test finding",
+            what_was_measured="skin conductance",
+            measurement_instrument="electrodes",
+            population="undergraduates",
+            population_size=50,
+            environment="lab",
+            duration="single session",
+            controlled=["temperature"],
+            uncontrolled=["real-world threat"],
+        )
+        self.assertIsInstance(sm, ScopeMap)
+        self.assertEqual(sm.measurement_type,
+                         MeasurementType.PHYSIOLOGICAL_RESPONSE)
+        self.assertEqual(sm.selection_method, SelectionType.CONVENIENCE_SAMPLE)
+        self.assertGreater(len(sm.silent_on), 0)
+        liberation = sm.as_liberation_statement()
+        self.assertIn("KNOWLEDGE LIBERATION", liberation)
+
+    def test_edge_explorer_generates_eight_dimensions(self):
+        from edge_explorer import EdgeExplorer, EdgeType
+        self.assertEqual(len(EdgeType), 8)
+        explorer = EdgeExplorer()
+        exploration = explorer.explore(
+            claim="Blunted response in adversity-exposed adults",
+            what_was_measured="skin conductance",
+            population="undergraduates",
+            environment="lab",
+            duration="single session",
+            uncontrolled_variables=["threat exposure", "pain tolerance"],
+        )
+        # Should generate multiple edge questions (not necessarily all 8
+        # -- some pushers are gated on claim/environment content)
+        self.assertGreaterEqual(len(exploration.generated_questions), 4)
+        summary = exploration.summary()
+        self.assertIn("EDGE EXPLORATION", summary)
+
+    def test_application_builder_flags_misapplication(self):
+        from application_builder import ApplicationBuilder, ApplicationDomain
+        builder = ApplicationBuilder()
+        plan = builder.build(
+            claim="Adversity associated with deficit in threat response",
+            scope_population="undergraduates",
+            scope_environment="lab",
+            scope_duration="single session",
+            what_was_measured="skin conductance",
+            uncontrolled_variables=["threat exposure"],
+        )
+        self.assertGreater(len(plan.legitimate_applications), 0)
+        self.assertGreater(len(plan.misapplications_to_avoid), 0)
+        # Claim contains "deficit" + "adversity" -> frame_correction
+        # application should fire, and clinical-overreach misapplication
+        # should fire.
+        domains = {a.domain for a in plan.legitimate_applications}
+        self.assertIn(ApplicationDomain.FRAME_CORRECTION, domains)
+
+    def test_knowledge_liberation_orchestrator(self):
+        from knowledge_liberation import StudyInput, liberate
+        study = StudyInput(
+            claimed_finding="Test claim",
+            what_was_measured="skin conductance",
+            measurement_instrument="electrodes",
+            population="undergraduates",
+            population_size=50,
+            environment="lab",
+            duration="single session",
+            controlled_variables=["temperature"],
+            uncontrolled_variables=["threat exposure"],
+        )
+        output = liberate(study)
+        self.assertIn("STAGE 1", output)
+        self.assertIn("STAGE 2", output)
+        self.assertIn("STAGE 3", output)
+        self.assertIn("PIPELINE COMPLETE", output)
+
+    def test_interactive_navigator_graph_walk(self):
+        from interactive_navigator import Navigator, NodeType
+        nav = Navigator("test_session")
+        claim_id = nav.claim("Root claim", source="test")
+        s1 = nav.silence("A silence", from_node=claim_id)
+        e1 = nav.edge("An edge question", from_node=s1)
+        nav.session.park(e1, reason="later")
+        # Snapshot should include all three nodes
+        snap = nav.session.snapshot()
+        self.assertIn(claim_id, snap)
+        self.assertIn(s1, snap)
+        self.assertIn(e1, snap)
+        # Parked thread tracked
+        self.assertIn(e1, nav.session.parked_threads)
+        # Trace from e1 includes claim_id
+        paths = nav.session.trace(e1)
+        self.assertTrue(any(claim_id in p for p in paths))
+
+    def test_shadow_catalog_seeded_and_diagnoses(self):
+        from shadow_catalog import ShadowCatalog, SilenceCategory
+        catalog = ShadowCatalog()
+        self.assertEqual(len(catalog.patterns), 12)
+        # Must include the anchor patterns referenced in tests elsewhere
+        for pid in ("SEL-001", "TMP-001", "ONT-001", "CTX-001",
+                    "INC-001", "STR-001", "POP-001", "MSR-001",
+                    "CAU-001", "INT-001", "ONT-002", "SEL-002"):
+            self.assertIn(pid, catalog.patterns)
+        # Diagnose picks up cues
+        matches = catalog.match_cues(
+            "We recruited 273 employed adults via online survey. "
+            "Childhood trauma leads to increased suicide risk."
+        )
+        self.assertGreater(len(matches), 0)
+        # SEL-001 (survivor selection) should match on "employed adults"
+        matched_ids = {p.pattern_id for p in matches}
+        self.assertIn("SEL-001", matched_ids)
+
+    def test_recontextualizer_role_specific_output(self):
+        from recontextualizer import (
+            Recontextualizer, UserContext, ContextRole,
+        )
+        ctx = UserContext(
+            role=ContextRole.PRACTITIONER,
+            domain="mental health outreach",
+            location_or_region="rural county",
+            population_of_interest="families in economic precarity",
+            goal="apply findings responsibly",
+        )
+        recon = Recontextualizer()
+        prompt = recon.recontextualize(
+            silence="Study excluded people in acute crisis",
+            context=ctx,
+        )
+        # Localized question should mention the user's location/population
+        self.assertIn("rural county", prompt.localized_question)
+        # Practitioner-role should produce practitioner-specific experiment
+        self.assertIn("practice", prompt.small_experiment.lower())
+        # Sources should include practitioner-specific entries
+        self.assertTrue(any("experienced colleagues" in s.lower()
+                            for s in prompt.who_to_ask))
+
+
 if __name__ == "__main__":
     unittest.main()

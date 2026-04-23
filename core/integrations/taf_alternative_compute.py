@@ -34,19 +34,49 @@ from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, List, Tuple, Callable
 from enum import IntEnum
 
-# Import TAF bridge primitives (assumes taf_bridge.py exists)
-from core.integrations.taf_bridge import (
-    EnergyAccounting, AdmissibilityField, AdmissibilityMode,
-    CompressionOperator, TAFBridge
-)
+# TAF bridge primitives live next door in core/integrations/.
+# Prefer the package-qualified form when available; fall back to a
+# sibling-module import when this file is executed directly with
+# core/integrations/ on sys.path.
+try:
+    from core.integrations.taf_bridge import (
+        EnergyAccounting, AdmissibilityField, AdmissibilityMode,
+        CompressionOperator, TAFBridge,
+    )
+except ImportError:
+    from taf_bridge import (  # type: ignore
+        EnergyAccounting, AdmissibilityField, AdmissibilityMode,
+        CompressionOperator, TAFBridge,
+    )
 
-# Import Geometric Bridge (assumes in path)
-from geometric_bridge import (
-    HardwareData, DrillDepth, BridgeTarget,
-    HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS, LIFETIME_BANDS,
-    VOLTAGE_BANDS, CURRENT_BANDS,
-    gray_to_value, gray_to_binary
-)
+
+# ----------------------------------------------------------------------
+# OPTIONAL UPSTREAM: Geometric-to-Binary Computational Bridge
+# ----------------------------------------------------------------------
+# Same guarded-import pattern as taf_bridge.py. See that file's
+# docstring for the rationale.
+try:
+    from geometric_bridge import (  # type: ignore
+        HardwareData, DrillDepth, BridgeTarget,
+        HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS, LIFETIME_BANDS,
+        VOLTAGE_BANDS, CURRENT_BANDS,
+        gray_to_value, gray_to_binary,
+    )
+    GEOMETRIC_BRIDGE_AVAILABLE = True
+except ImportError:
+    HardwareData = None
+    DrillDepth = None
+    BridgeTarget = None
+    HEALTH_BANDS = None
+    TEMP_BANDS = None
+    NOISE_BANDS = None
+    DRIFT_BANDS = None
+    LIFETIME_BANDS = None
+    VOLTAGE_BANDS = None
+    CURRENT_BANDS = None
+    gray_to_value = None
+    gray_to_binary = None
+    GEOMETRIC_BRIDGE_AVAILABLE = False
 
 # ----------------------------------------------------------------------
 # 1. Multi-Level TAF Engine (High-Resolution Energy Accounting)
