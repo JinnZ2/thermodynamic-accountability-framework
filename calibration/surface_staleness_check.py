@@ -81,6 +81,19 @@ PINS = [
                  "When upstream adopts SURFACE.md, migrate to a tag or "
                  "constant pin.",
     },
+    {
+        "kind": "commit_sha",
+        "name": "geometric_bridge",
+        "owner": "JinnZ2",
+        "repo": "Geometric-to-Binary-Computational-Bridge",
+        "branch": "main",
+        "pinned_sha": "ba1a5251be7d39bcef865e47e7dd8c513d0044ed",
+        "contract_file": "schemas/geometric_bridge_contract.py",
+        "notes": "Upstream has no declared version yet; pre-release (500+ "
+                 "commits). Contract provides functional stdlib fallbacks so "
+                 "TAF's taf_bridge.py works end-to-end without the external "
+                 "repo installed.",
+    },
 ]
 
 

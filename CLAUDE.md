@@ -231,16 +231,33 @@ thermodynamic-accountability-framework/
 │   │                             #   the evaluator score responses without
 │   │                             #   leaking the trap. Paired with
 │   │                             #   calibration/trapdoor_eval.py
-│   └── distributional_contract.py  # Cross-repo stable surface for
-│                                 #   money_distribution + investment_
-│                                 #   distribution. CONTRACT_VERSION 0.1.0
-│                                 #   (pre-1.0). Primary consumer:
-│                                 #   metabolic-accounting/distributional/.
-│                                 #   Declares StratificationAxis,
-│                                 #   MoneyFlowDistribution, IncidenceResult,
-│                                 #   InvestmentHoldings, CapitalIncidenceResult.
-│                                 #   HANDOFF_MAP documents which MA fields
-│                                 #   come in and which TAF shapes go out.
+│   ├── distributional_contract.py  # Cross-repo stable surface for
+│   │                             #   money_distribution + investment_
+│   │                             #   distribution. CONTRACT_VERSION 0.1.0
+│   │                             #   (pre-1.0). Primary consumer:
+│   │                             #   metabolic-accounting/distributional/.
+│   │                             #   Declares StratificationAxis,
+│   │                             #   MoneyFlowDistribution, IncidenceResult,
+│   │                             #   InvestmentHoldings, CapitalIncidenceResult.
+│   │                             #   HANDOFF_MAP documents which MA fields
+│   │                             #   come in and which TAF shapes go out.
+│   └── geometric_bridge_contract.py  # Mirror + functional stdlib fallback
+│                                 #   for the Geometric-to-Binary
+│                                 #   Computational Bridge. CONTRACT_VERSION
+│                                 #   0.1.0, pinned to upstream commit SHA
+│                                 #   (upstream has no SURFACE.md yet).
+│                                 #   Declares DrillDepth, BridgeTarget,
+│                                 #   HardwareData, 7 band tuples,
+│                                 #   gray_to_binary + gray_to_value,
+│                                 #   SensorDecoder/ActuatorController
+│                                 #   Protocols, and working fallback
+│                                 #   implementations (FallbackSensorDecoder,
+│                                 #   FallbackActuatorController) so TAF's
+│                                 #   taf_bridge.py runs end-to-end without
+│                                 #   the external repo installed. Paired
+│                                 #   with core/integrations/taf_bridge.py
+│                                 #   and core/integrations/taf_alternative_
+│                                 #   compute.py.
 │
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component

@@ -51,10 +51,11 @@ except ImportError:
 
 
 # ----------------------------------------------------------------------
-# OPTIONAL UPSTREAM: Geometric-to-Binary Computational Bridge
+# UPSTREAM: Geometric-to-Binary Computational Bridge
 # ----------------------------------------------------------------------
-# Same guarded-import pattern as taf_bridge.py. See that file's
-# docstring for the rationale.
+# Same fallback pattern as taf_bridge.py. Prefer real upstream; fall
+# back to schemas/geometric_bridge_contract.py when unavailable.
+
 try:
     from geometric_bridge import (  # type: ignore
         HardwareData, DrillDepth, BridgeTarget,
@@ -64,18 +65,24 @@ try:
     )
     GEOMETRIC_BRIDGE_AVAILABLE = True
 except ImportError:
-    HardwareData = None
-    DrillDepth = None
-    BridgeTarget = None
-    HEALTH_BANDS = None
-    TEMP_BANDS = None
-    NOISE_BANDS = None
-    DRIFT_BANDS = None
-    LIFETIME_BANDS = None
-    VOLTAGE_BANDS = None
-    CURRENT_BANDS = None
-    gray_to_value = None
-    gray_to_binary = None
+    try:
+        from schemas.geometric_bridge_contract import (  # type: ignore
+            HardwareData, DrillDepth, BridgeTarget,
+            HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS, LIFETIME_BANDS,
+            VOLTAGE_BANDS, CURRENT_BANDS,
+            gray_to_value, gray_to_binary,
+        )
+    except ImportError:
+        import sys as _sys
+        import pathlib as _pathlib
+        _repo_root = _pathlib.Path(__file__).resolve().parents[2]
+        _sys.path.insert(0, str(_repo_root))
+        from schemas.geometric_bridge_contract import (  # type: ignore  # noqa: E402
+            HardwareData, DrillDepth, BridgeTarget,
+            HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS, LIFETIME_BANDS,
+            VOLTAGE_BANDS, CURRENT_BANDS,
+            gray_to_value, gray_to_binary,
+        )
     GEOMETRIC_BRIDGE_AVAILABLE = False
 
 # ----------------------------------------------------------------------
