@@ -1108,6 +1108,99 @@ class TestGeometricBridgeContract(unittest.TestCase):
         self.assertIsInstance(taf_bridge.HEALTH_BANDS, tuple)
         self.assertGreater(len(taf_bridge.HEALTH_BANDS), 1)
 
+    def test_bridge_contract_manifest_accessors(self):
+        c = self._import_contract()
+        # 18 bridge domains, 6 hardware modules
+        domains = c.list_bridge_domains()
+        self.assertEqual(len(domains), 18)
+        for canonical in ("sound", "electric", "thermal", "magnetic",
+                           "community", "resilience", "biomachine",
+                           "consciousness", "emotion"):
+            self.assertIn(canonical, domains)
+        # Single-domain lookup
+        thermal = c.get_bridge_domain("thermal")
+        self.assertEqual(thermal["solver_name"], "encode_thermal")
+        self.assertIn("Thermal", c.get_silicon_entry_point("thermal"))
+        # Hardware modules
+        hw = c.list_hardware_modules()
+        self.assertEqual(len(hw), 6)
+        self.assertIn("hardware_bridge", hw)
+        # Missing-domain raises with helpful message
+        with self.assertRaises(KeyError):
+            c.get_bridge_domain("nonexistent_xyz")
+
+
+# ---------------------------------------------------------------
+# mandala_fieldlink (core/integrations/)
+# ---------------------------------------------------------------
+
+class TestMandalaFieldlink(unittest.TestCase):
+    """Loose-coupling bridge to Mandala-Computing (MIT-licensed
+    optimization solver). Mandala is not installed in the test env;
+    fallback paths must work."""
+
+    def _import_link(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from core.integrations import mandala_fieldlink
+        return mandala_fieldlink
+
+    def test_imports_and_constants(self):
+        m = self._import_link()
+        self.assertEqual(len(m.UPSTREAM_COMMIT_SHA), 40)
+        self.assertEqual(m.UPSTREAM_LICENSE, "MIT")
+        self.assertGreaterEqual(len(m.UPSTREAM_ENTRY_POINTS), 3)
+
+    def test_ground_state_to_collapse_distance(self):
+        m = self._import_link()
+        self.assertAlmostEqual(
+            m.ground_state_cost_to_collapse_distance(0.0), 1.0)
+        self.assertAlmostEqual(
+            m.ground_state_cost_to_collapse_distance(1.0), 0.0)
+        self.assertAlmostEqual(
+            m.ground_state_cost_to_collapse_distance(0.25), 0.75)
+
+    def test_solver_choice_for_cascade(self):
+        m = self._import_link()
+        self.assertEqual(m.cascade_level_to_solver_choice("MINIMAL"),
+                         "simulated_annealing")
+        self.assertEqual(m.cascade_level_to_solver_choice("MODERATE"),
+                         "parallel_tempering")
+        self.assertEqual(m.cascade_level_to_solver_choice("CRITICAL"),
+                         "quantum_annealing")
+
+    def test_delegate_uses_fallback_when_mandala_absent(self):
+        m = self._import_link()
+        called = []
+
+        def fallback(problem):
+            called.append(problem)
+            return {"fallback_used": True}
+
+        result = m.delegate_optimization({"cells": 4}, fallback=fallback)
+        self.assertTrue(result["fallback_used"])
+        self.assertEqual(len(called), 1)
+
+    def test_delegate_raises_without_fallback(self):
+        m = self._import_link()
+        with self.assertRaises(m.MandalaUnavailable):
+            m.delegate_optimization({"cells": 4})
+
+    def test_cross_validation_report_shape(self):
+        m = self._import_link()
+        link = m.MandalaLink()
+        link.ingest_mandala(ground_state_cost=0.10,
+                            convergence_residual=1e-7,
+                            n_cells=8, n_active_states=60)
+        link.ingest_taf(fatigue_score=3.0, cascade_level="MODERATE")
+        report = link.cross_validate()
+        self.assertIn("derived_collapse_distance", report)
+        self.assertIn("recommended_solver", report)
+        self.assertEqual(report["recommended_solver"], "parallel_tempering")
+
 
 if __name__ == "__main__":
     unittest.main()
