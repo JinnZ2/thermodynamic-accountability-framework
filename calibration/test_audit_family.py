@@ -1271,5 +1271,114 @@ class TestMunicipalResilienceFramework(unittest.TestCase):
         self.assertGreater(coop_act["commitment_discount"], 0.0)
 
 
+# ---------------------------------------------------------------
+# monolith_brittleness (simulations/) + coupling to municipal
+# ---------------------------------------------------------------
+
+class TestMonolithBrittleness(unittest.TestCase):
+    """Falsifiable monolith-vs-distributed comparison; couples to
+    political_audit/municipal_resilience_framework via
+    business_profile_to_system_node + municipal_fleet_resilience."""
+
+    def _import_module(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from simulations import monolith_brittleness as mb
+        return mb
+
+    def test_imports_and_seven_reference_systems(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        self.assertEqual(len(systems), 7)
+        for k in ("modern_corporate_monolith", "biological_ecosystem",
+                   "distributed_open_source_network",
+                   "small_farm_network"):
+            self.assertIn(k, systems)
+
+    def test_distributed_beats_monolith(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        monolith = mb.resilience_score(systems["modern_corporate_monolith"])
+        distributed = mb.resilience_score(
+            systems["distributed_open_source_network"])
+        ecosystem = mb.resilience_score(systems["biological_ecosystem"])
+        # Falsifiable hypothesis: distributed > monolith
+        self.assertGreater(distributed, monolith)
+        # Biological ecosystem should be the highest-resilience reference
+        self.assertGreater(ecosystem, distributed)
+
+    def test_shock_response_separates_systems(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        # 60% energy shock: industrial agriculture (energy_dependency=0.95)
+        # should retain less function than biological ecosystem
+        # (energy_dependency=0.05).
+        ag = mb.simulate_shock(systems["industrial_agriculture"], 0.6, "energy")
+        eco = mb.simulate_shock(systems["biological_ecosystem"], 0.6, "energy")
+        self.assertLess(ag, 0.5)
+        self.assertGreater(eco, 0.9)
+
+    def test_synchrony_index_higher_for_homogenized(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        results = mb.monolith_synchrony_failure(systems, 0.4, "energy")
+        # Industrial-agriculture monolith: high synchrony, low net survival
+        ag = results["industrial_agriculture"]
+        eco = results["biological_ecosystem"]
+        self.assertGreater(ag["synchrony_index"], 0.8)
+        self.assertLess(eco["synchrony_index"], 0.1)
+        # Net survival should follow
+        self.assertGreater(eco["network_survival"], ag["network_survival"])
+
+    def test_coupling_business_profile_to_system_node(self):
+        """A BusinessProfile from political_audit/municipal_resilience_
+        framework projects into a SystemNode that classifies
+        consistently: extraction predators get high
+        extraction_ratio + low feedback_loop_strength."""
+        mb = self._import_module()
+        from political_audit.municipal_resilience_framework import (
+            reference_profiles,
+        )
+        farm_coop, pe_roll_up = (
+            reference_profiles()[2], reference_profiles()[3]
+        )
+        coop_node = mb.business_profile_to_system_node(farm_coop)
+        pe_node = mb.business_profile_to_system_node(pe_roll_up)
+
+        # Farm coop -> low extraction, high redundancy
+        self.assertLess(coop_node.extraction_ratio, 0.2)
+        # PE roll-up -> high extraction, low feedback
+        self.assertGreater(pe_node.extraction_ratio, 0.9)
+        self.assertLess(pe_node.feedback_loop_strength, 0.6)
+
+        # Resilience score reverses
+        self.assertGreater(
+            mb.resilience_score(coop_node),
+            mb.resilience_score(pe_node),
+        )
+
+    def test_municipal_fleet_resilience_full_loop(self):
+        mb = self._import_module()
+        from political_audit.municipal_resilience_framework import (
+            reference_profiles,
+        )
+        report = mb.municipal_fleet_resilience(
+            reference_profiles(), shock_magnitude=0.4, shock_type="energy"
+        )
+        self.assertEqual(report["fleet_size"], 4)
+        self.assertEqual(report["shock"]["type"], "energy")
+        # Substrate contributors should retain function; predators should fail
+        per = report["per_business"]
+        farm = next(v for k, v in per.items() if "farm cooperative" in k)
+        pe = next(v for k, v in per.items() if "PE-owned" in k)
+        self.assertGreater(farm["network_survival"],
+                           pe["network_survival"])
+        self.assertGreater(farm["network_survival"], 0.5)
+        self.assertLess(pe["network_survival"], 0.3)
+
+
 if __name__ == "__main__":
     unittest.main()
