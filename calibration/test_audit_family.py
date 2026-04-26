@@ -1108,6 +1108,369 @@ class TestGeometricBridgeContract(unittest.TestCase):
         self.assertIsInstance(taf_bridge.HEALTH_BANDS, tuple)
         self.assertGreater(len(taf_bridge.HEALTH_BANDS), 1)
 
+    def test_bridge_contract_manifest_accessors(self):
+        c = self._import_contract()
+        # 18 bridge domains, 6 hardware modules
+        domains = c.list_bridge_domains()
+        self.assertEqual(len(domains), 18)
+        for canonical in ("sound", "electric", "thermal", "magnetic",
+                           "community", "resilience", "biomachine",
+                           "consciousness", "emotion"):
+            self.assertIn(canonical, domains)
+        # Single-domain lookup
+        thermal = c.get_bridge_domain("thermal")
+        self.assertEqual(thermal["solver_name"], "encode_thermal")
+        self.assertIn("Thermal", c.get_silicon_entry_point("thermal"))
+        # Hardware modules
+        hw = c.list_hardware_modules()
+        self.assertEqual(len(hw), 6)
+        self.assertIn("hardware_bridge", hw)
+        # Missing-domain raises with helpful message
+        with self.assertRaises(KeyError):
+            c.get_bridge_domain("nonexistent_xyz")
+
+
+# ---------------------------------------------------------------
+# mandala_fieldlink (core/integrations/)
+# ---------------------------------------------------------------
+
+class TestMandalaFieldlink(unittest.TestCase):
+    """Loose-coupling bridge to Mandala-Computing (MIT-licensed
+    optimization solver). Mandala is not installed in the test env;
+    fallback paths must work."""
+
+    def _import_link(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from core.integrations import mandala_fieldlink
+        return mandala_fieldlink
+
+    def test_imports_and_constants(self):
+        m = self._import_link()
+        self.assertEqual(len(m.UPSTREAM_COMMIT_SHA), 40)
+        self.assertEqual(m.UPSTREAM_LICENSE, "MIT")
+        self.assertGreaterEqual(len(m.UPSTREAM_ENTRY_POINTS), 3)
+
+    def test_ground_state_to_collapse_distance(self):
+        m = self._import_link()
+        self.assertAlmostEqual(
+            m.ground_state_cost_to_collapse_distance(0.0), 1.0)
+        self.assertAlmostEqual(
+            m.ground_state_cost_to_collapse_distance(1.0), 0.0)
+        self.assertAlmostEqual(
+            m.ground_state_cost_to_collapse_distance(0.25), 0.75)
+
+    def test_solver_choice_for_cascade(self):
+        m = self._import_link()
+        self.assertEqual(m.cascade_level_to_solver_choice("MINIMAL"),
+                         "simulated_annealing")
+        self.assertEqual(m.cascade_level_to_solver_choice("MODERATE"),
+                         "parallel_tempering")
+        self.assertEqual(m.cascade_level_to_solver_choice("CRITICAL"),
+                         "quantum_annealing")
+
+    def test_delegate_uses_fallback_when_mandala_absent(self):
+        m = self._import_link()
+        called = []
+
+        def fallback(problem):
+            called.append(problem)
+            return {"fallback_used": True}
+
+        result = m.delegate_optimization({"cells": 4}, fallback=fallback)
+        self.assertTrue(result["fallback_used"])
+        self.assertEqual(len(called), 1)
+
+    def test_delegate_raises_without_fallback(self):
+        m = self._import_link()
+        with self.assertRaises(m.MandalaUnavailable):
+            m.delegate_optimization({"cells": 4})
+
+    def test_cross_validation_report_shape(self):
+        m = self._import_link()
+        link = m.MandalaLink()
+        link.ingest_mandala(ground_state_cost=0.10,
+                            convergence_residual=1e-7,
+                            n_cells=8, n_active_states=60)
+        link.ingest_taf(fatigue_score=3.0, cascade_level="MODERATE")
+        report = link.cross_validate()
+        self.assertIn("derived_collapse_distance", report)
+        self.assertIn("recommended_solver", report)
+        self.assertEqual(report["recommended_solver"], "parallel_tempering")
+
+
+# ---------------------------------------------------------------
+# municipal_resilience_framework (political_audit/)
+# ---------------------------------------------------------------
+
+class TestMunicipalResilienceFramework(unittest.TestCase):
+    """Three-layer incentive-restructuring tool for municipal policy."""
+
+    def _import_module(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from political_audit import municipal_resilience_framework as mrf
+        return mrf
+
+    def test_imports_and_reference_profiles(self):
+        mrf = self._import_module()
+        profiles = mrf.reference_profiles()
+        self.assertEqual(len(profiles), 4)
+        names = [p.name for p in profiles]
+        self.assertTrue(any("Costco" in n for n in names))
+        self.assertTrue(any("PE-owned" in n for n in names))
+
+    def test_extraction_predator_classified_correctly(self):
+        mrf = self._import_module()
+        # PE roll-up profile is the canonical extraction predator
+        pe_roll_up = mrf.reference_profiles()[3]
+        rep = mrf.municipal_reputation_score(pe_roll_up)
+        self.assertEqual(rep["classification"], "extraction_predator")
+        self.assertLess(rep["score"], -0.4)
+
+    def test_substrate_contributor_classified_correctly(self):
+        mrf = self._import_module()
+        # Local farm cooperative is the canonical substrate contributor
+        farm_coop = mrf.reference_profiles()[2]
+        rep = mrf.municipal_reputation_score(farm_coop)
+        self.assertEqual(rep["classification"], "substrate_contributor")
+        self.assertGreater(rep["score"], 0.4)
+
+    def test_tax_rate_inverts_for_extraction_vs_contribution(self):
+        """Predators pay >= 2x; contributors pay <= 0.5x base rate."""
+        mrf = self._import_module()
+        farm_coop = mrf.reference_profiles()[2]
+        pe_roll_up = mrf.reference_profiles()[3]
+        coop_tax = mrf.tax_and_zoning_treatment(farm_coop)
+        pe_tax = mrf.tax_and_zoning_treatment(pe_roll_up)
+        self.assertEqual(coop_tax["zoning_status"], "priority")
+        self.assertEqual(pe_tax["zoning_status"], "blocked")
+        # Spread is at least 5x
+        self.assertGreaterEqual(
+            pe_tax["effective_tax_rate"] / coop_tax["effective_tax_rate"],
+            5.0,
+        )
+
+    def test_actuarial_premium_separates_extraction_from_contribution(self):
+        mrf = self._import_module()
+        farm_coop = mrf.reference_profiles()[2]
+        pe_roll_up = mrf.reference_profiles()[3]
+        coop_act = mrf.actuarial_resilience_score(farm_coop)
+        pe_act = mrf.actuarial_resilience_score(pe_roll_up)
+        # PE has higher premium, larger systemic-risk component, and
+        # zero commitment discount (vs farm coop which has substantial)
+        self.assertGreater(pe_act["premium_index"],
+                           coop_act["premium_index"])
+        self.assertEqual(pe_act["commitment_discount"], 0.0)
+        self.assertGreater(coop_act["commitment_discount"], 0.0)
+
+
+# ---------------------------------------------------------------
+# monolith_brittleness (simulations/) + coupling to municipal
+# ---------------------------------------------------------------
+
+class TestMonolithBrittleness(unittest.TestCase):
+    """Falsifiable monolith-vs-distributed comparison; couples to
+    political_audit/municipal_resilience_framework via
+    business_profile_to_system_node + municipal_fleet_resilience."""
+
+    def _import_module(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from simulations import monolith_brittleness as mb
+        return mb
+
+    def test_imports_and_seven_reference_systems(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        self.assertEqual(len(systems), 7)
+        for k in ("modern_corporate_monolith", "biological_ecosystem",
+                   "distributed_open_source_network",
+                   "small_farm_network"):
+            self.assertIn(k, systems)
+
+    def test_distributed_beats_monolith(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        monolith = mb.resilience_score(systems["modern_corporate_monolith"])
+        distributed = mb.resilience_score(
+            systems["distributed_open_source_network"])
+        ecosystem = mb.resilience_score(systems["biological_ecosystem"])
+        # Falsifiable hypothesis: distributed > monolith
+        self.assertGreater(distributed, monolith)
+        # Biological ecosystem should be the highest-resilience reference
+        self.assertGreater(ecosystem, distributed)
+
+    def test_shock_response_separates_systems(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        # 60% energy shock: industrial agriculture (energy_dependency=0.95)
+        # should retain less function than biological ecosystem
+        # (energy_dependency=0.05).
+        ag = mb.simulate_shock(systems["industrial_agriculture"], 0.6, "energy")
+        eco = mb.simulate_shock(systems["biological_ecosystem"], 0.6, "energy")
+        self.assertLess(ag, 0.5)
+        self.assertGreater(eco, 0.9)
+
+    def test_synchrony_index_higher_for_homogenized(self):
+        mb = self._import_module()
+        systems = mb.build_reference_systems()
+        results = mb.monolith_synchrony_failure(systems, 0.4, "energy")
+        # Industrial-agriculture monolith: high synchrony, low net survival
+        ag = results["industrial_agriculture"]
+        eco = results["biological_ecosystem"]
+        self.assertGreater(ag["synchrony_index"], 0.8)
+        self.assertLess(eco["synchrony_index"], 0.1)
+        # Net survival should follow
+        self.assertGreater(eco["network_survival"], ag["network_survival"])
+
+    def test_coupling_business_profile_to_system_node(self):
+        """A BusinessProfile from political_audit/municipal_resilience_
+        framework projects into a SystemNode that classifies
+        consistently: extraction predators get high
+        extraction_ratio + low feedback_loop_strength."""
+        mb = self._import_module()
+        from political_audit.municipal_resilience_framework import (
+            reference_profiles,
+        )
+        farm_coop, pe_roll_up = (
+            reference_profiles()[2], reference_profiles()[3]
+        )
+        coop_node = mb.business_profile_to_system_node(farm_coop)
+        pe_node = mb.business_profile_to_system_node(pe_roll_up)
+
+        # Farm coop -> low extraction, high redundancy
+        self.assertLess(coop_node.extraction_ratio, 0.2)
+        # PE roll-up -> high extraction, low feedback
+        self.assertGreater(pe_node.extraction_ratio, 0.9)
+        self.assertLess(pe_node.feedback_loop_strength, 0.6)
+
+        # Resilience score reverses
+        self.assertGreater(
+            mb.resilience_score(coop_node),
+            mb.resilience_score(pe_node),
+        )
+
+    def test_municipal_fleet_resilience_full_loop(self):
+        mb = self._import_module()
+        from political_audit.municipal_resilience_framework import (
+            reference_profiles,
+        )
+        report = mb.municipal_fleet_resilience(
+            reference_profiles(), shock_magnitude=0.4, shock_type="energy"
+        )
+        self.assertEqual(report["fleet_size"], 4)
+        self.assertEqual(report["shock"]["type"], "energy")
+        # Substrate contributors should retain function; predators should fail
+        per = report["per_business"]
+        farm = next(v for k, v in per.items() if "farm cooperative" in k)
+        pe = next(v for k, v in per.items() if "PE-owned" in k)
+        self.assertGreater(farm["network_survival"],
+                           pe["network_survival"])
+        self.assertGreater(farm["network_survival"], 0.5)
+        self.assertLess(pe["network_survival"], 0.3)
+
+
+# ---------------------------------------------------------------
+# business_resilience_framework (political_audit/) + projection
+# ---------------------------------------------------------------
+
+class TestBusinessResilienceFramework(unittest.TestCase):
+    """Inside-view self-audit; couples to municipal_resilience_framework
+    via business_state_to_business_profile()."""
+
+    def _import_module(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from political_audit import business_resilience_framework as brf
+        return brf
+
+    def test_imports_and_two_reference_profiles(self):
+        brf = self._import_module()
+        profiles = brf.reference_profiles()
+        self.assertEqual(len(profiles), 2)
+        names = [p.name for p in profiles]
+        self.assertTrue(any("manufacturer" in n for n in names))
+        self.assertTrue(any("PE-acquired" in n for n in names))
+
+    def test_committed_business_substrate_healthy(self):
+        brf = self._import_module()
+        committed = brf.reference_profiles()[0]  # mid-size manufacturer
+        sub = brf.substrate_health_audit(committed)
+        self.assertEqual(sub["rating"], "healthy")
+        ext = brf.extraction_ratio_measurement(committed)
+        self.assertEqual(ext["direction"], "value_returning_to_substrate")
+
+    def test_pe_extraction_drives_collapsing_substrate(self):
+        brf = self._import_module()
+        pe = brf.reference_profiles()[1]
+        sub = brf.substrate_health_audit(pe)
+        self.assertIn(sub["rating"], ("collapsing", "degrading"))
+        ext = brf.extraction_ratio_measurement(pe)
+        self.assertEqual(ext["direction"], "value_leaving_substrate")
+        cas = brf.cascade_vulnerability_scan(pe)
+        # PE roll-up should hit critical or worse
+        self.assertIn(cas["rating"], ("critical", "imminent_failure_risk"))
+
+    def test_discretionary_effort_forecasts_decay_for_pe(self):
+        brf = self._import_module()
+        pe = brf.reference_profiles()[1]
+        eff = brf.discretionary_effort_signal(pe)
+        # Effort 0.20 + safety 0.2 reports + 72% turnover -> advanced decay
+        self.assertIn(eff["forecast"],
+                      ("decay_in_progress",
+                       "advanced_decay_imminent_failure"))
+        self.assertLess(eff["leading_indicator"], 0.30)
+
+    def test_transition_pathway_phases_present_for_decaying_business(self):
+        brf = self._import_module()
+        pe = brf.reference_profiles()[1]
+        path = brf.transition_pathway(pe)
+        self.assertEqual(len(path["phases"]), 3)
+        # Each phase has at least one action for the decaying business
+        for p in path["phases"]:
+            self.assertGreater(len(p["actions"]), 0)
+        self.assertIn("phase_1", path["falsifiable_targets"])
+
+    def test_inside_to_outside_projection_consistent(self):
+        """Self-audited committed business projects to substrate_contributor
+        at the municipal layer; self-audited PE business projects to
+        extraction_predator. The inside view and outside view tell the
+        same story."""
+        brf = self._import_module()
+        from political_audit.municipal_resilience_framework import (
+            municipal_reputation_score,
+            tax_and_zoning_treatment,
+        )
+        committed, pe = brf.reference_profiles()
+        committed_profile = brf.business_state_to_business_profile(committed)
+        pe_profile = brf.business_state_to_business_profile(pe)
+
+        committed_rep = municipal_reputation_score(committed_profile)
+        pe_rep = municipal_reputation_score(pe_profile)
+
+        self.assertEqual(committed_rep["classification"],
+                         "substrate_contributor")
+        self.assertEqual(pe_rep["classification"], "extraction_predator")
+
+        # Tax/zoning treatment should flip too
+        committed_tax = tax_and_zoning_treatment(committed_profile)
+        pe_tax = tax_and_zoning_treatment(pe_profile)
+        self.assertEqual(committed_tax["zoning_status"], "priority")
+        self.assertEqual(pe_tax["zoning_status"], "blocked")
+
 
 if __name__ == "__main__":
     unittest.main()

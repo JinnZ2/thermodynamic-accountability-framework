@@ -92,7 +92,21 @@ PINS = [
         "notes": "Upstream has no declared version yet; pre-release (500+ "
                  "commits). Contract provides functional stdlib fallbacks so "
                  "TAF's taf_bridge.py works end-to-end without the external "
-                 "repo installed.",
+                 "repo installed. Also mirrors bridge_contract_manifest.json "
+                 "(18 bridge domains, 6 hardware modules) at "
+                 "schemas/bridge_contract_manifest.json.",
+    },
+    {
+        "kind": "commit_sha",
+        "name": "mandala_computing",
+        "owner": "JinnZ2",
+        "repo": "Mandala-Computing",
+        "branch": "main",
+        "pinned_sha": "1e2aa0da4072b2a6ed8dc5c28004418a2bfbec33",
+        "contract_file": "core/integrations/mandala_fieldlink.py",
+        "notes": "MIT-licensed (TAF stays CC0; loose coupling via the "
+                 "fieldlink preserves the license boundary). Upstream is "
+                 "research-grade with no SURFACE.md; advisory drift only.",
     },
 ]
 

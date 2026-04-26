@@ -276,6 +276,124 @@ def validate_upstream_surface(namespace: Dict[str, Any]) -> SurfaceCheckResult:
 
 
 # ---------------------------------------------------------------
+# BRIDGE CONTRACT MANIFEST ACCESSORS
+# ---------------------------------------------------------------
+# Mirror of upstream's cross_repo_bridge_contract.py. Loads either
+# the live upstream's bridge_contract_manifest.json (when the package
+# is installed) or our local mirror at
+# schemas/bridge_contract_manifest.json. Provides the same accessor
+# surface declared by upstream's __all__:
+#     load_bridge_contract, list_bridge_domains, get_bridge_domain,
+#     get_solver_name, get_top_level_encoder, get_silicon_entry_point,
+#     list_hardware_modules, get_hardware_module
+#
+# This is the 18-domain registry through which TAF can dispatch to
+# alternative-compute paradigms (sound, electric, gravity, magnetic,
+# light, pressure, thermal, wave, chemical, community, resilience,
+# biomachine, coop, cyclic, vortex, geometric_fiber, consciousness,
+# emotion). Each domain carries a silicon_entry_point string that
+# names the upstream class to import for hardware-aware dispatch.
+
+import json as _json
+import functools as _functools
+import pathlib as _pathlib
+
+_MIRROR_MANIFEST_PATH = (
+    _pathlib.Path(__file__).resolve().parent / "bridge_contract_manifest.json"
+)
+
+
+@_functools.lru_cache(maxsize=1)
+def load_bridge_contract() -> Dict[str, Any]:
+    """Load the bridge contract manifest.
+
+    Resolution order:
+      1. The live upstream package's manifest, if importable
+         (`from cross_repo_bridge_contract import load_bridge_contract`)
+      2. TAF's local mirror at schemas/bridge_contract_manifest.json
+
+    The two are kept in lockstep by surface_staleness_check.py. The
+    upstream commit SHA pinned in this contract (UPSTREAM_COMMIT_SHA)
+    is the version of the manifest the local mirror tracks.
+    """
+    try:
+        from cross_repo_bridge_contract import (  # type: ignore
+            load_bridge_contract as _upstream_loader,
+        )
+        return _upstream_loader()
+    except ImportError:
+        return _json.loads(_MIRROR_MANIFEST_PATH.read_text())
+
+
+def _bridge_index() -> Dict[str, Dict[str, Any]]:
+    return {entry["name"]: entry
+            for entry in load_bridge_contract()["bridge_domains"]}
+
+
+def _hardware_index() -> Dict[str, Dict[str, Any]]:
+    return {entry["name"]: entry
+            for entry in load_bridge_contract()["hardware_module_catalog"]}
+
+
+def list_bridge_domains() -> List[str]:
+    """Return bridge domain names in canonical contract order."""
+    return [entry["name"]
+            for entry in load_bridge_contract()["bridge_domains"]]
+
+
+def get_bridge_domain(name: str) -> Dict[str, Any]:
+    """Return manifest metadata for one bridge domain."""
+    key = name.strip().lower()
+    idx = _bridge_index()
+    if key not in idx:
+        available = ", ".join(sorted(idx))
+        raise KeyError(
+            f"Unknown bridge domain '{name}'. Available domains: {available}"
+        )
+    return idx[key]
+
+
+def get_solver_name(name: str) -> str:
+    """Return the canonical registry solver name for a bridge domain."""
+    return get_bridge_domain(name)["solver_name"]
+
+
+def get_top_level_encoder(name: str) -> str:
+    """Return the canonical top-level encoder import path."""
+    return get_bridge_domain(name)["top_level_encoder"]
+
+
+def get_silicon_entry_point(name: str) -> str:
+    """Return the canonical silicon-side entry point import path.
+
+    This is the alternative-compute dispatch entry: the import path
+    a consumer would use to instantiate the hardware-aware encoder
+    for a given bridge domain. TAF's taf_alternative_compute.py can
+    use this to delegate to the upstream's silicon adapters when
+    available.
+    """
+    return get_bridge_domain(name)["silicon_entry_point"]
+
+
+def list_hardware_modules() -> List[str]:
+    """Return hardware-module names in canonical contract order."""
+    return [entry["name"]
+            for entry in load_bridge_contract()["hardware_module_catalog"]]
+
+
+def get_hardware_module(name: str) -> Dict[str, Any]:
+    """Return manifest metadata for one hardware-side module."""
+    key = name.strip().lower()
+    idx = _hardware_index()
+    if key not in idx:
+        available = ", ".join(sorted(idx))
+        raise KeyError(
+            f"Unknown hardware module '{name}'. Available modules: {available}"
+        )
+    return idx[key]
+
+
+# ---------------------------------------------------------------
 # SELF-TEST
 # ---------------------------------------------------------------
 
