@@ -1380,5 +1380,97 @@ class TestMonolithBrittleness(unittest.TestCase):
         self.assertLess(pe["network_survival"], 0.3)
 
 
+# ---------------------------------------------------------------
+# business_resilience_framework (political_audit/) + projection
+# ---------------------------------------------------------------
+
+class TestBusinessResilienceFramework(unittest.TestCase):
+    """Inside-view self-audit; couples to municipal_resilience_framework
+    via business_state_to_business_profile()."""
+
+    def _import_module(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from political_audit import business_resilience_framework as brf
+        return brf
+
+    def test_imports_and_two_reference_profiles(self):
+        brf = self._import_module()
+        profiles = brf.reference_profiles()
+        self.assertEqual(len(profiles), 2)
+        names = [p.name for p in profiles]
+        self.assertTrue(any("manufacturer" in n for n in names))
+        self.assertTrue(any("PE-acquired" in n for n in names))
+
+    def test_committed_business_substrate_healthy(self):
+        brf = self._import_module()
+        committed = brf.reference_profiles()[0]  # mid-size manufacturer
+        sub = brf.substrate_health_audit(committed)
+        self.assertEqual(sub["rating"], "healthy")
+        ext = brf.extraction_ratio_measurement(committed)
+        self.assertEqual(ext["direction"], "value_returning_to_substrate")
+
+    def test_pe_extraction_drives_collapsing_substrate(self):
+        brf = self._import_module()
+        pe = brf.reference_profiles()[1]
+        sub = brf.substrate_health_audit(pe)
+        self.assertIn(sub["rating"], ("collapsing", "degrading"))
+        ext = brf.extraction_ratio_measurement(pe)
+        self.assertEqual(ext["direction"], "value_leaving_substrate")
+        cas = brf.cascade_vulnerability_scan(pe)
+        # PE roll-up should hit critical or worse
+        self.assertIn(cas["rating"], ("critical", "imminent_failure_risk"))
+
+    def test_discretionary_effort_forecasts_decay_for_pe(self):
+        brf = self._import_module()
+        pe = brf.reference_profiles()[1]
+        eff = brf.discretionary_effort_signal(pe)
+        # Effort 0.20 + safety 0.2 reports + 72% turnover -> advanced decay
+        self.assertIn(eff["forecast"],
+                      ("decay_in_progress",
+                       "advanced_decay_imminent_failure"))
+        self.assertLess(eff["leading_indicator"], 0.30)
+
+    def test_transition_pathway_phases_present_for_decaying_business(self):
+        brf = self._import_module()
+        pe = brf.reference_profiles()[1]
+        path = brf.transition_pathway(pe)
+        self.assertEqual(len(path["phases"]), 3)
+        # Each phase has at least one action for the decaying business
+        for p in path["phases"]:
+            self.assertGreater(len(p["actions"]), 0)
+        self.assertIn("phase_1", path["falsifiable_targets"])
+
+    def test_inside_to_outside_projection_consistent(self):
+        """Self-audited committed business projects to substrate_contributor
+        at the municipal layer; self-audited PE business projects to
+        extraction_predator. The inside view and outside view tell the
+        same story."""
+        brf = self._import_module()
+        from political_audit.municipal_resilience_framework import (
+            municipal_reputation_score,
+            tax_and_zoning_treatment,
+        )
+        committed, pe = brf.reference_profiles()
+        committed_profile = brf.business_state_to_business_profile(committed)
+        pe_profile = brf.business_state_to_business_profile(pe)
+
+        committed_rep = municipal_reputation_score(committed_profile)
+        pe_rep = municipal_reputation_score(pe_profile)
+
+        self.assertEqual(committed_rep["classification"],
+                         "substrate_contributor")
+        self.assertEqual(pe_rep["classification"], "extraction_predator")
+
+        # Tax/zoning treatment should flip too
+        committed_tax = tax_and_zoning_treatment(committed_profile)
+        pe_tax = tax_and_zoning_treatment(pe_profile)
+        self.assertEqual(committed_tax["zoning_status"], "priority")
+        self.assertEqual(pe_tax["zoning_status"], "blocked")
+
+
 if __name__ == "__main__":
     unittest.main()
