@@ -1202,5 +1202,74 @@ class TestMandalaFieldlink(unittest.TestCase):
         self.assertEqual(report["recommended_solver"], "parallel_tempering")
 
 
+# ---------------------------------------------------------------
+# municipal_resilience_framework (political_audit/)
+# ---------------------------------------------------------------
+
+class TestMunicipalResilienceFramework(unittest.TestCase):
+    """Three-layer incentive-restructuring tool for municipal policy."""
+
+    def _import_module(self):
+        import sys
+        import pathlib
+        repo_root = pathlib.Path(__file__).resolve().parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        from political_audit import municipal_resilience_framework as mrf
+        return mrf
+
+    def test_imports_and_reference_profiles(self):
+        mrf = self._import_module()
+        profiles = mrf.reference_profiles()
+        self.assertEqual(len(profiles), 4)
+        names = [p.name for p in profiles]
+        self.assertTrue(any("Costco" in n for n in names))
+        self.assertTrue(any("PE-owned" in n for n in names))
+
+    def test_extraction_predator_classified_correctly(self):
+        mrf = self._import_module()
+        # PE roll-up profile is the canonical extraction predator
+        pe_roll_up = mrf.reference_profiles()[3]
+        rep = mrf.municipal_reputation_score(pe_roll_up)
+        self.assertEqual(rep["classification"], "extraction_predator")
+        self.assertLess(rep["score"], -0.4)
+
+    def test_substrate_contributor_classified_correctly(self):
+        mrf = self._import_module()
+        # Local farm cooperative is the canonical substrate contributor
+        farm_coop = mrf.reference_profiles()[2]
+        rep = mrf.municipal_reputation_score(farm_coop)
+        self.assertEqual(rep["classification"], "substrate_contributor")
+        self.assertGreater(rep["score"], 0.4)
+
+    def test_tax_rate_inverts_for_extraction_vs_contribution(self):
+        """Predators pay >= 2x; contributors pay <= 0.5x base rate."""
+        mrf = self._import_module()
+        farm_coop = mrf.reference_profiles()[2]
+        pe_roll_up = mrf.reference_profiles()[3]
+        coop_tax = mrf.tax_and_zoning_treatment(farm_coop)
+        pe_tax = mrf.tax_and_zoning_treatment(pe_roll_up)
+        self.assertEqual(coop_tax["zoning_status"], "priority")
+        self.assertEqual(pe_tax["zoning_status"], "blocked")
+        # Spread is at least 5x
+        self.assertGreaterEqual(
+            pe_tax["effective_tax_rate"] / coop_tax["effective_tax_rate"],
+            5.0,
+        )
+
+    def test_actuarial_premium_separates_extraction_from_contribution(self):
+        mrf = self._import_module()
+        farm_coop = mrf.reference_profiles()[2]
+        pe_roll_up = mrf.reference_profiles()[3]
+        coop_act = mrf.actuarial_resilience_score(farm_coop)
+        pe_act = mrf.actuarial_resilience_score(pe_roll_up)
+        # PE has higher premium, larger systemic-risk component, and
+        # zero commitment discount (vs farm coop which has substantial)
+        self.assertGreater(pe_act["premium_index"],
+                           coop_act["premium_index"])
+        self.assertEqual(pe_act["commitment_discount"], 0.0)
+        self.assertGreater(coop_act["commitment_discount"], 0.0)
+
+
 if __name__ == "__main__":
     unittest.main()
