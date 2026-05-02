@@ -196,6 +196,14 @@ thermodynamic-accountability-framework/
 │   ├── trend_corruption_calculator.py     # combine measurement + framework
 │   │                             #   corruption probabilities; verdict:
 │   │                             #   REPORTED/INFLATED/INVERTED/INDETERMINATE
+│   ├── constraint_recovery_framework.py   # recover physical constraints
+│   │                             #   from pre-1900 systems into machine-
+│   │                             #   readable PhysicalConstraint records
+│   │                             #   (trigger / problem / mechanism /
+│   │                             #   lag / failure-mode / cost / validation).
+│   │                             #   Three seeded RecoveredSystems: mill
+│   │                             #   pond cascade, Anishinaabe seasonal
+│   │                             #   burning, beaver hydrology.
 │   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
 │   └── us_wildfire_audit_registry.md      # worked-example audit registry
 │
@@ -603,3 +611,13 @@ python core/atbs/test_v2.py
   files keep `⊗` since it renders correctly there.
 - All metrology modules: stdlib only. Smoke-test by running each
   module directly: `python3 metrology/<module>.py`.
+- Added `metrology/constraint_recovery_framework.py`: extracts the
+  physical constraints encoded in pre-1900 engineering systems into
+  machine-readable `PhysicalConstraint` records (physical_trigger,
+  problem_solved, solution_mechanism, lag_time_weeks, failure_mode,
+  cost_of_failure, validation). Three seeded `RecoveredSystem`s
+  (mill pond cascade, Anishinaabe seasonal burning, beaver
+  hydrology); query helpers `find_system`,
+  `find_constraints_by_problem`, `coupled_failure_analysis`. Couples
+  to `pre1900_engineering_registry.py` -- the registry catalogs the
+  systems, this module recovers their engineering constraints.
