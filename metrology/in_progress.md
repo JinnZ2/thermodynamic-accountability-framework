@@ -367,7 +367,17 @@ what the data actually is.
 - [ ] Phase 2 population: pull NIFC methodology papers, construct dual-
       stream data 2015-2024, build the four surrogate calibration curves
       listed in the wildfire registry
-- [ ] Phase 3: hurricane registry markdown templated from wildfire
+- [x] Phase 3 skeleton: `atlantic_hurricane_audit_registry.md` 7-era audit
+      + `hurricane_metrology_demo.py` runs end-to-end. Demo confirms the
+      naive vs AMO-matched vs methodology+phase-matched comparisons
+      produce three different stories from the same HURDAT2 numbers
+      (naive +120%, AMO-matched +41%, methodology+phase-matched is the
+      apples-to-apples comparison).
+- [ ] Phase 3 population: build calibration curves from the published
+      Landsea/Hagen/Delgado reanalysis papers (the revisions ARE the
+      dual-stream data); systematize Vecchi-Knutson missing-storm
+      corrections for pre-1965 data; add HURDAT2 version + hash pinning
+      to every record.
 - [ ] Phase 4: drought registry, with the derived-index caveat documented
       up front (PDSI vs SPI vs SPEI vs Drought Monitor)
 - [ ] Phase 5: flood registry, with explicit "missing gauge" / network-
