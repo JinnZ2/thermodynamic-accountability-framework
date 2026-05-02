@@ -378,8 +378,21 @@ what the data actually is.
       dual-stream data); systematize Vecchi-Knutson missing-storm
       corrections for pre-1965 data; add HURDAT2 version + hash pinning
       to every record.
-- [ ] Phase 4: drought registry, with the derived-index caveat documented
-      up front (PDSI vs SPI vs SPEI vs Drought Monitor)
+- [x] Phase 4 skeleton: `us_drought_audit_registry.md` 8-era audit
+      (D1 newspaper -> D8 GRACE-FO + multi-sensor) + `drought_metrology
+      _demo.py` runs end-to-end. Demo confirms five indices give five
+      different answers for the same 2000-2024 conditions (PDSI
+      Thornthwaite -0.98 "D1 moderate" vs SPI -0.24 "no drought"),
+      and the 2015 baseline-switching example shows the same physical
+      conditions move from "D0" (1961-1990 baseline) to "no drought"
+      (1991-2020 baseline). Yang 2020 overestimation reproduced at
+      ~30% bias in the 2010s decade. Documents the cumulative
+      uncertainty stack at +/-1.0 PDSI units RSS, comparable to the
+      magnitude of most published drought "signals."
+- [ ] Phase 4 population: pull operational PDSI/SPI/SPEI archives from
+      NCEI with version metadata; recompute key historical droughts
+      using Yang 2020 PDSI-CMIP5 method; cross-reference with Cook et
+      al. tree-ring drought atlases; build the four calibration curves.
 - [ ] Phase 5: flood registry, with explicit "missing gauge" / network-
       density handling
 - [ ] Phase 6: cross-domain matrix wrapper -- `CalibrationVectorEntry`
