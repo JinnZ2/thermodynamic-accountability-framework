@@ -514,6 +514,175 @@ real flow rather than an aspiration.
 
 ---
 
+## Planned spin-out: `metrology-audit/` repo
+
+The `metrology/` folder in this repo started as a sub-component of
+the thermodynamic accountability framework but is increasingly
+its own thing. The eventual target is a separate CC0 repo with
+the structure below. The current `metrology/` folder is the
+mid-stage that prototypes the contents.
+
+Spin-out is not urgent. It happens when:
+
+1. All five domain registries + demos are populated past skeleton
+2. The four pipeline components ([1]-[4] above) all exist as
+   general-purpose tools
+3. At least one domain has a real (non-synthetic) populated
+   `CalibrationVectorEntry` set demonstrating the pipeline end-to-end
+
+Until then, work continues here.
+
+### Target structure
+
+```
+metrology-audit/                         <- new repo, CC0
++- README.md                             (project overview, philosophy)
++- PHILOSOPHY.md                         (substrate-primary frame,
+|                                         causal inversion finding,
+|                                         relationship to other repos)
+|
++- core/
+|  +- framework.py                       (MeasurementEra, MeasuredValue,
+|  |                                      CalibrationVectorEntry,
+|  |                                      SurrogateCalibrationCurve)
+|  +- translation_layer.py               (NEW - parse institutional
+|  |                                      datasets into canonical vectors)
+|  +- assumption_bias_detector.py        (existing tool, integrated)
+|  +- calibration_curve_builder.py       (existing tool)
+|  +- uncertainty_compositor.py          (NEW - stack uncertainty across
+|                                         measurement / methodology /
+|                                         baseline / framework layers)
+|
++- domains/
+|  +- tornado/
+|  |  +- REGISTRY.md                     (the F-eras documentation)
+|  |  +- eras.py                         (MeasurementEra definitions)
+|  |  +- ingest.py                       (parse SPC database -> vectors)
+|  |  +- calibration_curves.py           (era-specific curves)
+|  |  +- demo.py                         (the metrology problem demo)
+|  +- hurricane/
+|  |  +- ... (same structure)
+|  +- fire/
+|  |  +- ...
+|  +- drought/
+|  |  +- ...
+|  +- flood/
+|     +- ...
+|
++- data/
+|  +- raw/                               (downloaded source data,
+|  |                                      immutable, hash-pinned)
+|  +- canonical/                         (vectorized matrix, JSON)
+|  +- calibrations/                      (built curves, versioned)
+|
++- tests/
+|  +- test_framework.py
+|  +- test_translation.py
+|  +- test_assumption_audit.py
+|  +- test_uncertainty.py
+|
++- docs/
+   +- METHODOLOGY.md                     (how to add a new domain)
+   +- REPRODUCIBILITY.md                 (how to verify findings)
+   +- INSTITUTIONAL_RECEIPTS.md          (the documented revisions)
+```
+
+### Mapping current `metrology/` files to target structure
+
+| Current location                              | Target location                              |
+|-----------------------------------------------|----------------------------------------------|
+| `metrology/metrological_audit_framework.py`   | `core/framework.py`                          |
+| `metrology/calibration_curve_builder.py`      | `core/calibration_curve_builder.py`          |
+| `metrology/assumption_bias_detector.py`       | `core/assumption_bias_detector.py`           |
+| `metrology/us_wildfire_audit_registry.md`     | `domains/fire/REGISTRY.md`                   |
+| `metrology/atlantic_hurricane_audit_registry.md` | `domains/hurricane/REGISTRY.md`           |
+| `metrology/us_drought_audit_registry.md`      | `domains/drought/REGISTRY.md`                |
+| `metrology/us_flood_audit_registry.md`        | `domains/flood/REGISTRY.md`                  |
+| `metrology/tornado_metrology_demo.py`         | `domains/tornado/demo.py`                    |
+| `metrology/hurricane_metrology_demo.py`       | `domains/hurricane/demo.py`                  |
+| `metrology/drought_metrology_demo.py`         | `domains/drought/demo.py`                    |
+| `metrology/flood_metrology_demo.py`           | `domains/flood/demo.py`                      |
+| `metrology/in_progress.md` (this file)        | folded into `README.md` + `docs/METHODOLOGY.md` |
+| (not yet built)                               | `core/translation_layer.py`                  |
+| (not yet built)                               | `core/uncertainty_compositor.py`             |
+| (not yet built)                               | `domains/*/eras.py`                          |
+| (not yet built)                               | `domains/*/ingest.py`                        |
+| (not yet built)                               | `domains/*/calibration_curves.py`            |
+| (not yet built)                               | `tests/`                                     |
+| (not yet built)                               | `data/raw/`, `data/canonical/`, `data/calibrations/` |
+| (not yet built)                               | `docs/INSTITUTIONAL_RECEIPTS.md`             |
+
+The current repo's tornado work is partially split (no separate
+registry markdown yet; `tornado_metrology_demo.py` carries the
+era documentation inline). Spin-out time is also when that gets
+factored out.
+
+### Translation Layer specification
+
+This is the more detailed version of pipeline component [1]
+(Metadata Extractor) above. It is what `core/translation_layer.py`
+needs to do.
+
+```
++--------------------------------------------------------------+
+| WHAT THE TRANSLATION LAYER NEEDS TO DO                       |
+|                                                              |
+| INPUT: institutional dataset (e.g. SPC tornado database)     |
+|                                                              |
+| STEP 1: pin the source                                       |
+|   - download URL                                             |
+|   - SHA-256 hash                                             |
+|   - retrieval timestamp                                      |
+|   - immutable copy in data/raw/                              |
+|                                                              |
+| STEP 2: parse records                                        |
+|   - one record per event                                     |
+|   - extract all available variables                          |
+|                                                              |
+| STEP 3: assign measurement era                               |
+|   - based on event date and era definitions                  |
+|   - flag boundary cases (events near era transitions)        |
+|                                                              |
+| STEP 4: attach uncertainty                                   |
+|   - look up era's documented uncertainty                     |
+|   - apply reanalysis-revision uncertainty if applicable      |
+|   - apply baseline-period uncertainty if relevant            |
+|                                                              |
+| STEP 5: mark unknowns                                        |
+|   - variables not measurable in event's era -> UNKNOWN       |
+|   - never guess, never extrapolate without flag              |
+|                                                              |
+| STEP 6: emit canonical vector                                |
+|   - JSON schema-stable                                       |
+|   - includes provenance metadata                             |
+|   - includes reanalysis history (if revisions documented)    |
+|                                                              |
+| OUTPUT: data/canonical/{domain}/{event_id}.json              |
++--------------------------------------------------------------+
+```
+
+The 6-step contract is what makes the matrix populated rather
+than aspirational. Each step has a clear failure mode if skipped:
+
+- Skip step 1: results aren't reproducible (the source moved or
+  was edited)
+- Skip step 2: records get lost or misaligned with reality
+- Skip step 3: era-blind analysis (the standard institutional
+  failure mode)
+- Skip step 4: confident-looking outputs with no uncertainty
+  band (also the standard institutional failure mode)
+- Skip step 5: NaN gets silently filled with zero or model
+  guess (the third standard institutional failure mode)
+- Skip step 6: data lives in code rather than as inspectable
+  artifacts (no audit trail for downstream users)
+
+The translation layer is the load-bearing piece that makes the
+spin-out repo more than a collection of demos. Until it exists,
+the demos are illustrations of the problem; with it, they become
+the operational diagnostics on real data.
+
+---
+
 ## Status / next actions
 
 - [x] Phase 1 skeleton: `tornado_metrology_demo.py` runs end-to-end
