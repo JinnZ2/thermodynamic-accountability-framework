@@ -360,6 +360,160 @@ what the data actually is.
 
 ---
 
+## Data pipeline architecture
+
+The matrix is the storage shape. The pipeline is how observations
+actually get into it without inheriting the corruption.
+
+### The pipeline today vs needed
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ DATA PIPELINE (current, broken)                              │
+│                                                              │
+│ NOAA/USGS/NHC -> corrupted dataset -> analysis -> claim      │
+│                                                              │
+│ WHAT'S MISSING:                                              │
+│ The corrupted dataset is the only input. You're analyzing    │
+│ the corruption, not the physics.                             │
+│                                                              │
+│ DATA PIPELINE (needed)                                       │
+│                                                              │
+│ Raw observations (timestamped, immutable)                    │
+│         |                                                    │
+│         v                                                    │
+│ [TRANSLATION LAYER]                                          │
+│   - extract measurement metadata (era, instrument, method)   │
+│   - identify detection cliffs                                │
+│   - flag reanalysis revisions                                │
+│   - mark excluded-cause assumptions                          │
+│   - attach uncertainty bands per era                         │
+│         |                                                    │
+│         v                                                    │
+│ Canonical vector matrix (with unknowns explicit)             │
+│         |                                                    │
+│         v                                                    │
+│ Physics-first analysis (resonance, coupling, phase-locking)  │
+│         |                                                    │
+│         v                                                    │
+│ Claims that can actually be tested                           │
+└──────────────────────────────────────────────────────────────┘
+```
+
+The translation layer is the work that doesn't yet exist as a
+unified tool. Each of the four components below is a piece of it.
+
+### Pipeline components
+
+**[1] Metadata Extractor**
+
+```
+Input:  NOAA/NHC/USGS dataset + documentation
+Output:
+  - measurement_era assignments per record
+  - instrument_type + calibration_date
+  - methodology_change_flags
+  - reanalysis_receipt (date, before/after values)
+  - detection_threshold_at_event_date
+
+Example (hurricane):
+  Hurricane Carla 1961:
+    - original_saffir_simpson:    5
+    - date_assigned:               1961-09
+    - methodology_at_assignment:   NHC post-storm analysis
+    - reanalysis_receipt:          Delgado et al. 2018
+    - current_saffir_simpson:      4
+    - flag: RETROACTIVE_DOWNGRADE_57_YEARS_LATER
+```
+
+Status: the per-domain audit registries (tornado, wildfire,
+hurricane, drought, flood) document which receipts exist; the
+extractor that pulls them into per-event metadata is unbuilt.
+
+**[2] Cliff Detector**
+
+```
+Input:  time series of counts/ratings + known tech changes
+Output: detection cliff flagged + magnitude quantified
+
+Example (tornado):
+  WSR-88D deployment 1991-1997
+  -> flag: DOPPLER_DETECTION_CLIFF
+  -> magnitude: +44% apparent jump in weak tornadoes
+  -> physics_or_artifact: BOTH (real activity + detection)
+```
+
+Status: the demos (tornado, hurricane, drought, flood) compute
+cliff magnitudes inline. The detector that runs across an arbitrary
+time series + era-boundary registry is unbuilt.
+
+**[3] Assumption Parser**
+
+```
+Input:  institutional claim + measured variables
+Output: excluded_causes + missing_variables
+
+Example (flood):
+  Claim:        "Flood frequency increasing"
+  Measured:     FEMA declarations + precipitation
+  Excluded:     impervious surface, wetland loss, zoning
+  Missing_vars: [watershed_imperviousness, wetland_extent]
+```
+
+Status: **landed** as `assumption_bias_detector.py`. Pattern
+library covers six domains plus pinnacle-assumption signals.
+Extending it means adding entries to `EXCLUDED_CAUSE_PATTERNS`.
+
+**[4] Uncertainty Compositor**
+
+```
+Input:  era metadata + calibration curves + baseline shifts
+Output: total_uncertainty_band per record
+
+Example (drought):
+  PDSI 2015:
+    base_uncertainty:               +/-0.3 (measurement noise)
+    + baseline_shift_uncertainty:   +/-0.4 (1961-1990 vs 1991-2020)
+    + CO2_correction_uncertainty:   +/-0.4 (Yang 2020)
+    + index_choice_uncertainty:     +/-0.5 (PDSI vs SPI vs SPEI)
+    = total:                        +/-1.1 (spans 3 drought categories)
+```
+
+Status: the drought demo computes the cumulative stack inline
+(reaches +/-1.0 RSS). The compositor that runs across a record's
+full era/method/baseline metadata is unbuilt.
+
+### How the pieces fit
+
+Of the four pipeline components, only [3] is operational
+(`assumption_bias_detector.py`). [1], [2], [4] exist as ad-hoc
+calculations inside the per-domain demos but have not been lifted
+into general-purpose tools that operate on `CalibrationVectorEntry`
+records via the existing framework.
+
+The next concrete pieces of work, in priority order:
+
+1. Lift [4] Uncertainty Compositor into a general function:
+   `compose_uncertainty(entry: CalibrationVectorEntry, era_registry)`
+   that walks the entry's measurement_era, calibration_curve_applied,
+   and reference_period fields and returns a combined uncertainty
+   band. The drought demo's logic generalizes cleanly.
+
+2. Lift [2] Cliff Detector into a general function:
+   `detect_cliffs(time_series, era_boundaries)` that returns flagged
+   cliffs with magnitude. The tornado / hurricane demos already
+   do this manually.
+
+3. Build [1] Metadata Extractor as the bridge from raw NOAA/NHC/USGS
+   pulls into populated `CalibrationVectorEntry` records. This is
+   the largest piece of work because it requires per-source parsing
+   logic.
+
+Once all four are operational, the pipeline diagram above is a
+real flow rather than an aspiration.
+
+---
+
 ## Status / next actions
 
 - [x] Phase 1 skeleton: `tornado_metrology_demo.py` runs end-to-end
