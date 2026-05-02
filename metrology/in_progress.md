@@ -393,11 +393,44 @@ what the data actually is.
       NCEI with version metadata; recompute key historical droughts
       using Yang 2020 PDSI-CMIP5 method; cross-reference with Cook et
       al. tree-ring drought atlases; build the four calibration curves.
-- [ ] Phase 5: flood registry, with explicit "missing gauge" / network-
-      density handling
+- [x] Phase 5 skeleton: `us_flood_audit_registry.md` 6-era audit
+      (F1 pre-gauge -> F6 satellite + ML) + `flood_metrology_demo.py`
+      runs end-to-end. The flood phase surfaces a NEW finding that
+      didn't appear in earlier phases: floods don't have a methodology
+      problem, they have an ASSUMPTION problem. The framework that
+      asks "is climate causing more floods?" structurally excludes
+      "is land-use causing more floods?" from being a testable
+      alternative. Demo shows precipitation r=+0.695 vs impervious-
+      surface r=+0.638 with billion-$ flood disasters -- comparable
+      correlations, but only the climate one gets published. The
+      land-use variables aren't in the dataset because the framework
+      doesn't consider them candidates.
+
+- [x] Layer-4 detector: `assumption_bias_detector.py` is the
+      operational tool that emerges from the flood-phase finding.
+      Generalizes the framework audit across all six domains
+      (flood, drought, tornado, hurricane, fire, earthquake) plus
+      pinnacle-assumption signals (primitive/obsolete/inefficient/
+      etc.). Given a `FrameworkClaim` with verbatim text, attributed
+      cause, and measured variables, returns suggested excluded
+      causes, missing variables, and a reframed claim. Pattern
+      library is intentionally extensible -- adding a domain means
+      adding one entry to `EXCLUDED_CAUSE_PATTERNS`. Self-test
+      exercises four claims (flood, drought, tornado, infrastructure-
+      pinnacle); all detection patterns fire correctly.
+
+- [ ] Phase 5 population: paired-watershed analysis (developed vs
+      undeveloped, similar precipitation), pre/post-channelization
+      gauge records, paleoflood deposit cross-reference, NFIP
+      claims with property-age and zoning context.
+
 - [ ] Phase 6: cross-domain matrix wrapper -- `CalibrationVectorEntry`
       already supports the open-schema variables dict; the cross-domain
-      query layer is what's missing
+      query layer is what's missing. Now that `assumption_bias_detector
+      .py` exists, Phase 6 also needs a Layer-4 audit pass on
+      cross-domain queries (e.g. "did 2011 cluster across domains?"
+      can be a real signal OR a clustering of methodology shifts in
+      multiple domains simultaneously).
 
 This is multi-year work. The point of writing it down append-only is
 that the corruption is explicit. Future analysis can honor it.
