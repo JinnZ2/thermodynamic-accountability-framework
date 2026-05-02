@@ -99,6 +99,16 @@ thermodynamic-accountability-framework/
 │   │                             #   EMBEDDED_PROMPT for AI readers
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
+│   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
+│   │                             #   recency-bias patterns (temporal
+│   │                             #   hierarchy, progress narrative,
+│   │                             #   primitive labeling, library
+│   │                             #   invisibility, translation
+│   │                             #   laundering, design-logic loss).
+│   │                             #   evaluate_justification() forces
+│   │                             #   substantive answer (citation,
+│   │                             #   measurement, comparison) before
+│   │                             #   the gate passes.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -621,3 +631,15 @@ python core/atbs/test_v2.py
   `find_constraints_by_problem`, `coupled_failure_analysis`. Couples
   to `pre1900_engineering_registry.py` -- the registry catalogs the
   systems, this module recovers their engineering constraints.
+- Added `calibration/recency_bias_detector.py`: regex-based pattern
+  detector for six recency-bias patterns (temporal_hierarchy,
+  progress_narrative, primitive_labeling, library_invisibility,
+  translation_laundering, design_logic_loss). `detect_recency_bias()`
+  returns `AuditResult` with `BiasFlag`s, severity, and a
+  justification_checklist drawn from `JUSTIFICATION_REQUIREMENTS`.
+  `evaluate_justification()` is the gate: each flagged question
+  needs a substantive answer (>=30 chars + at least one of:
+  4-digit year, measurement with unit, comparison phrase, or
+  explicit reference marker). Same chat-paste contamination as
+  prior cleanups; rewritten cleanly. stdlib only; calibration
+  test suite (11 tests) still passes.
