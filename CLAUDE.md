@@ -174,6 +174,40 @@ thermodynamic-accountability-framework/
 │                                 #   educator / ai_system / builder /
 │                                 #   generic).
 │
+├── metrology/                     # Two-layer (measurement x framework) audit
+│   │                             #   for Earth-systems extreme-weather trends.
+│   │                             #   Companion ecosystem to calibration/.
+│   │                             #   Core claim:
+│   │                             #     corruption(trend) =
+│   │                             #         corruption(measurement) *
+│   │                             #         corruption(framework)
+│   ├── metrological_audit_framework.py    # 5-mode measurement-layer audit
+│   ├── calibration_curve_builder.py       # observer-vs-truth bias structure
+│   ├── observer_bias.py                   # invert modern bias to recover
+│   │                             #   historical (pre-instrument) records
+│   ├── domain_convergence_matrix.py       # 12 convergence checks
+│   │                             #   (M1-M5 measurement, F1-F7 framework)
+│   │                             #   that any new domain audit must pass
+│   ├── pre1900_engineering_registry.py    # 8 observation-based engineering
+│   │                             #   systems (Anishinaabe burning, beaver
+│   │                             #   hydrology, mill ponds, Hohokam canals,
+│   │                             #   terraced ag, Plains forecasting, Taino
+│   │                             #   hurricane forecasting, Inuit sea ice)
+│   ├── trend_corruption_calculator.py     # combine measurement + framework
+│   │                             #   corruption probabilities; verdict:
+│   │                             #   REPORTED/INFLATED/INVERTED/INDETERMINATE
+│   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
+│   └── us_wildfire_audit_registry.md      # worked-example audit registry
+│
+├── resilience_stack.py            # Coupled three-layer resilience architecture
+│                                 #   (AbsenceSignature -> ConstraintNavigator ->
+│                                 #   RegulatoryScopeAudit). Cascade-vulnerability
+│                                 #   score for documentation-biased systems.
+│
+├── support_cartography.py         # Map informal support networks; identify
+│                                 #   load-bearing relationships invisible to
+│                                 #   credentialing infrastructure.
+│
 ├── schemas/                       # Stable-surface contracts for upstream repos
 │   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
 │   │                             #   (TrustPhase, TrustState, CustomerSegment,
@@ -525,3 +559,47 @@ python core/atbs/test_v2.py
 - Test suite: `python3 -m unittest calibration.test_calibration -v`
   runs 11 tests, all pass (was only 3 discoverable before the
   test-file nesting fix).
+
+### Audit Notes (2026-05-02) -- metrology/ + root cleanup
+- Same chat-paste contamination pattern as the 2026-04-17 calibration
+  pass: smart quotes used as triple-quote delimiters, flat class/def
+  bodies (col 0 instead of col 4), markdown ``` fences wrapping
+  method bodies, `**name**`/`**main**` markdown-bold dunders.
+- Root-level cleanup:
+  - `resilience_stack.py` rewritten cleanly. Three-layer architecture:
+    `AbsenceSignature` registry -> `ConstraintNavigator` ->
+    `RegulatoryScopeAudit`. `ResilienceStack.assess()` produces a
+    cascade vulnerability score (0-10). stdlib only.
+  - `support_cartography.py` already clean (cleaned in prior commit
+    `231f0a0` per its commit message).
+- Three filename typos / mismatches corrected via `git mv` so module
+  filename matches its own self-declared docstring identity:
+  - `metrology/domain_mateix.py` -> `metrology/domain_convergence_matrix.py`
+    (typo in original filename)
+  - `metrology/preregistry.py` -> `metrology/pre1900_engineering_registry.py`
+    (filename was a shorthand; docstring + commit message used full name)
+  - `metrology/trend.py` -> `metrology/trend_corruption_calculator.py`
+    (filename was a shorthand)
+  - `metrology/vross_domain.py` -> `metrology/cross_domain_synthesis.md`
+    (file content was pure Markdown saved with `.py` extension; same
+    pattern as the 2026-04-16 `attribution_sim.md` -> `.jsx` and
+    `audit_protocol.md` -> `.html` renames)
+- Five Python files in `metrology/` rewritten cleanly with proper
+  indentation:
+  - `domain_convergence_matrix.py` (12 convergence checks across 5
+    reference domains; `score_audit()` returns VALID/WEAKENED/INVALID)
+  - `observer_bias.py` (`build_bias_signature()` from
+    `CalibrationPair` samples, `correct_historical()` applies inverse
+    bias with propagated CIs, `DEFAULT_PRIORS` for 7 observer types)
+  - `pre1900_engineering_registry.py` (8 observation-based engineering
+    systems: Anishinaabe burning, beaver hydrology, mill ponds,
+    Hohokam canals, terraced agriculture, Plains forecasting, Taino
+    hurricane forecasting, Inuit sea ice)
+  - `trend_corruption_calculator.py` (`MeasurementCorruption` x
+    `FrameworkCorruption` -> combined verdict
+    REPORTED/INFLATED/INVERTED/INDETERMINATE)
+- `⊗` operator symbol in `corruption(measurement) ⊗ corruption(framework)`
+  pseudocode replaced with `*` in Python source comments. Markdown
+  files keep `⊗` since it renders correctly there.
+- All metrology modules: stdlib only. Smoke-test by running each
+  module directly: `python3 metrology/<module>.py`.
