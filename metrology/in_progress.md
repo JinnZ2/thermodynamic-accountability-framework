@@ -426,9 +426,17 @@ Example (hurricane):
     - flag: RETROACTIVE_DOWNGRADE_57_YEARS_LATER
 ```
 
-Status: the per-domain audit registries (tornado, wildfire,
-hurricane, drought, flood) document which receipts exist; the
-extractor that pulls them into per-event metadata is unbuilt.
+Status: **landed** as `translation_layer.py`. Implements all six
+steps of the translation contract from the spin-out spec below:
+DataSourcePin (step 1), DomainTranslator base class (steps 2-6),
+ReanalysisReceipt + VariableMapping + MeasurementEraSimple +
+UnknownValue + UnknownReason as supporting types. Demo subclass
+TornadoTranslator translates two example SPC records (Joplin 2011
+and Tri-State 1925) end-to-end. The 1925 record correctly falls
+outside the 1950+ era list and emits `UNKNOWN_ERA`; the 2011
+record gets era T4 with full provenance, framework classifications
+(physics / physics_proxy / exposure), and explicit UnknownValue
+entries for the variables the SPC dataset doesn't carry.
 
 **[2] Cliff Detector**
 
@@ -479,38 +487,58 @@ Example (drought):
     = total:                        +/-1.1 (spans 3 drought categories)
 ```
 
-Status: the drought demo computes the cumulative stack inline
-(reaches +/-1.0 RSS). The compositor that runs across a record's
-full era/method/baseline metadata is unbuilt.
+Status: **partially landed**. `UncertaintyEnvelope` (in
+`translation_layer.py`) is the data structure with five named
+contributions (measurement / methodology / era_boundary /
+reanalysis / framework) and both `total_rss()` and `total_linear()`
+methods. The drought demo computes a cumulative stack inline
+(reaches +/-1.0 RSS). What's still unbuilt: a general
+`compose_uncertainty(entry: CalibrationVectorEntry, era_registry)`
+function that walks an entry's measurement_era /
+calibration_curve_applied / reference_period fields and returns
+a populated `UncertaintyEnvelope` automatically, plus the per-era
+`era_uncertainty_for()` overrides in each domain translator
+(currently a placeholder of measurement=0.1).
 
 ### How the pieces fit
 
-Of the four pipeline components, only [3] is operational
-(`assumption_bias_detector.py`). [1], [2], [4] exist as ad-hoc
-calculations inside the per-domain demos but have not been lifted
-into general-purpose tools that operate on `CalibrationVectorEntry`
-records via the existing framework.
+Of the four pipeline components: [1] and [3] are operational,
+[4] is partially landed (data structure done, compositor function
+not yet), [2] is still ad-hoc inside per-domain demos.
+
+  - [1] Metadata Extractor: **landed** (`translation_layer.py`)
+  - [2] Cliff Detector: not yet (logic exists per-demo)
+  - [3] Assumption Parser: **landed** (`assumption_bias_detector.py`)
+  - [4] Uncertainty Compositor: partial (`UncertaintyEnvelope`
+        type landed; `compose_uncertainty()` function not yet)
 
 The next concrete pieces of work, in priority order:
 
-1. Lift [4] Uncertainty Compositor into a general function:
+1. Finish [4] Uncertainty Compositor: write the general function
    `compose_uncertainty(entry: CalibrationVectorEntry, era_registry)`
-   that walks the entry's measurement_era, calibration_curve_applied,
-   and reference_period fields and returns a combined uncertainty
-   band. The drought demo's logic generalizes cleanly.
+   that walks an entry's measurement_era, calibration_curve_applied,
+   and reference_period fields and returns a populated
+   `UncertaintyEnvelope`. Add per-era `era_uncertainty_for()`
+   overrides in each domain translator. The drought demo's logic
+   generalizes cleanly.
 
 2. Lift [2] Cliff Detector into a general function:
    `detect_cliffs(time_series, era_boundaries)` that returns flagged
    cliffs with magnitude. The tornado / hurricane demos already
    do this manually.
 
-3. Build [1] Metadata Extractor as the bridge from raw NOAA/NHC/USGS
-   pulls into populated `CalibrationVectorEntry` records. This is
-   the largest piece of work because it requires per-source parsing
-   logic.
+3. Populate the per-domain `DomainTranslator` subclasses with real
+   SPC / HURDAT2 / NIFC / NCEI parsers and reanalysis databases.
+   Tornado is sketched in the demo. Hurricane needs a HURDAT2
+   parser plus the documented Carla / Inez / Camille / Andrew /
+   Okeechobee revision receipts. Drought needs a multi-index
+   parser. Flood needs the land-use variable mappings the
+   institutional databases don't carry. Fire needs the era
+   transitions documented in the wildfire registry.
 
-Once all four are operational, the pipeline diagram above is a
-real flow rather than an aspiration.
+Once all four are operational and the per-domain translators are
+populated, the pipeline diagram above is a real flow rather than
+an aspiration.
 
 ---
 
@@ -603,8 +631,8 @@ metrology-audit/                         <- new repo, CC0
 | `metrology/drought_metrology_demo.py`         | `domains/drought/demo.py`                    |
 | `metrology/flood_metrology_demo.py`           | `domains/flood/demo.py`                      |
 | `metrology/in_progress.md` (this file)        | folded into `README.md` + `docs/METHODOLOGY.md` |
-| (not yet built)                               | `core/translation_layer.py`                  |
-| (not yet built)                               | `core/uncertainty_compositor.py`             |
+| `metrology/translation_layer.py`              | `core/translation_layer.py`                  |
+| (partially in `translation_layer.py`)         | `core/uncertainty_compositor.py`             |
 | (not yet built)                               | `domains/*/eras.py`                          |
 | (not yet built)                               | `domains/*/ingest.py`                        |
 | (not yet built)                               | `domains/*/calibration_curves.py`            |
@@ -681,6 +709,22 @@ spin-out repo more than a collection of demos. Until it exists,
 the demos are illustrations of the problem; with it, they become
 the operational diagnostics on real data.
 
+**Status of the 6-step contract**: all six steps land in the
+generic base class `DomainTranslator.translate_record()` in
+`metrology/translation_layer.py`. Step 1 is `DataSourcePin`, with
+a `from_file(filepath)` constructor that hashes the actual source
+file. Step 2 is parsing handed to the per-domain subclass. Step 3
+is `assign_era(year, eras)` plus `is_era_boundary(year, eras,
+window)`. Step 4 wires `era_uncertainty_for(era_name, variable)`
+into a populated `UncertaintyEnvelope` (per-era overrides still
+to be filled in by each domain). Step 5 is `UnknownValue` with
+8 typed reasons (`INSTRUMENT_DID_NOT_EXIST`, `NOT_RECORDED_IN_ERA`,
+`LOST_OR_REDACTED`, `BELOW_DETECTION_THRESHOLD`,
+`OUTSIDE_GAUGE_NETWORK`, `PRE_REGISTRY_DATE`, `INSTITUTIONAL_GAP`,
+`UNKNOWN_REASON`). Step 6 is `CanonicalRecord.to_json()` which
+emits the schema-stable JSON with provenance, era, uncertainty,
+and reanalysis receipts attached.
+
 ---
 
 ## Status / next actions
@@ -728,6 +772,20 @@ the operational diagnostics on real data.
       correlations, but only the climate one gets published. The
       land-use variables aren't in the dataset because the framework
       doesn't consider them candidates.
+
+- [x] Pipeline component [1] Metadata Extractor: `translation_layer
+      .py` lands the 6-step contract end-to-end. `DataSourcePin`,
+      `ReanalysisReceipt`, `VariableMapping`, `MeasurementEraSimple`
+      + `assign_era` / `is_era_boundary`, `UnknownReason` (8 typed
+      reasons), `UnknownValue`, `UncertaintyEnvelope` (5 contributions
+      with RSS + linear combination), `CanonicalRecord` (JSON-emitting
+      output), and `DomainTranslator` base class. Demo subclass
+      `TornadoTranslator` translates Joplin 2011 (modern, era T4)
+      and Tri-State 1925 (legacy, falls outside 1950+ era list ->
+      `UNKNOWN_ERA`) end-to-end. Framework-classification labels
+      attach automatically (physics / physics_proxy / exposure).
+      Same module also lands `UncertaintyEnvelope` which is the
+      data-structure foundation for pipeline component [4].
 
 - [x] Layer-4 detector: `assumption_bias_detector.py` is the
       operational tool that emerges from the flood-phase finding.
