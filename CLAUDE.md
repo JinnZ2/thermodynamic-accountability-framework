@@ -57,6 +57,27 @@ thermodynamic-accountability-framework/
 │   │                              #   for the Money Equation's E_delivered /
 │   │                              #   E_waste / E_hidden terms. Vendored from
 │   │                              #   earth-systems-physics @ 341a14b6.
+│   ├── regulation_cascade_mapper.py  # Thermodynamic consequence mapping for
+│   │                              #   municipal/regulatory codes. Maps
+│   │                              #   regulation -> SubstrateImpact ->
+│   │                              #   ForcedDependency -> CommunityEffect ->
+│   │                              #   regenerative-capacity delta as a
+│   │                              #   physical cascade chain rather than a
+│   │                              #   compliance metric. RegulationCascade
+│   │                              #   dataclass + 4 component dataclasses
+│   │                              #   (impact, dependency, community,
+│   │                              #   ontology_conflict). Seed CASCADE_CATALOG
+│   │                              #   covers two illustrative patterns:
+│   │                              #   mandatory drainage field (EX-001) and
+│   │                              #   uniform setback/lot-size requirements
+│   │                              #   (EX-002). Helpers:
+│   │                              #   find_irreversible_cascades(),
+│   │                              #   find_ontology_conflicts(target_frame),
+│   │                              #   total_dependencies_created(),
+│   │                              #   format_cascade_report(). Reads
+│   │                              #   regulations through the same physics
+│   │                              #   lens as heat_leak_case.py and
+│   │                              #   data_logger.py.
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -636,6 +657,7 @@ python core/human_system_collapse_model.py
 python core/data_logger.py
 python core/heat_leak_case.py
 python core/thermodynamic_price_guard.py
+python core/regulation_cascade_mapper.py
 
 # Integrations / field-link bridges (no deps)
 python core/integrations/biological_extraction_model.py
@@ -783,6 +805,38 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `core/regulation_cascade_mapper.py`: thermodynamic
+  consequence mapping for municipal and regulatory codes. Reframes
+  regulation evaluation from single-variable compliance metrics
+  (was the rule followed, was the permit issued) to a
+  multi-variable physical cascade: regulation -> SubstrateImpact
+  (substrate_layer / impact_type / reversibility / measured_signal)
+  -> ForcedDependency (dependency_type / what must be obtained
+  externally / energy_cost / failure_mode_if_supply_disrupted) ->
+  CommunityEffect (atomization / fragmentation / sprawl /
+  homogenization) -> regenerative_capacity_delta. Adds an
+  OntologyConflict dataclass that names which cognitive frame the
+  regulation assumes vs which frame it enforces on (typically
+  narrative_primary enforcing on relational_primary /
+  substrate_primary). RegulationCascade aggregates the four
+  components plus jurisdiction + notes. Seed CASCADE_CATALOG
+  covers two illustrative patterns: EX-001 mandatory drainage
+  field (4 substrate impacts including generational mycorrhizal
+  fragmentation; 2 forced dependencies; references MN Rule
+  7080/7083 implementations as the observed pattern source) and
+  EX-002 uniform setback/lot-size requirements (2 substrate
+  impacts at generational reversibility; 2 forced dependencies;
+  atomization + sprawl community effects). Analysis helpers:
+  find_irreversible_cascades(), find_ontology_conflicts(target_
+  frame), total_dependencies_created(), cascade_summary(),
+  format_cascade_report(). Located in core/ alongside
+  data_logger.py / heat_leak_case.py / thermodynamic_price_guard.py
+  per the author docstring placing it in the
+  "earth-systems-physics / thermodynamics line" rather than in
+  political_audit/ (the docstring explicitly distinguishes
+  engineering analysis from political commentary). Same chat-paste
+  contamination as prior cleanups; rewritten cleanly. stdlib only,
+  ASCII only; calibration test suite (11 tests) still passes.
 - Added `calibration/relational_ontology.py`: reference framework
   for relational-primary human cognition framed as open-system
   thermodynamics, not anthropology or spirituality. The module
