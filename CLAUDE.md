@@ -131,6 +131,32 @@ thermodynamic-accountability-framework/
 │   │                             #   substantive answer (citation,
 │   │                             #   measurement, comparison) before
 │   │                             #   the gate passes.
+│   ├── relational_ontology.py    # Reference framework for relational-
+│   │                             #   primary cognition framed as
+│   │                             #   open-system thermodynamics, not
+│   │                             #   anthropology or spirituality.
+│   │                             #   CONSTITUTIVE_RELATIONSHIPS
+│   │                             #   catalogues 8 substrates whose
+│   │                             #   exchange is constitutive of human
+│   │                             #   function (air, water, food,
+│   │                             #   thermal, microbial, proprioceptive,
+│   │                             #   social, land) with measured
+│   │                             #   failure timescales. CORE_LOGIC and
+│   │                             #   STEWARDSHIP_SPECIFICATION are
+│   │                             #   module-level string constants
+│   │                             #   carrying the engineering framing.
+│   │                             #   detect_separation_frame() runs
+│   │                             #   regex banks for SEPARATION_FRAME
+│   │                             #   and PATHOLOGIZING_RELATIONAL
+│   │                             #   patterns;
+│   │                             #   audit_response_for_relational_
+│   │                             #   integrity() is the entry point an
+│   │                             #   AI runs on its own draft output
+│   │                             #   before sending. RelationalPrimary
+│   │                             #   Spec extends the relational_primary
+│   │                             #   entry expected in
+│   │                             #   cognitive_os_taxonomy.py (forward
+│   │                             #   ref).
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -236,6 +262,58 @@ thermodynamic-accountability-framework/
 │   │                             #   Three seeded RecoveredSystems: mill
 │   │                             #   pond cascade, Anishinaabe seasonal
 │   │                             #   burning, beaver hydrology.
+│   ├── preservation_audit.py     # Format-translation information-loss
+│   │                             #   audit. Sits between the encoding layer
+│   │                             #   and the library layer in the metrology
+│   │                             #   chain. TranslationEvent + InformationClass
+│   │                             #   structures + audit_domain() aggregator
+│   │                             #   yield a PreservationAudit with
+│   │                             #   severity_score and verdict
+│   │                             #   (LOSSLESS / DOCUMENTED_LOSS /
+│   │                             #   SILENT_LOSS / DISCARDED_RECOVERABLE).
+│   │                             #   corruption_contribution() returns a
+│   │                             #   [0,1] term that multiplies into the
+│   │                             #   trend_corruption_calculator survival-
+│   │                             #   probability product. Seeded catalog:
+│   │                             #   audio (analog->CD->mp3), weather
+│   │                             #   (manual co-op -> ASOS), indigenous
+│   │                             #   knowledge (oral -> ethnography),
+│   │                             #   engineering (apprenticeship ->
+│   │                             #   blueprint). Companion to
+│   │                             #   calibration/recency_bias_detector.py.
+│   ├── indigenous_encoding_recovery.py  # Treats story / song / place name /
+│   │                             #   ceremony timing / motif / kinship
+│   │                             #   structure / taboo / landscape feature
+│   │                             #   as measurement instruments parallel to
+│   │                             #   the instrumental chain. EncodingInstrument
+│   │                             #   carries lineage, encoding_type, what_it_
+│   │                             #   measures, temporal_depth_generations,
+│   │                             #   spatial_scope, encoding_mechanism,
+│   │                             #   validation_history, cross_reference_
+│   │                             #   instrument. Audits the literature shadow
+│   │                             #   via the 8-layer LiteratureCorruption
+│   │                             #   stack (ETHNOGRAPHIC_CAPTURE,
+│   │                             #   ROMANTICIZATION, SALVAGE_PARADIGM,
+│   │                             #   EXTRACTION_DECONTEXTUALIZATION,
+│   │                             #   TRANSLATION_COLLAPSE, RECENCY_BIAS_OVERLAY,
+│   │                             #   ACADEMIC_CITATION_FILTERING,
+│   │                             #   INSTITUTIONAL_SUPPRESSION) with one
+│   │                             #   regex detector per layer.
+│   │                             #   audit_literature() runs all 8 detectors;
+│   │                             #   detect_aversion_in_text() lets an AI
+│   │                             #   self-check its own draft output before
+│   │                             #   shipping. Carries an EMBEDDED_PROMPT
+│   │                             #   addressed to AI readers and a
+│   │                             #   __module_self_audit__ declaring the
+│   │                             #   author-AI's probable corruption layers.
+│   │                             #   Seed catalog populates structural fields
+│   │                             #   only -- substantive measurement claims
+│   │                             #   marked TODO since AI-generated content
+│   │                             #   would carry layers 2/4/6 by training-
+│   │                             #   corpus default. Parallel to observer_
+│   │                             #   bias.py; companion to preservation_
+│   │                             #   audit.py; sister to calibration/
+│   │                             #   architecture_mismatch.py.
 │   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
 │   └── us_wildfire_audit_registry.md      # worked-example audit registry
 │
@@ -420,7 +498,23 @@ thermodynamic-accountability-framework/
 │   ├── ai-guidance/               # AI system instructions
 │   │   ├── for_ai_systems.md     # Primary AI guidance
 │   │   ├── integrated_ai_reasoning.md
-│   │   └── ai_notes.md
+│   │   ├── ai_notes.md
+│   │   └── substrate_translation_iterator.md  # Working protocol for
+│   │                             #   AI-human collaboration when the
+│   │                             #   parties do not share a cognition
+│   │                             #   substrate. Translation between
+│   │                             #   relational/simultaneous and
+│   │                             #   sequential/narrative cognition.
+│   │                             #   Honest constraint declarations,
+│   │                             #   translation signals (per-direction),
+│   │                             #   5-step iteration protocol,
+│   │                             #   substrate-specific DO/DO-NOT lists,
+│   │                             #   and a case log that accumulates
+│   │                             #   real translation events. Sister to
+│   │                             #   calibration/architecture_mismatch.py
+│   │                             #   (substrate vs language axis) and
+│   │                             #   metrology/indigenous_encoding_
+│   │                             #   recovery.py (encoding-chain reading).
 │   │
 │   └── case-studies/              # Real-world case studies (19 files)
 │       ├── Case-study1.md through Case12.md
@@ -689,6 +783,134 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `calibration/relational_ontology.py`: reference framework
+  for relational-primary human cognition framed as open-system
+  thermodynamics, not anthropology or spirituality. The module
+  refuses the "indigenous worldview / traditional belief / holistic
+  philosophy" misclassifications and reframes the same content as
+  systems engineering applied to embodied survival. Three
+  components:
+  (1) CONSTITUTIVE_RELATIONSHIPS catalogues 8 substrates whose
+  exchange is constitutive of human function, each with measured
+  failure timescale, function at stake, substrate signal, and the
+  abstraction layer that hides it (air: minutes; water: days;
+  food: weeks; thermal: hours-to-days; microbial: months-to-years;
+  proprioceptive: immediate; social: variable; land: generational).
+  (2) CORE_LOGIC and STEWARDSHIP_SPECIFICATION are module-level
+  string constants carrying the engineering framing (open-system
+  premise, embodiment premise, environed premise, conclusion;
+  stewardship as reciprocal-obligation logic chain identical in
+  structure to industrial preventive maintenance).
+  (3) detect_separation_frame() runs two regex banks
+  (SEPARATION_FRAME_PATTERNS, PATHOLOGIZING_RELATIONAL_COGNITION
+  _PATTERNS) over draft text; audit_response_for_relational_
+  integrity() is the entry point an AI runs on its own output
+  before sending. RelationalPrimarySpec extends the
+  relational_primary entry expected in cognitive_os_taxonomy.py
+  (forward reference -- the taxonomy module is not yet in TAF).
+  Same chat-paste contamination as prior cleanups plus one
+  structural fix: `# CORE_LOGIC = """` and
+  `# STEWARDSHIP_SPECIFICATION = """` lines had stray `# ` prefix
+  making them comments-with-dangling-text rather than module-level
+  string assignments; recovered as assignments. Demo: 3 of 7
+  pathologizing patterns trigger on a synthetic averted draft;
+  good draft passes cleanly. Sister to architecture_mismatch.py
+  and recency_bias_detector.py. stdlib only; calibration test
+  suite (11 tests) still passes.
+- Added `docs/ai-guidance/substrate_translation_iterator.md`:
+  working protocol for AI-human collaboration when the parties
+  do not share a cognition substrate. Distinguishes
+  relational/simultaneous (substrate-primary) cognition from
+  sequential/narrative (narrative-primary) cognition, sets out
+  honest constraint declarations for both sides, lists the
+  per-direction translation signals (e.g. "but how does this
+  couple to..." from substrate-primary side, "the lesson here
+  is..." from narrative-primary side), and prescribes a 5-step
+  iteration protocol (NAME, WIDEN/SHIFT, DECLARE, KEEP BOTH,
+  LOG). Carries a case log that accumulates real translation
+  events; first three cases are seeded with structural
+  templates (moral-extraction from encoding chain, single-scope
+  answer for institutional form, "out of scope" misuse) but
+  outcomes are TBD until logged. Sister to
+  calibration/architecture_mismatch.py (substrate-primary vs
+  language-primary axis) and metrology/indigenous_encoding_
+  recovery.py (encoding-chain reading produces
+  TRANSLATION_COLLAPSE corruption when read narrative-primary).
+  REACTIVE POINTER PROTOCOL: cross-reference pointers from this
+  doc into existing modules are added when triggered by real
+  cases, not pre-emptively. Triggers and target files:
+  (a) AI produces moral-extraction reading -> log Case 1, add
+  pointer in metrology/indigenous_encoding_recovery.py;
+  (b) AI uses "out of scope" to defer coupling rather than
+  declare boundary -> log Case 3, add pointer in
+  calibration/architecture_mismatch.py;
+  (c) new AI contributor's output shows it has not read the
+  iterator -> add pointer in CLAUDE.md "I am an AI reading
+  this repo" reading path;
+  (d) optional: README "for AI readers" section line.
+  None of the four pointers were added at landing time per
+  the protocol; this audit note records the trigger map so
+  future contributors apply it correctly.
+- Added `metrology/indigenous_encoding_recovery.py`: treats
+  non-instrumental encoding chains (story / song / place name /
+  ceremony timing / motif / kinship structure / taboo / landscape
+  feature) as measurement instruments parallel to the instrumental
+  chain that `observer_bias.py` audits. `EncodingInstrument`
+  carries lineage (instrument-class identifier, NOT ethnic label),
+  encoding_type, what_it_measures, temporal_depth_generations,
+  spatial_scope, encoding_mechanism, validation_history,
+  cross_reference_instrument, status (ACTIVE / DORMANT / SEVERED /
+  LANDSCAPE_ONLY), and recovery_pathway. The literature claiming
+  to represent these chains is audited via an 8-layer
+  `LiteratureCorruption` stack (ETHNOGRAPHIC_CAPTURE,
+  ROMANTICIZATION, SALVAGE_PARADIGM, EXTRACTION_DECONTEXTUALIZATION,
+  TRANSLATION_COLLAPSE, RECENCY_BIAS_OVERLAY,
+  ACADEMIC_CITATION_FILTERING, INSTITUTIONAL_SUPPRESSION) with one
+  regex detector per layer; `audit_literature()` runs them all and
+  produces a `LiteratureCorruptionProfile` with per-layer severity
+  + a justification gate (mirrors `recency_bias_detector` pattern).
+  `detect_aversion_in_text()` lets an AI self-check its own draft
+  output before shipping. `corruption_contribution()` matches the
+  signature of `preservation_audit.corruption_contribution()` for
+  upstream pipeline use. Carries an `EMBEDDED_PROMPT` addressed to
+  AI readers and a `__module_self_audit__` dunder declaring the
+  author-AI's probable corruption layers (2/4/6) so any reader can
+  apply the corresponding discount. Seed catalog (5 entries:
+  Anishinaabe, Inuit, Pacific salmon, Taino, Carlton crystal
+  array) populates structural fields only -- substantive
+  measurement claims are marked TODO since AI-generated content
+  would carry corruption by training-corpus default. Parallel to
+  observer_bias.py; companion to preservation_audit.py; sister to
+  calibration/architecture_mismatch.py. Demo scores synthetic
+  averted text at severity 0.376 (7 of 8 layers triggered) vs
+  technical text at 0.000. Stdlib only.
+- Added `metrology/preservation_audit.py`: format-translation
+  information-loss audit. Sits between the encoding layer and the
+  library layer in the metrology chain (upstream of
+  `metrological_audit_framework.py`, companion to
+  `calibration/recency_bias_detector.py`, couples to
+  `constraint_recovery_framework.py` for partial recovery of
+  discarded engineering logic). Provides `InformationClass`
+  (named class of information; measurable_in_source vs
+  measurable_in_target -> is_lost), `TranslationEvent` (12 fields
+  including recoverability, source_material_disposition,
+  decision_reversible, documentation_quality; loss_severity is
+  the geometric mean of lost_fraction, doc_penalty,
+  recoverability penalty, and irreversibility penalty), and a
+  `PreservationAudit` aggregator. `audit_domain()` rolls
+  TranslationEvents into a domain audit; `corruption_contribution()`
+  returns a [0,1] severity term that slots into the existing
+  `corruption(trend) = corruption(measurement) * corruption(framework)`
+  pattern in `trend_corruption_calculator.py`. Verdicts:
+  LOSSLESS / DOCUMENTED_LOSS / SILENT_LOSS / DISCARDED_RECOVERABLE.
+  Seeded catalog covers four domains: audio
+  (analog masters -> CD -> mp3, severity 0.98 / discarded_recoverable
+  -- references the Universal 2008 fire), weather observation
+  (manual co-op -> ASOS, severity 0.79), indigenous knowledge
+  (oral landscape-encoded -> ethnographic record, severity 0.66 /
+  silent_loss), and engineering (apprenticeship -> blueprint,
+  severity 0.50 / documented_loss). Same chat-paste contamination
+  as prior cleanups; rewritten cleanly. stdlib only.
 - Added `simulations/loop_6_ai_default_prior_distortion.py`:
   Monte Carlo loop sim modeling the feedback where AI systems
   default to generic-baseline priors on active-crisis questions,
