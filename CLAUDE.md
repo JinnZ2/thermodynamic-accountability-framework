@@ -323,6 +323,29 @@ thermodynamic-accountability-framework/
 │                                 #   Loaded by geometric_bridge_contract.py
 │                                 #   when the live upstream package is
 │                                 #   not installed.
+│   ├── earth_physics_contract.py # Mirrors the assumption_validator
+│                                 #   public surface from earth-systems-
+│                                 #   physics: RiskLevel, AssumptionBoundary,
+│                                 #   ASSUMPTION_KEYS (37 entries spanning
+│                                 #   layers 0..6 -- electromagnetics
+│                                 #   through biosphere), COUPLING_GRAPH
+│                                 #   (16-key failure-propagation map),
+│                                 #   AssumptionRecord/CascadeSnapshot/
+│                                 #   Alert monitor shapes, plus
+│                                 #   PUBLIC_FUNCTIONS signatures for
+│                                 #   assess_from_layer_states /
+│                                 #   global_confidence_multiplier /
+│                                 #   detect_cascade_risk / full_report.
+│                                 #   CONTRACT_VERSION 0.1.0, pinned to
+│                                 #   upstream commit
+│                                 #   341a14b6e1706f16bea6a909d496bde4c8060109
+│                                 #   (upstream has no SURFACE.md /
+│                                 #   repo-level version yet; 0.1.0 comes
+│                                 #   from assumption_validator/__init__.py
+│                                 #   __version__). stdlib only -- the
+│                                 #   live upstream needs numpy + flask;
+│                                 #   this mirror does not. Paired with
+│                                 #   core/integrations/earth_physics_fieldlink.py.
 │
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
@@ -643,3 +666,23 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added earth-systems-physics couple: `schemas/earth_physics_contract.py`
+  mirrors the upstream `assumption_validator` public surface (37
+  ASSUMPTION_KEYS, 16-key COUPLING_GRAPH, RiskLevel /
+  AssumptionBoundary / AssumptionRecord / CascadeSnapshot / Alert
+  shapes, PUBLIC_FUNCTIONS signatures). CONTRACT_VERSION 0.1.0
+  pinned to upstream commit
+  341a14b6e1706f16bea6a909d496bde4c8060109. Paired with
+  `core/integrations/earth_physics_fieldlink.py`, which maps TAF's
+  framework-layer convergence checks (F1-F7 in
+  metrology/domain_convergence_matrix.py) to upstream assumption
+  keys: F1_stationarity -> 8 anchors (atmo_jet_shear,
+  atmo_hadley_extent, hydro_AMOC_collapse, hydro_AMOC_transport,
+  hydro_arctic_amplification, hydro_committed_warming,
+  bio_amazon_tipping, bio_NEP_sink); F2_baseline_selection -> 4;
+  F4_human_modification -> 6. F3/F5/F6/F7 are intrinsically
+  methodology-layer and return verdict="UNKNOWN" with an explicit
+  note. Loose-coupled: `physics_anchor_for_check()` will use the
+  live upstream `assumption_validator` package if importable;
+  otherwise it returns UNKNOWN verdicts so TAF stays runnable in
+  isolation. stdlib only.
