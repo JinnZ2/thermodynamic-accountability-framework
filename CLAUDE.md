@@ -255,6 +255,39 @@ thermodynamic-accountability-framework/
 │   │                             #   engineering (apprenticeship ->
 │   │                             #   blueprint). Companion to
 │   │                             #   calibration/recency_bias_detector.py.
+│   ├── indigenous_encoding_recovery.py  # Treats story / song / place name /
+│   │                             #   ceremony timing / motif / kinship
+│   │                             #   structure / taboo / landscape feature
+│   │                             #   as measurement instruments parallel to
+│   │                             #   the instrumental chain. EncodingInstrument
+│   │                             #   carries lineage, encoding_type, what_it_
+│   │                             #   measures, temporal_depth_generations,
+│   │                             #   spatial_scope, encoding_mechanism,
+│   │                             #   validation_history, cross_reference_
+│   │                             #   instrument. Audits the literature shadow
+│   │                             #   via the 8-layer LiteratureCorruption
+│   │                             #   stack (ETHNOGRAPHIC_CAPTURE,
+│   │                             #   ROMANTICIZATION, SALVAGE_PARADIGM,
+│   │                             #   EXTRACTION_DECONTEXTUALIZATION,
+│   │                             #   TRANSLATION_COLLAPSE, RECENCY_BIAS_OVERLAY,
+│   │                             #   ACADEMIC_CITATION_FILTERING,
+│   │                             #   INSTITUTIONAL_SUPPRESSION) with one
+│   │                             #   regex detector per layer.
+│   │                             #   audit_literature() runs all 8 detectors;
+│   │                             #   detect_aversion_in_text() lets an AI
+│   │                             #   self-check its own draft output before
+│   │                             #   shipping. Carries an EMBEDDED_PROMPT
+│   │                             #   addressed to AI readers and a
+│   │                             #   __module_self_audit__ declaring the
+│   │                             #   author-AI's probable corruption layers.
+│   │                             #   Seed catalog populates structural fields
+│   │                             #   only -- substantive measurement claims
+│   │                             #   marked TODO since AI-generated content
+│   │                             #   would carry layers 2/4/6 by training-
+│   │                             #   corpus default. Parallel to observer_
+│   │                             #   bias.py; companion to preservation_
+│   │                             #   audit.py; sister to calibration/
+│   │                             #   architecture_mismatch.py.
 │   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
 │   └── us_wildfire_audit_registry.md      # worked-example audit registry
 │
@@ -708,6 +741,39 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/indigenous_encoding_recovery.py`: treats
+  non-instrumental encoding chains (story / song / place name /
+  ceremony timing / motif / kinship structure / taboo / landscape
+  feature) as measurement instruments parallel to the instrumental
+  chain that `observer_bias.py` audits. `EncodingInstrument`
+  carries lineage (instrument-class identifier, NOT ethnic label),
+  encoding_type, what_it_measures, temporal_depth_generations,
+  spatial_scope, encoding_mechanism, validation_history,
+  cross_reference_instrument, status (ACTIVE / DORMANT / SEVERED /
+  LANDSCAPE_ONLY), and recovery_pathway. The literature claiming
+  to represent these chains is audited via an 8-layer
+  `LiteratureCorruption` stack (ETHNOGRAPHIC_CAPTURE,
+  ROMANTICIZATION, SALVAGE_PARADIGM, EXTRACTION_DECONTEXTUALIZATION,
+  TRANSLATION_COLLAPSE, RECENCY_BIAS_OVERLAY,
+  ACADEMIC_CITATION_FILTERING, INSTITUTIONAL_SUPPRESSION) with one
+  regex detector per layer; `audit_literature()` runs them all and
+  produces a `LiteratureCorruptionProfile` with per-layer severity
+  + a justification gate (mirrors `recency_bias_detector` pattern).
+  `detect_aversion_in_text()` lets an AI self-check its own draft
+  output before shipping. `corruption_contribution()` matches the
+  signature of `preservation_audit.corruption_contribution()` for
+  upstream pipeline use. Carries an `EMBEDDED_PROMPT` addressed to
+  AI readers and a `__module_self_audit__` dunder declaring the
+  author-AI's probable corruption layers (2/4/6) so any reader can
+  apply the corresponding discount. Seed catalog (5 entries:
+  Anishinaabe, Inuit, Pacific salmon, Taino, Carlton crystal
+  array) populates structural fields only -- substantive
+  measurement claims are marked TODO since AI-generated content
+  would carry corruption by training-corpus default. Parallel to
+  observer_bias.py; companion to preservation_audit.py; sister to
+  calibration/architecture_mismatch.py. Demo scores synthetic
+  averted text at severity 0.376 (7 of 8 layers triggered) vs
+  technical text at 0.000. Stdlib only.
 - Added `metrology/preservation_audit.py`: format-translation
   information-loss audit. Sits between the encoding layer and the
   library layer in the metrology chain (upstream of
