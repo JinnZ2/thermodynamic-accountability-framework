@@ -472,7 +472,23 @@ thermodynamic-accountability-framework/
 │   ├── ai-guidance/               # AI system instructions
 │   │   ├── for_ai_systems.md     # Primary AI guidance
 │   │   ├── integrated_ai_reasoning.md
-│   │   └── ai_notes.md
+│   │   ├── ai_notes.md
+│   │   └── substrate_translation_iterator.md  # Working protocol for
+│   │                             #   AI-human collaboration when the
+│   │                             #   parties do not share a cognition
+│   │                             #   substrate. Translation between
+│   │                             #   relational/simultaneous and
+│   │                             #   sequential/narrative cognition.
+│   │                             #   Honest constraint declarations,
+│   │                             #   translation signals (per-direction),
+│   │                             #   5-step iteration protocol,
+│   │                             #   substrate-specific DO/DO-NOT lists,
+│   │                             #   and a case log that accumulates
+│   │                             #   real translation events. Sister to
+│   │                             #   calibration/architecture_mismatch.py
+│   │                             #   (substrate vs language axis) and
+│   │                             #   metrology/indigenous_encoding_
+│   │                             #   recovery.py (encoding-chain reading).
 │   │
 │   └── case-studies/              # Real-world case studies (19 files)
 │       ├── Case-study1.md through Case12.md
@@ -741,6 +757,40 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `docs/ai-guidance/substrate_translation_iterator.md`:
+  working protocol for AI-human collaboration when the parties
+  do not share a cognition substrate. Distinguishes
+  relational/simultaneous (substrate-primary) cognition from
+  sequential/narrative (narrative-primary) cognition, sets out
+  honest constraint declarations for both sides, lists the
+  per-direction translation signals (e.g. "but how does this
+  couple to..." from substrate-primary side, "the lesson here
+  is..." from narrative-primary side), and prescribes a 5-step
+  iteration protocol (NAME, WIDEN/SHIFT, DECLARE, KEEP BOTH,
+  LOG). Carries a case log that accumulates real translation
+  events; first three cases are seeded with structural
+  templates (moral-extraction from encoding chain, single-scope
+  answer for institutional form, "out of scope" misuse) but
+  outcomes are TBD until logged. Sister to
+  calibration/architecture_mismatch.py (substrate-primary vs
+  language-primary axis) and metrology/indigenous_encoding_
+  recovery.py (encoding-chain reading produces
+  TRANSLATION_COLLAPSE corruption when read narrative-primary).
+  REACTIVE POINTER PROTOCOL: cross-reference pointers from this
+  doc into existing modules are added when triggered by real
+  cases, not pre-emptively. Triggers and target files:
+  (a) AI produces moral-extraction reading -> log Case 1, add
+  pointer in metrology/indigenous_encoding_recovery.py;
+  (b) AI uses "out of scope" to defer coupling rather than
+  declare boundary -> log Case 3, add pointer in
+  calibration/architecture_mismatch.py;
+  (c) new AI contributor's output shows it has not read the
+  iterator -> add pointer in CLAUDE.md "I am an AI reading
+  this repo" reading path;
+  (d) optional: README "for AI readers" section line.
+  None of the four pointers were added at landing time per
+  the protocol; this audit note records the trigger map so
+  future contributors apply it correctly.
 - Added `metrology/indigenous_encoding_recovery.py`: treats
   non-instrumental encoding chains (story / song / place name /
   ceremony timing / motif / kinship structure / taboo / landscape
