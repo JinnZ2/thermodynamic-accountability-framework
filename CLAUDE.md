@@ -178,6 +178,31 @@ thermodynamic-accountability-framework/
 │   │                             #   entry expected in
 │   │                             #   cognitive_os_taxonomy.py (forward
 │   │                             #   ref).
+│   ├── convergent_ontology_mapper.py  # Cross-lineage convergence mapper
+│   │                             #   for relational ontologies. Frames
+│   │                             #   knowledge lineages as independent
+│   │                             #   measurement chains and convergence
+│   │                             #   across them as triangulation, not
+│   │                             #   cultural variation. Catalog of 7
+│   │                             #   lineages (Ubuntu, Anabaptist
+│   │                             #   stewardship, indigenous kinship-
+│   │                             #   land reciprocity, Pacific gift
+│   │                             #   economy, Daoist relational
+│   │                             #   philosophy, open-system thermo-
+│   │                             #   dynamics, modern ecology) with
+│   │                             #   schema covering encoding language,
+│   │                             #   central claim, reciprocity protocol,
+│   │                             #   consequence of violation,
+│   │                             #   independent validation, and typical
+│   │                             #   misreading in the dominant frame.
+│   │                             #   6 abstract CONVERGENT_CLAIMS state
+│   │                             #   the shared signal; CONVERGENCE_LOGIC
+│   │                             #   block carries the metrology framing.
+│   │                             #   detect_lineage_reference_in_text()
+│   │                             #   recognizes when a user references
+│   │                             #   one lineage so the AI can surface
+│   │                             #   the convergence with others.
+│   │                             #   Sister to relational_ontology.py.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -805,6 +830,41 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `calibration/convergent_ontology_mapper.py`: cross-lineage
+  convergence mapper for relational ontologies. Frames knowledge
+  lineages as independent measurement chains and convergence across
+  them as triangulation in physics, not cultural variation in
+  anthropology. CONVERGENCE_LOGIC block lays out the three-premise
+  argument (independent measurement = standard for confirmed
+  measurement; lineages are measurement systems; convergence is
+  evidence the constraint is real, not constructed). KnowledgeLineage
+  dataclass carries name, geographic_origin, primary_register,
+  encoding_language, central_claim, reciprocity_protocol,
+  consequence_of_violation, independent_validation, and
+  typical_misreading_in_dominant_frame. Seed CATALOG of 7 lineages:
+  Ubuntu (Southern Africa), Anabaptist Stewardship (Central Europe
+  + diaspora), Indigenous Kinship-Land Reciprocity (globally
+  distributed), Pacific Gift Economy (Melanesia/Polynesia), Daoist
+  Relational Philosophy (China), Open-System Thermodynamics (modern
+  Western science), Modern Ecology (modern Western science +
+  traditional ecological knowledge synthesis). 6 abstract
+  CONVERGENT_CLAIMS state the shared signal across all lineages
+  (humans not separable from sustaining relationships; separation
+  causes degradation; reciprocal maintenance is operating
+  constraint; obligations constitutive of identity; violation
+  produces cascade failures; long-term viability requires reading
+  existing geometry). Query helpers: list_lineages(), get_lineage(),
+  lineages_by_register(), show_convergence_on_claim(claim_index),
+  detect_lineage_reference_in_text() (returns lineage names whose
+  keywords appear in the text -- useful when a user references one
+  lineage and the AI should surface the convergence with others).
+  Same chat-paste contamination as prior cleanups plus the same
+  `# CONVERGENCE_LOGIC = """` stray-prefix issue as the relational_
+  ontology cleanup; recovered as a module-level string assignment.
+  Demo: 7 lineages catalogued; 6 convergent claims; test text
+  ("Mennonite", "Ubuntu", "mycorrhizal") correctly detects 3
+  lineages. Sister to relational_ontology.py. stdlib only,
+  ASCII only; calibration test suite (11 tests) still passes.
 - Added `core/regulation_cascade_mapper.py`: thermodynamic
   consequence mapping for municipal and regulatory codes. Reframes
   regulation evaluation from single-variable compliance metrics
