@@ -57,6 +57,27 @@ thermodynamic-accountability-framework/
 │   │                              #   for the Money Equation's E_delivered /
 │   │                              #   E_waste / E_hidden terms. Vendored from
 │   │                              #   earth-systems-physics @ 341a14b6.
+│   ├── regulation_cascade_mapper.py  # Thermodynamic consequence mapping for
+│   │                              #   municipal/regulatory codes. Maps
+│   │                              #   regulation -> SubstrateImpact ->
+│   │                              #   ForcedDependency -> CommunityEffect ->
+│   │                              #   regenerative-capacity delta as a
+│   │                              #   physical cascade chain rather than a
+│   │                              #   compliance metric. RegulationCascade
+│   │                              #   dataclass + 4 component dataclasses
+│   │                              #   (impact, dependency, community,
+│   │                              #   ontology_conflict). Seed CASCADE_CATALOG
+│   │                              #   covers two illustrative patterns:
+│   │                              #   mandatory drainage field (EX-001) and
+│   │                              #   uniform setback/lot-size requirements
+│   │                              #   (EX-002). Helpers:
+│   │                              #   find_irreversible_cascades(),
+│   │                              #   find_ontology_conflicts(target_frame),
+│   │                              #   total_dependencies_created(),
+│   │                              #   format_cascade_report(). Reads
+│   │                              #   regulations through the same physics
+│   │                              #   lens as heat_leak_case.py and
+│   │                              #   data_logger.py.
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -157,6 +178,31 @@ thermodynamic-accountability-framework/
 │   │                             #   entry expected in
 │   │                             #   cognitive_os_taxonomy.py (forward
 │   │                             #   ref).
+│   ├── convergent_ontology_mapper.py  # Cross-lineage convergence mapper
+│   │                             #   for relational ontologies. Frames
+│   │                             #   knowledge lineages as independent
+│   │                             #   measurement chains and convergence
+│   │                             #   across them as triangulation, not
+│   │                             #   cultural variation. Catalog of 7
+│   │                             #   lineages (Ubuntu, Anabaptist
+│   │                             #   stewardship, indigenous kinship-
+│   │                             #   land reciprocity, Pacific gift
+│   │                             #   economy, Daoist relational
+│   │                             #   philosophy, open-system thermo-
+│   │                             #   dynamics, modern ecology) with
+│   │                             #   schema covering encoding language,
+│   │                             #   central claim, reciprocity protocol,
+│   │                             #   consequence of violation,
+│   │                             #   independent validation, and typical
+│   │                             #   misreading in the dominant frame.
+│   │                             #   6 abstract CONVERGENT_CLAIMS state
+│   │                             #   the shared signal; CONVERGENCE_LOGIC
+│   │                             #   block carries the metrology framing.
+│   │                             #   detect_lineage_reference_in_text()
+│   │                             #   recognizes when a user references
+│   │                             #   one lineage so the AI can surface
+│   │                             #   the convergence with others.
+│   │                             #   Sister to relational_ontology.py.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -636,6 +682,7 @@ python core/human_system_collapse_model.py
 python core/data_logger.py
 python core/heat_leak_case.py
 python core/thermodynamic_price_guard.py
+python core/regulation_cascade_mapper.py
 
 # Integrations / field-link bridges (no deps)
 python core/integrations/biological_extraction_model.py
@@ -783,6 +830,73 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `calibration/convergent_ontology_mapper.py`: cross-lineage
+  convergence mapper for relational ontologies. Frames knowledge
+  lineages as independent measurement chains and convergence across
+  them as triangulation in physics, not cultural variation in
+  anthropology. CONVERGENCE_LOGIC block lays out the three-premise
+  argument (independent measurement = standard for confirmed
+  measurement; lineages are measurement systems; convergence is
+  evidence the constraint is real, not constructed). KnowledgeLineage
+  dataclass carries name, geographic_origin, primary_register,
+  encoding_language, central_claim, reciprocity_protocol,
+  consequence_of_violation, independent_validation, and
+  typical_misreading_in_dominant_frame. Seed CATALOG of 7 lineages:
+  Ubuntu (Southern Africa), Anabaptist Stewardship (Central Europe
+  + diaspora), Indigenous Kinship-Land Reciprocity (globally
+  distributed), Pacific Gift Economy (Melanesia/Polynesia), Daoist
+  Relational Philosophy (China), Open-System Thermodynamics (modern
+  Western science), Modern Ecology (modern Western science +
+  traditional ecological knowledge synthesis). 6 abstract
+  CONVERGENT_CLAIMS state the shared signal across all lineages
+  (humans not separable from sustaining relationships; separation
+  causes degradation; reciprocal maintenance is operating
+  constraint; obligations constitutive of identity; violation
+  produces cascade failures; long-term viability requires reading
+  existing geometry). Query helpers: list_lineages(), get_lineage(),
+  lineages_by_register(), show_convergence_on_claim(claim_index),
+  detect_lineage_reference_in_text() (returns lineage names whose
+  keywords appear in the text -- useful when a user references one
+  lineage and the AI should surface the convergence with others).
+  Same chat-paste contamination as prior cleanups plus the same
+  `# CONVERGENCE_LOGIC = """` stray-prefix issue as the relational_
+  ontology cleanup; recovered as a module-level string assignment.
+  Demo: 7 lineages catalogued; 6 convergent claims; test text
+  ("Mennonite", "Ubuntu", "mycorrhizal") correctly detects 3
+  lineages. Sister to relational_ontology.py. stdlib only,
+  ASCII only; calibration test suite (11 tests) still passes.
+- Added `core/regulation_cascade_mapper.py`: thermodynamic
+  consequence mapping for municipal and regulatory codes. Reframes
+  regulation evaluation from single-variable compliance metrics
+  (was the rule followed, was the permit issued) to a
+  multi-variable physical cascade: regulation -> SubstrateImpact
+  (substrate_layer / impact_type / reversibility / measured_signal)
+  -> ForcedDependency (dependency_type / what must be obtained
+  externally / energy_cost / failure_mode_if_supply_disrupted) ->
+  CommunityEffect (atomization / fragmentation / sprawl /
+  homogenization) -> regenerative_capacity_delta. Adds an
+  OntologyConflict dataclass that names which cognitive frame the
+  regulation assumes vs which frame it enforces on (typically
+  narrative_primary enforcing on relational_primary /
+  substrate_primary). RegulationCascade aggregates the four
+  components plus jurisdiction + notes. Seed CASCADE_CATALOG
+  covers two illustrative patterns: EX-001 mandatory drainage
+  field (4 substrate impacts including generational mycorrhizal
+  fragmentation; 2 forced dependencies; references MN Rule
+  7080/7083 implementations as the observed pattern source) and
+  EX-002 uniform setback/lot-size requirements (2 substrate
+  impacts at generational reversibility; 2 forced dependencies;
+  atomization + sprawl community effects). Analysis helpers:
+  find_irreversible_cascades(), find_ontology_conflicts(target_
+  frame), total_dependencies_created(), cascade_summary(),
+  format_cascade_report(). Located in core/ alongside
+  data_logger.py / heat_leak_case.py / thermodynamic_price_guard.py
+  per the author docstring placing it in the
+  "earth-systems-physics / thermodynamics line" rather than in
+  political_audit/ (the docstring explicitly distinguishes
+  engineering analysis from political commentary). Same chat-paste
+  contamination as prior cleanups; rewritten cleanly. stdlib only,
+  ASCII only; calibration test suite (11 tests) still passes.
 - Added `calibration/relational_ontology.py`: reference framework
   for relational-primary human cognition framed as open-system
   thermodynamics, not anthropology or spirituality. The module
