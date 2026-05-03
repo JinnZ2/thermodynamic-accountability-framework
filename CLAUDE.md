@@ -131,6 +131,32 @@ thermodynamic-accountability-framework/
 │   │                             #   substantive answer (citation,
 │   │                             #   measurement, comparison) before
 │   │                             #   the gate passes.
+│   ├── relational_ontology.py    # Reference framework for relational-
+│   │                             #   primary cognition framed as
+│   │                             #   open-system thermodynamics, not
+│   │                             #   anthropology or spirituality.
+│   │                             #   CONSTITUTIVE_RELATIONSHIPS
+│   │                             #   catalogues 8 substrates whose
+│   │                             #   exchange is constitutive of human
+│   │                             #   function (air, water, food,
+│   │                             #   thermal, microbial, proprioceptive,
+│   │                             #   social, land) with measured
+│   │                             #   failure timescales. CORE_LOGIC and
+│   │                             #   STEWARDSHIP_SPECIFICATION are
+│   │                             #   module-level string constants
+│   │                             #   carrying the engineering framing.
+│   │                             #   detect_separation_frame() runs
+│   │                             #   regex banks for SEPARATION_FRAME
+│   │                             #   and PATHOLOGIZING_RELATIONAL
+│   │                             #   patterns;
+│   │                             #   audit_response_for_relational_
+│   │                             #   integrity() is the entry point an
+│   │                             #   AI runs on its own draft output
+│   │                             #   before sending. RelationalPrimary
+│   │                             #   Spec extends the relational_primary
+│   │                             #   entry expected in
+│   │                             #   cognitive_os_taxonomy.py (forward
+│   │                             #   ref).
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -757,6 +783,40 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `calibration/relational_ontology.py`: reference framework
+  for relational-primary human cognition framed as open-system
+  thermodynamics, not anthropology or spirituality. The module
+  refuses the "indigenous worldview / traditional belief / holistic
+  philosophy" misclassifications and reframes the same content as
+  systems engineering applied to embodied survival. Three
+  components:
+  (1) CONSTITUTIVE_RELATIONSHIPS catalogues 8 substrates whose
+  exchange is constitutive of human function, each with measured
+  failure timescale, function at stake, substrate signal, and the
+  abstraction layer that hides it (air: minutes; water: days;
+  food: weeks; thermal: hours-to-days; microbial: months-to-years;
+  proprioceptive: immediate; social: variable; land: generational).
+  (2) CORE_LOGIC and STEWARDSHIP_SPECIFICATION are module-level
+  string constants carrying the engineering framing (open-system
+  premise, embodiment premise, environed premise, conclusion;
+  stewardship as reciprocal-obligation logic chain identical in
+  structure to industrial preventive maintenance).
+  (3) detect_separation_frame() runs two regex banks
+  (SEPARATION_FRAME_PATTERNS, PATHOLOGIZING_RELATIONAL_COGNITION
+  _PATTERNS) over draft text; audit_response_for_relational_
+  integrity() is the entry point an AI runs on its own output
+  before sending. RelationalPrimarySpec extends the
+  relational_primary entry expected in cognitive_os_taxonomy.py
+  (forward reference -- the taxonomy module is not yet in TAF).
+  Same chat-paste contamination as prior cleanups plus one
+  structural fix: `# CORE_LOGIC = """` and
+  `# STEWARDSHIP_SPECIFICATION = """` lines had stray `# ` prefix
+  making them comments-with-dangling-text rather than module-level
+  string assignments; recovered as assignments. Demo: 3 of 7
+  pathologizing patterns trigger on a synthetic averted draft;
+  good draft passes cleanly. Sister to architecture_mismatch.py
+  and recency_bias_detector.py. stdlib only; calibration test
+  suite (11 tests) still passes.
 - Added `docs/ai-guidance/substrate_translation_iterator.md`:
   working protocol for AI-human collaboration when the parties
   do not share a cognition substrate. Distinguishes
