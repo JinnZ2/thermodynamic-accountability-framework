@@ -236,6 +236,25 @@ thermodynamic-accountability-framework/
 │   │                             #   Three seeded RecoveredSystems: mill
 │   │                             #   pond cascade, Anishinaabe seasonal
 │   │                             #   burning, beaver hydrology.
+│   ├── preservation_audit.py     # Format-translation information-loss
+│   │                             #   audit. Sits between the encoding layer
+│   │                             #   and the library layer in the metrology
+│   │                             #   chain. TranslationEvent + InformationClass
+│   │                             #   structures + audit_domain() aggregator
+│   │                             #   yield a PreservationAudit with
+│   │                             #   severity_score and verdict
+│   │                             #   (LOSSLESS / DOCUMENTED_LOSS /
+│   │                             #   SILENT_LOSS / DISCARDED_RECOVERABLE).
+│   │                             #   corruption_contribution() returns a
+│   │                             #   [0,1] term that multiplies into the
+│   │                             #   trend_corruption_calculator survival-
+│   │                             #   probability product. Seeded catalog:
+│   │                             #   audio (analog->CD->mp3), weather
+│   │                             #   (manual co-op -> ASOS), indigenous
+│   │                             #   knowledge (oral -> ethnography),
+│   │                             #   engineering (apprenticeship ->
+│   │                             #   blueprint). Companion to
+│   │                             #   calibration/recency_bias_detector.py.
 │   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
 │   └── us_wildfire_audit_registry.md      # worked-example audit registry
 │
@@ -689,6 +708,33 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/preservation_audit.py`: format-translation
+  information-loss audit. Sits between the encoding layer and the
+  library layer in the metrology chain (upstream of
+  `metrological_audit_framework.py`, companion to
+  `calibration/recency_bias_detector.py`, couples to
+  `constraint_recovery_framework.py` for partial recovery of
+  discarded engineering logic). Provides `InformationClass`
+  (named class of information; measurable_in_source vs
+  measurable_in_target -> is_lost), `TranslationEvent` (12 fields
+  including recoverability, source_material_disposition,
+  decision_reversible, documentation_quality; loss_severity is
+  the geometric mean of lost_fraction, doc_penalty,
+  recoverability penalty, and irreversibility penalty), and a
+  `PreservationAudit` aggregator. `audit_domain()` rolls
+  TranslationEvents into a domain audit; `corruption_contribution()`
+  returns a [0,1] severity term that slots into the existing
+  `corruption(trend) = corruption(measurement) * corruption(framework)`
+  pattern in `trend_corruption_calculator.py`. Verdicts:
+  LOSSLESS / DOCUMENTED_LOSS / SILENT_LOSS / DISCARDED_RECOVERABLE.
+  Seeded catalog covers four domains: audio
+  (analog masters -> CD -> mp3, severity 0.98 / discarded_recoverable
+  -- references the Universal 2008 fire), weather observation
+  (manual co-op -> ASOS, severity 0.79), indigenous knowledge
+  (oral landscape-encoded -> ethnographic record, severity 0.66 /
+  silent_loss), and engineering (apprenticeship -> blueprint,
+  severity 0.50 / documented_loss). Same chat-paste contamination
+  as prior cleanups; rewritten cleanly. stdlib only.
 - Added `simulations/loop_6_ai_default_prior_distortion.py`:
   Monte Carlo loop sim modeling the feedback where AI systems
   default to generic-baseline priors on active-crisis questions,
