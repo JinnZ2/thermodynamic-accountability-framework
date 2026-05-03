@@ -83,7 +83,16 @@ thermodynamic-accountability-framework/
 │   ├── emergent_federation.py     # Heterogeneous nodes with specialization profiles
 │   ├── node_v3_ipi.py            # Node v3 focused on Intergenerational Production Integration
 │   ├── lhri_sim.py               # Longitudinal Human Resilience Index simulation
-│   └── seed_sim.py               # Community + seed AI network dynamics
+│   ├── seed_sim.py               # Community + seed AI network dynamics
+│   └── loop_6_ai_default_prior_distortion.py  # Monte Carlo loop sim for AI
+│                                 #   default-prior distortion. Models the
+│                                 #   feedback where AI systems default to
+│                                 #   "generic stable baseline" priors when
+│                                 #   asked about active-crisis systems,
+│                                 #   substrate-primary observers carry the
+│                                 #   correction load, and decision damage
+│                                 #   compounds via DECISION_LAG_FACTOR.
+│                                 #   Stdlib only (random, statistics).
 │
 ├── game_theory/                   # Formal proofs of game theory failures
 │   ├── proof-pipeline.py         # 6-module proof pipeline (50KB)
@@ -680,6 +689,24 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `simulations/loop_6_ai_default_prior_distortion.py`:
+  Monte Carlo loop sim modeling the feedback where AI systems
+  default to generic-baseline priors on active-crisis questions,
+  substrate-primary observers carry the correction load and burn
+  out (OBSERVER_BURNOUT_RATE 8%/yr scaled by prior_calibration),
+  and decision damage compounds via DECISION_LAG_FACTOR=1.5. The
+  L6 designation positions this sim upstream of L5
+  (signal/trust/consent) since it determines whether measurement
+  instruments are calibrated to substrate reality or to
+  institutional narrative; L1-L5 of the US-oil-phase-shift sim
+  series are not in TAF (yet). Stdlib only (random, statistics).
+  Demo: n=2000 trajectories x 10yr -> mean final prior ~0.90,
+  76.6% severe miscalibration (>0.85), 93.1% high decision damage
+  (>0.5), 0.1% recover via random honest-pivot events. One dead
+  line in the chat-paste source (`correction_load = ... * 0`
+  immediately overwritten by the next line) was dropped during
+  cleanup; corrected `correction_load = state['prior_calibration']`
+  preserved with its comment.
 - Vendored `core/thermodynamic_price_guard.py` from
   earth-systems-physics @ commit 341a14b6 (CC0). Co-located with
   `core/data_logger.py` (parasitic energy debt) and
