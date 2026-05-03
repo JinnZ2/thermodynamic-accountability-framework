@@ -44,6 +44,19 @@ thermodynamic-accountability-framework/
 │   ├── data_logger.py             # Parasitic energy debt accounting
 │   ├── heat_leak_case.py          # TAF diagnostic engine (institutional friction)
 │   ├── automation_assessment.py   # Hidden variable entropy + automation load
+│   ├── thermodynamic_price_guard.py  # Price vs. embodied-energy validator.
+│   │                              #   Flags INFLATED (price >> energy) and
+│   │                              #   WASTEFUL (energy >> price) failure modes.
+│   │                              #   Provides embodied_energy() (materials ->
+│   │                              #   kWh), price_energy_check() with
+│   │                              #   transformation-band detection, full
+│   │                              #   labor_energy_budget() (metabolic +
+│   │                              #   support multiplier), and eroei_check()
+│   │                              #   (NET_SINK / BELOW_VIABILITY / MARGINAL /
+│   │                              #   VIABLE). Implements the runtime accounting
+│   │                              #   for the Money Equation's E_delivered /
+│   │                              #   E_waste / E_hidden terms. Vendored from
+│   │                              #   earth-systems-physics @ 341a14b6.
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -519,6 +532,7 @@ python core/fatigue_model.py
 python core/human_system_collapse_model.py
 python core/data_logger.py
 python core/heat_leak_case.py
+python core/thermodynamic_price_guard.py
 
 # Integrations / field-link bridges (no deps)
 python core/integrations/biological_extraction_model.py
@@ -666,6 +680,28 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Vendored `core/thermodynamic_price_guard.py` from
+  earth-systems-physics @ commit 341a14b6 (CC0). Co-located with
+  `core/data_logger.py` (parasitic energy debt) and
+  `core/heat_leak_case.py` (institutional friction) since this is
+  physics-native to TAF's domain rather than an upstream bridge.
+  Provides four layers: (0) `embodied_energy()` -- materials dict
+  + transport + processing -> kWh, with `MATERIAL_ENERGY` constants
+  for 12 common materials; (1) `price_energy_check()` -- compares
+  monetary price to energy cost via `transformation_band`,
+  classifies INFLATED_EXTREME / INFLATED / PLAUSIBLE /
+  SUBSIDY_OR_WASTE / WASTEFUL; (2) `labor_energy_budget()` -- full
+  thermodynamic cost of human labor including 8x support multiplier
+  (food / shelter / infrastructure), not just metabolic output;
+  (3) `eroei_check()` -- Energy Return on Energy Invested with
+  `min_viable=3.0` threshold, classifies NET_SINK /
+  BELOW_VIABILITY / MARGINAL / VIABLE. Implements the runtime
+  accounting for the Money Equation's E_delivered / E_waste /
+  E_hidden terms, which were previously theory-only in
+  `docs/economics/money_labor/`. Demo runs end-to-end (Bitcoin
+  transaction -> SUBSIDY_OR_WASTE, copper wire -> PLAUSIBLE,
+  diamond ring -> INFLATED_EXTREME, corn ethanol EROEI 0.8 ->
+  NET_SINK). stdlib only.
 - Added earth-systems-physics couple: `schemas/earth_physics_contract.py`
   mirrors the upstream `assumption_validator` public surface (37
   ASSUMPTION_KEYS, 16-key COUPLING_GRAPH, RiskLevel /
