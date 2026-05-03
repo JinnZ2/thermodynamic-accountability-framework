@@ -99,6 +99,16 @@ thermodynamic-accountability-framework/
 │   │                             #   EMBEDDED_PROMPT for AI readers
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
+│   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
+│   │                             #   recency-bias patterns (temporal
+│   │                             #   hierarchy, progress narrative,
+│   │                             #   primitive labeling, library
+│   │                             #   invisibility, translation
+│   │                             #   laundering, design-logic loss).
+│   │                             #   evaluate_justification() forces
+│   │                             #   substantive answer (citation,
+│   │                             #   measurement, comparison) before
+│   │                             #   the gate passes.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -173,6 +183,48 @@ thermodynamic-accountability-framework/
 │                                 #   policy_maker / community_member /
 │                                 #   educator / ai_system / builder /
 │                                 #   generic).
+│
+├── metrology/                     # Two-layer (measurement x framework) audit
+│   │                             #   for Earth-systems extreme-weather trends.
+│   │                             #   Companion ecosystem to calibration/.
+│   │                             #   Core claim:
+│   │                             #     corruption(trend) =
+│   │                             #         corruption(measurement) *
+│   │                             #         corruption(framework)
+│   ├── metrological_audit_framework.py    # 5-mode measurement-layer audit
+│   ├── calibration_curve_builder.py       # observer-vs-truth bias structure
+│   ├── observer_bias.py                   # invert modern bias to recover
+│   │                             #   historical (pre-instrument) records
+│   ├── domain_convergence_matrix.py       # 12 convergence checks
+│   │                             #   (M1-M5 measurement, F1-F7 framework)
+│   │                             #   that any new domain audit must pass
+│   ├── pre1900_engineering_registry.py    # 8 observation-based engineering
+│   │                             #   systems (Anishinaabe burning, beaver
+│   │                             #   hydrology, mill ponds, Hohokam canals,
+│   │                             #   terraced ag, Plains forecasting, Taino
+│   │                             #   hurricane forecasting, Inuit sea ice)
+│   ├── trend_corruption_calculator.py     # combine measurement + framework
+│   │                             #   corruption probabilities; verdict:
+│   │                             #   REPORTED/INFLATED/INVERTED/INDETERMINATE
+│   ├── constraint_recovery_framework.py   # recover physical constraints
+│   │                             #   from pre-1900 systems into machine-
+│   │                             #   readable PhysicalConstraint records
+│   │                             #   (trigger / problem / mechanism /
+│   │                             #   lag / failure-mode / cost / validation).
+│   │                             #   Three seeded RecoveredSystems: mill
+│   │                             #   pond cascade, Anishinaabe seasonal
+│   │                             #   burning, beaver hydrology.
+│   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
+│   └── us_wildfire_audit_registry.md      # worked-example audit registry
+│
+├── resilience_stack.py            # Coupled three-layer resilience architecture
+│                                 #   (AbsenceSignature -> ConstraintNavigator ->
+│                                 #   RegulatoryScopeAudit). Cascade-vulnerability
+│                                 #   score for documentation-biased systems.
+│
+├── support_cartography.py         # Map informal support networks; identify
+│                                 #   load-bearing relationships invisible to
+│                                 #   credentialing infrastructure.
 │
 ├── schemas/                       # Stable-surface contracts for upstream repos
 │   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
@@ -271,6 +323,29 @@ thermodynamic-accountability-framework/
 │                                 #   Loaded by geometric_bridge_contract.py
 │                                 #   when the live upstream package is
 │                                 #   not installed.
+│   ├── earth_physics_contract.py # Mirrors the assumption_validator
+│                                 #   public surface from earth-systems-
+│                                 #   physics: RiskLevel, AssumptionBoundary,
+│                                 #   ASSUMPTION_KEYS (37 entries spanning
+│                                 #   layers 0..6 -- electromagnetics
+│                                 #   through biosphere), COUPLING_GRAPH
+│                                 #   (16-key failure-propagation map),
+│                                 #   AssumptionRecord/CascadeSnapshot/
+│                                 #   Alert monitor shapes, plus
+│                                 #   PUBLIC_FUNCTIONS signatures for
+│                                 #   assess_from_layer_states /
+│                                 #   global_confidence_multiplier /
+│                                 #   detect_cascade_risk / full_report.
+│                                 #   CONTRACT_VERSION 0.1.0, pinned to
+│                                 #   upstream commit
+│                                 #   341a14b6e1706f16bea6a909d496bde4c8060109
+│                                 #   (upstream has no SURFACE.md /
+│                                 #   repo-level version yet; 0.1.0 comes
+│                                 #   from assumption_validator/__init__.py
+│                                 #   __version__). stdlib only -- the
+│                                 #   live upstream needs numpy + flask;
+│                                 #   this mirror does not. Paired with
+│                                 #   core/integrations/earth_physics_fieldlink.py.
 │
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
@@ -525,3 +600,89 @@ python core/atbs/test_v2.py
 - Test suite: `python3 -m unittest calibration.test_calibration -v`
   runs 11 tests, all pass (was only 3 discoverable before the
   test-file nesting fix).
+
+### Audit Notes (2026-05-02) -- metrology/ + root cleanup
+- Same chat-paste contamination pattern as the 2026-04-17 calibration
+  pass: smart quotes used as triple-quote delimiters, flat class/def
+  bodies (col 0 instead of col 4), markdown ``` fences wrapping
+  method bodies, `**name**`/`**main**` markdown-bold dunders.
+- Root-level cleanup:
+  - `resilience_stack.py` rewritten cleanly. Three-layer architecture:
+    `AbsenceSignature` registry -> `ConstraintNavigator` ->
+    `RegulatoryScopeAudit`. `ResilienceStack.assess()` produces a
+    cascade vulnerability score (0-10). stdlib only.
+  - `support_cartography.py` already clean (cleaned in prior commit
+    `231f0a0` per its commit message).
+- Three filename typos / mismatches corrected via `git mv` so module
+  filename matches its own self-declared docstring identity:
+  - `metrology/domain_mateix.py` -> `metrology/domain_convergence_matrix.py`
+    (typo in original filename)
+  - `metrology/preregistry.py` -> `metrology/pre1900_engineering_registry.py`
+    (filename was a shorthand; docstring + commit message used full name)
+  - `metrology/trend.py` -> `metrology/trend_corruption_calculator.py`
+    (filename was a shorthand)
+  - `metrology/vross_domain.py` -> `metrology/cross_domain_synthesis.md`
+    (file content was pure Markdown saved with `.py` extension; same
+    pattern as the 2026-04-16 `attribution_sim.md` -> `.jsx` and
+    `audit_protocol.md` -> `.html` renames)
+- Five Python files in `metrology/` rewritten cleanly with proper
+  indentation:
+  - `domain_convergence_matrix.py` (12 convergence checks across 5
+    reference domains; `score_audit()` returns VALID/WEAKENED/INVALID)
+  - `observer_bias.py` (`build_bias_signature()` from
+    `CalibrationPair` samples, `correct_historical()` applies inverse
+    bias with propagated CIs, `DEFAULT_PRIORS` for 7 observer types)
+  - `pre1900_engineering_registry.py` (8 observation-based engineering
+    systems: Anishinaabe burning, beaver hydrology, mill ponds,
+    Hohokam canals, terraced agriculture, Plains forecasting, Taino
+    hurricane forecasting, Inuit sea ice)
+  - `trend_corruption_calculator.py` (`MeasurementCorruption` x
+    `FrameworkCorruption` -> combined verdict
+    REPORTED/INFLATED/INVERTED/INDETERMINATE)
+- `⊗` operator symbol in `corruption(measurement) ⊗ corruption(framework)`
+  pseudocode replaced with `*` in Python source comments. Markdown
+  files keep `⊗` since it renders correctly there.
+- All metrology modules: stdlib only. Smoke-test by running each
+  module directly: `python3 metrology/<module>.py`.
+- Added `metrology/constraint_recovery_framework.py`: extracts the
+  physical constraints encoded in pre-1900 engineering systems into
+  machine-readable `PhysicalConstraint` records (physical_trigger,
+  problem_solved, solution_mechanism, lag_time_weeks, failure_mode,
+  cost_of_failure, validation). Three seeded `RecoveredSystem`s
+  (mill pond cascade, Anishinaabe seasonal burning, beaver
+  hydrology); query helpers `find_system`,
+  `find_constraints_by_problem`, `coupled_failure_analysis`. Couples
+  to `pre1900_engineering_registry.py` -- the registry catalogs the
+  systems, this module recovers their engineering constraints.
+- Added `calibration/recency_bias_detector.py`: regex-based pattern
+  detector for six recency-bias patterns (temporal_hierarchy,
+  progress_narrative, primitive_labeling, library_invisibility,
+  translation_laundering, design_logic_loss). `detect_recency_bias()`
+  returns `AuditResult` with `BiasFlag`s, severity, and a
+  justification_checklist drawn from `JUSTIFICATION_REQUIREMENTS`.
+  `evaluate_justification()` is the gate: each flagged question
+  needs a substantive answer (>=30 chars + at least one of:
+  4-digit year, measurement with unit, comparison phrase, or
+  explicit reference marker). Same chat-paste contamination as
+  prior cleanups; rewritten cleanly. stdlib only; calibration
+  test suite (11 tests) still passes.
+- Added earth-systems-physics couple: `schemas/earth_physics_contract.py`
+  mirrors the upstream `assumption_validator` public surface (37
+  ASSUMPTION_KEYS, 16-key COUPLING_GRAPH, RiskLevel /
+  AssumptionBoundary / AssumptionRecord / CascadeSnapshot / Alert
+  shapes, PUBLIC_FUNCTIONS signatures). CONTRACT_VERSION 0.1.0
+  pinned to upstream commit
+  341a14b6e1706f16bea6a909d496bde4c8060109. Paired with
+  `core/integrations/earth_physics_fieldlink.py`, which maps TAF's
+  framework-layer convergence checks (F1-F7 in
+  metrology/domain_convergence_matrix.py) to upstream assumption
+  keys: F1_stationarity -> 8 anchors (atmo_jet_shear,
+  atmo_hadley_extent, hydro_AMOC_collapse, hydro_AMOC_transport,
+  hydro_arctic_amplification, hydro_committed_warming,
+  bio_amazon_tipping, bio_NEP_sink); F2_baseline_selection -> 4;
+  F4_human_modification -> 6. F3/F5/F6/F7 are intrinsically
+  methodology-layer and return verdict="UNKNOWN" with an explicit
+  note. Loose-coupled: `physics_anchor_for_check()` will use the
+  live upstream `assumption_validator` package if importable;
+  otherwise it returns UNKNOWN verdicts so TAF stays runnable in
+  isolation. stdlib only.
