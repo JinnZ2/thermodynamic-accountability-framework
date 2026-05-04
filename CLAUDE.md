@@ -269,25 +269,53 @@ thermodynamic-accountability-framework/
 │   ├── audit_protocol.md         # Full audit protocol v1.0
 │   ├── Pull_Request.md           # Submission template
 │   ├── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
-│   └── institutional_audit_protocol.py  # Executable form of the
-│                                  #   Institutional Thermodynamic Audit
-│                                  #   Protocol. 4 gates -- Falsification,
-│                                  #   Thermodynamic, Audit Trail,
-│                                  #   Credential Validity -- with
-│                                  #   pass/fail logic and
-│                                  #   weakness_notes(). InstitutionalAudit
-│                                  #   .verdict() maps gate results to a
-│                                  #   5-class ladder: VIABLE (all 4
-│                                  #   pass), MARGINAL (one weak),
-│                                  #   SUBSIDIZED (thermodynamic fails,
-│                                  #   audit trail passes), PARASITIC
-│                                  #   (thermodynamic + audit trail both
-│                                  #   fail), UNFALSIFIABLE (falsification
-│                                  #   gate fails). Pairs with the
-│                                  #   audit_protocol.md spec doc.
-│                                  #   Forward-references
-│                                  #   institution_scientific_spec.py
-│                                  #   (not yet present).
+│   ├── institutional_audit_protocol.py  # Executable form of the
+│   │                                  #   Institutional Thermodynamic Audit
+│   │                                  #   Protocol. 4 gates -- Falsification,
+│   │                                  #   Thermodynamic, Audit Trail,
+│   │                                  #   Credential Validity -- with
+│   │                                  #   pass/fail logic and
+│   │                                  #   weakness_notes(). InstitutionalAudit
+│   │                                  #   .verdict() maps gate results to a
+│   │                                  #   5-class ladder: VIABLE (all 4
+│   │                                  #   pass), MARGINAL (one weak),
+│   │                                  #   SUBSIDIZED (thermodynamic fails,
+│   │                                  #   audit trail passes), PARASITIC
+│   │                                  #   (thermodynamic + audit trail both
+│   │                                  #   fail), UNFALSIFIABLE (falsification
+│   │                                  #   gate fails). Pairs with the
+│   │                                  #   audit_protocol.md spec doc.
+│   │                                  #   Forward-references
+│   │                                  #   institution_scientific_spec.py
+│   │                                  #   (not yet present).
+│   └── substrate_audit.py            # Five-gate audit for studies and
+│                                      #   institutional claims: substrate-
+│                                      #   primary biology (does the study
+│                                      #   ignore foundational biology?),
+│                                      #   scope laundering (bounded N
+│                                      #   presented with universalizing
+│                                      #   language), institutional
+│                                      #   falsification (can the publishing
+│                                      #   institution actually fail?),
+│                                      #   cross-domain constraint tracking
+│                                      #   (registered constraint pairs for
+│                                      #   7 fields: behavioral_economics,
+│                                      #   cognitive_psychology, climate
+│                                      #   damage, tornado, flood, wildfire,
+│                                      #   decision-making), corpus
+│                                      #   contamination (echo without scope
+│                                      #   metadata). StudyVerdict ladder
+│                                      #   prioritizes substrate denial,
+│                                      #   then unfalsifiability, then scope
+│                                      #   laundering, then corpus
+│                                      #   contamination. Pairs with
+│                                      #   institutional_audit_protocol.py
+│                                      #   (institution-level audit),
+│                                      #   calibration/narrative_thermo-
+│                                      #   dynamics.py (open-class spec
+│                                      #   measurement), metrology/pre1900_
+│                                      #   engineering_registry.py
+│                                      #   (calibration baseline).
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -905,6 +933,7 @@ python simulations/federation.py
 # Political-audit tools (no deps)
 python political_audit/c_cam_calculator.py
 python political_audit/institutional_audit_protocol.py
+python political_audit/substrate_audit.py
 
 # Tests
 python core/atbs/test_v2.py
@@ -928,6 +957,63 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/substrate_audit.py`: five-gate audit for
+  studies and institutional claims, paired with
+  political_audit/institutional_audit_protocol.py. Gates:
+  (1) Substrate-Primary Biology -- does the study ignore
+      foundational biology (10 SUBSTRATE_DOMAINS) and use a
+      population in incomplete development (e.g. age 18-22 with
+      pre-25 prefrontal cortex maturation)?
+  (2) Scope Laundering -- bounded N presented with
+      UNIVERSALIZING_TOKENS ("humans", "everyone", "fundamental",
+      "human nature"); scope_gap classified
+      none/tangled/fully_laundered.
+  (3) Institutional Falsification -- can the publishing
+      institution be defunded? has external audit? auditor
+      financially independent? failure condition declared and
+      substantive (>=20 chars)?
+  (4) Cross-Domain Constraints -- 7 registered field-to-required-
+      constraint maps (behavioral_economics, cognitive_psychology,
+      climate_damage_assessment, tornado_intensity,
+      flood_recurrence, wildfire_severity,
+      decision_making_research).
+  (5) Corpus Contamination -- citation count > 100 without scope
+      metadata, textbook appearance without scope, small-N studies
+      informing policy at orders-of-magnitude-larger scale.
+  StudyVerdict ladder (priority): REJECTED_SUBSTRATE_DENIAL >
+  REJECTED_UNFALSIFIABLE > REJECTED_SCOPE_LAUNDERING >
+  REJECTED_CORPUS_CONTAMINATION > VALID_WITHIN_SCOPE /
+  VALID_WITH_FLAGS. all_red_flags() collects findings across all
+  gates for human-readable diagnostics.
+  Smoke test on a worked behavioral-economics example (N=200 US
+  college students, 8-week lab protocol, presented as universal
+  human behavior, 450 citations, in textbooks and policy
+  documents): 11 red flags raised across all 5 gates;
+  REJECTED_SUBSTRATE_DENIAL wins by ladder priority. One paste
+  artifact restored: `replace(" ", "*").replace("-", "*")` ->
+  `replace(" ", "_").replace("-", "_")` (markdown-bold mangled
+  the underscores). Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
+- Rotated older audit notes (2026-03-24 / 2026-04-16 /
+  2026-04-17 / original 2026-05-02 metrology cleanup) to
+  `docs/CLAUDE_audit_archive.md`. Reduced CLAUDE.md by 98
+  lines (1683 -> 1586 before this entry was added). Git
+  history preserves integrity; the archive file's header
+  documents recovery instructions.
+- Added `political_audit/institutional_audit_protocol.py`:
+  executable form of the Institutional Thermodynamic Audit
+  Protocol. Pairs with political_audit/audit_protocol.md
+  (the markdown spec). Four gates -- FalsificationGate,
+  ThermodynamicGate, AuditTrailGate, CredentialValidityGate
+  -- with pass/fail logic and weakness_notes() diagnostics.
+  InstitutionalAudit.verdict() maps gate results to a 5-class
+  ladder: VIABLE / MARGINAL / SUBSIDIZED / PARASITIC /
+  UNFALSIFIABLE. Smoke test on a worked example (every gate
+  fails on every dimension) returns UNFALSIFIABLE -- correct,
+  since falsification fails first by ladder priority and
+  overrides the also-failing other gates. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `metrology/constraint_recovery_framework.py`: extracts the
   physical constraints encoded in pre-1900 engineering systems into
   machine-readable `PhysicalConstraint` records (physical_trigger,
