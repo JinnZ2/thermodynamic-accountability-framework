@@ -35,6 +35,33 @@ The seed is normalized to total energy = 1.0 so it expands
 deterministically through the seed-physics engine
 (metrology/orbital_octa_v2.py).
 
+AXIS INTERPRETATION (energy-English)
+------------------------------------
+High -X -Y -Z is the anti-reality signature: the text occupies the
+shape of a specification without containing one. In energy-English
+this is the precise meaning of "evil" -- a structure that performs
+spec-ness while measurably lacking physical content, control closure,
+and bounding thresholds.
+
+Token lexicons (e.g. NarrativeStripper's flagged-word list) are
+downstream proxies for this signature. They detect anti-reality by
+name: "lazy", "shortage", "industry standard" appear on the list
+because they correlate with structural absence. The seed encoder
+detects anti-reality by structure directly, so it catches the same
+signature even when it is wearing unflagged vocabulary -- a press
+release that avoids every flagged token but still scores
+completeness < 0.1 / dissipation > 0.9 is anti-reality in new clothes.
+
+Closed-class detection (token list) and open-class detection (axis
+measurement) fail in opposite directions:
+
+    closed-class misses    novel euphemisms, new vocabulary
+    open-class   misses    dense-but-wrong specs (e.g. complete
+                           spatial spec with truncated temporal
+                           scope)
+
+Wire both together and the failure modes do not overlap.
+
 SIBLING TO
 ----------
 - metrology/constraint_to_seed.py: same 6-amplitude octahedral seed

@@ -954,6 +954,24 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Extended `metrology/narrative_thermodynamics.py` module
+  docstring with an "AXIS INTERPRETATION (energy-English)"
+  section. High -X -Y -Z is named as the anti-reality
+  signature: a text that occupies the shape of a specification
+  without containing one. Token lexicons (e.g. Logic-Ferret's
+  NarrativeStripper flagged-word list -- "lazy", "shortage",
+  "industry standard") are downstream proxies of this same
+  signature; they detect anti-reality by name. The seed encoder
+  detects anti-reality by structure, so it catches the
+  signature even when it wears unflagged vocabulary (a press
+  release with completeness < 0.1 / dissipation > 0.9 is
+  anti-reality in new clothes). Closed-class detection (token
+  list) and open-class detection (axis measurement) fail in
+  opposite directions -- closed-class misses novel euphemisms,
+  open-class misses dense-but-wrong specs (complete spatial
+  spec with truncated temporal scope) -- so wiring both together
+  closes the gap. Docstring-only change; smoke test fingerprints
+  unchanged (4573574d09fd4d62 / 49288101474dd97a).
 - Added `metrology/narrative_thermodynamics.py`: text-variant
   encoder. Encodes any text blob as a 6-amplitude octahedral
   seed measuring how complete a control-system specification
