@@ -705,6 +705,26 @@ thermodynamic-accountability-framework/
 │                                 #   leaking the trap. Paired with
 │                                 #   calibration/trapdoor_eval.py
 │
+├── in_progress/                   # Live-scoping notes for upcoming
+│   │                             #   metrology / calibration work.
+│   │                             #   Three earlier .py drafts
+│   │                             #   (trend_corruption_calculator,
+│   │                             #   domain_convergence_matrix,
+│   │                             #   pre1900_engineering_registry)
+│   │                             #   plus cross_domain_synthesis.md
+│   │                             #   were chat-paste-contaminated
+│   │                             #   duplicates of clean files in
+│   │                             #   metrology/ -- removed in this
+│   │                             #   commit since clean versions
+│   │                             #   already exist.
+│   └── build_priority_notes.md   # Roadmap: substrate_baseline_registry
+│                                 #   first, then measurement_corruption_
+│                                 #   matrix, regime_shift_detector,
+│                                 #   cascade_coupling_simulator. Plus
+│                                 #   the observation_bias_characterization
+│                                 #   sketch and calibration-through-
+│                                 #   bias-characterization framing.
+│
 ├── tools/                         # Repo-hygiene scripts (stdlib only)
 │   ├── chat_paste_check.py       # Detect chat-paste contamination
 │   │                             #   in .py files: smart quotes,
