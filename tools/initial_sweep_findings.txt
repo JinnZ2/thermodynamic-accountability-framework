@@ -1,0 +1,68 @@
+initial sweep findings (2026-05-02)
+====================================
+
+Run on landing: `find . -name "*.py" -not -path "./.git/*" -print0 |
+xargs -0 python tools/chat_paste_check.py`
+
+Workflow ships in WARN-ONLY mode through 2026-05-09 to give time
+to address these before enforcement.
+
+REAL CONTAMINATION (must be fixed before enforcing CI)
+------------------------------------------------------
+
+calibration/projection_error_modes.py
+    line 477: flat body (non-indented after def/class)
+    Status: REAL. File does not parse:
+        IndentationError: expected an indented block after
+        class definition on line 34
+    Pre-existing chat-paste contamination from before this
+    detector landed; needs the same cleanup pass that
+    metrology/ and earlier calibration/ files received.
+
+FALSE POSITIVES (detector limitation; tracking for v2)
+------------------------------------------------------
+
+calibration/adaptation_debt.py
+    line 82, 118, 153: flat body (non-indented after def/class)
+    Status: FALSE POSITIVE. File parses cleanly. The detector
+    sees a multi-line function signature where the continuation
+    line is at col 0:
+
+        def score_total_debt(friction_events: list[dict[str, Any]],
+        cliff: float = 10.0) -> DimensionScore:
+
+    This is valid Python (line continuation inside an open
+    parenthesis) but the detector does not track paren depth.
+
+DETECTOR IMPROVEMENT FOR v2
+---------------------------
+
+The flat-body detector should track parenthesis / bracket /
+brace depth and only flag a non-indented line after a def/class
+when paren depth is 0. Roughly:
+
+    paren_depth = 0
+    for line in lines:
+        # ... existing checks ...
+        if DEF_CLASS_RE.match(line.lstrip()) and \
+                line == line.lstrip():
+            # only enter "watch for flat body" state if line
+            # actually closes its parens
+            if line.count("(") == line.count(")"):
+                in_def_or_class = True
+            continue
+        # ... existing flat-body check ...
+        # update paren_depth based on line content
+
+Until then: false positives on multi-line signatures with
+col-0 continuations are tolerable in WARN-ONLY mode.
+
+ACTION ITEMS
+------------
+
+[ ] Fix calibration/projection_error_modes.py before flipping
+    workflow to enforcing.
+[ ] Improve flat-body detector to track paren depth.
+[ ] After 2026-05-09: remove `continue-on-error: true` from
+    .github/workflows/chat_paste_check.yml and remove the
+    TODO comment.

@@ -1,0 +1,26 @@
+name: chat-paste check
+
+# WARN-ONLY mode through 2026-05-09 (one week from landing).
+# After that date, flip `continue-on-error: false` and remove
+# this comment to enforce the check on PRs and pushes to main.
+# TODO 2026-05-09: flip to enforcing.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    continue-on-error: true   # WARN-ONLY; remove after 2026-05-09
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: run chat_paste_check on all .py
+        run: |
+          find . -name "*.py" -not -path "./.git/*" \
+            -print0 | xargs -0 \
+            python tools/chat_paste_check.py

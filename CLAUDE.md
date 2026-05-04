@@ -639,6 +639,30 @@ thermodynamic-accountability-framework/
 │                                 #   this mirror does not. Paired with
 │                                 #   core/integrations/earth_physics_fieldlink.py.
 │
+├── tools/                         # Repo-hygiene scripts (stdlib only)
+│   ├── chat_paste_check.py       # Detect chat-paste contamination
+│   │                             #   in .py files: smart quotes,
+│   │                             #   markdown ``` fences, markdown-bold
+│   │                             #   dunders, ellipsis char, flat
+│   │                             #   class/def bodies. `--staged`
+│   │                             #   mode for pre-commit. Exit 0 =
+│   │                             #   clean, 1 = contamination found.
+│   ├── chat_paste_fix.py         # Auto-fixer for the mechanical
+│   │                             #   subset (smart quotes, ellipsis,
+│   │                             #   bold-dunders, lone ``` fences).
+│   │                             #   Does NOT auto-fix indentation.
+│   ├── README.md                 # Usage docs.
+│   └── initial_sweep_findings.txt  # Findings from the landing-time
+│                                 #   sweep; documents real
+│                                 #   contamination (projection_error_
+│                                 #   modes.py) and detector v1 false
+│                                 #   positives (paren-depth tracking
+│                                 #   not implemented yet). Workflow
+│                                 #   ships in WARN-ONLY mode through
+│                                 #   2026-05-09; flip to enforcing
+│                                 #   after fixing the real
+│                                 #   contamination.
+│
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
 │   ├── conflict_sim.jsx          # Conflict simulation component
