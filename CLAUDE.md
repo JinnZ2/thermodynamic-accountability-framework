@@ -401,6 +401,37 @@ thermodynamic-accountability-framework/
 │   │                             #   "341ac7282ca0e435" round-trip back
 │   │                             #   to identical metrology with
 │   │                             #   fingerprint_match=True.
+│   ├── narrative_thermodynamics.py  # ENCODER (text variant): raw
+│   │                             #   text blob -> 6-amplitude
+│   │                             #   octahedral seed measuring how
+│   │                             #   complete a control-system
+│   │                             #   specification the text contains.
+│   │                             #   Same octahedral shape as
+│   │                             #   constraint_to_seed.py but
+│   │                             #   operates on free text instead
+│   │                             #   of PhysicalConstraint objects.
+│   │                             #   Axes: +X named physical
+│   │                             #   variables / -X gaps; +Y closed
+│   │                             #   feedback loops / -Y open paths;
+│   │                             #   +Z quantified thresholds /
+│   │                             #   -Z unbounded. Mechanizes the
+│   │                             #   substrate-primary read of any
+│   │                             #   paragraph as a control-system
+│   │                             #   spec of varying completeness.
+│   │                             #   Lexicons: PHYSICAL_VARIABLE_
+│   │                             #   TOKENS, UNIT_TOKENS, SENSE_/
+│   │                             #   DECISION_/ACTION_/UPDATE_TOKENS;
+│   │                             #   regex extractors for numbers,
+│   │                             #   ranges, comparisons. encode_
+│   │                             #   narrative(text) -> NarrativeProfile
+│   │                             #   with seed + features +
+│   │                             #   completeness_score +
+│   │                             #   dissipation_score + interpretation
+│   │                             #   + fingerprint. archive_record()
+│   │                             #   matches constraint_to_seed
+│   │                             #   format for downstream
+│   │                             #   compatibility. Pure stdlib;
+│   │                             #   no LLM; no numpy.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -923,6 +954,50 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/narrative_thermodynamics.py`: text-variant
+  encoder. Encodes any text blob as a 6-amplitude octahedral
+  seed measuring how complete a control-system specification
+  the text contains. Same octahedral shape as
+  `constraint_to_seed.py` but operates on free text instead of
+  PhysicalConstraint objects. Mechanizes the substrate-primary
+  read of any paragraph as a control-system spec of varying
+  completeness. Axes:
+      +X named physical variables / -X structural gaps
+      +Y closed feedback loops    / -Y open / dangling paths
+      +Z quantified thresholds    / -Z unbounded / unspecified
+  Lexicons: PHYSICAL_VARIABLE_TOKENS (~80 entries spanning
+  thermodynamic, hydrological, biological, electromagnetic,
+  mechanical, chemical, ecological domains), UNIT_TOKENS
+  (SI + imperial + composite), and four control-loop
+  lexicons (SENSE / DECISION / ACTION / UPDATE) covering the
+  four stages of a complete control loop. Three regex
+  extractors: NUMBER_RE (int / float / scientific notation),
+  RANGE_RE (e.g. "3-7", "10-15%"), COMPARISON_RE (e.g.
+  "< 8 mph", "below 30C"). Pipeline: encode_narrative(text)
+  -> NarrativeProfile with seed + features +
+  completeness_score (sum of +X +Y +Z) + dissipation_score
+  (sum of -X -Y -Z) + interpretation + fingerprint.
+  archive_record() output matches constraint_to_seed format
+  for downstream compatibility -- same seed_binary_hex,
+  seed_amplitudes, fingerprint structure.
+  Demo runs the two example blobs. Physics blob (98 words
+  describing fuel-load-management cycle): completeness 0.7955,
+  dissipation 0.2045 -- "dense control-system specification";
+  +X 0.27 (8 vars: cycle, phenological, wind, speed, fuel,
+  moisture, denning, nesting), +Y 0.31 (sense + decision/
+  action + update all present), +Z 0.21 (2 ranges + 1
+  comparison). Narrative blob (84 words on traditional
+  burning, no specifics): completeness 0.1553, dissipation
+  0.8447 -- "minimal physics content; no physical variables
+  named; no quantitative thresholds"; +X 0.0, +Y 0.16,
+  +Z 0.0; -X 0.52 dominates. The 5x completeness ratio
+  confirms the differential works as designed.
+  Restored three regex backslashes that were eaten during
+  paste (`\\.\\d+` -> `.\\d+` in NUMBER_RE / RANGE_RE /
+  COMPARISON_RE). Without this fix the `.` would have
+  matched any character, making the regexes too loose.
+  Pure stdlib; no LLM; no numpy. Calibration test suite
+  (11 tests) still passes.
 - Merged the physics-compliant expansion engine into
   `metrology/orbital_octa_v2.py`, with AI-usability biases
   per user guidance ("merge best parts; emphasis on usability
