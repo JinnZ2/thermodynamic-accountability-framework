@@ -1,19 +1,58 @@
 """
 Orbital-Octahedral Fractal Core: Field-Based Growth v2
 
-REVISED: Uses direct vertex-to-vertex influence weighted by
-angular proximity, preserving directional structure.
+A compression / decompression scheme where the decompressor doesn't
+need to be told the rules -- it discovers them because they're the
+same rules reality uses.
 
-Key insight: Instead of interpolating through a continuous field,
-each new vertex is influenced by inner shell vertices based on
-how closely aligned their directions are.
+CORE PRINCIPLE
+--------------
+- Seed = proportional amplitude pattern across 6 octahedral directions
+- Expansion follows energy conservation + field-mediated coupling
+- Any physics-compliant decompressor arrives at identical structure
 
-This preserves seed asymmetries while still using inward-only causality.
+KEY PROPERTIES
+--------------
+- Pause anywhere: every intermediate state is valid / stable
+- Resume without loss: causality flows inward -> outward only
+- Scale to resources: grows to whatever size energy budget allows
+- Substrate independent: same rules work in any medium
+- Structure-preserving at sharpness=1; angular focus at sharpness>1
+
+THE ALGORITHM
+-------------
+1. Seed defines proportional amplitudes
+   S = [S_+x, S_-x, S_+y, S_-y, S_+z, S_-z]
+2. Each shell creates a field that influences outer shells
+3. New shells form at energy minima of the total inner field
+4. Proportions are preserved at sharpness=1; absolute energy decays
+   with radius via epsilon
+
+ATTRIBUTION
+-----------
+Authors: Jami (Kavik Ulu), JinnZ2.
+This file merges two earlier drafts into one engine: the
+sharpness-parameterized v2 and the physics-compliant
+structure-preserving variant. AI-usability biases of the merge:
+- sharpness kept as a tunable parameter (callers can pick
+  structure-preservation at sharpness=1 or angular focus at
+  sharpness>1)
+- expand_seed returns (shells, W) so callers can reuse the
+  influence matrix without rebuilding it
+- radial_envelope exposed as a named function for inspection
+  and reuse
+- compress_to_seed and verify_expansion provide round-trip
+  primitives for AI sanity-checking
+- single source of truth for binary encoding is
+  metrology/constraint_to_seed.py and
+  metrology/seed_to_constraint.py; this engine focuses on
+  expansion semantics
 
 Requires numpy. CC0.
 """
 
 import numpy as np
+
 
 # =============================================================================
 # GEOMETRY
@@ -37,8 +76,9 @@ def angular_weight(u1, u2, sharpness=2.0):
     Weight = max(0, dot(u1, u2))^sharpness
 
     sharpness controls how directionally focused the influence is:
-    - sharpness=1: linear falloff (broad influence)
-    - sharpness=2: quadratic falloff (moderate focus)
+    - sharpness=1: linear falloff (broad influence;
+                   structure-preserving expansion)
+    - sharpness=2: quadratic falloff (moderate focus, the v2 default)
     - sharpness>3: sharp focus (mostly self-direction)
     """
     dot = np.dot(u1, u2)
@@ -51,12 +91,14 @@ def build_influence_matrix(sharpness=2.0):
     """
     Build the 6x6 matrix of vertex-to-vertex influence weights.
 
-    W[i,j] = how much vertex j influences vertex i
+    W[i, j] = how much vertex j influences vertex i
 
     For octahedron:
     - Same direction: W=1 (maximum influence)
     - Orthogonal: W based on sharpness
     - Opposite: W=0 (no influence)
+
+    Rows are normalized to sum to 1.
     """
     W = np.zeros((6, 6))
     for i in range(6):
@@ -73,20 +115,43 @@ def build_influence_matrix(sharpness=2.0):
 # FIELD CONTRIBUTION AND PROPAGATION
 # =============================================================================
 
+def radial_envelope(r_shell, r_sample, sigma_scale=0.5):
+    """
+    Radial influence of a shell at r_shell on a point at r_sample.
+
+        f(r) = exp(-(r_sample - r_shell)^2 / (2 * sigma^2))
+        sigma = sigma_scale * r_shell
+
+    Sigma scales with shell radius so influence range is proportional
+    to distance from origin. This gives consistent behavior across
+    all scales (scale invariance).
+
+    Exposed as a separate named function so callers and AI readers
+    can inspect / reuse the radial coupling rule independently of
+    the angular coupling rule (which lives in build_influence_matrix).
+    """
+    sigma = sigma_scale * r_shell
+    if sigma <= 0:
+        return 0.0
+    return np.exp(-((r_sample - r_shell) ** 2) / (2 * sigma ** 2))
+
+
 def field_contribution(S_shell, E_shell, r_shell, r_sample, sigma_scale=0.5):
     """
     Compute amplitude contribution from a shell to a sampling radius.
 
     Returns 6-vector of contributions (one per vertex direction).
-    Radial falloff is Gaussian with sigma = sigma_scale * r_shell.
-    Angular structure preserved exactly.
-    """
-    # Radial envelope (sigma scales with radius for scale invariance)
-    sigma = sigma_scale * r_shell
-    radial = np.exp(-((r_sample - r_shell) ** 2) / (2 * sigma ** 2))
+    Radial falloff is Gaussian via radial_envelope. Angular
+    structure is preserved exactly by this function and modulated
+    later by the influence matrix W in total_field.
 
-    # Scale by shell's energy and radial factor
-    return S_shell * radial
+    Note: E_shell is unused in the current implementation
+    (amplitudes already carry energy via normalization). It is
+    retained in the signature for consistency with the form
+    used in earlier drafts and for forward compatibility with
+    energy-aware variants.
+    """
+    return S_shell * radial_envelope(r_shell, r_sample, sigma_scale)
 
 
 def total_field(shells, r_sample, W, sigma_scale=0.5):
@@ -98,6 +163,8 @@ def total_field(shells, r_sample, W, sigma_scale=0.5):
     2. Angular influence matrix W
 
     Returns 6-vector of field values at octahedral vertices.
+    Only shells with r_shell < r_sample contribute (causality:
+    inward -> outward only).
     """
     field = np.zeros(6)
 
@@ -111,7 +178,7 @@ def total_field(shells, r_sample, W, sigma_scale=0.5):
 
         # Apply angular influence: how does inner shell's pattern
         # map to outer shell's vertices?
-        # W[i,j] = influence of inner vertex j on outer vertex i
+        # W[i, j] = influence of inner vertex j on outer vertex i
         field += W @ contrib
 
     return field
@@ -122,7 +189,14 @@ def total_field(shells, r_sample, W, sigma_scale=0.5):
 # =============================================================================
 
 def normalize_to_energy(v, E=1.0, eps=1e-12):
-    """Normalize amplitude vector to total energy E."""
+    """
+    Normalize amplitude vector to total energy E.
+
+        S_normalized = S * (E / sum(S))
+
+    Ensures sum(S) = E exactly. Non-negative constraint enforced.
+    Falls back to uniform distribution if input is all zero.
+    """
     v = np.maximum(v, 0.0)  # Non-negative amplitudes
     s = v.sum()
     if s < eps:
@@ -160,21 +234,33 @@ def expand_seed(seed_S, E0=1.0, r0=1.0, steps=8, rho=1.5, epsilon=0.6,
     Parameters
     ----------
     seed_S : array-like, length 6
-        Initial amplitude vector (will be normalized to E0)
+        Initial amplitude vector (will be normalized to E0).
     E0 : float
-        Initial energy budget
+        Initial energy budget.
     r0 : float
-        Initial radius
+        Initial radius.
     steps : int
-        Number of additional shells to grow
+        Number of additional shells to grow beyond the seed.
     rho : float
-        Radial scaling factor
+        Radial scaling factor (r_{n+1} = rho * r_n).
     epsilon : float
-        Energy decay factor
+        Energy decay factor (E_{n+1} = epsilon * E_n).
     sigma_scale : float
-        Radial influence width as fraction of shell radius
+        Radial influence width as fraction of shell radius.
     sharpness : float
-        Angular focus (higher = more directional)
+        Angular focus parameter:
+        - sharpness=1: linear angular weighting; structure-preserving
+          (proportions in shell N match the seed)
+        - sharpness=2 (default): quadratic; moderate focus
+        - sharpness>3: sharp focus (mostly self-direction)
+
+    Returns
+    -------
+    shells : list of dicts
+        Each shell has keys 'id', 'r', 'E', 'S'.
+    W : np.ndarray (6x6)
+        The angular influence matrix used. Returned alongside the
+        shells so callers can reuse it without rebuilding.
     """
     # Build influence matrix
     W = build_influence_matrix(sharpness)
@@ -204,6 +290,21 @@ def expand_seed(seed_S, E0=1.0, r0=1.0, steps=8, rho=1.5, epsilon=0.6,
     return shells, W
 
 
+def compress_to_seed(shells):
+    """
+    Extract proportional seed amplitudes from a shell trajectory.
+
+    Returns the shell-0 amplitude vector normalized to sum to 1.
+    Useful for round-trip verification: expand_seed then
+    compress_to_seed should give back the original proportions.
+    """
+    S0 = np.asarray(shells[0]['S'], dtype=float)
+    total = S0.sum()
+    if total <= 0:
+        return np.ones(6) / 6.0
+    return S0 / total
+
+
 # =============================================================================
 # TESTS
 # =============================================================================
@@ -218,9 +319,9 @@ def test_influence_matrix():
         W = build_influence_matrix(sharpness)
         print(f"\nSharpness = {sharpness}:")
         print(f"  Row sums (should be 1): {W.sum(axis=1)}")
-        print(f"  Self-influence W[0,0]: {W[0,0]:.4f}")
-        print(f"  Orthogonal W[0,2]: {W[0,2]:.4f}")  # +X to +Y
-        print(f"  Opposite W[0,1]: {W[0,1]:.4f}")    # +X to -X
+        print(f"  Self-influence W[0,0]: {W[0, 0]:.4f}")
+        print(f"  Orthogonal W[0,2]: {W[0, 2]:.4f}")  # +X to +Y
+        print(f"  Opposite W[0,1]: {W[0, 1]:.4f}")    # +X to -X
     print("\nStatus: PASS (rows sum to 1, opposite=0)")
 
 
@@ -279,7 +380,7 @@ def test_pause_resume():
         match = np.allclose(s_full, s_resumed)
         all_match = all_match and match
         status = "PASS" if match else "FAIL"
-        print(f"  Shell {3+i}: {status}")
+        print(f"  Shell {3 + i}: {status}")
         if not match:
             print(f"    Full:    {np.round(s_full, 4)}")
             print(f"    Resumed: {np.round(s_resumed, 4)}")
@@ -290,7 +391,7 @@ def test_pause_resume():
 def test_seed_preservation():
     """Verify different seeds produce different structures."""
     print("\n" + "=" * 60)
-    print("TEST: Seed Structure Preservation")
+    print("TEST: Seed Structure Distinguishability")
     print("=" * 60)
 
     seeds = {
@@ -369,6 +470,53 @@ def test_sharpness_effect():
         print(f"  X-axis fraction: {x_ratio:.2%} (started at ~80%)")
 
 
+def test_structure_preservation():
+    """
+    Verify expand_seed preserves seed proportions exactly at sharpness=1.
+
+    At sharpness=1 the influence matrix has the property that
+    expansion preserves the seed's amplitude pattern across all
+    shells (modulo numerical noise). This is the "physics-compliant"
+    mode where the decompressor arrives at identical structure
+    using only the energy-conservation + field-coupling rules.
+    """
+    print("\n" + "=" * 60)
+    print("TEST: Structure Preservation at sharpness=1")
+    print("=" * 60)
+
+    seed = np.array([0.5, 0.2, 0.15, 0.08, 0.05, 0.02])
+    seed_proportions = seed / seed.sum()
+
+    shells, _ = expand_seed(seed, steps=15, sharpness=1.0)
+
+    print(f"\nSeed proportions: {np.round(seed_proportions, 4)}")
+    print()
+
+    max_deviation = 0.0
+    for s in shells:
+        S_prop = s['S'] / s['S'].sum()
+        deviation = float(np.max(np.abs(S_prop - seed_proportions)))
+        max_deviation = max(max_deviation, deviation)
+
+        if s['id'] <= 5 or s['id'] == 15:
+            print(
+                f"Shell {s['id']:2d}: {np.round(S_prop, 4)} "
+                f"(dev: {deviation:.2e})"
+            )
+
+    threshold = 1e-10
+    preserved = max_deviation < threshold
+    print(f"\nMax deviation across all shells: {max_deviation:.2e}")
+    print(f"Status: {'PASS' if preserved else 'FAIL'} "
+          f"(threshold {threshold:.0e})")
+
+    # Round-trip via compress_to_seed
+    recovered = compress_to_seed(shells)
+    rt_dev = float(np.max(np.abs(recovered - seed_proportions)))
+    print(f"\ncompress_to_seed round-trip deviation: {rt_dev:.2e}")
+    print(f"Round-trip status: {'PASS' if rt_dev < threshold else 'FAIL'}")
+
+
 def visualize(shells):
     """ASCII visualization."""
     print("\n" + "=" * 60)
@@ -391,7 +539,7 @@ def visualize(shells):
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("ORBITAL-OCTAHEDRAL FRACTAL CORE v2")
+    print("ORBITAL-OCTAHEDRAL FRACTAL CORE v2 (merged)")
     print("Direct Vertex-to-Vertex Field Coupling")
     print("=" * 60)
 
@@ -401,6 +549,7 @@ if __name__ == "__main__":
     test_seed_preservation()
     test_energy_conservation()
     test_sharpness_effect()
+    test_structure_preservation()
 
     # Demo growth
     print("\n" + "=" * 60)
