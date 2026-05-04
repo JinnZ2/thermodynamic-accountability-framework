@@ -308,6 +308,34 @@ thermodynamic-accountability-framework/
 │   │                             #   Three seeded RecoveredSystems: mill
 │   │                             #   pond cascade, Anishinaabe seasonal
 │   │                             #   burning, beaver hydrology.
+│   ├── constraint_recovery_framework_v03_patch.py  # Additive v0.3 patch:
+│   │                             #   InstitutionFrame dataclass (forces
+│   │                             #   explicit definition of "institution"
+│   │                             #   per cultural frame), drift detectors
+│   │                             #   (HIERARCHY_TOKENS / WESTERN_DEFAULT_
+│   │                             #   TOKENS / INSTITUTION_VAGUENESS_TOKENS),
+│   │                             #   validation layer for v0.2 schema
+│   │                             #   (depends_on/enables resolution,
+│   │                             #   evidence_quality enum, descendant-
+│   │                             #   community consultation, observer
+│   │                             #   calibration), and graph analysis
+│   │                             #   (longest dependency chain, single
+│   │                             #   points of failure, cross-system
+│   │                             #   couplings). 4 seeded InstitutionFrames
+│   │                             #   (US peer-review, Anishinaabe seasonal
+│   │                             #   council, Persian qanat guild, Soviet/
+│   │                             #   Russian cosmonautics) demonstrate
+│   │                             #   same-word-different-referent contrast.
+│   │                             #   SCHEMA DEPENDENCY: validators expect
+│   │                             #   v0.2 PhysicalConstraint with
+│   │                             #   depends_on / enables / evidence_quality
+│   │                             #   / confidence_level / knowledge_system
+│   │                             #   / recovery_provenance fields, which
+│   │                             #   the v0.1 base in this repo does not
+│   │                             #   yet have. InstitutionFrame catalog +
+│   │                             #   drift detectors + smoke test run
+│   │                             #   today; validators wait for v0.2
+│   │                             #   schema upgrade.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -830,6 +858,52 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/constraint_recovery_framework_v03_patch.py`:
+  additive patch declaring four structural defenses against
+  category errors observed during cross-model session work
+  (Claude / DeepSeek). Components:
+  (1) InstitutionFrame dataclass forces explicit definition of
+  what "institution" means per cultural / temporal / geographic
+  frame (the word does not map across cultures without
+  specification). 4 seeded frames (US peer-review credentialing
+  system, Anishinaabe seasonal burn council, Persian qanat
+  guild + water court, Soviet/Russian cosmonautics design-
+  bureau tradition) demonstrate the contrast: all four are
+  "institutions", none map to the same vector space.
+  (2) Validation layer with seven validators
+  (validate_constraint_dependencies for dangling depends_on/
+  enables IDs; validate_evidence_quality enum check;
+  validate_confidence_range for [0,1] bounds;
+  validate_descendant_consultation for full_fidelity_preserved
+  claims; validate_institution_frame_present;
+  validate_observer_calibration for empty
+  interpreter_epistemology / known_missing_perspectives;
+  validate_text_for_drift) producing ValidationFinding records
+  classified by severity (error / warning / flag).
+  (3) Drift detectors: three keyword sets and three matching
+  detectors -- HIERARCHY_TOKENS (primitive / advanced / folk
+  knowledge / TEK / first-world / etc), WESTERN_DEFAULT_TOKENS
+  (scientific method / peer reviewed / objective observer /
+  evidence-based / best practices), INSTITUTION_VAGUENESS_TOKENS
+  (the institution / institutional review / the academy / etc).
+  (4) Graph analysis: build_dependency_graph,
+  longest_dependency_chain, single_points_of_failure (sorted by
+  downstream cascade count), cross_system_couplings (default
+  hydrology + fire keyword bank).
+  SCHEMA DEPENDENCY GAP: the patch was authored against a v0.2
+  PhysicalConstraint schema (depends_on, enables, evidence_quality,
+  confidence_level, knowledge_system, recovery_provenance,
+  physical_principle, applicability_assessment) that does not
+  match the current v0.1 base in metrology/constraint_recovery_
+  framework.py. Validators raise AttributeError if run against
+  v0.1 systems. Module docstring + structure-tree entry both
+  document the gap; InstitutionFrame catalog, drift detectors,
+  and smoke test run independently of the v0.2 upgrade and
+  exercise correctly today (smoke test: 4 hierarchy tokens, 4
+  Western-default tokens, 1 institution-vagueness token detected
+  on synthetic averted text). Land the v0.2 schema upgrade to
+  exercise the validators end-to-end. stdlib only;
+  calibration test suite (11 tests) still passes.
 - Added `calibration/convergent_ontology_mapper.py`: cross-lineage
   convergence mapper for relational ontologies. Frames knowledge
   lineages as independent measurement chains and convergence across
