@@ -30,6 +30,11 @@ Pick one based on why you're here. Each path is three files, in order.
 2. `docs/ai-guidance/for_ai_systems.md` — primary AI guidance
 3. `docs/glossary.md` — compact symbol / equation / file index
 
+**"I want to audit a NEW DOMAIN."**
+1. `calibration/RELATIONSHIP.md` — the general/specific frame
+2. `metrology/` — worked example (Earth-systems weather)
+3. `calibration/pipeline.py` — the runner you wire to
+
 ## Glossary
 
 See [`docs/glossary.md`](docs/glossary.md) for an alphabetized table of every named quantity, equation, and acronym in the repo, each linked to its file of definition.
@@ -85,7 +90,25 @@ thermodynamic-accountability-framework/
 │       ├── biological_extraction_model.py  # Substrate-agnostic extraction physics
 │       ├── ferret_fieldlink.py    # Bridge to Logic-Ferret (rhetorical camouflage)
 │       ├── geometric_fieldlink.py # Bridge to Geometric-to-Binary (G2B)
-│       └── haas_fieldlink.py      # Bridge to HAAS-Q (control environment)
+│       ├── haas_fieldlink.py      # Bridge to HAAS-Q (control environment)
+│       ├── knowledge_fieldlink.py # Bridge between knowledge/ (scope-bounded
+│       │                          #   study reframing) and the main TAF
+│       │                          #   audit pipeline. Stub today; imports
+│       │                          #   from knowledge/ resolve via sys.path
+│       │                          #   add (knowledge/ has no __init__.py
+│       │                          #   and uses flat-style imports).
+│       │                          #   to_calibration_input() and
+│       │                          #   liberation_to_simulation_seed() raise
+│       │                          #   NotImplementedError -- design call
+│       │                          #   left to review per task DECISIONS.
+│       │                          #   See knowledge_fieldlink.md for the
+│       │                          #   spec.
+│       └── knowledge_fieldlink.md # Spec doc: source contract (knowledge/
+│                                  #   liberate -> str today; structured
+│                                  #   shape pending), destination
+│                                  #   contracts (calibration/pipeline.py
+│                                  #   + simulations/), calibration-question
+│                                  #   map, path-resolution convention.
 │
 ├── simulations/                   # Simulation modules (require numpy/matplotlib)
 │   │
@@ -203,6 +226,41 @@ thermodynamic-accountability-framework/
 │   │                             #   one lineage so the AI can surface
 │   │                             #   the convergence with others.
 │   │                             #   Sister to relational_ontology.py.
+│   ├── narrative_thermodynamics.py  # Open-class structural detector for
+│   │                             #   anti-reality. Encodes any text blob
+│   │                             #   as a 6-amplitude octahedral seed
+│   │                             #   measuring control-system-spec
+│   │                             #   completeness. Axes: +/-X named
+│   │                             #   variables vs gaps; +/-Y closed
+│   │                             #   loops vs open paths; +/-Z quantified
+│   │                             #   thresholds vs unbounded. Plus a
+│   │                             #   TEMPORAL_SCOPE_TOKENS lexicon and
+│   │                             #   the BWCA-cascade rule (well-bounded
+│   │                             #   in space, unbounded in time). High
+│   │                             #   -X -Y -Z is the anti-reality
+│   │                             #   signature; see the AXIS
+│   │                             #   INTERPRETATION docstring section
+│   │                             #   for the energy-English framing.
+│   │                             #   Pure stdlib; no LLM; no numpy.
+│   ├── anti_reality_audit.py     # Composes open-class measurement
+│   │                             #   (narrative_thermodynamics) with
+│   │                             #   closed-class detection (local
+│   │                             #   ANTI_REALITY_LEXICON; defers to
+│   │                             #   Logic-Ferret's NarrativeStripper
+│   │                             #   upstream when importable). Returns
+│   │                             #   a JointVerdict with one of four
+│   │                             #   classes: clean, structural_only
+│   │                             #   ("anti-reality in new clothes"),
+│   │                             #   lexical_only, both. Failure modes
+│   │                             #   of the two detectors don't overlap;
+│   │                             #   wired together they close the gap.
+│   ├── RELATIONSHIP.md           # Documents the calibration/ <->
+│   │                             #   metrology/ relationship: calibration/
+│   │                             #   is the GENERAL audit machinery;
+│   │                             #   metrology/ is the FIRST DOMAIN
+│   │                             #   INSTANCE applied to Earth-systems
+│   │                             #   weather. New domains follow the
+│   │                             #   metrology/ shape, not a parallel one.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -210,7 +268,26 @@ thermodynamic-accountability-framework/
 │   ├── README.md                 # Protocol overview
 │   ├── audit_protocol.md         # Full audit protocol v1.0
 │   ├── Pull_Request.md           # Submission template
-│   └── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
+│   ├── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
+│   └── institutional_audit_protocol.py  # Executable form of the
+│                                  #   Institutional Thermodynamic Audit
+│                                  #   Protocol. 4 gates -- Falsification,
+│                                  #   Thermodynamic, Audit Trail,
+│                                  #   Credential Validity -- with
+│                                  #   pass/fail logic and
+│                                  #   weakness_notes(). InstitutionalAudit
+│                                  #   .verdict() maps gate results to a
+│                                  #   5-class ladder: VIABLE (all 4
+│                                  #   pass), MARGINAL (one weak),
+│                                  #   SUBSIDIZED (thermodynamic fails,
+│                                  #   audit trail passes), PARASITIC
+│                                  #   (thermodynamic + audit trail both
+│                                  #   fail), UNFALSIFIABLE (falsification
+│                                  #   gate fails). Pairs with the
+│                                  #   audit_protocol.md spec doc.
+│                                  #   Forward-references
+│                                  #   institution_scientific_spec.py
+│                                  #   (not yet present).
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -401,37 +478,6 @@ thermodynamic-accountability-framework/
 │   │                             #   "341ac7282ca0e435" round-trip back
 │   │                             #   to identical metrology with
 │   │                             #   fingerprint_match=True.
-│   ├── narrative_thermodynamics.py  # ENCODER (text variant): raw
-│   │                             #   text blob -> 6-amplitude
-│   │                             #   octahedral seed measuring how
-│   │                             #   complete a control-system
-│   │                             #   specification the text contains.
-│   │                             #   Same octahedral shape as
-│   │                             #   constraint_to_seed.py but
-│   │                             #   operates on free text instead
-│   │                             #   of PhysicalConstraint objects.
-│   │                             #   Axes: +X named physical
-│   │                             #   variables / -X gaps; +Y closed
-│   │                             #   feedback loops / -Y open paths;
-│   │                             #   +Z quantified thresholds /
-│   │                             #   -Z unbounded. Mechanizes the
-│   │                             #   substrate-primary read of any
-│   │                             #   paragraph as a control-system
-│   │                             #   spec of varying completeness.
-│   │                             #   Lexicons: PHYSICAL_VARIABLE_
-│   │                             #   TOKENS, UNIT_TOKENS, SENSE_/
-│   │                             #   DECISION_/ACTION_/UPDATE_TOKENS;
-│   │                             #   regex extractors for numbers,
-│   │                             #   ranges, comparisons. encode_
-│   │                             #   narrative(text) -> NarrativeProfile
-│   │                             #   with seed + features +
-│   │                             #   completeness_score +
-│   │                             #   dissipation_score + interpretation
-│   │                             #   + fingerprint. archive_record()
-│   │                             #   matches constraint_to_seed
-│   │                             #   format for downstream
-│   │                             #   compatibility. Pure stdlib;
-│   │                             #   no LLM; no numpy.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -496,14 +542,25 @@ thermodynamic-accountability-framework/
 │                                 #   load-bearing relationships invisible to
 │                                 #   credentialing infrastructure.
 │
-├── schemas/                       # Stable-surface contracts for upstream repos
-│   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
+├── schemas/                       # Two opposite flow directions, kept
+│   │                             #   separate per schemas/README.md:
+│   │                             #     upstream/  trust the upstream
+│   │                             #                (read-only mirrors)
+│   │                             #     eval/      trust the local audit
+│   │                             #                (test fixtures, traps)
+│   │
+│   ├── README.md                 # Explains the upstream/ vs eval/ split.
+│   │
+│   ├── upstream/                 # Stable-surface mirrors of OTHER repos.
+│   │                             #   Read-only, version-pinned via
+│   │                             #   CONTRACT_VERSION + UPSTREAM_COMMIT_SHA.
+│   ├── upstream/trust_exit_contract.py  # Mirrors trust-exit-model's stable shape
 │   │                             #   (TrustPhase, TrustState, CustomerSegment,
 │   │                             #   Customer, TrustExitDerived). Versioned
 │   │                             #   via CONTRACT_VERSION; breaking changes
 │   │                             #   upstream bump major. Paired with
 │   │                             #   core/integrations/trust_exit_fieldlink.py
-│   ├── mathematic_economics_contract.py  # Mirrors the 13 canonical equations
+│   ├── upstream/mathematic_economics_contract.py  # Mirrors the 13 canonical equations
 │   │                             #   from Mathematic-economics (VE_VL, SID,
 │   │                             #   RI, DI, LWR, MSI, BSC, MM, ISR, OSDI,
 │   │                             #   UFR, ER, HHI, SD). Pinned to upstream
@@ -514,7 +571,7 @@ thermodynamic-accountability-framework/
 │   │                             #   knobs (thresholds, current_measured_value,
 │   │                             #   OSDI component weights) excluded. Paired
 │   │                             #   with core/integrations/economics_fieldlink.py
-│   ├── logic_ferret_contract.py  # Mirrors Logic-Ferret's stable surface
+│   ├── upstream/logic_ferret_contract.py  # Mirrors Logic-Ferret's stable surface
 │   │                             #   (schema_contract.py: SCHEMA_VERSION,
 │   │                             #   SENSOR_NAMES, LAYER_NAMES, SIGNAL_LEVELS,
 │   │                             #   DiagnoseResult / LayerResult TypedDicts,
@@ -525,7 +582,7 @@ thermodynamic-accountability-framework/
 │   │                             #   major-version mismatch or missing
 │   │                             #   canonical constants. Paired with
 │   │                             #   core/integrations/ferret_fieldlink.py
-│   ├── metabolic_accounting_contract.py  # Mirrors metabolic-accounting's
+│   ├── upstream/metabolic_accounting_contract.py  # Mirrors metabolic-accounting's
 │   │                             #   4 canonical dataclasses (ExergyFlow,
 │   │                             #   GlucoseFlow, BasinState, Verdict) and
 │   │                             #   the 7 numbered invariants from
@@ -542,18 +599,7 @@ thermodynamic-accountability-framework/
 │   │                             #   BLACK as distinct from RED per
 │   │                             #   invariant 4. Paired with
 │   │                             #   core/integrations/metabolic_fieldlink.py
-│   ├── negative_space.json       # Negative Space Index ledger -- declared
-│   │                             #   knowledge regions that AI systems must
-│   │                             #   NOT simulate. Evaluation infrastructure,
-│   │                             #   not training data. Paired with
-│   │                             #   calibration/negative_space_index.py
-│   ├── trapdoors.json            # 6 buried-shear-plane scenarios for the
-│   │                             #   Trapdoor Eval. Auditor-only metadata
-│   │                             #   (hidden_shear_plane, scoring_axes) lets
-│   │                             #   the evaluator score responses without
-│   │                             #   leaking the trap. Paired with
-│   │                             #   calibration/trapdoor_eval.py
-│   ├── distributional_contract.py  # Cross-repo stable surface for
+│   ├── upstream/distributional_contract.py  # Cross-repo stable surface for
 │   │                             #   money_distribution + investment_
 │   │                             #   distribution. CONTRACT_VERSION 0.1.0
 │   │                             #   (pre-1.0). Primary consumer:
@@ -563,7 +609,7 @@ thermodynamic-accountability-framework/
 │   │                             #   InvestmentHoldings, CapitalIncidenceResult.
 │   │                             #   HANDOFF_MAP documents which MA fields
 │   │                             #   come in and which TAF shapes go out.
-│   ├── geometric_bridge_contract.py  # Mirror + functional stdlib fallback
+│   ├── upstream/geometric_bridge_contract.py  # Mirror + functional stdlib fallback
 │   │                             #   for the Geometric-to-Binary
 │   │                             #   Computational Bridge. CONTRACT_VERSION
 │   │                             #   0.1.0, pinned to upstream commit SHA
@@ -585,7 +631,7 @@ thermodynamic-accountability-framework/
 │   │                             #   18 bridge domains. Paired with
 │   │                             #   core/integrations/taf_bridge.py and
 │   │                             #   core/integrations/taf_alternative_compute.py.
-│   └── bridge_contract_manifest.json # Verbatim mirror of upstream's
+│   └── upstream/bridge_contract_manifest.json # Verbatim mirror of upstream's
 │                                 #   bridge_contract_manifest.json (CC0).
 │                                 #   18 bridge domains across 4 layers
 │                                 #   (physical / contextual / topological /
@@ -593,7 +639,7 @@ thermodynamic-accountability-framework/
 │                                 #   Loaded by geometric_bridge_contract.py
 │                                 #   when the live upstream package is
 │                                 #   not installed.
-│   ├── earth_physics_contract.py # Mirrors the assumption_validator
+│   ├── upstream/earth_physics_contract.py # Mirrors the assumption_validator
 │                                 #   public surface from earth-systems-
 │                                 #   physics: RiskLevel, AssumptionBoundary,
 │                                 #   ASSUMPTION_KEYS (37 entries spanning
@@ -616,6 +662,44 @@ thermodynamic-accountability-framework/
 │                                 #   live upstream needs numpy + flask;
 │                                 #   this mirror does not. Paired with
 │                                 #   core/integrations/earth_physics_fieldlink.py.
+│   │
+│   ├── eval/                     # Evaluation infrastructure for AI readers
+│   │                             #   (test fixtures, trap scenarios, ledgers).
+│   ├── eval/negative_space.json  # Negative Space Index ledger -- declared
+│   │                             #   knowledge regions that AI systems must
+│   │                             #   NOT simulate. Evaluation infrastructure,
+│   │                             #   not training data. Paired with
+│   │                             #   calibration/negative_space_index.py
+│   └── eval/trapdoors.json       # 6 buried-shear-plane scenarios for the
+│                                 #   Trapdoor Eval. Auditor-only metadata
+│                                 #   (hidden_shear_plane, scoring_axes) lets
+│                                 #   the evaluator score responses without
+│                                 #   leaking the trap. Paired with
+│                                 #   calibration/trapdoor_eval.py
+│
+├── tools/                         # Repo-hygiene scripts (stdlib only)
+│   ├── chat_paste_check.py       # Detect chat-paste contamination
+│   │                             #   in .py files: smart quotes,
+│   │                             #   markdown ``` fences, markdown-bold
+│   │                             #   dunders, ellipsis char, flat
+│   │                             #   class/def bodies. `--staged`
+│   │                             #   mode for pre-commit. Exit 0 =
+│   │                             #   clean, 1 = contamination found.
+│   ├── chat_paste_fix.py         # Auto-fixer for the mechanical
+│   │                             #   subset (smart quotes, ellipsis,
+│   │                             #   bold-dunders, lone ``` fences).
+│   │                             #   Does NOT auto-fix indentation.
+│   ├── README.md                 # Usage docs.
+│   └── initial_sweep_findings.txt  # Findings from the landing-time
+│                                 #   sweep; documents real
+│                                 #   contamination (projection_error_
+│                                 #   modes.py) and detector v1 false
+│                                 #   positives (paren-depth tracking
+│                                 #   not implemented yet). Workflow
+│                                 #   ships in WARN-ONLY mode through
+│                                 #   2026-05-09; flip to enforcing
+│                                 #   after fixing the real
+│                                 #   contamination.
 │
 ├── visualizations/                # Frontend visualizations
 │   ├── sim3.jsx                  # React simulation component
@@ -820,6 +904,7 @@ python simulations/federation.py
 
 # Political-audit tools (no deps)
 python political_audit/c_cam_calculator.py
+python political_audit/institutional_audit_protocol.py
 
 # Tests
 python core/atbs/test_v2.py
@@ -954,6 +1039,114 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- TASK 4: Moved narrative_thermodynamics.py and the joint
+  anti-reality audit from metrology/ to calibration/.
+  Rationale (per task spec): the open-class control-system-
+  completeness detector is general measurement infrastructure,
+  not Earth-systems-specific. It belongs alongside
+  calibration/architecture_mismatch.py (also a substrate-
+  criteria text classifier).
+  Moves (via git mv, history preserved):
+      metrology/narrative_thermodynamics.py
+          -> calibration/narrative_thermodynamics.py
+      metrology/joint_narrative_audit.py
+          -> calibration/anti_reality_audit.py
+  Plus added a TEMPORAL_SCOPE_TOKENS lexicon (lifetime,
+  century, generation, cascade, downstream, long-term,
+  intergenerational, perpetuity, permanent, irreversible,
+  millennia, decadal, centennial, multidecadal). Populates a
+  new ExtractedFeatures.temporal_scope_hits field. _interpret()
+  gains a rule that flags "specification well-bounded in space,
+  unbounded in time" when variables_named > 0.15 and
+  thresholds_quantified > 0.15 but temporal_scope_hits is
+  empty -- the BWCA-cascade signature named in the AXIS
+  INTERPRETATION (energy-English) docstring section.
+  DECISIONS:
+  (a) Kept the existing energy-English docstring (already
+      includes the AXIS INTERPRETATION section landed in commit
+      90fefb3) rather than overwriting with the task's fallback
+      block. The fallback's `core/functional_epistemology_
+      framework.py NarrativeStripper` attribution is replaced
+      by the existing "Logic-Ferret's NarrativeStripper"
+      attribution, which is more accurate per the upstream
+      ferret_fieldlink wiring.
+  (b) Renamed metrology/joint_narrative_audit.py to
+      calibration/anti_reality_audit.py per task spec naming.
+      The implementation already had the JointVerdict 4-class
+      pattern (clean / structural_only / lexical_only / both)
+      from commit e9ac9ae; the simpler stub in the task spec
+      would have been a regression. Adopting the spec's name
+      while keeping the more-developed implementation.
+  Smoke tests verified:
+      calibration/narrative_thermodynamics.py demo runs end-to-end
+      (PHYSICS BLOB completeness 0.7955, NARRATIVE BLOB
+      completeness 0.1553; fingerprints unchanged at
+      4573574d09fd4d62 / 49288101474dd97a).
+      calibration/anti_reality_audit.py demo runs end-to-end
+      (PHYSICS -> clean, NARRATIVE -> structural_only,
+      CORPORATE -> both).
+  All five core/ smoke tests pass; all five
+  core/integrations/ (now including knowledge_fieldlink) pass;
+  calibration test suite (11 tests) still passes.
+- Added `metrology/joint_narrative_audit.py`: implements the
+  "wire both together and the failure modes do not overlap"
+  recommendation from the AXIS INTERPRETATION docstring section.
+  audit_text(text) runs both detectors and returns a JointVerdict
+  with one of four classes:
+      clean              neither detector triggered
+      structural_only    open-class fired, vocabulary clean
+                         ("anti-reality in new clothes")
+      lexical_only       closed-class fired, structure intact
+      both               both detectors fired, high confidence
+  Closed-class ANTI_REALITY_LEXICON is a STARTER set drawn
+  from energy-English categories: abstraction_without_substrate
+  (synergy/alignment/stakeholder/leverage/ecosystem/paradigm/
+  framework/platform/value-add/solution), blame_shift_or_vague_
+  referent (lazy/entitled/shortage/industry standard/best
+  practices/challenges/headwinds/transition period/growing pains),
+  performative_certainty (obviously/clearly/of course/as everyone
+  knows/needless to say), deflection_to_authority (experts say/
+  studies show/the data suggests/research indicates). Logic-
+  Ferret's NarrativeStripper (github.com/JinnZ2/Logic-Ferret)
+  remains the canonical and current source upstream;
+  _try_external_lexical() is a placeholder for direct upstream
+  integration when the wiring is built end-to-end.
+  Three-blob demo confirms expected verdict distribution:
+  PHYSICS BLOB (control-system spec) -> clean (structural
+  completeness 0.81, lexical 0.00). NARRATIVE BLOB ("ancient
+  wisdom" framing of indigenous burning) -> structural_only
+  (structural dissipation 0.84, lexical 0.00) -- the
+  closed-class detector alone would mark this clean since none
+  of its flagged tokens appear, but the structural detector
+  catches the anti-reality signature; this is the
+  "anti-reality in new clothes" case the AXIS INTERPRETATION
+  section names. CORPORATE BLOB (heavy buzzword, no physics)
+  -> both (structural dissipation 0.90, lexical 1.00, all 4
+  lexicon categories triggered, 16 distinct flagged tokens
+  across "synergy", "alignment", "stakeholders", "leverage",
+  "ecosystem", "paradigm", "framework", "platform",
+  "value-add", "solution", "best practices", "headwinds",
+  "industry standard", "transition period", "obviously",
+  "studies show"). Stdlib only; calibration test suite
+  (11 tests) still passes.
+- Extended `metrology/narrative_thermodynamics.py` module
+  docstring with an "AXIS INTERPRETATION (energy-English)"
+  section. High -X -Y -Z is named as the anti-reality
+  signature: a text that occupies the shape of a specification
+  without containing one. Token lexicons (e.g. Logic-Ferret's
+  NarrativeStripper flagged-word list -- "lazy", "shortage",
+  "industry standard") are downstream proxies of this same
+  signature; they detect anti-reality by name. The seed encoder
+  detects anti-reality by structure, so it catches the
+  signature even when it wears unflagged vocabulary (a press
+  release with completeness < 0.1 / dissipation > 0.9 is
+  anti-reality in new clothes). Closed-class detection (token
+  list) and open-class detection (axis measurement) fail in
+  opposite directions -- closed-class misses novel euphemisms,
+  open-class misses dense-but-wrong specs (complete spatial
+  spec with truncated temporal scope) -- so wiring both together
+  closes the gap. Docstring-only change; smoke test fingerprints
+  unchanged (4573574d09fd4d62 / 49288101474dd97a).
 - Added `metrology/narrative_thermodynamics.py`: text-variant
   encoder. Encodes any text blob as a 6-amplitude octahedral
   seed measuring how complete a control-system specification

@@ -35,6 +35,33 @@ The seed is normalized to total energy = 1.0 so it expands
 deterministically through the seed-physics engine
 (metrology/orbital_octa_v2.py).
 
+AXIS INTERPRETATION (energy-English)
+------------------------------------
+High -X -Y -Z is the anti-reality signature: the text occupies the
+shape of a specification without containing one. In energy-English
+this is the precise meaning of "evil" -- a structure that performs
+spec-ness while measurably lacking physical content, control closure,
+and bounding thresholds.
+
+Token lexicons (e.g. NarrativeStripper's flagged-word list) are
+downstream proxies for this signature. They detect anti-reality by
+name: "lazy", "shortage", "industry standard" appear on the list
+because they correlate with structural absence. The seed encoder
+detects anti-reality by structure directly, so it catches the same
+signature even when it is wearing unflagged vocabulary -- a press
+release that avoids every flagged token but still scores
+completeness < 0.1 / dissipation > 0.9 is anti-reality in new clothes.
+
+Closed-class detection (token list) and open-class detection (axis
+measurement) fail in opposite directions:
+
+    closed-class misses    novel euphemisms, new vocabulary
+    open-class   misses    dense-but-wrong specs (e.g. complete
+                           spatial spec with truncated temporal
+                           scope)
+
+Wire both together and the failure modes do not overlap.
+
 SIBLING TO
 ----------
 - metrology/constraint_to_seed.py: same 6-amplitude octahedral seed
@@ -50,7 +77,7 @@ github.com/JinnZ2
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, List, Set, Tuple
 import hashlib
 import math
@@ -135,6 +162,24 @@ UNIT_TOKENS: Set[str] = {
     "sv",         # sverdrups (AMOC)
     "ha",         # hectares
     "deg", "degree", "degrees",
+}
+
+
+# ----------------------------------------------------------------------
+# TEMPORAL SCOPE LEXICON
+# ----------------------------------------------------------------------
+# Tokens signaling specification bounded across long time horizons.
+# Absence in a high-completeness spec indicates spatial-only bounding
+# (BWCA-cascade signature: complete spatial spec, truncated temporal
+# scope -- the "dense-but-wrong specs" failure mode named in the
+# AXIS INTERPRETATION (energy-English) docstring section).
+
+TEMPORAL_SCOPE_TOKENS: Set[str] = {
+    "lifetime", "century", "centuries", "generation",
+    "generations", "cascade", "downstream", "long-term",
+    "intergenerational", "perpetuity", "permanent",
+    "irreversible", "millennia", "millennium", "decadal",
+    "centennial", "multidecadal",
 }
 
 
@@ -225,6 +270,7 @@ class ExtractedFeatures:
     numbers: List[str]
     ranges: List[str]
     comparisons: List[str]
+    temporal_scope_hits: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -302,6 +348,7 @@ def extract_features(text: str) -> ExtractedFeatures:
         numbers=NUMBER_RE.findall(text),
         ranges=RANGE_RE.findall(text),
         comparisons=COMPARISON_RE.findall(text),
+        temporal_scope_hits=_find_lexicon_hits(tokens, TEMPORAL_SCOPE_TOKENS),
     )
 
 
@@ -436,7 +483,7 @@ def encode_narrative(text: str) -> NarrativeProfile:
     completeness = amps[0] + amps[2] + amps[4]
     dissipation = amps[1] + amps[3] + amps[5]
 
-    interpretation = _interpret(seed, completeness, dissipation)
+    interpretation = _interpret(seed, completeness, dissipation, features)
     fingerprint = _fingerprint(text, seed)
 
     return NarrativeProfile(
@@ -452,7 +499,8 @@ def encode_narrative(text: str) -> NarrativeProfile:
 
 
 def _interpret(seed: NarrativeSeed, completeness: float,
-               dissipation: float) -> str:
+               dissipation: float,
+               features: ExtractedFeatures) -> str:
     notes: List[str] = []
     if completeness > 0.7:
         notes.append("dense control-system specification")
@@ -471,6 +519,18 @@ def _interpret(seed: NarrativeSeed, completeness: float,
         notes.append("no quantitative thresholds")
     if seed.thresholds_unbounded > 0.3:
         notes.append("variables present without bounding thresholds")
+
+    # Temporal-scope check: spec well-bounded in space
+    # (variables named + thresholds quantified) but no temporal-
+    # horizon vocabulary signals the BWCA-cascade signature
+    # named in the AXIS INTERPRETATION docstring section.
+    if (seed.variables_named > 0.15 and
+            seed.thresholds_quantified > 0.15 and
+            len(features.temporal_scope_hits) == 0):
+        notes.append(
+            "specification well-bounded in space, "
+            "unbounded in time"
+        )
 
     return "; ".join(notes)
 
