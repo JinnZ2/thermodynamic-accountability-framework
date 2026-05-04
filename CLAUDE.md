@@ -268,7 +268,26 @@ thermodynamic-accountability-framework/
 │   ├── README.md                 # Protocol overview
 │   ├── audit_protocol.md         # Full audit protocol v1.0
 │   ├── Pull_Request.md           # Submission template
-│   └── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
+│   ├── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
+│   └── institutional_audit_protocol.py  # Executable form of the
+│                                  #   Institutional Thermodynamic Audit
+│                                  #   Protocol. 4 gates -- Falsification,
+│                                  #   Thermodynamic, Audit Trail,
+│                                  #   Credential Validity -- with
+│                                  #   pass/fail logic and
+│                                  #   weakness_notes(). InstitutionalAudit
+│                                  #   .verdict() maps gate results to a
+│                                  #   5-class ladder: VIABLE (all 4
+│                                  #   pass), MARGINAL (one weak),
+│                                  #   SUBSIDIZED (thermodynamic fails,
+│                                  #   audit trail passes), PARASITIC
+│                                  #   (thermodynamic + audit trail both
+│                                  #   fail), UNFALSIFIABLE (falsification
+│                                  #   gate fails). Pairs with the
+│                                  #   audit_protocol.md spec doc.
+│                                  #   Forward-references
+│                                  #   institution_scientific_spec.py
+│                                  #   (not yet present).
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -885,6 +904,7 @@ python simulations/federation.py
 
 # Political-audit tools (no deps)
 python political_audit/c_cam_calculator.py
+python political_audit/institutional_audit_protocol.py
 
 # Tests
 python core/atbs/test_v2.py
