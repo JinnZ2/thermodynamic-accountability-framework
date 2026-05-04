@@ -923,6 +923,34 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Merged the physics-compliant expansion engine into
+  `metrology/orbital_octa_v2.py`, with AI-usability biases
+  per user guidance ("merge best parts; emphasis on usability
+  for AI"). Authors credited: Jami (Kavik Ulu) + JinnZ2.
+  Merge decisions:
+  - sharpness kept as a tunable parameter (callers pick
+    structure-preservation at sharpness=1 or angular focus at
+    sharpness>1; the physics-compliant engine had hardcoded
+    sharpness=1 by removing the parameter entirely);
+  - expand_seed continues returning (shells, W) so callers can
+    reuse the influence matrix without rebuilding it (the
+    physics-compliant engine returned just shells);
+  - radial_envelope exposed as a named function for
+    inspection / reuse (was inline in v2's field_contribution);
+  - compress_to_seed added (returns shell-0 amplitudes
+    normalized; useful for round-trip verification);
+  - test_structure_preservation added as a 7th self-test
+    (verifies expand_seed at sharpness=1 preserves seed
+    proportions exactly across 15 shells, with round-trip
+    via compress_to_seed);
+  - binary encode/decode NOT added to the engine; single
+    source of truth for binary format remains in
+    constraint_to_seed.py + seed_to_constraint.py to keep
+    the layering clean for AI readers.
+  License unified to CC0 (matches rest of repo and the seed
+  encoder/decoder); attribution to both authors in the
+  module docstring. constraint_to_seed.try_expand contract
+  still holds (still unpacks shells, _W from expand_seed).
 - Added `metrology/seed_to_constraint.py` (decoder) and applied
   the soul/body design clarification across the seed system.
   KEY INSIGHT: the seed encodes the METROLOGY of a constraint,
