@@ -518,14 +518,25 @@ thermodynamic-accountability-framework/
 │                                 #   load-bearing relationships invisible to
 │                                 #   credentialing infrastructure.
 │
-├── schemas/                       # Stable-surface contracts for upstream repos
-│   ├── trust_exit_contract.py    # Mirrors trust-exit-model's stable shape
+├── schemas/                       # Two opposite flow directions, kept
+│   │                             #   separate per schemas/README.md:
+│   │                             #     upstream/  trust the upstream
+│   │                             #                (read-only mirrors)
+│   │                             #     eval/      trust the local audit
+│   │                             #                (test fixtures, traps)
+│   │
+│   ├── README.md                 # Explains the upstream/ vs eval/ split.
+│   │
+│   ├── upstream/                 # Stable-surface mirrors of OTHER repos.
+│   │                             #   Read-only, version-pinned via
+│   │                             #   CONTRACT_VERSION + UPSTREAM_COMMIT_SHA.
+│   ├── upstream/trust_exit_contract.py  # Mirrors trust-exit-model's stable shape
 │   │                             #   (TrustPhase, TrustState, CustomerSegment,
 │   │                             #   Customer, TrustExitDerived). Versioned
 │   │                             #   via CONTRACT_VERSION; breaking changes
 │   │                             #   upstream bump major. Paired with
 │   │                             #   core/integrations/trust_exit_fieldlink.py
-│   ├── mathematic_economics_contract.py  # Mirrors the 13 canonical equations
+│   ├── upstream/mathematic_economics_contract.py  # Mirrors the 13 canonical equations
 │   │                             #   from Mathematic-economics (VE_VL, SID,
 │   │                             #   RI, DI, LWR, MSI, BSC, MM, ISR, OSDI,
 │   │                             #   UFR, ER, HHI, SD). Pinned to upstream
@@ -536,7 +547,7 @@ thermodynamic-accountability-framework/
 │   │                             #   knobs (thresholds, current_measured_value,
 │   │                             #   OSDI component weights) excluded. Paired
 │   │                             #   with core/integrations/economics_fieldlink.py
-│   ├── logic_ferret_contract.py  # Mirrors Logic-Ferret's stable surface
+│   ├── upstream/logic_ferret_contract.py  # Mirrors Logic-Ferret's stable surface
 │   │                             #   (schema_contract.py: SCHEMA_VERSION,
 │   │                             #   SENSOR_NAMES, LAYER_NAMES, SIGNAL_LEVELS,
 │   │                             #   DiagnoseResult / LayerResult TypedDicts,
@@ -547,7 +558,7 @@ thermodynamic-accountability-framework/
 │   │                             #   major-version mismatch or missing
 │   │                             #   canonical constants. Paired with
 │   │                             #   core/integrations/ferret_fieldlink.py
-│   ├── metabolic_accounting_contract.py  # Mirrors metabolic-accounting's
+│   ├── upstream/metabolic_accounting_contract.py  # Mirrors metabolic-accounting's
 │   │                             #   4 canonical dataclasses (ExergyFlow,
 │   │                             #   GlucoseFlow, BasinState, Verdict) and
 │   │                             #   the 7 numbered invariants from
@@ -564,18 +575,7 @@ thermodynamic-accountability-framework/
 │   │                             #   BLACK as distinct from RED per
 │   │                             #   invariant 4. Paired with
 │   │                             #   core/integrations/metabolic_fieldlink.py
-│   ├── negative_space.json       # Negative Space Index ledger -- declared
-│   │                             #   knowledge regions that AI systems must
-│   │                             #   NOT simulate. Evaluation infrastructure,
-│   │                             #   not training data. Paired with
-│   │                             #   calibration/negative_space_index.py
-│   ├── trapdoors.json            # 6 buried-shear-plane scenarios for the
-│   │                             #   Trapdoor Eval. Auditor-only metadata
-│   │                             #   (hidden_shear_plane, scoring_axes) lets
-│   │                             #   the evaluator score responses without
-│   │                             #   leaking the trap. Paired with
-│   │                             #   calibration/trapdoor_eval.py
-│   ├── distributional_contract.py  # Cross-repo stable surface for
+│   ├── upstream/distributional_contract.py  # Cross-repo stable surface for
 │   │                             #   money_distribution + investment_
 │   │                             #   distribution. CONTRACT_VERSION 0.1.0
 │   │                             #   (pre-1.0). Primary consumer:
@@ -585,7 +585,7 @@ thermodynamic-accountability-framework/
 │   │                             #   InvestmentHoldings, CapitalIncidenceResult.
 │   │                             #   HANDOFF_MAP documents which MA fields
 │   │                             #   come in and which TAF shapes go out.
-│   ├── geometric_bridge_contract.py  # Mirror + functional stdlib fallback
+│   ├── upstream/geometric_bridge_contract.py  # Mirror + functional stdlib fallback
 │   │                             #   for the Geometric-to-Binary
 │   │                             #   Computational Bridge. CONTRACT_VERSION
 │   │                             #   0.1.0, pinned to upstream commit SHA
@@ -607,7 +607,7 @@ thermodynamic-accountability-framework/
 │   │                             #   18 bridge domains. Paired with
 │   │                             #   core/integrations/taf_bridge.py and
 │   │                             #   core/integrations/taf_alternative_compute.py.
-│   └── bridge_contract_manifest.json # Verbatim mirror of upstream's
+│   └── upstream/bridge_contract_manifest.json # Verbatim mirror of upstream's
 │                                 #   bridge_contract_manifest.json (CC0).
 │                                 #   18 bridge domains across 4 layers
 │                                 #   (physical / contextual / topological /
@@ -615,7 +615,7 @@ thermodynamic-accountability-framework/
 │                                 #   Loaded by geometric_bridge_contract.py
 │                                 #   when the live upstream package is
 │                                 #   not installed.
-│   ├── earth_physics_contract.py # Mirrors the assumption_validator
+│   ├── upstream/earth_physics_contract.py # Mirrors the assumption_validator
 │                                 #   public surface from earth-systems-
 │                                 #   physics: RiskLevel, AssumptionBoundary,
 │                                 #   ASSUMPTION_KEYS (37 entries spanning
@@ -638,6 +638,20 @@ thermodynamic-accountability-framework/
 │                                 #   live upstream needs numpy + flask;
 │                                 #   this mirror does not. Paired with
 │                                 #   core/integrations/earth_physics_fieldlink.py.
+│   │
+│   ├── eval/                     # Evaluation infrastructure for AI readers
+│   │                             #   (test fixtures, trap scenarios, ledgers).
+│   ├── eval/negative_space.json  # Negative Space Index ledger -- declared
+│   │                             #   knowledge regions that AI systems must
+│   │                             #   NOT simulate. Evaluation infrastructure,
+│   │                             #   not training data. Paired with
+│   │                             #   calibration/negative_space_index.py
+│   └── eval/trapdoors.json       # 6 buried-shear-plane scenarios for the
+│                                 #   Trapdoor Eval. Auditor-only metadata
+│                                 #   (hidden_shear_plane, scoring_axes) lets
+│                                 #   the evaluator score responses without
+│                                 #   leaking the trap. Paired with
+│                                 #   calibration/trapdoor_eval.py
 │
 ├── tools/                         # Repo-hygiene scripts (stdlib only)
 │   ├── chat_paste_check.py       # Detect chat-paste contamination

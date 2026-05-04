@@ -22,7 +22,7 @@ This fieldlink translates between them:
     TAF -> earth-physics:  framework-check IDs -> set of relevant
                            upstream assumption_keys
 
-Stable input shape (contract): see ``schemas/earth_physics_contract.py``.
+Stable input shape (contract): see ``schemas/upstream/earth_physics_contract.py``.
 Pinned upstream commit: 341a14b6e1706f16bea6a909d496bde4c8060109.
 
 The link is loose-coupled. It will use the live upstream
@@ -44,7 +44,7 @@ from typing import Any, Dict, List, Optional
 # used by the other *_fieldlink.py modules).
 _HERE = __file__
 try:
-    from schemas.earth_physics_contract import (
+    from schemas.upstream.earth_physics_contract import (
         ASSUMPTION_KEYS,
         COUPLING_GRAPH,
         CONTRACT_VERSION,
@@ -57,7 +57,7 @@ except ImportError:
     _ROOT = os.path.abspath(os.path.join(os.path.dirname(_HERE), "..", ".."))
     if _ROOT not in sys.path:
         sys.path.insert(0, _ROOT)
-    from schemas.earth_physics_contract import (  # type: ignore[no-redef]
+    from schemas.upstream.earth_physics_contract import (  # type: ignore[no-redef]
         ASSUMPTION_KEYS,
         COUPLING_GRAPH,
         CONTRACT_VERSION,

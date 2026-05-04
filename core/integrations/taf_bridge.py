@@ -54,7 +54,7 @@ try:
 except ImportError:
     # Fall back to the contract's working implementations.
     try:
-        from schemas.geometric_bridge_contract import (  # type: ignore
+        from schemas.upstream.geometric_bridge_contract import (  # type: ignore
             SensorDecoder, ActuatorController,
             HardwareData, DrillDepth, BridgeTarget,
             HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS,
@@ -65,7 +65,7 @@ except ImportError:
         import pathlib as _pathlib
         _repo_root = _pathlib.Path(__file__).resolve().parents[2]
         _sys.path.insert(0, str(_repo_root))
-        from schemas.geometric_bridge_contract import (  # type: ignore  # noqa: E402
+        from schemas.upstream.geometric_bridge_contract import (  # type: ignore  # noqa: E402
             SensorDecoder, ActuatorController,
             HardwareData, DrillDepth, BridgeTarget,
             HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS,
