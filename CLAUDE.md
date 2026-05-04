@@ -269,25 +269,53 @@ thermodynamic-accountability-framework/
 │   ├── audit_protocol.md         # Full audit protocol v1.0
 │   ├── Pull_Request.md           # Submission template
 │   ├── c_cam_calculator.py       # Camouflage Score (C_cam) calculator
-│   └── institutional_audit_protocol.py  # Executable form of the
-│                                  #   Institutional Thermodynamic Audit
-│                                  #   Protocol. 4 gates -- Falsification,
-│                                  #   Thermodynamic, Audit Trail,
-│                                  #   Credential Validity -- with
-│                                  #   pass/fail logic and
-│                                  #   weakness_notes(). InstitutionalAudit
-│                                  #   .verdict() maps gate results to a
-│                                  #   5-class ladder: VIABLE (all 4
-│                                  #   pass), MARGINAL (one weak),
-│                                  #   SUBSIDIZED (thermodynamic fails,
-│                                  #   audit trail passes), PARASITIC
-│                                  #   (thermodynamic + audit trail both
-│                                  #   fail), UNFALSIFIABLE (falsification
-│                                  #   gate fails). Pairs with the
-│                                  #   audit_protocol.md spec doc.
-│                                  #   Forward-references
-│                                  #   institution_scientific_spec.py
-│                                  #   (not yet present).
+│   ├── institutional_audit_protocol.py  # Executable form of the
+│   │                                  #   Institutional Thermodynamic Audit
+│   │                                  #   Protocol. 4 gates -- Falsification,
+│   │                                  #   Thermodynamic, Audit Trail,
+│   │                                  #   Credential Validity -- with
+│   │                                  #   pass/fail logic and
+│   │                                  #   weakness_notes(). InstitutionalAudit
+│   │                                  #   .verdict() maps gate results to a
+│   │                                  #   5-class ladder: VIABLE (all 4
+│   │                                  #   pass), MARGINAL (one weak),
+│   │                                  #   SUBSIDIZED (thermodynamic fails,
+│   │                                  #   audit trail passes), PARASITIC
+│   │                                  #   (thermodynamic + audit trail both
+│   │                                  #   fail), UNFALSIFIABLE (falsification
+│   │                                  #   gate fails). Pairs with the
+│   │                                  #   audit_protocol.md spec doc.
+│   │                                  #   Forward-references
+│   │                                  #   institution_scientific_spec.py
+│   │                                  #   (not yet present).
+│   └── substrate_audit.py            # Five-gate audit for studies and
+│                                      #   institutional claims: substrate-
+│                                      #   primary biology (does the study
+│                                      #   ignore foundational biology?),
+│                                      #   scope laundering (bounded N
+│                                      #   presented with universalizing
+│                                      #   language), institutional
+│                                      #   falsification (can the publishing
+│                                      #   institution actually fail?),
+│                                      #   cross-domain constraint tracking
+│                                      #   (registered constraint pairs for
+│                                      #   7 fields: behavioral_economics,
+│                                      #   cognitive_psychology, climate
+│                                      #   damage, tornado, flood, wildfire,
+│                                      #   decision-making), corpus
+│                                      #   contamination (echo without scope
+│                                      #   metadata). StudyVerdict ladder
+│                                      #   prioritizes substrate denial,
+│                                      #   then unfalsifiability, then scope
+│                                      #   laundering, then corpus
+│                                      #   contamination. Pairs with
+│                                      #   institutional_audit_protocol.py
+│                                      #   (institution-level audit),
+│                                      #   calibration/narrative_thermo-
+│                                      #   dynamics.py (open-class spec
+│                                      #   measurement), metrology/pre1900_
+│                                      #   engineering_registry.py
+│                                      #   (calibration baseline).
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -905,6 +933,7 @@ python simulations/federation.py
 # Political-audit tools (no deps)
 python political_audit/c_cam_calculator.py
 python political_audit/institutional_audit_protocol.py
+python political_audit/substrate_audit.py
 
 # Tests
 python core/atbs/test_v2.py
@@ -919,104 +948,72 @@ python core/atbs/test_v2.py
 6. **Lagged coupling** — ecological changes propagate with delay to knowledge dimensions
 7. **IPI gating** — knowledge transmission gated by structure, not energy surplus
 
-### Audit Notes (2026-03-24)
-- `core/fatigue_model.py` was consolidated from 3 duplicate class definitions
-- Broken indentation and markdown ``` artifacts were removed
-- `HumanSystemModel` now delegates to `FatigueModel` (DRY)
-- File names standardized from mixed `Hyphen-Case`/`snake_case` to consistent `snake_case`
-- 50+ root-level files organized into `core/`, `simulations/`, `docs/`, `visualizations/`
-- `Signal -distortion.md` (space in filename) preserved as `signal_distortion_extended.md`
-- `Leyer0.md` (typo) preserved as `layer0.md`
+### Audit Notes -- older entries archived
 
-### Audit Notes (2026-04-16)
-- `political-audit/` renamed to `political_audit/` to match snake_case convention
-- `core/integrations/` created; `biological_extraction_model.py` and the three
-  `*_fieldlink.py` bridges (Ferret / Geometric / HAAS) moved there
-- `Notes.md` (root) moved to `docs/theory/notes.md`
-- `labor_thermodynamics/attribution_sim.md` was actually React/JSX —
-  renamed to `visualizations/attribution_sim.jsx` (note: file contains
-  Unicode smart quotes that need to be straightened before it will run)
-- `labor_thermodynamics/audit_protocol.md` was actually an HTML document —
-  renamed to `visualizations/labor_audit_protocol.html`
-- `labor_thermodynamics/` now contains only the real markdown specs
-  (README, failure_modes, measurement_problem)
+Audit notes from 2026-03-24 through the original 2026-05-02
+metrology cleanup pass have been archived to
+`docs/CLAUDE_audit_archive.md` for readability. The full
+text is preserved there; this section now holds the active
+session's notes only.
 
-### Audit Notes (2026-04-17) -- calibration/ cleanup
-- New `calibration/` folder arrived on main with 12 chat-pasted Python
-  files. Every file had smart quotes, stray markdown code fences, and
-  flat class/def bodies (col 0 instead of col 4). Cleaned up in
-  several passes:
-  - Mechanical pass: straightened quotes, removed ```` ``` ```` fences,
-    fixed `**name**`/`**init**`-style markdown-bold dunders, replaced
-    `…` with `...`.
-  - Structural pass: programmatic re-indenter that tracked class/def
-    body scope plus nested control-flow (if/for/while/with/try)
-    recovered most files. Hand-polish for the remaining residual
-    errors (mainly scorer-body content that had been trapped inside
-    `if not X: return ...` branches, causing silent-None returns).
-  - `schema.py` and `calibration_audit.py` were rewritten cleanly;
-    `observation_dependance.py` (spelling typo) was renamed to
-    `observation_dependence.py` and its 33-line truncated stub
-    replaced with a working maturity-model implementation (idea ->
-    exploration -> investigation -> theorized -> skill stages,
-    stage-mismatch detection, stage-appropriate witness model).
-  - `autism_subset_cautionary.py` and `dyslexic_module.py` were
-    deleted; their dyslexia / ADHD / autism-spectrum material is
-    consolidated into `architecture_mismatch.py` under
-    `FAILURE_MODES["pathologizing_substrate_architecture"]`, the
-    `SUBSTRATE_PRIMARY_SIGNALS` list, and the `EMBEDDED_PROMPT`
-    section addressed to AI models.
-  - `architecture_mismatch.py` was landed in three incremental commits
-    (Part A: classifier + profile; Part B: signals + FAILURE_MODES;
-    Part C: scorers + audit + embedded prompt) after context-timeout
-    issues with single-commit rewrites.
-- Test suite: `python3 -m unittest calibration.test_calibration -v`
-  runs 11 tests, all pass (was only 3 discoverable before the
-  test-file nesting fix).
-
-### Audit Notes (2026-05-02) -- metrology/ + root cleanup
-- Same chat-paste contamination pattern as the 2026-04-17 calibration
-  pass: smart quotes used as triple-quote delimiters, flat class/def
-  bodies (col 0 instead of col 4), markdown ``` fences wrapping
-  method bodies, `**name**`/`**main**` markdown-bold dunders.
-- Root-level cleanup:
-  - `resilience_stack.py` rewritten cleanly. Three-layer architecture:
-    `AbsenceSignature` registry -> `ConstraintNavigator` ->
-    `RegulatoryScopeAudit`. `ResilienceStack.assess()` produces a
-    cascade vulnerability score (0-10). stdlib only.
-  - `support_cartography.py` already clean (cleaned in prior commit
-    `231f0a0` per its commit message).
-- Three filename typos / mismatches corrected via `git mv` so module
-  filename matches its own self-declared docstring identity:
-  - `metrology/domain_mateix.py` -> `metrology/domain_convergence_matrix.py`
-    (typo in original filename)
-  - `metrology/preregistry.py` -> `metrology/pre1900_engineering_registry.py`
-    (filename was a shorthand; docstring + commit message used full name)
-  - `metrology/trend.py` -> `metrology/trend_corruption_calculator.py`
-    (filename was a shorthand)
-  - `metrology/vross_domain.py` -> `metrology/cross_domain_synthesis.md`
-    (file content was pure Markdown saved with `.py` extension; same
-    pattern as the 2026-04-16 `attribution_sim.md` -> `.jsx` and
-    `audit_protocol.md` -> `.html` renames)
-- Five Python files in `metrology/` rewritten cleanly with proper
-  indentation:
-  - `domain_convergence_matrix.py` (12 convergence checks across 5
-    reference domains; `score_audit()` returns VALID/WEAKENED/INVALID)
-  - `observer_bias.py` (`build_bias_signature()` from
-    `CalibrationPair` samples, `correct_historical()` applies inverse
-    bias with propagated CIs, `DEFAULT_PRIORS` for 7 observer types)
-  - `pre1900_engineering_registry.py` (8 observation-based engineering
-    systems: Anishinaabe burning, beaver hydrology, mill ponds,
-    Hohokam canals, terraced agriculture, Plains forecasting, Taino
-    hurricane forecasting, Inuit sea ice)
-  - `trend_corruption_calculator.py` (`MeasurementCorruption` x
-    `FrameworkCorruption` -> combined verdict
-    REPORTED/INFLATED/INVERTED/INDETERMINATE)
-- `⊗` operator symbol in `corruption(measurement) ⊗ corruption(framework)`
-  pseudocode replaced with `*` in Python source comments. Markdown
-  files keep `⊗` since it renders correctly there.
-- All metrology modules: stdlib only. Smoke-test by running each
-  module directly: `python3 metrology/<module>.py`.
+### Audit Notes (2026-05-02 onward)
+- Added `political_audit/substrate_audit.py`: five-gate audit for
+  studies and institutional claims, paired with
+  political_audit/institutional_audit_protocol.py. Gates:
+  (1) Substrate-Primary Biology -- does the study ignore
+      foundational biology (10 SUBSTRATE_DOMAINS) and use a
+      population in incomplete development (e.g. age 18-22 with
+      pre-25 prefrontal cortex maturation)?
+  (2) Scope Laundering -- bounded N presented with
+      UNIVERSALIZING_TOKENS ("humans", "everyone", "fundamental",
+      "human nature"); scope_gap classified
+      none/tangled/fully_laundered.
+  (3) Institutional Falsification -- can the publishing
+      institution be defunded? has external audit? auditor
+      financially independent? failure condition declared and
+      substantive (>=20 chars)?
+  (4) Cross-Domain Constraints -- 7 registered field-to-required-
+      constraint maps (behavioral_economics, cognitive_psychology,
+      climate_damage_assessment, tornado_intensity,
+      flood_recurrence, wildfire_severity,
+      decision_making_research).
+  (5) Corpus Contamination -- citation count > 100 without scope
+      metadata, textbook appearance without scope, small-N studies
+      informing policy at orders-of-magnitude-larger scale.
+  StudyVerdict ladder (priority): REJECTED_SUBSTRATE_DENIAL >
+  REJECTED_UNFALSIFIABLE > REJECTED_SCOPE_LAUNDERING >
+  REJECTED_CORPUS_CONTAMINATION > VALID_WITHIN_SCOPE /
+  VALID_WITH_FLAGS. all_red_flags() collects findings across all
+  gates for human-readable diagnostics.
+  Smoke test on a worked behavioral-economics example (N=200 US
+  college students, 8-week lab protocol, presented as universal
+  human behavior, 450 citations, in textbooks and policy
+  documents): 11 red flags raised across all 5 gates;
+  REJECTED_SUBSTRATE_DENIAL wins by ladder priority. One paste
+  artifact restored: `replace(" ", "*").replace("-", "*")` ->
+  `replace(" ", "_").replace("-", "_")` (markdown-bold mangled
+  the underscores). Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
+- Rotated older audit notes (2026-03-24 / 2026-04-16 /
+  2026-04-17 / original 2026-05-02 metrology cleanup) to
+  `docs/CLAUDE_audit_archive.md`. Reduced CLAUDE.md by 98
+  lines (1683 -> 1586 before this entry was added). Git
+  history preserves integrity; the archive file's header
+  documents recovery instructions.
+- Added `political_audit/institutional_audit_protocol.py`:
+  executable form of the Institutional Thermodynamic Audit
+  Protocol. Pairs with political_audit/audit_protocol.md
+  (the markdown spec). Four gates -- FalsificationGate,
+  ThermodynamicGate, AuditTrailGate, CredentialValidityGate
+  -- with pass/fail logic and weakness_notes() diagnostics.
+  InstitutionalAudit.verdict() maps gate results to a 5-class
+  ladder: VIABLE / MARGINAL / SUBSIDIZED / PARASITIC /
+  UNFALSIFIABLE. Smoke test on a worked example (every gate
+  fails on every dimension) returns UNFALSIFIABLE -- correct,
+  since falsification fails first by ladder priority and
+  overrides the also-failing other gates. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `metrology/constraint_recovery_framework.py`: extracts the
   physical constraints encoded in pre-1900 engineering systems into
   machine-readable `PhysicalConstraint` records (physical_trigger,
