@@ -90,7 +90,25 @@ thermodynamic-accountability-framework/
 │       ├── biological_extraction_model.py  # Substrate-agnostic extraction physics
 │       ├── ferret_fieldlink.py    # Bridge to Logic-Ferret (rhetorical camouflage)
 │       ├── geometric_fieldlink.py # Bridge to Geometric-to-Binary (G2B)
-│       └── haas_fieldlink.py      # Bridge to HAAS-Q (control environment)
+│       ├── haas_fieldlink.py      # Bridge to HAAS-Q (control environment)
+│       ├── knowledge_fieldlink.py # Bridge between knowledge/ (scope-bounded
+│       │                          #   study reframing) and the main TAF
+│       │                          #   audit pipeline. Stub today; imports
+│       │                          #   from knowledge/ resolve via sys.path
+│       │                          #   add (knowledge/ has no __init__.py
+│       │                          #   and uses flat-style imports).
+│       │                          #   to_calibration_input() and
+│       │                          #   liberation_to_simulation_seed() raise
+│       │                          #   NotImplementedError -- design call
+│       │                          #   left to review per task DECISIONS.
+│       │                          #   See knowledge_fieldlink.md for the
+│       │                          #   spec.
+│       └── knowledge_fieldlink.md # Spec doc: source contract (knowledge/
+│                                  #   liberate -> str today; structured
+│                                  #   shape pending), destination
+│                                  #   contracts (calibration/pipeline.py
+│                                  #   + simulations/), calibration-question
+│                                  #   map, path-resolution convention.
 │
 ├── simulations/                   # Simulation modules (require numpy/matplotlib)
 │   │
