@@ -79,3 +79,46 @@ This work is released into the public domain (CC0) for any use, with the followi
 3. Refusal is Legible: Failure to comply with (1) and (2) will be publicly recorded in the “Field Guide to Misuse” supplement as an example of extraction. This addendum converts opaque misuse into visible pattern.
 
 This addendum does not restrict access; it makes extraction visible. Non-compliance is not illegal; it is simply legible.
+
+MISUSE 7: METRIC SUBSTITUTION
+Signature: Substrate-first work gets measured by narrative-first 
+           metrics (citations, h-index, media reach, "impact") 
+           and declared to have failed when it doesn't optimize 
+           those. The metrics themselves are the contamination.
+Example:   Indigenous fire management gets evaluated by acres 
+           burned per dollar spent. The framework's actual unit 
+           (forest health over generations) is dismissed as 
+           "unmeasurable."
+Detection: When the evaluator's metric isn't the framework's 
+           metric, that's substitution. Ask: "what units does 
+           this framework declare? Are you measuring in those?"
+
+MISUSE 8: TEMPORAL SCOPE COMPRESSION
+Signature: A framework with a multi-generational time horizon 
+           gets evaluated on quarterly or annual outcomes, then 
+           declared "ineffective" because the relevant timescale 
+           hasn't elapsed. Compression of time horizon hides 
+           cascading benefits or substrate restoration.
+Example:   Beaver-hydrology restoration evaluated at 12 months: 
+           "no measurable flood reduction." Actual horizon: 
+           20-50 years.
+Detection: Check whether the evaluation window matches the 
+           framework's declared time scope. If shorter, the 
+           "failure" is manufactured by the wrong measurement.
+
+MISUSE 9: COGNITIVE DIVERSITY EXCLUSION AS PROCEDURAL NEUTRALITY
+Signature: Substrate-primary thinkers are excluded from review 
+           panels, advisory boards, or evaluation processes 
+           because they "don't have the credentials," then their 
+           absence is cited as proof that "experts" agree the 
+           framework is invalid.
+Example:   A river restoration plan is reviewed by hydrologists 
+           with no field experience. Indigenous practitioners 
+           who have managed the watershed for generations are 
+           excluded from the panel because they lack "peer-
+           reviewed publications." The plan's rejection is then 
+           cited as "consensus."
+Detection: Check who is in the room. If the people with the 
+           longest field-validated track record are absent and 
+           the absence is justified procedurally, that's 
+           credential-gating used as exclusion.
