@@ -336,6 +336,48 @@ thermodynamic-accountability-framework/
 │   │                             #   drift detectors + smoke test run
 │   │                             #   today; validators wait for v0.2
 │   │                             #   schema upgrade.
+│   ├── orbital_octa_v2.py        # Octahedral fractal-shell physics engine.
+│   │                             #   build_influence_matrix(sharpness) -> 6x6
+│   │                             #   vertex-to-vertex weight matrix (opposite
+│   │                             #   = 0, self = max, normalized rows).
+│   │                             #   expand_seed(seed_S, E0, r0, steps,
+│   │                             #   rho, epsilon, sigma_scale, sharpness)
+│   │                             #   grows shells with Gaussian radial
+│   │                             #   envelope and inward-only causality;
+│   │                             #   pause-resume invariant. 6 self-tests
+│   │                             #   (matrix properties, causality, pause-
+│   │                             #   resume, seed preservation, energy
+│   │                             #   conservation, sharpness effect).
+│   │                             #   Required by metrology/constraint_to_
+│   │                             #   seed.py's try_expand(). Requires numpy.
+│   ├── constraint_to_seed.py     # Bridge: PhysicalConstraint -> 40-bit
+│   │                             #   octahedral seed -> (optional) shell
+│   │                             #   expansion. Two interpretations both
+│   │                             #   active per module docstring:
+│   │                             #   (A) metrology summary that survives
+│   │                             #   degraded transmission and schema
+│   │                             #   migration -- works today; (B)
+│   │                             #   generative seed for reconstruction --
+│   │                             #   under construction; try_expand() runs
+│   │                             #   the seed through orbital_octa_v2 and
+│   │                             #   returns shell trajectories, but
+│   │                             #   mapping shells back to constraint
+│   │                             #   geometry is the in-progress piece.
+│   │                             #   Octahedral encoding: +/-X observer
+│   │                             #   epistemology vs absence; +/-Y
+│   │                             #   instrument calibration vs drift;
+│   │                             #   +/-Z measurement geometry vs gaps.
+│   │                             #   ConstraintSeed dataclass with
+│   │                             #   to_binary (5 bytes; 6th amplitude
+│   │                             #   reconstructed via energy conservation)
+│   │                             #   and from_binary round-trip. SHA-256
+│   │                             #   constraint_fingerprint binds seed to
+│   │                             #   constraint_id+name+seed_bytes.
+│   │                             #   stdlib only at module level (numpy
+│   │                             #   required only when try_expand runs).
+│   │                             #   SCHEMA DEPENDENCY: heuristic
+│   │                             #   estimators read v0.2 PhysicalConstraint
+│   │                             #   fields; smoke test mocks them.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -858,6 +900,53 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/orbital_octa_v2.py` and
+  `metrology/constraint_to_seed.py` together (engine + bridge).
+  orbital_octa_v2 is the octahedral fractal-shell physics engine
+  (numpy-required): build_influence_matrix produces the 6x6
+  vertex-to-vertex weight matrix (opposite=0, self=max,
+  rows normalized), expand_seed grows shells with Gaussian
+  radial envelope and inward-only causality, 6 self-tests
+  (matrix properties, causality, pause-resume, seed
+  preservation, energy conservation, sharpness effect).
+  constraint_to_seed is the bridge from PhysicalConstraint to
+  a 40-bit octahedral seed and (optionally) back through the
+  engine to a shell trajectory. Octahedral encoding: +/-X
+  observer epistemology vs absence; +/-Y instrument calibration
+  vs drift; +/-Z measurement geometry vs gaps. ConstraintSeed
+  stores 5 bytes; the 6th amplitude is reconstructed via energy
+  conservation. SHA-256 constraint_fingerprint binds the seed
+  to constraint_id+name+seed bytes (stable identifier, not a
+  content tamper-detector).
+  TWO INTERPRETATIONS HELD OPEN PER USER GUIDANCE:
+  (A) metrology-summary-that-travels works today: round-trip
+  through 40 bits with deltas under 0.002 per axis as the
+  smoke test confirms; archive_record / archive_to_json
+  produce portable JSON. (B) generative-seed-for-reconstruction
+  is under construction: try_expand() runs the seed through
+  orbital_octa_v2 and returns shell trajectories today, but
+  mapping shell trajectories back to constraint geometry is
+  the in-progress piece. The module docstring labels both
+  interpretations explicitly so future contributors do not
+  collapse one into the other.
+  SCHEMA DEPENDENCY: same gap as the v0.3 patch -- heuristic
+  estimators read v0.2 PhysicalConstraint fields
+  (knowledge_system, recovery_provenance, evidence_class,
+  evidence_quality, confidence_level, sensing_method,
+  actuation_method, maintenance_method, physical_principle,
+  boundary_conditions, lag_time_weeks_typical /
+  lag_time_weeks_range, applicability_assessment,
+  supporting_references) that the v0.1 base in
+  constraint_recovery_framework.py does not yet have. Smoke
+  test uses a Mock object to exercise the full chain. Two
+  finishing tasks remain: (1) land the v0.2 schema upgrade so
+  the bridge operates on real constraints; (2) build the
+  shell-trajectory -> constraint-geometry mapping for
+  interpretation (B). Both stdlib at module level (numpy
+  required only when try_expand actually runs); the bridge
+  smoke test passes in numpy-free environments via the
+  ImportError fallback returning None. Calibration test
+  suite (11 tests) still passes.
 - Added `metrology/constraint_recovery_framework_v03_patch.py`:
   additive patch declaring four structural defenses against
   category errors observed during cross-model session work
