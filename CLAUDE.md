@@ -350,34 +350,57 @@ thermodynamic-accountability-framework/
 │   │                             #   conservation, sharpness effect).
 │   │                             #   Required by metrology/constraint_to_
 │   │                             #   seed.py's try_expand(). Requires numpy.
-│   ├── constraint_to_seed.py     # Bridge: PhysicalConstraint -> 40-bit
-│   │                             #   octahedral seed -> (optional) shell
-│   │                             #   expansion. Two interpretations both
-│   │                             #   active per module docstring:
-│   │                             #   (A) metrology summary that survives
-│   │                             #   degraded transmission and schema
-│   │                             #   migration -- works today; (B)
-│   │                             #   generative seed for reconstruction --
-│   │                             #   under construction; try_expand() runs
-│   │                             #   the seed through orbital_octa_v2 and
-│   │                             #   returns shell trajectories, but
-│   │                             #   mapping shells back to constraint
-│   │                             #   geometry is the in-progress piece.
-│   │                             #   Octahedral encoding: +/-X observer
-│   │                             #   epistemology vs absence; +/-Y
-│   │                             #   instrument calibration vs drift;
-│   │                             #   +/-Z measurement geometry vs gaps.
-│   │                             #   ConstraintSeed dataclass with
-│   │                             #   to_binary (5 bytes; 6th amplitude
-│   │                             #   reconstructed via energy conservation)
-│   │                             #   and from_binary round-trip. SHA-256
+│   ├── constraint_to_seed.py     # ENCODER: PhysicalConstraint -> 40-bit
+│   │                             #   octahedral seed. Soul/body design:
+│   │                             #   the seed is the metrology fingerprint
+│   │                             #   (soul, always survives); the full
+│   │                             #   constraint is the narrative content
+│   │                             #   (body, can be lost). Octahedral
+│   │                             #   encoding: +/-X observer epistemology
+│   │                             #   vs absence; +/-Y instrument
+│   │                             #   calibration vs drift; +/-Z
+│   │                             #   measurement geometry vs gaps.
+│   │                             #   ConstraintSeed.to_binary stores 5
+│   │                             #   bytes; the 6th amplitude is
+│   │                             #   reconstructed via energy
+│   │                             #   conservation. SHA-256
 │   │                             #   constraint_fingerprint binds seed to
-│   │                             #   constraint_id+name+seed_bytes.
+│   │                             #   id+name+bytes (stable identifier,
+│   │                             #   not a content tamper-detector).
+│   │                             #   try_expand() routes through
+│   │                             #   orbital_octa_v2 for a richer view of
+│   │                             #   the SAME metrology profile (NOT a
+│   │                             #   content-reconstruction path).
 │   │                             #   stdlib only at module level (numpy
 │   │                             #   required only when try_expand runs).
 │   │                             #   SCHEMA DEPENDENCY: heuristic
 │   │                             #   estimators read v0.2 PhysicalConstraint
 │   │                             #   fields; smoke test mocks them.
+│   ├── seed_to_constraint.py     # DECODER: 40-bit seed (or
+│   │                             #   archive_record dict) -> MetrologyProfile
+│   │                             #   -> ConstraintStub. Pure stdlib so
+│   │                             #   the soul-recovery path runs in
+│   │                             #   numpy-free environments. Duplicates
+│   │                             #   the orbital_octa_v2 expansion in
+│   │                             #   stdlib (build_influence_matrix /
+│   │                             #   _matvec / _gaussian_envelope /
+│   │                             #   _normalize_energy / expand_amplitudes
+│   │                             #   matching v2 semantics).
+│   │                             #   shells_to_metrology_profile reads
+│   │                             #   the trajectory; profile_to_stub
+│   │                             #   produces a ConstraintStub with 6
+│   │                             #   metrology presence flags populated +
+│   │                             #   21 narrative fields explicitly listed
+│   │                             #   as unrecoverable. compute_fingerprint
+│   │                             #   / verify_fingerprint match the
+│   │                             #   encoder formula. reconstruct_from_
+│   │                             #   archive_record(record) is the top-
+│   │                             #   level entry point. Round-trip
+│   │                             #   verified end-to-end: encoder hex
+│   │                             #   "412d3f153d" + fingerprint
+│   │                             #   "341ac7282ca0e435" round-trip back
+│   │                             #   to identical metrology with
+│   │                             #   fingerprint_match=True.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -900,6 +923,70 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/seed_to_constraint.py` (decoder) and applied
+  the soul/body design clarification across the seed system.
+  KEY INSIGHT: the seed encodes the METROLOGY of a constraint,
+  not its content. Reconstruction recovers calibration state /
+  observer-frame completeness / measurement-geometry presence /
+  integrity fingerprint -- it does NOT recover the problem
+  statement, mechanism description, or references (those live
+  in the full PhysicalConstraint store, attached at lookup time
+  with the fingerprint as integrity check).
+  Soul/body decomposition:
+      seed             = soul of the observation; always survives
+                         migration, corruption, degraded transmission;
+                         40 bits
+      full constraint  = body; can be lost, reformatted, rewritten
+  The previous "two interpretations (A) metrology summary that
+  travels / (B) generative seed for reconstruction (under
+  construction)" framing in constraint_to_seed.py was a
+  misframing -- there is one interpretation (metrology
+  fingerprint), and expansion via orbital_octa_v2 produces a
+  richer view of the same metrology profile (cross-shell
+  propagation patterns), not a content-reconstruction path.
+  Module docstring rewritten with the soul/body framing;
+  archive_record + try_expand docstrings updated to match;
+  the previously-flagged finishing task "(2) shell-trajectory
+  to constraint-geometry mapping" is RETRACTED as based on
+  the misframing.
+  seed_to_constraint.py components:
+  (1) Pure-stdlib expansion: build_influence_matrix / _matvec /
+      _gaussian_envelope / _normalize_energy / expand_amplitudes
+      mirror orbital_octa_v2 semantics. The decoder runs in
+      numpy-free environments so the soul-recovery path works
+      even when the full physics engine is unavailable -- a
+      deliberate design choice for archive survivability.
+  (2) decode_seed_binary inverts constraint_to_seed.to_binary
+      (5 bytes -> 6 amplitudes, 6th reconstructed via energy
+      conservation, then re-normalized against quantization
+      drift).
+  (3) shells_to_metrology_profile reads the trajectory and
+      derives a MetrologyProfile with three AxisReadings
+      (epistemology +X/-X, calibration +Y/-Y, geometry +Z/-Z)
+      plus overall_quality (high/moderate/weak/contested) and
+      overall_confidence in [0,1].
+  (4) profile_to_stub produces a ConstraintStub with 6 boolean
+      metrology presence flags + 21 narrative fields explicitly
+      listed as unrecoverable (physical_trigger, problem_solved,
+      solution_mechanism, sensing_method, etc.). Honest about
+      what the seed CANNOT regenerate.
+  (5) compute_fingerprint / verify_fingerprint match the
+      constraint_to_seed.constraint_fingerprint formula
+      (sha256(id|name|hex)[:16]).
+  (6) reconstruct_from_archive_record(record) is the top-level
+      entry point: takes the dict produced by
+      constraint_to_seed.archive_record, returns a fully
+      populated ConstraintStub.
+  ROUND-TRIP VERIFIED END-TO-END: the encoder smoke test on
+  the mock Anishinaabe burn constraint produced
+  seed_binary_hex="412d3f153d" / fingerprint="341ac7282ca0e435";
+  the decoder smoke test consumes those exact values and
+  reproduces the metrology profile (+X 0.2549 vs -X 0.1765,
+  +Y 0.2471 vs -Y 0.0824, +Z 0.2392 vs -Z 0.0000, matching the
+  encoder pre-quantization values within 8-bit noise) with
+  fingerprint_match=True, confidence_level=0.7412,
+  evidence_quality="high", all 6 presence flags consistent.
+  stdlib only; calibration test suite (11 tests) still passes.
 - Added `metrology/orbital_octa_v2.py` and
   `metrology/constraint_to_seed.py` together (engine + bridge).
   orbital_octa_v2 is the octahedral fractal-shell physics engine

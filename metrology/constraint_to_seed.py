@@ -10,34 +10,52 @@ geometry, plus their corresponding absences) as a normalized
 5 bytes are stored explicitly; the 6th amplitude is reconstructed
 via energy conservation (sum = 1).
 
-TWO INTERPRETATIONS, BOTH ACTIVE
---------------------------------
+DESIGN: SEED IS METROLOGY, NOT CONTENT
+--------------------------------------
 
-This module supports two separate uses of the seed. Both are useful;
-both are under active development. Treat them as distinct contracts:
+The seed encodes the METROLOGY of a constraint -- never the
+constraint's content. This clarification supersedes the earlier
+"two interpretations" framing in this docstring; there are not
+two interpretations, there is one (metrology fingerprint), and
+expansion via the seed-physics engine produces a richer view of
+the same metrology profile, not a path back to the constraint's
+content.
 
-(A) METROLOGY SUMMARY THAT TRAVELS  [working today]
-    The seed is a portable, lossy summary of a constraint's
-    observational quality. It survives degraded transmission,
-    schema migration, and storage at extreme compression. The
-    summary is NOT the constraint -- it is the metrology profile
-    that lets a downstream consumer know how much to trust the
-    constraint they are reading.
+Soul / body decomposition:
 
-    Round-trip: PhysicalConstraint -> ConstraintSeed -> 40 bits
-    -> ConstraintSeed -> seed_to_summary(). The summary is
-    preserved across the round-trip; the constraint's content
-    is NOT (it lives in the source PhysicalConstraint, not in
-    the seed).
+    seed = soul of the observation
+        - metrology fingerprint
+        - always survives migration, corruption, degraded
+          transmission
+        - 40 bits
 
-(B) GENERATIVE SEED FOR RECONSTRUCTION  [under construction]
-    Longer-term aim: the seed plus the seed-physics engine
-    (orbital_octa_v2.expand_seed) regenerates structural
-    geometry that reconstructs constraint relationships
-    without needing the original PhysicalConstraint payload.
-    Today, try_expand() runs the seed through the engine and
-    returns shell trajectories; mapping shell trajectories
-    back to constraint geometry is the in-progress piece.
+    full PhysicalConstraint = body
+        - problem statement, mechanism, references
+        - can be lost, rewritten, migrated, destroyed
+        - lives in the constraint store, not in the seed
+
+Reconstruction from a seed gives back:
+    - was this observation well-calibrated?    (+Y vs -Y)
+    - did the observer have a complete frame?  (+X vs -X)
+    - was the measurement geometry specified?  (+Z vs -Z)
+    - the integrity fingerprint
+
+Reconstruction from a seed does NOT give back:
+    - the actual problem statement
+    - the actual mechanism description
+    - the actual references
+
+If the body is lost but the soul survives, you know:
+    - the metrology of what existed
+    - whether to trust any reconstruction someone offers as
+      a candidate body for this soul
+    - the fingerprint to verify against
+
+This is the metrology archive: souls always survive, even when
+bodies get migrated, reformatted, or destroyed. try_expand()
+through orbital_octa_v2 produces a richer view of the SAME
+metrology profile (cross-shell propagation patterns); it is NOT
+a content-reconstruction path.
 
 OCTAHEDRAL ENCODING
 -------------------
@@ -394,11 +412,13 @@ def archive_record(constraint, seed: ConstraintSeed) -> Dict:
     Produce a portable archive record suitable for storage,
     transmission over degraded networks, or schema migration.
 
-    The seed is the durable artifact; the rest is metadata
-    that may be lost in transit but can be reconstructed
-    from the seed's expansion via seed-physics (when the
-    generative-reconstruction work in interpretation (B) of
-    the module docstring matures).
+    The seed is the durable artifact (the soul); the rest is
+    metadata that may be lost in transit. The METROLOGY of the
+    constraint can be regenerated from the seed via expansion;
+    the constraint's content (problem statement, mechanism,
+    references -- the body) lives in the source PhysicalConstraint
+    store and is re-attached when the full record is located,
+    using the fingerprint as integrity check.
     """
     return {
         "seed_binary_hex": seed.to_binary().hex(),
@@ -427,10 +447,14 @@ def try_expand(seed: ConstraintSeed,
     is available, expand the seed across `steps` shells and return
     the shell trajectory. Otherwise return None.
 
-    This is the half of interpretation (B) that runs today: the seed
-    regenerates a shell trajectory under the engine's physics rules.
-    Mapping shell trajectories back to constraint geometry is the
-    in-progress piece.
+    The shell trajectory is a richer view of the SAME metrology
+    profile encoded in the seed: how the metrology amplitudes
+    propagate outward under physics-mediated coupling. It is NOT
+    a content-reconstruction path. To recover the metrology
+    profile + a PhysicalConstraint stub from a seed, see
+    metrology/seed_to_constraint.py (which provides the same
+    expansion in pure stdlib so the soul-recovery path survives
+    in numpy-free environments).
     """
     try:
         from orbital_octa_v2 import expand_seed  # type: ignore[import-not-found]
