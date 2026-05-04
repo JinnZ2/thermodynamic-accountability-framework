@@ -294,7 +294,7 @@ thermodynamic-accountability-framework/
 │   │                                  #   Forward-references
 │   │                                  #   institution_scientific_spec.py
 │   │                                  #   (not yet present).
-│   └── substrate_audit.py            # Five-gate audit for studies and
+│   ├── substrate_audit.py            # Five-gate audit for studies and
 │                                      #   institutional claims: substrate-
 │                                      #   primary biology (does the study
 │                                      #   ignore foundational biology?),
@@ -322,6 +322,37 @@ thermodynamic-accountability-framework/
 │                                      #   measurement), metrology/pre1900_
 │                                      #   engineering_registry.py
 │                                      #   (calibration baseline).
+│   └── standardization_audit.py      # Six-gate audit for claims that a
+│                                      #   standardization "worked".
+│                                      #   Measures what got eliminated,
+│                                      #   suppressed, or made invisible
+│                                      #   to support the chosen standard.
+│                                      #   Gates: innovation suppression,
+│                                      #   comparative fairness (was the
+│                                      #   choice tested under equal
+│                                      #   conditions?), community impact
+│                                      #   (who gained vs who lost
+│                                      #   alternatives), monopoly
+│                                      #   enabling (market concentration
+│                                      #   + legal protection + rent
+│                                      #   extraction), resilience cost
+│                                      #   (single point of failure,
+│                                      #   diversity remaining, cascade
+│                                      #   failure history), and
+│                                      #   thermodynamic balance (full-
+│                                      #   lifecycle net energy with
+│                                      #   maintenance + lost-alternative
+│                                      #   + cascade-failure costs
+│                                      #   counted). StandardizationVerdict
+│                                      #   ladder (worst-case wins):
+│                                      #   NET_HARMFUL > MONOPOLY_ENABLING
+│                                      #   > INNOVATION_SUPPRESSING >
+│                                      #   UNVERIFIED_CLAIM >
+│                                      #   BENEFICIAL_WITHIN_NARROW_SCOPE
+│                                      #   > GENUINELY_BENEFICIAL.
+│                                      #   Worked example: AC/DC grid
+│                                      #   standardization (1893) ->
+│                                      #   NET_HARMFUL with 22 red flags.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -1010,6 +1041,7 @@ python simulations/federation.py
 python political_audit/c_cam_calculator.py
 python political_audit/institutional_audit_protocol.py
 python political_audit/substrate_audit.py
+python political_audit/standardization_audit.py
 
 # Tests
 python core/atbs/test_v2.py
@@ -1033,6 +1065,54 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/standardization_audit.py`: six-gate
+  audit for claims that a standardization "worked". Measures
+  what got eliminated, suppressed, or made invisible to
+  support the chosen standard. Sister to
+  political_audit/substrate_audit.py (5-gate study/claim
+  audit) and political_audit/institutional_audit_protocol.py
+  (4-gate institutional audit) -- same gate-dataclass-with-
+  passes() architecture.
+  Gates:
+  (1) InnovationSuppressionGate -- has alternative
+      development halted? for how long? what funding remains?
+      are there active rediscovery attempts (evidence the
+      suppression was premature)?
+  (2) ComparativeFairnessGate -- was the comparison fair?
+      same funding / development time / regulatory treatment
+      / publication standards / head-to-head studies? all
+      five conjunctive.
+  (3) CommunityImpactGate -- who gained, who lost, who lost
+      access to alternatives? benefit_distribution
+      (concentrated / mixed / broadly_shared) vs
+      cost_distribution.
+  (4) MonopolyEnablingGate -- market_share_concentrated
+      (>70%), regional_alternatives_eliminated,
+      legal_protection_for_standard, rent_extraction_
+      documented. Passes iff <=1 red flag.
+  (5) ResilienceCostGate -- single_point_of_failure_present,
+      redundancy_eliminated, cascade_failure_examples,
+      recovery_pathway_available, diversity_remaining_pct
+      (<0.3 = monoculture).
+  (6) ThermodynamicBalanceGate -- net_balance =
+      energy_saved - maintenance - lost_alternatives -
+      cascade_failures. Passes only if full_lifecycle_
+      audited AND net positive.
+  StandardizationVerdict ladder (worst-case wins):
+      NET_HARMFUL > MONOPOLY_ENABLING > INNOVATION_SUPPRESSING
+      > UNVERIFIED_CLAIM > BENEFICIAL_WITHIN_NARROW_SCOPE
+      > GENUINELY_BENEFICIAL.
+  Worked example in __main__: AC/DC electrical grid
+  standardization (1893; chose AC, eliminated DC). Result:
+  22 red flags, VERDICT: NET_HARMFUL. Net thermodynamic
+  balance comes out -5e17 J after subtracting maintenance,
+  lost-DC-development costs, and cascade-failure history
+  (2003 Northeast blackout, 2021 Texas, 2025 Iberian
+  Peninsula). Includes DC-rediscovery evidence (data
+  centers, solar/renewable integration, HVDC, microgrids)
+  flagged as evidence the 1893 suppression was premature.
+  Pure stdlib; chat_paste_check passes; calibration test
+  suite (11 tests) still passes.
 - Expanded `Field_Guide.md` with MISUSE 10 (epistemic / logical
   grade inflation) and a new Cross-Framework Integration
   section.
