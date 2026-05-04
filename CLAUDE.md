@@ -432,6 +432,28 @@ thermodynamic-accountability-framework/
 │   │                             #   format for downstream
 │   │                             #   compatibility. Pure stdlib;
 │   │                             #   no LLM; no numpy.
+│   ├── joint_narrative_audit.py  # Joint anti-reality detector. Wires
+│   │                             #   together open-class structural
+│   │                             #   detection (narrative_thermodynamics)
+│   │                             #   and closed-class lexical detection
+│   │                             #   (NarrativeStripper-equivalent
+│   │                             #   starter lexicon). audit_text(text)
+│   │                             #   -> JointVerdict with one of four
+│   │                             #   verdict classes: clean,
+│   │                             #   structural_only ("anti-reality in
+│   │                             #   new clothes"), lexical_only
+│   │                             #   (vocabulary signal without
+│   │                             #   structural confirmation), both
+│   │                             #   (high-confidence anti-reality).
+│   │                             #   ANTI_REALITY_LEXICON has 4
+│   │                             #   categories: abstraction_without_
+│   │                             #   substrate, blame_shift_or_vague_
+│   │                             #   referent, performative_certainty,
+│   │                             #   deflection_to_authority. Defers to
+│   │                             #   Logic-Ferret's NarrativeStripper
+│   │                             #   upstream when importable;
+│   │                             #   otherwise uses local starter
+│   │                             #   lexicon. Pure stdlib.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -954,6 +976,47 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- Added `metrology/joint_narrative_audit.py`: implements the
+  "wire both together and the failure modes do not overlap"
+  recommendation from the AXIS INTERPRETATION docstring section.
+  audit_text(text) runs both detectors and returns a JointVerdict
+  with one of four classes:
+      clean              neither detector triggered
+      structural_only    open-class fired, vocabulary clean
+                         ("anti-reality in new clothes")
+      lexical_only       closed-class fired, structure intact
+      both               both detectors fired, high confidence
+  Closed-class ANTI_REALITY_LEXICON is a STARTER set drawn
+  from energy-English categories: abstraction_without_substrate
+  (synergy/alignment/stakeholder/leverage/ecosystem/paradigm/
+  framework/platform/value-add/solution), blame_shift_or_vague_
+  referent (lazy/entitled/shortage/industry standard/best
+  practices/challenges/headwinds/transition period/growing pains),
+  performative_certainty (obviously/clearly/of course/as everyone
+  knows/needless to say), deflection_to_authority (experts say/
+  studies show/the data suggests/research indicates). Logic-
+  Ferret's NarrativeStripper (github.com/JinnZ2/Logic-Ferret)
+  remains the canonical and current source upstream;
+  _try_external_lexical() is a placeholder for direct upstream
+  integration when the wiring is built end-to-end.
+  Three-blob demo confirms expected verdict distribution:
+  PHYSICS BLOB (control-system spec) -> clean (structural
+  completeness 0.81, lexical 0.00). NARRATIVE BLOB ("ancient
+  wisdom" framing of indigenous burning) -> structural_only
+  (structural dissipation 0.84, lexical 0.00) -- the
+  closed-class detector alone would mark this clean since none
+  of its flagged tokens appear, but the structural detector
+  catches the anti-reality signature; this is the
+  "anti-reality in new clothes" case the AXIS INTERPRETATION
+  section names. CORPORATE BLOB (heavy buzzword, no physics)
+  -> both (structural dissipation 0.90, lexical 1.00, all 4
+  lexicon categories triggered, 16 distinct flagged tokens
+  across "synergy", "alignment", "stakeholders", "leverage",
+  "ecosystem", "paradigm", "framework", "platform",
+  "value-add", "solution", "best practices", "headwinds",
+  "industry standard", "transition period", "obviously",
+  "studies show"). Stdlib only; calibration test suite
+  (11 tests) still passes.
 - Extended `metrology/narrative_thermodynamics.py` module
   docstring with an "AXIS INTERPRETATION (energy-English)"
   section. High -X -Y -Z is named as the anti-reality
