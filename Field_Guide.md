@@ -122,3 +122,75 @@ Detection: Check who is in the room. If the people with the
            longest field-validated track record are absent and 
            the absence is justified procedurally, that's 
            credential-gating used as exclusion.
+
+MISUSE 10: EPISTEMIC / LOGICAL GRADE INFLATION
+Signature: A claim is asserted at a higher gradient
+           (theory / law / axiom) than the testing record
+           supports. Common in policy documents, AI safety
+           claims, economic projections. The author skips
+           the testing stages -- hypothetical -> robust
+           hypothesis -> theory -> law on the epistemic
+           gradient (see scientific-method-principles.md),
+           or claim -> valid inference -> sound argument /
+           theorem -> axiomatic law on the logical gradient
+           (see logical-gradient.md) -- and presents the
+           output as if it had survived them.
+Example:   An AI alignment claim presented as "fundamental
+           principle of safe AI" with no falsification
+           record, no cross-media testing, no novel
+           predictions confirmed under thermodynamic
+           pressure.
+Detection: Ask "what's the falsification record? cross-
+           media tests? novel predictions confirmed?" If
+           answers are absent or vague, the claim is being
+           inflated. Specifically: a hypothetical wearing
+           the word "law", or a logical claim wearing the
+           word "axiom".
+
+---
+
+CROSS-FRAMEWORK INTEGRATION
+
+Two observations about how this Field Guide composes with
+the rest of the audit machinery in this repo:
+
+(1) Substrate / epistemic / logical: three metadata fields
+that travel with a claim
+
+    political_audit/substrate_audit.py asks:
+        is this study substrate-honest?
+        (5-gate audit: substrate-primary biology, scope
+        laundering, institutional falsification, cross-
+        domain constraints, corpus contamination)
+
+    scientific-method-principles.md asks:
+        what level of confidence does this claim deserve?
+        (epistemic gradient: hypothetical / robust hypothesis
+        / theory / law)
+
+    logical-gradient.md asks:
+        is the reasoning actually valid?
+        (logical gradient: claim / valid inference / sound
+        argument / axiomatic law)
+
+A study can pass substrate_audit (substrate-honest, scope-
+clean, cross-domain aware), receive an epistemic grade
+(robust hypothesis, not law), and a logical grade (sound
+argument, not axiom). All three metadata fields travel with
+the claim. MISUSE 10 above is what happens when one of those
+fields is inflated past its earned grade.
+
+(2) The thermodynamic gate is identical across all four
+audit modes
+
+    substrate_audit:           audit cost < error cost prevented
+    institutional_audit:       parasitic_ratio < 0.5
+    epistemic_gradient:        test cost < return on application
+    logical_gradient:          formalization cost < error cost
+                               prevented
+
+Same gate, four domains. This is the unifying invariant of
+the framework: an audit is only worth performing when the
+expected cost-of-error-it-prevents exceeds the cost of
+performing it. Every gate above is an instance of that
+invariant.

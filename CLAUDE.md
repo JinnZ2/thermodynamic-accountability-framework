@@ -262,7 +262,13 @@ thermodynamic-accountability-framework/
 │   │                             #   weather. New domains follow the
 │   │                             #   metrology/ shape, not a parallel one.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
-│   └── __init__.py
+│   ├── __init__.py
+│   └── logs/                     # Per-session audit logs (JSON).
+│                                 #   Captures Claude AI interaction
+│                                 #   corrections, field-guide-session
+│                                 #   audits, etc. Inputs to the
+│                                 #   substrate-translation iterator
+│                                 #   case log.
 │
 ├── political_audit/               # Six Sigma for Governance (snake_case)
 │   ├── README.md                 # Protocol overview
@@ -558,8 +564,26 @@ thermodynamic-accountability-framework/
 │   │                             #   bias.py; companion to preservation_
 │   │                             #   audit.py; sister to calibration/
 │   │                             #   architecture_mismatch.py.
+│   ├── assumption_bias_detector.py        # Detects framework-layer
+│   │                             #   assumption bias in trend extraction
+│   │                             #   (stationarity, baseline, linearity).
+│   ├── translation_layer.py               # Translation between
+│   │                             #   instrument observation, observer
+│   │                             #   record, and downstream claim.
+│   ├── tornado_metrology_demo.py          # Worked-example domain audit
+│   ├── hurricane_metrology_demo.py        # Worked-example domain audit
+│   ├── flood_metrology_demo.py            # Worked-example domain audit
+│   ├── drought_metrology_demo.py          # Worked-example domain audit
 │   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
-│   └── us_wildfire_audit_registry.md      # worked-example audit registry
+│   ├── us_wildfire_audit_registry.md      # worked-example audit registry
+│   ├── us_drought_audit_registry.md       # worked-example audit registry
+│   ├── us_flood_audit_registry.md         # worked-example audit registry
+│   ├── atlantic_hurricane_audit_registry.md  # worked-example audit registry
+│   ├── in_progress.md                     # Living scoping document for
+│   │                             #   metrology audit work backlog.
+│   └── README.md                          # Folder overview; cross-refs
+│                                  #   calibration/RELATIONSHIP.md for
+│                                  #   the general/specific framing.
 │
 ├── resilience_stack.py            # Coupled three-layer resilience architecture
 │                                 #   (AbsenceSignature -> ConstraintNavigator ->
@@ -827,6 +851,38 @@ thermodynamic-accountability-framework/
 ├── AI_ENTRY.md                    # AI onboarding: equations, simulations, safe rules
 ├── README.md                      # Project overview
 ├── LICENSE                        # License
+├── Field_Guide.md                 # Field Guide to Misuse of Substrate-
+│                                 #   Primary Frameworks. 10 misuse
+│                                 #   patterns (narrative repackaging,
+│                                 #   attentional extraction, free labor
+│                                 #   harvesting, co-option, smear-as-
+│                                 #   parasite, starvation, metric
+│                                 #   substitution, temporal scope
+│                                 #   compression, cognitive diversity
+│                                 #   exclusion, epistemic/logical
+│                                 #   grade inflation). Includes the
+│                                 #   CC0 + transparency addendum and a
+│                                 #   Cross-Framework Integration
+│                                 #   section recording how the
+│                                 #   Field Guide composes with
+│                                 #   substrate_audit + the gradient
+│                                 #   docs.
+├── scientific-method-principles.md  # Epistemic gradient: hypothetical
+│                                 #   -> robust hypothesis -> theory ->
+│                                 #   law. Each stage's entry
+│                                 #   requirements, falsifiability
+│                                 #   window, thermodynamic gate.
+├── logical-gradient.md            # Logical gradient: logical claim
+│                                 #   -> valid inference -> sound
+│                                 #   argument / theorem -> axiomatic
+│                                 #   law. Parallel structure to the
+│                                 #   epistemic gradient but operating
+│                                 #   on logical relationships rather
+│                                 #   than empirical patterns.
+├── narrative-distortion-map.md    # Maps the corruption pathways
+│                                 #   between substrate observation
+│                                 #   and narrative claim; companion
+│                                 #   to Field_Guide.md.
 └── CLAUDE.md                      # This file
 ```
 
@@ -977,6 +1033,50 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Expanded `Field_Guide.md` with MISUSE 10 (epistemic / logical
+  grade inflation) and a new Cross-Framework Integration
+  section.
+  MISUSE 10: claim asserted at higher gradient (theory / law /
+  axiom) than the testing record supports. Common in policy
+  documents, AI safety claims, economic projections. Detection:
+  ask for falsification record / cross-media tests / novel
+  predictions confirmed; if absent or vague, the claim is being
+  inflated. Specifically catches "hypothetical wearing the word
+  'law'" and "logical claim wearing the word 'axiom'".
+  Cross-Framework Integration section captures two cross-cutting
+  observations:
+    (1) Substrate / epistemic / logical: three metadata fields
+        that travel with a claim. substrate_audit asks if the
+        study is substrate-honest; scientific-method-principles
+        asks what level of confidence it deserves;
+        logical-gradient asks if the reasoning is valid. All
+        three travel with the claim. MISUSE 10 is what happens
+        when one is inflated past its earned grade.
+    (2) The thermodynamic gate is identical across all four
+        audit modes: substrate_audit (audit cost < error cost
+        prevented), institutional_audit (parasitic_ratio < 0.5),
+        epistemic_gradient (test cost < return on application),
+        logical_gradient (formalization cost < error cost
+        prevented). Same gate, four domains -- the unifying
+        invariant of the framework.
+  Plus registered the new top-level docs (Field_Guide.md,
+  scientific-method-principles.md, logical-gradient.md,
+  narrative-distortion-map.md), the new metrology/ files
+  (assumption_bias_detector.py, translation_layer.py, four
+  domain demos, three new audit registries, in_progress.md,
+  README.md), and the new calibration/logs/ directory in the
+  CLAUDE.md repository structure section.
+- Removed duplicate chat-pasted drafts from `in_progress/`
+  (trend_corruption_calculator.py, domain_convergence_matrix.py,
+  pre1900_engineering_registry.py, cross_domain_synthesis.md).
+  All four were chat-paste-contaminated drafts of files that
+  already exist clean in metrology/. Verified by smart-quote-
+  normalized diff: in_progress/ versions are functionally
+  equivalent to metrology/ versions plus chat-paste contamination
+  (smart quotes, flat indentation, ⊗ operator symbol). Kept
+  in_progress/build_priority_notes.md (the actual purpose of
+  the in_progress/ folder -- live-scoping notes for upcoming
+  metrology work).
 - Added `political_audit/substrate_audit.py`: five-gate audit for
   studies and institutional claims, paired with
   political_audit/institutional_audit_protocol.py. Gates:
