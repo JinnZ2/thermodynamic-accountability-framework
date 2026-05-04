@@ -951,6 +951,56 @@ python core/atbs/test_v2.py
   encoder/decoder); attribution to both authors in the
   module docstring. constraint_to_seed.try_expand contract
   still holds (still unpacks shells, _W from expand_seed).
+- Upgraded `metrology/constraint_recovery_framework.py` from
+  v0.1 to v0.2 schema, unblocking the v0.3 patch validators
+  and the constraint_to_seed estimators.
+  New dataclasses:
+  - KnowledgeSystem (institutional/cultural/epistemic frame
+    for a constraint; pairs with the v0.3 patch's
+    InstitutionFrame for deeper specification);
+  - RecoveryProvenance (interpreter_epistemology,
+    compression_losses, source_languages,
+    known_missing_perspectives, full_fidelity_preserved --
+    drives observer-axis amplitudes in the seed encoder).
+  Extended PhysicalConstraint with v0.2 fields:
+  - lag_time_weeks_typical + lag_time_weeks_range (replacing
+    v0.1's single lag_time_weeks);
+  - evidence_class, evidence_quality (high/moderate/weak/
+    contested), confidence_level in [0, 1];
+  - sensing_method, actuation_method, maintenance_method,
+    transmission_method;
+  - physical_principle, boundary_conditions;
+  - applicability_assessment, supporting_references;
+  - depends_on / enables for graph analysis;
+  - knowledge_system, recovery_provenance, cost_metric_epoch.
+  All v0.2 additions have defaults; the three seeded systems
+  (mill_pond_cascade, anishinaabe_seasonal_burn,
+  beaver_managed_hydrology) migrated in-place with shared
+  per-system KnowledgeSystem and RecoveryProvenance instances
+  (constraints from the same system reference the same
+  instance via Python pass-by-reference). SCHEMA_VERSION
+  module constant added ("0.2.0").
+  END-TO-END VERIFICATION:
+  (1) v0.2 base parses + self-demo runs;
+  (2) v0.3 patch validators run end-to-end against the v0.2
+      systems with zero AttributeError -- 2 findings total
+      (both hierarchy_drift flags catching "modern X" framing
+      in constraint text, which is correct behavior);
+  (3) constraint_to_seed.constraint_to_seed() runs against
+      a real (not mocked) PhysicalConstraint and produces the
+      exact seed_binary_hex "412d3f153d" / fingerprint
+      "341ac7282ca0e435" that the mock smoke test was
+      designed to match;
+  (4) seed_to_constraint.reconstruct_from_archive_record()
+      round-trips real CB_001 with fingerprint_match=True,
+      evidence_quality="high", confidence_level=0.7412.
+  Retracts the previously-flagged finishing task "(1) land
+  the v0.2 schema upgrade" from the constraint_to_seed +
+  v0.3 patch audit notes. The remaining finishing task is
+  populating the constraint_to_seed heuristic estimator
+  weights against a calibration corpus (currently
+  conservative-by-design defaults).
+  Calibration test suite (11 tests) still passes. stdlib only.
 - Added `metrology/seed_to_constraint.py` (decoder) and applied
   the soul/body design clarification across the seed system.
   KEY INSIGHT: the seed encodes the METROLOGY of a constraint,
