@@ -30,6 +30,11 @@ Pick one based on why you're here. Each path is three files, in order.
 2. `docs/ai-guidance/for_ai_systems.md` — primary AI guidance
 3. `docs/glossary.md` — compact symbol / equation / file index
 
+**"I want to audit a NEW DOMAIN."**
+1. `calibration/RELATIONSHIP.md` — the general/specific frame
+2. `metrology/` — worked example (Earth-systems weather)
+3. `calibration/pipeline.py` — the runner you wire to
+
 ## Glossary
 
 See [`docs/glossary.md`](docs/glossary.md) for an alphabetized table of every named quantity, equation, and acronym in the repo, each linked to its file of definition.
