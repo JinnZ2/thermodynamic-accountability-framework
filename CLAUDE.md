@@ -226,6 +226,41 @@ thermodynamic-accountability-framework/
 │   │                             #   one lineage so the AI can surface
 │   │                             #   the convergence with others.
 │   │                             #   Sister to relational_ontology.py.
+│   ├── narrative_thermodynamics.py  # Open-class structural detector for
+│   │                             #   anti-reality. Encodes any text blob
+│   │                             #   as a 6-amplitude octahedral seed
+│   │                             #   measuring control-system-spec
+│   │                             #   completeness. Axes: +/-X named
+│   │                             #   variables vs gaps; +/-Y closed
+│   │                             #   loops vs open paths; +/-Z quantified
+│   │                             #   thresholds vs unbounded. Plus a
+│   │                             #   TEMPORAL_SCOPE_TOKENS lexicon and
+│   │                             #   the BWCA-cascade rule (well-bounded
+│   │                             #   in space, unbounded in time). High
+│   │                             #   -X -Y -Z is the anti-reality
+│   │                             #   signature; see the AXIS
+│   │                             #   INTERPRETATION docstring section
+│   │                             #   for the energy-English framing.
+│   │                             #   Pure stdlib; no LLM; no numpy.
+│   ├── anti_reality_audit.py     # Composes open-class measurement
+│   │                             #   (narrative_thermodynamics) with
+│   │                             #   closed-class detection (local
+│   │                             #   ANTI_REALITY_LEXICON; defers to
+│   │                             #   Logic-Ferret's NarrativeStripper
+│   │                             #   upstream when importable). Returns
+│   │                             #   a JointVerdict with one of four
+│   │                             #   classes: clean, structural_only
+│   │                             #   ("anti-reality in new clothes"),
+│   │                             #   lexical_only, both. Failure modes
+│   │                             #   of the two detectors don't overlap;
+│   │                             #   wired together they close the gap.
+│   ├── RELATIONSHIP.md           # Documents the calibration/ <->
+│   │                             #   metrology/ relationship: calibration/
+│   │                             #   is the GENERAL audit machinery;
+│   │                             #   metrology/ is the FIRST DOMAIN
+│   │                             #   INSTANCE applied to Earth-systems
+│   │                             #   weather. New domains follow the
+│   │                             #   metrology/ shape, not a parallel one.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
 │   └── __init__.py
 │
@@ -424,59 +459,6 @@ thermodynamic-accountability-framework/
 │   │                             #   "341ac7282ca0e435" round-trip back
 │   │                             #   to identical metrology with
 │   │                             #   fingerprint_match=True.
-│   ├── narrative_thermodynamics.py  # ENCODER (text variant): raw
-│   │                             #   text blob -> 6-amplitude
-│   │                             #   octahedral seed measuring how
-│   │                             #   complete a control-system
-│   │                             #   specification the text contains.
-│   │                             #   Same octahedral shape as
-│   │                             #   constraint_to_seed.py but
-│   │                             #   operates on free text instead
-│   │                             #   of PhysicalConstraint objects.
-│   │                             #   Axes: +X named physical
-│   │                             #   variables / -X gaps; +Y closed
-│   │                             #   feedback loops / -Y open paths;
-│   │                             #   +Z quantified thresholds /
-│   │                             #   -Z unbounded. Mechanizes the
-│   │                             #   substrate-primary read of any
-│   │                             #   paragraph as a control-system
-│   │                             #   spec of varying completeness.
-│   │                             #   Lexicons: PHYSICAL_VARIABLE_
-│   │                             #   TOKENS, UNIT_TOKENS, SENSE_/
-│   │                             #   DECISION_/ACTION_/UPDATE_TOKENS;
-│   │                             #   regex extractors for numbers,
-│   │                             #   ranges, comparisons. encode_
-│   │                             #   narrative(text) -> NarrativeProfile
-│   │                             #   with seed + features +
-│   │                             #   completeness_score +
-│   │                             #   dissipation_score + interpretation
-│   │                             #   + fingerprint. archive_record()
-│   │                             #   matches constraint_to_seed
-│   │                             #   format for downstream
-│   │                             #   compatibility. Pure stdlib;
-│   │                             #   no LLM; no numpy.
-│   ├── joint_narrative_audit.py  # Joint anti-reality detector. Wires
-│   │                             #   together open-class structural
-│   │                             #   detection (narrative_thermodynamics)
-│   │                             #   and closed-class lexical detection
-│   │                             #   (NarrativeStripper-equivalent
-│   │                             #   starter lexicon). audit_text(text)
-│   │                             #   -> JointVerdict with one of four
-│   │                             #   verdict classes: clean,
-│   │                             #   structural_only ("anti-reality in
-│   │                             #   new clothes"), lexical_only
-│   │                             #   (vocabulary signal without
-│   │                             #   structural confirmation), both
-│   │                             #   (high-confidence anti-reality).
-│   │                             #   ANTI_REALITY_LEXICON has 4
-│   │                             #   categories: abstraction_without_
-│   │                             #   substrate, blame_shift_or_vague_
-│   │                             #   referent, performative_certainty,
-│   │                             #   deflection_to_authority. Defers to
-│   │                             #   Logic-Ferret's NarrativeStripper
-│   │                             #   upstream when importable;
-│   │                             #   otherwise uses local starter
-│   │                             #   lexicon. Pure stdlib.
 │   ├── preservation_audit.py     # Format-translation information-loss
 │   │                             #   audit. Sits between the encoding layer
 │   │                             #   and the library layer in the metrology
@@ -1037,6 +1019,55 @@ python core/atbs/test_v2.py
   explicit reference marker). Same chat-paste contamination as
   prior cleanups; rewritten cleanly. stdlib only; calibration
   test suite (11 tests) still passes.
+- TASK 4: Moved narrative_thermodynamics.py and the joint
+  anti-reality audit from metrology/ to calibration/.
+  Rationale (per task spec): the open-class control-system-
+  completeness detector is general measurement infrastructure,
+  not Earth-systems-specific. It belongs alongside
+  calibration/architecture_mismatch.py (also a substrate-
+  criteria text classifier).
+  Moves (via git mv, history preserved):
+      metrology/narrative_thermodynamics.py
+          -> calibration/narrative_thermodynamics.py
+      metrology/joint_narrative_audit.py
+          -> calibration/anti_reality_audit.py
+  Plus added a TEMPORAL_SCOPE_TOKENS lexicon (lifetime,
+  century, generation, cascade, downstream, long-term,
+  intergenerational, perpetuity, permanent, irreversible,
+  millennia, decadal, centennial, multidecadal). Populates a
+  new ExtractedFeatures.temporal_scope_hits field. _interpret()
+  gains a rule that flags "specification well-bounded in space,
+  unbounded in time" when variables_named > 0.15 and
+  thresholds_quantified > 0.15 but temporal_scope_hits is
+  empty -- the BWCA-cascade signature named in the AXIS
+  INTERPRETATION (energy-English) docstring section.
+  DECISIONS:
+  (a) Kept the existing energy-English docstring (already
+      includes the AXIS INTERPRETATION section landed in commit
+      90fefb3) rather than overwriting with the task's fallback
+      block. The fallback's `core/functional_epistemology_
+      framework.py NarrativeStripper` attribution is replaced
+      by the existing "Logic-Ferret's NarrativeStripper"
+      attribution, which is more accurate per the upstream
+      ferret_fieldlink wiring.
+  (b) Renamed metrology/joint_narrative_audit.py to
+      calibration/anti_reality_audit.py per task spec naming.
+      The implementation already had the JointVerdict 4-class
+      pattern (clean / structural_only / lexical_only / both)
+      from commit e9ac9ae; the simpler stub in the task spec
+      would have been a regression. Adopting the spec's name
+      while keeping the more-developed implementation.
+  Smoke tests verified:
+      calibration/narrative_thermodynamics.py demo runs end-to-end
+      (PHYSICS BLOB completeness 0.7955, NARRATIVE BLOB
+      completeness 0.1553; fingerprints unchanged at
+      4573574d09fd4d62 / 49288101474dd97a).
+      calibration/anti_reality_audit.py demo runs end-to-end
+      (PHYSICS -> clean, NARRATIVE -> structural_only,
+      CORPORATE -> both).
+  All five core/ smoke tests pass; all five
+  core/integrations/ (now including knowledge_fieldlink) pass;
+  calibration test suite (11 tests) still passes.
 - Added `metrology/joint_narrative_audit.py`: implements the
   "wire both together and the failure modes do not overlap"
   recommendation from the AXIS INTERPRETATION docstring section.
