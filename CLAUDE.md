@@ -751,6 +751,54 @@ thermodynamic-accountability-framework/
 │   │                             #   Filename mirrors pre1900_engineering_
 │   │                             #   registry.py (data-vintage marker).
 │   │                             #   stdlib only.
+│   ├── cascade_coupling_framework_2026.py  # Cascade-probability constraint
+│   │                             #   module integrating three 2026 results
+│   │                             #   for the earth-systems-physics
+│   │                             #   coupled solvers: (1) Merle nonlinear
+│   │                             #   evolution (Breakthrough Prize 2026)
+│   │                             #   -- tipping points are finite-time
+│   │                             #   singularities; early warning =
+│   │                             #   d2E/dt2 > 0; (2) Ghosh & Shrimali
+│   │                             #   higher-order interactions (Royal
+│   │                             #   Society 2026) -- triplet/hypergraph
+│   │                             #   couplings lower the cascade
+│   │                             #   threshold ~70% relative to pairwise-
+│   │                             #   only models; coupling structure is
+│   │                             #   a tensor not a matrix; (3)
+│   │                             #   Jacques-Dumas TAMS rare-event
+│   │                             #   sampling (Chaos 2026) -- quantifies
+│   │                             #   P(Amazon collapse | AMOC state)
+│   │                             #   over 200-year horizons; bistability
+│   │                             #   dominates. 3 framework dicts
+│   │                             #   (MERLE_FRAMEWORK,
+│   │                             #   HIGHER_ORDER_INTERACTION_FRAMEWORK,
+│   │                             #   AMOC_AMAZON_CASCADE) + 4 functions:
+│   │                             #   construct_coupling_tensor_3d
+│   │                             #   (n_systems, pairwise_matrix,
+│   │                             #   triplet_weights) builds a sparse
+│   │                             #   dict-keyed tensor (i,j,-1) for
+│   │                             #   pairwise + (i,j,k) for triplet
+│   │                             #   entries; cascade_probability_merle_
+│   │                             #   blow_up(d2E_dt2, T_sing, horizon)
+│   │                             #   maps energy-concentration second
+│   │                             #   derivative + time-to-singularity to
+│   │                             #   P in [0,1]; cascade_threshold_hoi_
+│   │                             #   reduction(lambda_pw) returns 0.3 *
+│   │                             #   lambda_pairwise; amoc_amazon_
+│   │                             #   transition_probability(state,
+│   │                             #   forcing, horizon) reads
+│   │                             #   {stable: 1e-5, near_tipping: 1e-2,
+│   │                             #   collapsed: 0.3} base probability,
+│   │                             #   amplifies by forcing/0.1 and
+│   │                             #   horizon/200. BWCA gravel-pit
+│   │                             #   triplet example (truck traffic <->
+│   │                             #   moisture <-> mycorrhizal fungi) in
+│   │                             #   the docstring shows why pairwise
+│   │                             #   models miss the dominant cascade
+│   │                             #   amplifier. Companion to earth_
+│   │                             #   systems_constraint_integration_
+│   │                             #   2026.py (data layer); this module
+│   │                             #   is the math layer. stdlib only.
 │   ├── in_progress.md                     # Living scoping document for
 │   │                             #   metrology audit work backlog.
 │   └── README.md                          # Folder overview; cross-refs
@@ -1206,6 +1254,65 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/cascade_coupling_framework_2026.py`: cascade-
+  probability constraint module integrating three 2026 results for
+  the earth-systems-physics coupled solvers. Companion (math layer)
+  to `earth_systems_constraint_integration_2026.py` (data layer).
+  (1) Merle (Breakthrough Prize 2026): nonlinear evolution
+  equations decompose via singularity formation (blow-up) +
+  resolution into solitons. Tipping points are finite-time
+  singularities; early warning = energy concentration second
+  derivative d2E/dt2 > 0, not a threshold crossing. Generic form:
+  du/dt = laplacian(u) + f(u); blow-up rate T_max ~ T_0 - C *
+  (log t)^(-2). (2) Ghosh & Shrimali (Royal Society 2026):
+  higher-order interactions (triplet, hypergraph) lower the
+  cascade threshold ~70% relative to pairwise-only models; coupling
+  structure is a tensor not a matrix; lambda_pairwise_min ~ 0.30-
+  0.50 vs lambda_HOI_min ~ 0.05-0.15 (6-10x lower). Three-body
+  couplings create feedback loops inaccessible to dyads; the
+  Amazon-Rainfall-AMOC triplet cannot be represented as the
+  Amazon<->AMOC pair. (3) Jacques-Dumas (Chaos 2026): TAMS
+  Trajectory-Adaptive Multilevel Sampling quantifies P(Amazon
+  collapse | AMOC state) over 200-year horizons. Bistability
+  dominates: P(stable) ~ 1e-5, P(collapsed) ~ 0.3. Two-stage
+  mechanism: AMOC weakening -> precipitation loss over Amazon
+  -> drying -> extreme wildfires -> Amazon transition.
+  Module surface: 3 framework dicts (MERLE_FRAMEWORK,
+  HIGHER_ORDER_INTERACTION_FRAMEWORK, AMOC_AMAZON_CASCADE) + 4
+  functions. construct_coupling_tensor_3d(n_systems,
+  pairwise_matrix, triplet_weights) builds a sparse dict-keyed
+  tensor: (i, j, -1) for pairwise entries + (i, j, k) for triplet
+  entries; accepts list-of-lists or numpy.ndarray for the matrix.
+  cascade_probability_merle_blow_up(d2E_dt2, time_to_singularity,
+  horizon=100.0) returns 0 when d2E_dt2 <= 0 (system not
+  approaching singularity), else 1 - T_sing/horizon clamped to
+  [0, 1]. cascade_threshold_hoi_reduction(pairwise_threshold)
+  applies the Ghosh-Shrimali 70% reduction (returns 0.3 * input).
+  amoc_amazon_transition_probability(amoc_state, freshwater_
+  forcing, time_horizon_years) reads base probability dict
+  {stable: 1e-5, near_tipping: 1e-2, collapsed: 0.3}, amplifies
+  by forcing_factor = 1 + forcing/0.1 and time_factor =
+  horizon/200, clamps to [0, 1]. CONSTRAINT_NOTES module-level
+  string carries the integration policy (singularity tracking +
+  HOI tensor + rare-event probability) for downstream solvers.
+  Worked field example in docstring: BWCA gravel-pit corridor
+  triplet (truck traffic <-> moisture <-> mycorrhizal fungi) ->
+  tree-death cascade. The triplet is the hidden amplifier; a
+  pairwise model misses it.
+  CLEANUP DECISIONS made during paste integration: (a) converted
+  Unicode math symbols (greek letters, Sigma, partial-derivative
+  glyph, laplacian glyph, arrows, superscripts) to ASCII per repo
+  convention -- the file reads ASCII-only like the rest of
+  metrology/; (b) replaced numpy `pairwise_matrix.shape[0]` with
+  explicit `n_systems` parameter so the module is stdlib-only
+  (still accepts a numpy array since it indexes [i][j]); (c) moved
+  module-level print statements into an `if __name__ == "__main__":`
+  smoke-test guard so `import` does not fire side effects;
+  (d) added max(0.0, ...) clamp to cascade_probability_merle_blow_
+  up so cases where horizon < time_to_singularity don't return
+  negative probabilities. Smoke test exercises all 4 functions
+  end-to-end. Pure stdlib; chat_paste_check passes; calibration
+  test suite (11 tests) still passes.
 - Added `metrology/earth_systems_constraint_integration_2026.py`:
   constraint layer module for earth-systems-physics coupled
   differential-equation solvers. Integrates three observational
