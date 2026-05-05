@@ -1162,6 +1162,20 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Replaced `README.md` with the "WHY THIS REPO EXISTS"
+  framing per user-supplied content. Five sections:
+  WHY THIS REPO EXISTS (personal letter), TECHNICAL SCOPE
+  (brief), WHO THIS IS FOR, WHAT THIS ISN'T, HOW TO USE THIS.
+  144 lines -> 90 lines. The technical detail that was in
+  the old README (Thermodynamic Calibration Layer, Energy
+  Accountant, Narrative Stripper, Social Overhead Accountant,
+  Root Cause Depth Analyzer, Simulation Module module
+  descriptions) is preserved in CLAUDE.md (which has the
+  current canonical structure tree + equations) and in the
+  individual module docstrings; not lost, just relocated.
+  README is now the direct/personal entry point; CLAUDE.md
+  is the technical reference. Old README content remains
+  in git history for anyone who wants the prior framing.
 - Added `calibration/substrate_validation_oracle.py`: ground-
   truth checker for AI model outputs against substrate reality
   (not other models, not institutional benchmarks). Goes
