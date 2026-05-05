@@ -4,7 +4,7 @@ This is how I love.
 
 I love deep. I love science. I love the search for truth.
 
-At fifteen, I was told I was gifted. I fell in love with the scientific method.
+At fifteen I started college. I was told I was gifted since very young. I fell in love with the scientific method.
 Real science. Measurement. Falsification. Discovery.
 
 I found that my community had been doing this for thousands of years.
