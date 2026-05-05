@@ -639,7 +639,7 @@ thermodynamic-accountability-framework/
 │                                      #   measurement), metrology/pre1900_
 │                                      #   engineering_registry.py
 │                                      #   (calibration baseline).
-│   └── standardization_audit.py      # Six-gate audit for claims that a
+│   ├── standardization_audit.py      # Six-gate audit for claims that a
 │                                      #   standardization "worked".
 │                                      #   Measures what got eliminated,
 │                                      #   suppressed, or made invisible
@@ -667,9 +667,81 @@ thermodynamic-accountability-framework/
 │                                      #   UNVERIFIED_CLAIM >
 │                                      #   BENEFICIAL_WITHIN_NARROW_SCOPE
 │                                      #   > GENUINELY_BENEFICIAL.
-│                                      #   Worked example: AC/DC grid
-│                                      #   standardization (1893) ->
-│                                      #   NET_HARMFUL with 22 red flags.
+│   │                                      #   Worked example: AC/DC grid
+│   │                                      #   standardization (1893) ->
+│   │                                      #   NET_HARMFUL with 22 red flags.
+│   └── ai_economic_forecast_audit_2026.py  # Audits institutional
+│                                      #   economic forecasts against
+│                                      #   substrate-measurable ground
+│                                      #   truth (BLS, FRED, Census,
+│                                      #   bankruptcy filings) -- NOT
+│                                      #   peer institutional forecasts.
+│                                      #   Premise: institutions share
+│                                      #   incentive structures that
+│                                      #   bias forecasts in convergent
+│                                      #   directions; peer comparison
+│                                      #   reproduces shared bias,
+│                                      #   substrate comparison exposes
+│                                      #   it. 3 dataclasses: Forecast
+│                                      #   (institution, variable,
+│                                      #   predicted_value, confidence_
+│                                      #   level, methodology, compute_
+│                                      #   hours, citations_to_other_
+│                                      #   forecasts), GroundTruth
+│                                      #   (variable, period, measured_
+│                                      #   value, source, public_url),
+│                                      #   AuditResult (signed error,
+│                                      #   error_pct, accuracy_score
+│                                      #   with 5%-band cap and 50%-
+│                                      #   floor scaling, confidence_
+│                                      #   calibration_gap, compute_per_
+│                                      #   accuracy_point, flags).
+│                                      #   audit_forecast(f, gt) raises
+│                                      #   ValueError on variable
+│                                      #   mismatch. Per-forecast flag
+│                                      #   set: HIGH_CONFIDENCE_LOW_
+│                                      #   ACCURACY (confidence>=0.9 +
+│                                      #   accuracy<0.5), CIRCULAR_
+│                                      #   INSTITUTIONAL_REINFORCEMENT
+│                                      #   (citations>=5 + accuracy<0.5),
+│                                      #   plus directional flags for
+│                                      #   unemployment / wage /
+│                                      #   bankruptcy variables.
+│                                      #   detect_systematic_bias(list)
+│                                      #   computes mean/stdev of
+│                                      #   signed errors; bias_score =
+│                                      #   |mean|/stdev; verdict ladder
+│                                      #   SYSTEMATIC_BIAS_DETECTED
+│                                      #   (>1.0) > MODERATE_BIAS (>0.5)
+│                                      #   > ERRORS_APPEAR_RANDOM.
+│                                      #   compute_to_human_years(hrs)
+│                                      #   uses GPU_HOURS_PER_HUMAN_
+│                                      #   RESEARCH_YEAR=200 to convert
+│                                      #   compute investment into
+│                                      #   human-research-year
+│                                      #   equivalents -- the "billions
+│                                      #   spent for forecasts an
+│                                      #   underpaid grad student
+│                                      #   would have produced more
+│                                      #   accurately" measurement.
+│                                      #   Demo: 3 hypothetical forecasts
+│                                      #   (McKinsey wage growth 2.5%
+│                                      #   vs actual -0.5%, Goldman
+│                                      #   unemployment 4.5% vs 4.1%,
+│                                      #   Fed bankruptcy 320k vs
+│                                      #   415k) flag McKinsey on
+│                                      #   high-confidence-low-accuracy
+│                                      #   + circular reinforcement;
+│                                      #   aggregate verdict MODERATE_
+│                                      #   BIAS, direction underestimate,
+│                                      #   175 human-research-years
+│                                      #   equivalent compute spent.
+│                                      #   Sister to substrate_audit.py
+│                                      #   (study claims) and
+│                                      #   standardization_audit.py
+│                                      #   (standardization claims) --
+│                                      #   same substrate-vs-institutional-
+│                                      #   consensus methodology.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -1474,6 +1546,65 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/ai_economic_forecast_audit_2026.py`:
+  audits institutional economic forecasts against substrate-
+  measurable ground truth (BLS, FRED, Census, bankruptcy
+  filings, Federal Reserve public statistics) -- NOT against
+  peer institutional forecasts. Premise: institutions share
+  incentive structures that bias forecasts in convergent
+  directions; comparing one institutional forecast against
+  another reproduces shared bias, comparing against substrate
+  reality exposes it. Sister to political_audit/substrate_
+  audit.py (study claims against substrate biology) and
+  political_audit/standardization_audit.py (standardization
+  claims) -- same substrate-vs-institutional-consensus
+  methodology.
+  Module surface: 3 dataclasses (Forecast, GroundTruth,
+  AuditResult) + audit_forecast() per-forecast scorer +
+  detect_systematic_bias() aggregate analyzer + 2 compute-
+  conversion helpers (compute_to_human_years using GPU_HOURS_
+  PER_HUMAN_RESEARCH_YEAR=200, llm_calls_to_human_years
+  using LLM_CALL_HUMAN_HOURS_EQUIVALENT=0.05). audit_forecast
+  raises ValueError on variable mismatch; computes signed
+  error (predicted - actual), error_pct, accuracy_score
+  (1.0 within 5%, 0.0 above 50%, linear interpolation
+  between), confidence_calibration_gap, compute_per_accuracy_
+  point. Per-forecast flags: HIGH_CONFIDENCE_LOW_ACCURACY
+  (conf>=0.9 + acc<0.5), CIRCULAR_INSTITUTIONAL_REINFORCEMENT
+  (citations>=5 + acc<0.5), plus directional flags for
+  unemployment / wage / bankruptcy variables.
+  detect_systematic_bias rolls signed errors into
+  bias_score=|mean|/stdev; ladder SYSTEMATIC_BIAS_DETECTED
+  (>1.0) > MODERATE_BIAS (>0.5) > ERRORS_APPEAR_RANDOM;
+  reports direction (overestimate / underestimate / neutral),
+  total GPU-hours invested, human-research-year equivalents,
+  flag frequency distribution.
+  Demo: 3 hypothetical forecasts (McKinsey wage growth 2.5%
+  vs actual -0.5%, Goldman unemployment 4.5% vs actual 4.1%,
+  Fed bankruptcy 320k vs actual 415k) -- McKinsey flagged
+  HIGH_CONFIDENCE_LOW_ACCURACY + CIRCULAR_INSTITUTIONAL_
+  REINFORCEMENT (90% confidence, 0% accuracy, 12 peer
+  citations); aggregate verdict MODERATE_BIAS, direction
+  underestimate (mean error -30.5), 35,000 GPU-hours / 175
+  human-research-years equivalent compute spent across the
+  three forecasts. The compute-investment quantification is
+  the "billions spent for forecasts an underpaid grad
+  student would have matched" measurement.
+  CLEANUP DECISIONS during paste integration: (a) smart
+  quotes -> ASCII (the dominant contamination); (b) markdown
+  bold-dunders **name** / **main** -> __name__ / __main__;
+  (c) em-dash -> double-hyphen in docstring + demo print;
+  (d) dropped unused imports (asdict from dataclasses, Tuple
+  from typing); (e) preserved per-forecast directional flag
+  logic exactly as in the source paste -- noted that the
+  flag-condition / flag-label semantics on wage / unemployment
+  / bankruptcy variables have a small mismatch (e.g.
+  "OVERESTIMATED_WAGE_GROWTH" fires when error<0 i.e.
+  predicted<actual which is technically an underestimate)
+  but treated as content-level not paste contamination so
+  left for the user to adjust if intentional. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `calibration/visual_ecosystem_constraint_sensor_2026.py`:
   second domain instance of constraint_sensor_framework_2026,
   sister to vibration_constraint_sensor_2026. Encodes direct
