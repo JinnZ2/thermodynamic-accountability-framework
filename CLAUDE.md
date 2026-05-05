@@ -260,6 +260,100 @@ thermodynamic-accountability-framework/
 │   │                             #   narrative hedging, universalizing
 │   │                             #   scope tokens, absence of numeric
 │   │                             #   quantities.
+│   ├── constraint_sensor_framework_2026.py  # Input layer for
+│   │                             #   substrate-primary, spatial-
+│   │                             #   mechanical, and proprioceptive
+│   │                             #   cognition. Lets non-narrative
+│   │                             #   beings transmit constraint
+│   │                             #   knowledge into language-based
+│   │                             #   systems without lossy collapse
+│   │                             #   into narrative. 3 composable
+│   │                             #   modules: (1) constraint_sensor_
+│   │                             #   input -- encode_constraint and
+│   │                             #   encode_constraint_chain build
+│   │                             #   structured records keyed on
+│   │                             #   modality (14 registered:
+│   │                             #   vibration, thermal, pressure,
+│   │                             #   spatial_geometry, energy_flow,
+│   │                             #   phase_transition, harmonic,
+│   │                             #   resistance, load_distribution,
+│   │                             #   proprioceptive, substrate_state,
+│   │                             #   chemical_gradient, field_strength,
+│   │                             #   coherence_state) with state /
+│   │                             #   location / indicates / conditions
+│   │                             #   / confidence / optional
+│   │                             #   narrative_descriptor; (2)
+│   │                             #   narrative_creep_gate -- 25
+│   │                             #   NARRATIVE_CREEP_PATTERNS regexes
+│   │                             #   (explanation injection, validation
+│   │                             #   reflex, affective framing, caveat
+│   │                             #   injection, narrative continuation,
+│   │                             #   inference creep) drive detect_
+│   │                             #   narrative_creep -> verdict ladder
+│   │                             #   CLEAN / LOW / MODERATE / HIGH
+│   │                             #   keyed on density (matches /
+│   │                             #   word_count); (3) output_constraint_
+│   │                             #   only -- strip_narrative removes
+│   │                             #   prefix scaffolding ("yeah",
+│   │                             #   "I think", "That's interesting",
+│   │                             #   "Looking at") + 8 PHRASES_TO_STRIP
+│   │                             #   patterns ("you know", "the thing
+│   │                             #   is", "what hits me is", etc),
+│   │                             #   gates on max_creep_density=0.02.
+│   │                             #   Sister to architecture_mismatch
+│   │                             #   (substrate-primary detector),
+│   │                             #   relational_ontology (relational-
+│   │                             #   primary reference), and anti_
+│   │                             #   reality_audit (lexical detection).
+│   ├── vibration_constraint_sensor_2026.py  # Domain-specific
+│   │                             #   application of constraint_sensor_
+│   │                             #   framework: encodes proprioceptive
+│   │                             #   vibration knowledge as direct
+│   │                             #   constraint specifications. Maps
+│   │                             #   pitch / amplitude / pattern /
+│   │                             #   location / transmission_path
+│   │                             #   to mechanical failure modes
+│   │                             #   without forcing narrative
+│   │                             #   translation. Use case: mechanic
+│   │                             #   or driver senses vibration
+│   │                             #   through hands / seat / frame /
+│   │                             #   steering and reports what hands
+│   │                             #   report. Controlled vocabulary:
+│   │                             #   7 PITCH_CLASSES (very_low_rumble
+│   │                             #   <30Hz to ultrasonic_felt), 5
+│   │                             #   AMPLITUDE_CLASSES, 9 PATTERN_
+│   │                             #   CLASSES (steady, pulsed, chunk,
+│   │                             #   warble, harmonic_rich, load_
+│   │                             #   dependent, speed_dependent,
+│   │                             #   temperature_dependent,
+│   │                             #   intermittent_strong), 19
+│   │                             #   LOCATIONS (steering_wheel through
+│   │                             #   trailer_kingpin), 7 TRANSMISSION_
+│   │                             #   PATHS (through_hands_only ->
+│   │                             #   whole_body). VibrationObservation
+│   │                             #   dataclass with validate() rejects
+│   │                             #   off-vocabulary values.
+│   │                             #   FAILURE_SIGNATURES catalog (10
+│   │                             #   entries: wheel bearing L/R front,
+│   │                             #   u-joint, transmission bearing,
+│   │                             #   gear whine, belt slip, tire
+│   │                             #   imbalance, trailer bearing,
+│   │                             #   kingpin wear, tie rod / ball
+│   │                             #   joint). match_signature(obs)
+│   │                             #   returns ranked list with
+│   │                             #   match_score = matched_fields /
+│   │                             #   total_signature_fields. build_
+│   │                             #   observation(pitch, amplitude,
+│   │                             #   pattern, where, path, **conditions)
+│   │                             #   is the terse operator builder
+│   │                             #   that runs validate() before
+│   │                             #   returning. CLEANUP NOTE:
+│   │                             #   added "intermittent_strong" to
+│   │                             #   PATTERN_CLASSES so the
+│   │                             #   tie_rod_or_ball_joint_failure
+│   │                             #   signature is actually reachable
+│   │                             #   via validated user input (latent
+│   │                             #   gap in the source paste).
 │   ├── provenance_corruption_detector_2026.py  # Sister to substrate_
 │   │                             #   validation_oracle (substrate ground
 │   │                             #   truth) and recency_bias_detector
@@ -1311,6 +1405,92 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/constraint_sensor_framework_2026.py` and
+  its concrete domain instance `calibration/vibration_constraint_
+  sensor_2026.py`. Together they form an input layer for
+  substrate-primary, spatial-mechanical, and proprioceptive
+  cognition: non-narrative observers (mechanics, drivers,
+  thermodynamic thinkers, dyslexic spatial cognitors) can
+  transmit constraint knowledge into language-based systems
+  without forced collapse into narrative.
+  constraint_sensor_framework_2026 is the GENERAL framework with
+  3 composable modules. (1) constraint_sensor_input: encode_
+  constraint(modality, state, location, indicates, conditions,
+  confidence, narrative_descriptor) builds a structured record
+  keyed on one of 14 registered modalities (vibration / thermal
+  / pressure / spatial_geometry / energy_flow / phase_transition
+  / harmonic / resistance / load_distribution / proprioceptive
+  / substrate_state / chemical_gradient / field_strength /
+  coherence_state); rejects unregistered modalities at the gate.
+  encode_constraint_chain builds coupled chains where the
+  cross-modality coupling IS the signal. (2) narrative_creep_
+  gate: 25 NARRATIVE_CREEP_PATTERNS regexes covering 6 creep
+  categories -- explanation injection ("that means", "this is
+  how", "essentially"), validation hierarchy reflex ("you're
+  right", "that's a great point", "exactly"), affective framing
+  ("what strikes me", "humbling and useful"), caveat injection
+  ("of course", "in some cases"), narrative continuation
+  ("where do you want to go", "shall we"), and system-level
+  inference creep ("the deeper insight"). detect_narrative_
+  creep returns density (matches/word_count) -> verdict ladder
+  CLEAN_CONSTRAINT_OUTPUT (0) / LOW (>0) / MODERATE (>0.02) /
+  HIGH (>0.05). (3) output_constraint_only: strip_narrative
+  removes 4 prefix patterns ("Yeah,", "I think", "That's
+  interesting", "Looking at") + 8 NARRATIVE_PHRASES_TO_STRIP
+  ("you know,", "the thing is", "what hits me is", "the
+  pattern you're hunting", "where this lands", etc); collapses
+  whitespace and orphan punctuation. output_constraint_only
+  gates on max_creep_density=0.02 default; returns dict with
+  pre/post density, action (STRIPPED / PASSED_THROUGH), and
+  audit trail.
+  vibration_constraint_sensor_2026 is the FIRST DOMAIN INSTANCE.
+  Encodes vibration knowledge with discrete-category controlled
+  vocabulary: 7 PITCH_CLASSES (very_low_rumble <30Hz, low_pulse
+  30-100Hz, low_mid 100-300Hz, mid 300-800Hz, high 800-2000Hz,
+  very_high_whine >2000Hz, ultrasonic_felt), 5 AMPLITUDE_
+  CLASSES, 9 PATTERN_CLASSES (steady / pulsed / chunk / warble
+  / harmonic_rich / load_dependent / speed_dependent /
+  temperature_dependent / intermittent_strong), 19 LOCATIONS
+  (steering_wheel through trailer_kingpin), 7 TRANSMISSION_
+  PATHS (through_hands_only / through_seat_only / ... /
+  whole_body / audible_only_no_tactile / tactile_only_no_
+  audible). VibrationObservation dataclass with validate()
+  method rejects off-vocabulary values. FAILURE_SIGNATURES
+  catalog has 10 seeded entries (wheel bearing L/R front,
+  u-joint / driveshaft, transmission bearing, gear whine, belt
+  slip, tire imbalance, trailer bearing, kingpin wear, tie rod
+  / ball joint). match_signature(obs) returns ranked candidates
+  with match_score = matched_fields / total_signature_fields.
+  build_observation(pitch, amplitude, pattern, where, path,
+  **conditions) is the terse operator builder.
+  Demo: low_pulse + speed_dependent + wheel_left_front +
+  through_hands_and_seat -> 100% match wheel_bearing_failing
+  left_front, 75% same mode right_front (correctly distinguishes
+  side via the location field), 50% tire_imbalance_or_separation,
+  33% transmission_gear_whine. The 25-point match-score gradient
+  prevents narrow-signature lock-in: an observation that doesn't
+  cleanly match the top entry still surfaces structurally similar
+  candidates the operator can verify.
+  CLEANUP DECISIONS during paste integration: (a) smart quotes
+  -> ASCII (the dominant contamination including smart
+  apostrophes inside regex patterns -- the `'?` optional-
+  apostrophe syntax only works with ASCII apostrophe);
+  (b) markdown bold-dunders **name** / **main** -> __name__ /
+  __main__; (c) removed embedded triple-backtick code fences
+  from inside function bodies; (d) markdown `1. 1. 1.`
+  numbered list (which renders as 1/2/3 in markdown but reads
+  as `1. 1. 1.` in source) -> proper `1. 2. 3.` numbering in
+  the docstring; (e) em-dash -> double-hyphen per ASCII
+  convention; (f) dropped unused `field` and `Tuple` imports
+  from vibration_constraint_sensor; (g) added "intermittent_
+  strong" to PATTERN_CLASSES in vibration_constraint_sensor
+  -- the source had it ONLY in AMPLITUDE_CLASSES but used it
+  as a pattern_class value in the FAILURE_SIGNATURES library
+  for the tie_rod_or_ball_joint_failure entry, so any user
+  reporting that pattern would be rejected by validate()
+  before the signature could match (latent gap fixed).
+  Both stdlib only; chat_paste_check passes; calibration test
+  suite (11 tests) still passes.
 - Added `calibration/provenance_corruption_detector_2026.py`:
   detector for the hallucination-amplification loop where AI
   outputs assert confidence without verifiable upstream
