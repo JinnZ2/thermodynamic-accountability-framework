@@ -226,6 +226,32 @@ thermodynamic-accountability-framework/
 │   │                             #   one lineage so the AI can surface
 │   │                             #   the convergence with others.
 │   │                             #   Sister to relational_ontology.py.
+│   ├── dark_ages_preservation.py  # Knowledge-extinction risk
+│   │                             #   classifier. Lessons from 300-1000
+│   │                             #   CE: Roman institutional knowledge
+│   │                             #   died with Roman institutions;
+│   │                             #   substrate-coupled knowledge
+│   │                             #   (oral / craft / indigenous)
+│   │                             #   survived. KnowledgeArtifact ->
+│   │                             #   ExtinctionRisk (LOW / MODERATE /
+│   │                             #   HIGH / CRITICAL / IMMINENT) +
+│   │                             #   recommended PreservationFormats
+│   │                             #   (open_source_code, distributed_
+│   │                             #   text, video_documentation,
+│   │                             #   apprenticeship_program, community_
+│   │                             #   practice, ai_training_corpus,
+│   │                             #   physical_artifact, landscape_
+│   │                             #   encoded). 7 KnowledgeCategory
+│   │                             #   types: EMBODIED, CRAFT, INDIGENOUS,
+│   │                             #   INSTITUTIONAL, PROPRIETARY,
+│   │                             #   OPEN_TECHNICAL, ORAL_TRADITION.
+│   │                             #   PROPRIETARY = highest extinction
+│   │                             #   risk by design (locked behind
+│   │                             #   walls, dies on collapse).
+│   │                             #   Pairs with institutional_mutation_
+│   │                             #   tracker.py (which institutions are
+│   │                             #   collapse-prone) and substrate_
+│   │                             #   audit.py.
 │   ├── institutional_mutation_tracker.py  # Real-time tracker of which
 │   │                             #   way an institution is mutating
 │   │                             #   under pressure: science (substrate-
@@ -1102,6 +1128,44 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/dark_ages_preservation.py`: knowledge-
+  extinction risk classifier. Frame: actual Dark Ages
+  (300-1000 CE) showed Roman institutional knowledge died
+  with Roman institutions while substrate-coupled knowledge
+  (oral tradition, craft skills, indigenous practices)
+  survived. The 1000-year recovery was caused by knowledge
+  HOARDING, not loss of capacity.
+  Module classifies any knowledge artifact via 7 enums:
+  KnowledgeCategory (EMBODIED, CRAFT, INDIGENOUS,
+  INSTITUTIONAL, PROPRIETARY, OPEN_TECHNICAL, ORAL_TRADITION),
+  ExtinctionRisk (LOW / MODERATE / HIGH / CRITICAL /
+  IMMINENT), PreservationFormat (8 formats: open_source_code,
+  distributed_text, video_documentation, apprenticeship_
+  program, community_practice, ai_training_corpus, physical_
+  artifact, landscape_encoded).
+  KnowledgeArtifact has 8 fields covering carrier count,
+  distribution outside institutions, substrate dependence,
+  open documentation, machine-readable form, cross-
+  generational transmission active, institutional dependency.
+  assess_extinction_risk() computes risk_score from these +
+  carrier count buckets (<10 / <100 / <1000); maps to enum.
+  recommend_preservation_formats() picks formats per category.
+  assess() returns PreservationAssessment with priority_score
+  in [0, 10] and reasoning notes.
+  Demo on 3 artifacts:
+  (1) Relational sensing (EMBODIED, no documentation, no
+      machine-readable form, no cross-generational transmission)
+      -> MODERATE risk, priority 4.
+  (2) Anishinaabe burning (INDIGENOUS, ~200 carriers, cross-
+      generational active) -> MODERATE risk, priority 4.
+  (3) Proprietary AI safety (PROPRIETARY, NDA, 50 carriers,
+      institutional_dependency=1.0) -> IMMINENT risk, priority
+      10. As designed -- proprietary knowledge has highest
+      extinction risk in the model.
+  Pairs with institutional_mutation_tracker.py (which
+  institutions are collapse-prone) and political_audit/
+  substrate_audit.py. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `calibration/institutional_mutation_tracker.py`:
   real-time tracker (vs the political_audit/ trio's one-time
   audits) for which way an institution is mutating under
