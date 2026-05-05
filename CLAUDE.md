@@ -809,6 +809,65 @@ thermodynamic-accountability-framework/
 │                                      #   compute investment + ground-
 │                                      #   truth availability collapses
 │                                      #   the "needs more time" excuse.
+│   └── multi_model_peer_review_2026.py  # AI-to-AI peer-review framework.
+│                                      #   Independent models with
+│                                      #   different training corpora,
+│                                      #   architectures, or vendors run
+│                                      #   the same forecast question;
+│                                      #   compare predictions for
+│                                      #   convergence/divergence; test
+│                                      #   all against ground truth.
+│                                      #   Replaces / complements human
+│                                      #   peer review with independent
+│                                      #   AI cross-validation.
+│                                      #   Companion to ai_economic_
+│                                      #   forecast_audit_2026 (per-
+│                                      #   forecast accuracy) and
+│                                      #   validation_timeline_audit_2026
+│                                      #   (timeline audit). 2 dataclasses
+│                                      #   (ModelPrediction, GroundTruth
+│                                      #   Point). 4 functions:
+│                                      #   convergence_metrics(predictions)
+│                                      #   computes mean / stdev / spread /
+│                                      #   coefficient_of_variation;
+│                                      #   verdict ladder STRONG_
+│                                      #   CONVERGENCE (cv<0.05) /
+│                                      #   MODERATE (<0.15) / WEAK (<0.30)
+│                                      #   / DIVERGENT_NO_CONSENSUS;
+│                                      #   accuracy_vs_ground_truth ranks
+│                                      #   models by accuracy_pct = 100 *
+│                                      #   (1 - |rel_err|), capped at 0;
+│                                      #   reports confidence_minus_
+│                                      #   accuracy_pct as the inflation
+│                                      #   measure; divergence_flags uses
+│                                      #   IQR fence (q3 + 1.5*IQR /
+│                                      #   q1 - 1.5*IQR) to flag HIGH_
+│                                      #   OUTLIER / LOW_OUTLIER models;
+│                                      #   peer_review aggregates with
+│                                      #   verdict ladder CONSENSUS_AND_
+│                                      #   VALIDATED (strong convergence
+│                                      #   + top accuracy>=70%) /
+│                                      #   CONSENSUS_BUT_FALSIFIED_BY_
+│                                      #   GROUND_TRUTH / CONSENSUS_
+│                                      #   AWAITING_GROUND_TRUTH /
+│                                      #   PARTIAL_CONSENSUS_REQUIRES_
+│                                      #   MORE_MODELS / FRAGMENTED_NO_
+│                                      #   CONSENSUS. Demo: 3 models on
+│                                      #   us_personal_bankruptcies_2025
+│                                      #   (300k / 320k / 380k vs actual
+│                                      #   450k); CV 0.125 -> MODERATE
+│                                      #   convergence; BLS-microdata-
+│                                      #   trained model both most
+│                                      #   accurate (84%) AND least
+│                                      #   overconfident (-12% inflation),
+│                                      #   open-web-trained model least
+│                                      #   accurate (67%) AND most
+│                                      #   overconfident (+18% inflation)
+│                                      #   -- training-data quality
+│                                      #   tracks with both accuracy and
+│                                      #   confidence calibration.
+│                                      #   Verdict: PARTIAL_CONSENSUS_
+│                                      #   REQUIRES_MORE_MODELS.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -1613,6 +1672,75 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/multi_model_peer_review_2026.py`:
+  AI-to-AI peer review framework. Companion to ai_economic_
+  forecast_audit_2026 (per-forecast accuracy + bias-direction
+  audit) and validation_timeline_audit_2026 (validation
+  timeline audit). The peer-review angle: independent models
+  with DIFFERENT training corpora, architectures, or vendors
+  run the same forecast question; agreement among
+  substrate-grounded independent models is a stronger signal
+  than agreement among institutional peers (which reproduces
+  shared incentive bias). Replaces / complements traditional
+  human peer review with AI cross-validation.
+  Module surface: 2 dataclasses (ModelPrediction with
+  model_id / training_corpus_label / architecture_class /
+  predicted_value / stated_confidence_pct / prediction_date;
+  GroundTruthPoint with target_variable / actual_value /
+  measurement_source / measurement_date) + 4 functions.
+  convergence_metrics(predictions) computes mean / stdev /
+  spread / coefficient_of_variation = stdev / max(|mean|,
+  1e-9); 4-class verdict ladder STRONG_CONVERGENCE
+  (cv<0.05) > MODERATE (<0.15) > WEAK (<0.30) >
+  DIVERGENT_NO_CONSENSUS. accuracy_vs_ground_truth(predictions,
+  gt) computes accuracy_pct = max(0, 100 * (1 - |rel_err|))
+  per model and ranks; reports confidence_minus_accuracy_pct
+  as the inflation/calibration measure (positive = overclaim,
+  negative = underclaim). divergence_flags(predictions) uses
+  IQR-fence rule (q3 + 1.5*IQR upper, q1 - 1.5*IQR lower) to
+  surface HIGH_OUTLIER and LOW_OUTLIER models -- requires
+  >=3 predictions to compute quartiles. peer_review(predictions,
+  ground_truth=None) aggregates into 5-class verdict ladder:
+  CONSENSUS_AND_VALIDATED (strong convergence + top accuracy
+  >= 70%) / CONSENSUS_BUT_FALSIFIED_BY_GROUND_TRUTH /
+  CONSENSUS_AWAITING_GROUND_TRUTH (no gt provided) /
+  PARTIAL_CONSENSUS_REQUIRES_MORE_MODELS (moderate or weak
+  convergence) / FRAGMENTED_NO_CONSENSUS (cv>=0.30).
+  Demo: 3 models predict us_personal_bankruptcies_2025
+  -- model_A (open_web_2020 / transformer_LLM, 300k, claimed
+  85% confidence), model_B (financial_news_2021 / tabular_
+  GBM, 320k, 78%), model_C (bls_microdata_2020 / ensemble
+  with linear baseline, 380k, 72%); actual 450k. Convergence
+  CV 0.1249 -> MODERATE_CONVERGENCE; no drift outliers.
+  Per-model accuracy: model_C 84.44% (claimed 72% ->
+  inflation -12.44%, the only well-calibrated model); model_B
+  71.11% (claimed 78% -> +6.89%); model_A 66.67% (claimed
+  85% -> +18.33%). The substrate-trained model (BLS
+  microdata) is BOTH the most accurate AND the only one
+  whose accuracy exceeds its stated confidence -- training-
+  data quality tracks with confidence calibration as well as
+  accuracy. Verdict PARTIAL_CONSENSUS_REQUIRES_MORE_MODELS,
+  consistent with the consensus being biased low (all 3
+  predicted below actual; the higher-confidence model_C is
+  closer to truth, suggesting the lower-prediction consensus
+  is the bias direction).
+  CLEANUP DECISIONS during paste integration: (a) smart
+  quotes -> ASCII; (b) markdown bold-dunders **name** /
+  **main** -> __name__ / __main__; (c) em-dash -> double-
+  hyphen in docstring + demo print; (d) dropped unused
+  imports (asdict and field from dataclasses); (e) renamed
+  internal variable from `iqr` (which held the quartile
+  cut points list, not the IQR scalar) to `quartiles` for
+  readability -- preserved the subsequent `iqr_range = q3
+  - q1` semantics exactly; (f) added "(none)" fallback
+  print line in the demo when drift_flags is empty so the
+  output is not visually ambiguous; (g) preserved the
+  output-key name "absolute_error" in
+  accuracy_vs_ground_truth even though the value is signed
+  (actual - predicted) -- content-level naming, not paste
+  contamination, left for user adjustment if intentional.
+  Pure stdlib; chat_paste_check passes; calibration test
+  suite (11 tests) still passes.
 - Added `political_audit/validation_timeline_audit_2026.py`:
   companion to ai_economic_forecast_audit_2026 (which scores
   forecast accuracy against substrate ground truth). This module
