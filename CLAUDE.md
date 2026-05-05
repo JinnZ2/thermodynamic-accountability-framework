@@ -354,6 +354,75 @@ thermodynamic-accountability-framework/
 │   │                             #   signature is actually reachable
 │   │                             #   via validated user input (latent
 │   │                             #   gap in the source paste).
+│   ├── visual_ecosystem_constraint_sensor_2026.py  # Second domain
+│   │                             #   instance of constraint_sensor_
+│   │                             #   framework (sister to vibration_
+│   │                             #   constraint_sensor). Encodes
+│   │                             #   direct visual ecosystem
+│   │                             #   observations as constraint
+│   │                             #   specifications without narrative
+│   │                             #   translation. Operator passes
+│   │                             #   color palette / growth stage /
+│   │                             #   fragility / spatial distribution
+│   │                             #   / disturbance markers / predator
+│   │                             #   presence / topographic context.
+│   │                             #   Controlled vocabulary: 8 COLOR_
+│   │                             #   SIGNATURES (green_full_saturation
+│   │                             #   through mottled_uneven), 9
+│   │                             #   GROWTH_STAGES (dormant through
+│   │                             #   senescing), 7 FRAGILITY_CLASSES
+│   │                             #   (robust through skeletal_remains),
+│   │                             #   8 SPATIAL_PATTERNS (uniform,
+│   │                             #   gradient_topographic, gradient_
+│   │                             #   road_proximity, gradient_water_
+│   │                             #   proximity, patchy_random,
+│   │                             #   patchy_correlated_with_
+│   │                             #   disturbance, edge_effect_only,
+│   │                             #   trail_aligned), 13 DISTURBANCE_
+│   │                             #   MARKERS (vehicle tracks, novel
+│   │                             #   structures, fire, flood,
+│   │                             #   chemical spill, compaction), 7
+│   │                             #   PREDATOR_PRESENCE classes incl.
+│   │                             #   absent_should_be_present (the
+│   │                             #   ecologically-loaded category), 6
+│   │                             #   CASCADE_CLASSIFICATIONS
+│   │                             #   (stable -> transient_lag ->
+│   │                             #   moderate_disruption ->
+│   │                             #   degradation_partial_permanent ->
+│   │                             #   collapse_threshold_approached ->
+│   │                             #   collapse_in_progress).
+│   │                             #   VisualEcosystemObservation
+│   │                             #   dataclass with validate() rejects
+│   │                             #   off-vocabulary values. CONSTRAINT_
+│   │                             #   SIGNATURES catalog (7 entries)
+│   │                             #   covers predator-corridor
+│   │                             #   disruption by novel structure,
+│   │                             #   winter dormancy vs chronic
+│   │                             #   collapse, road runoff stress,
+│   │                             #   fire recovery phase, herbivore
+│   │                             #   overload + predator absent,
+│   │                             #   hydrological stress, trail-
+│   │                             #   concentrated corridor. Each
+│   │                             #   entry returns constraint_
+│   │                             #   violation + cascade_class +
+│   │                             #   recalibration_window + missing_
+│   │                             #   function + permanent_damage_risk.
+│   │                             #   match_constraint() ranks
+│   │                             #   candidates by matched_fields/
+│   │                             #   total_signature_fields. rule_
+│   │                             #   out_salt_runoff and rule_out_
+│   │                             #   hydrology eliminate gradient-
+│   │                             #   driven causes (returns
+│   │                             #   (ruled_out, reason)) so the
+│   │                             #   observer can foreground the
+│   │                             #   constraint that remains. CLEANUP
+│   │                             #   NOTE: source had `from typing
+│   │                             #   import Tuple` AT THE BOTTOM,
+│   │                             #   after the rule_out_* functions
+│   │                             #   whose return annotations
+│   │                             #   reference Tuple -- that fails at
+│   │                             #   module load. Moved import to
+│   │                             #   top.
 │   ├── provenance_corruption_detector_2026.py  # Sister to substrate_
 │   │                             #   validation_oracle (substrate ground
 │   │                             #   truth) and recency_bias_detector
@@ -1405,6 +1474,101 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/visual_ecosystem_constraint_sensor_2026.py`:
+  second domain instance of constraint_sensor_framework_2026,
+  sister to vibration_constraint_sensor_2026. Encodes direct
+  visual ecosystem observations (color, growth stage, fragility,
+  spatial pattern, disturbance markers, predator presence) as
+  constraint specifications without narrative translation.
+  Use case: roadside / trail-side observer notes pale gray
+  shrubs with green tips, fragile breakage visible, no raptors
+  on perches that should be active, recent unoccupied RV
+  upslope -- and feeds those facts directly to a system that
+  matches against constraint signatures and returns cascade-
+  risk classification.
+  Module surface: 8 COLOR_SIGNATURES (green_full_saturation,
+  green_pale, gray_dominant, gray_with_green_tips, yellow_
+  chlorotic, brown_dieback, red_purple_anthocyanin, mottled_
+  uneven), 9 GROWTH_STAGES (dormant through senescing +
+  no_growth_expected_for_season), 7 FRAGILITY_CLASSES (robust
+  through skeletal_remains, including partially_consumed for
+  active herbivory signature), 8 SPATIAL_PATTERNS (uniform,
+  gradient_topographic, gradient_road_proximity, gradient_
+  water_proximity, patchy_random, patchy_correlated_with_
+  disturbance, edge_effect_only, trail_aligned), 13
+  DISTURBANCE_MARKERS (vehicle tracks recent/old, structure
+  new_unoccupied/active/old, construction, logging, fire
+  recent/old, flooding, chemical spill, compaction), 7
+  PREDATOR_PRESENCE classes (active_birds_visible, raptor_
+  perches_used, scat_or_tracks_present, calls_audible,
+  no_visible_activity, absent_should_be_present, unknown_not_
+  assessed) -- the absent_should_be_present category is
+  ecologically loaded; the observer is asserting both an
+  expectation and an absence, which is what makes it a
+  constraint signal rather than just an absence record.
+  6-class CASCADE_CLASSIFICATIONS ladder: stable_no_cascade,
+  transient_lag_recalibration_expected, moderate_disruption_
+  recovery_likely, degradation_partial_permanent, collapse_
+  threshold_approached, collapse_in_progress.
+  VisualEcosystemObservation dataclass with validate() runs the
+  6 vocabulary gates (rejects off-vocabulary values) before
+  matching. CONSTRAINT_SIGNATURES catalog seeded with 7 entries:
+  (1) predator_corridor_disrupted_by_novel_structure (5-field
+  signature on gray-tipped + budding + fragile + predator
+  absent + new unoccupied structure -> transient_lag,
+  weeks_to_months recalibration); (2) winter_dormancy_or_
+  chronic_collapse (4-field, deliberately ambiguous between
+  seasonal + collapse signatures); (3) road_runoff_chemical_
+  or_salt_stress (3-field on chlorotic + wilting + road
+  proximity gradient -> degradation_partial_permanent); (4)
+  fire_damage_recovery_phase; (5) herbivore_overload_predator_
+  absent (3-field on mottled + partially_consumed + predators
+  absent); (6) hydrological_stress; (7) predator_or_
+  pollinator_corridor_concentrated_to_trail_only. Each entry
+  returns constraint_violation + cascade_class +
+  recalibration_window + missing_function + permanent_damage_
+  risk. match_constraint(obs) ranks by matched_fields /
+  total_signature_fields. Two rule-out functions eliminate
+  gradient-driven causes so the constraint that REMAINS is
+  the one foregrounded: rule_out_salt_runoff returns True
+  when elevated_above_road_runoff is True (excludes salt
+  path) or False when spatial_pattern matches gradient_road_
+  proximity (consistent with road chemistry); rule_out_
+  hydrology returns True when spatial_pattern is patchy_
+  correlated_with_disturbance or trail_aligned (inconsistent
+  with uniform hydrology). Both functions return
+  (ruled_out, reason).
+  Demo: gray_with_green_tips + bud_starting + fragile_
+  visible_breakage + trail_aligned + structure_new_
+  unoccupied + absent_should_be_present, elevated_above_
+  road_runoff=True. Rule-outs: salt RULED OUT (elevated
+  above road runoff), hydrology RULED OUT (trail-aligned
+  pattern inconsistent with uniform hydrology). Constraint
+  matches: TWO 100% matches surface simultaneously --
+  predator_corridor_disrupted_by_novel_structure (5/5
+  fields) AND predator_or_pollinator_corridor_concentrated_
+  to_trail_only (3/3 fields). Both transient_lag class. The
+  two matches point at distinct but co-occurring mechanisms
+  (novel structure disrupts the corridor; trail concentrates
+  what's left); both can be true at once. The library is
+  designed so partial-match scores below 100% surface
+  structurally similar candidates the observer can verify or
+  rule out.
+  CLEANUP DECISIONS during paste integration: (a) smart
+  quotes -> ASCII; (b) markdown bold-dunders **name** /
+  **main** -> __name__ / __main__; (c) em-dash -> double-
+  hyphen; (d) markdown `- ` indented bullet list -> proper
+  ASCII bullet list with 2-space indent in docstring;
+  (e) dropped unused `field` import from dataclasses;
+  (f) LATENT BUG FIX: source had `from typing import Tuple`
+  AT THE BOTTOM of the module, AFTER the rule_out_* functions
+  whose return annotations reference Tuple. Python evaluates
+  return-type annotations at function-definition time (no
+  `from __future__ import annotations` was in the source),
+  so this would NameError at module load. Moved Tuple import
+  to the top alongside Dict / List / Optional.
+  Pure stdlib; chat_paste_check passes; calibration test
+  suite (11 tests) still passes.
 - Added `calibration/constraint_sensor_framework_2026.py` and
   its concrete domain instance `calibration/vibration_constraint_
   sensor_2026.py`. Together they form an input layer for
