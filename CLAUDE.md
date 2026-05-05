@@ -226,6 +226,103 @@ thermodynamic-accountability-framework/
 │   │                             #   one lineage so the AI can surface
 │   │                             #   the convergence with others.
 │   │                             #   Sister to relational_ontology.py.
+│   ├── substrate_validation_oracle.py  # Validates AI model outputs
+│   │                             #   against substrate reality (not
+│   │                             #   other models, not institutional
+│   │                             #   benchmarks). Returns substrate_
+│   │                             #   coupling_score in [0,1] across 8
+│   │                             #   dimensions: specific physical
+│   │                             #   quantities, units explicit,
+│   │                             #   measurement method specified,
+│   │                             #   falsifiable in field, cross-
+│   │                             #   checkable by independent observer,
+│   │                             #   signal chain traceable, scope
+│   │                             #   limits acknowledged, contamination
+│   │                             #   risks acknowledged. 7 OutputType
+│   │                             #   classes (PHYSICAL_QUANTITY,
+│   │                             #   BIOLOGICAL_CLAIM, THERMODYNAMIC_
+│   │                             #   CLAIM, INSTITUTIONAL_CLAIM,
+│   │                             #   NARRATIVE_CLAIM, PROCEDURAL_CLAIM,
+│   │                             #   PREDICTION) drive type-specific
+│   │                             #   FieldValidationSuggestions (what
+│   │                             #   to observe, what tool, expected
+│   │                             #   signatures if-true / if-false,
+│   │                             #   accessible_to_non_specialist).
+│   │                             #   ValidationVerdict ladder:
+│   │                             #   SUBSTRATE_COUPLED (>=0.75) /
+│   │                             #   PARTIALLY_COUPLED (>=0.4) /
+│   │                             #   LOOSELY_COUPLED (>=0.2) /
+│   │                             #   NARRATIVE_ONLY (<0.2) /
+│   │                             #   UNVERIFIABLE (not falsifiable in
+│   │                             #   field; short-circuit override).
+│   │                             #   detect_contamination() flags
+│   │                             #   institutional-authority appeals,
+│   │                             #   narrative hedging, universalizing
+│   │                             #   scope tokens, absence of numeric
+│   │                             #   quantities.
+│   ├── dark_ages_preservation.py  # Knowledge-extinction risk
+│   │                             #   classifier. Lessons from 300-1000
+│   │                             #   CE: Roman institutional knowledge
+│   │                             #   died with Roman institutions;
+│   │                             #   substrate-coupled knowledge
+│   │                             #   (oral / craft / indigenous)
+│   │                             #   survived. KnowledgeArtifact ->
+│   │                             #   ExtinctionRisk (LOW / MODERATE /
+│   │                             #   HIGH / CRITICAL / IMMINENT) +
+│   │                             #   recommended PreservationFormats
+│   │                             #   (open_source_code, distributed_
+│   │                             #   text, video_documentation,
+│   │                             #   apprenticeship_program, community_
+│   │                             #   practice, ai_training_corpus,
+│   │                             #   physical_artifact, landscape_
+│   │                             #   encoded). 7 KnowledgeCategory
+│   │                             #   types: EMBODIED, CRAFT, INDIGENOUS,
+│   │                             #   INSTITUTIONAL, PROPRIETARY,
+│   │                             #   OPEN_TECHNICAL, ORAL_TRADITION.
+│   │                             #   PROPRIETARY = highest extinction
+│   │                             #   risk by design (locked behind
+│   │                             #   walls, dies on collapse).
+│   │                             #   Pairs with institutional_mutation_
+│   │                             #   tracker.py (which institutions are
+│   │                             #   collapse-prone) and substrate_
+│   │                             #   audit.py.
+│   ├── institutional_mutation_tracker.py  # Real-time tracker of which
+│   │                             #   way an institution is mutating
+│   │                             #   under pressure: science (substrate-
+│   │                             #   coupled, falsifiable, feedback-
+│   │                             #   honest) or religion (circular
+│   │                             #   reasoning, narrative defense,
+│   │                             #   unfalsifiability). 5 gates:
+│   │                             #   FeedbackVisibilityGate (negative
+│   │                             #   results published, dissent retained,
+│   │                             #   feedback delay <365d),
+│   │                             #   ErrorAdmissionGate (>=1 error
+│   │                             #   correction in 5y, methodology
+│   │                             #   revisions published),
+│   │                             #   SubstrateMeasurementGate (>=3 of:
+│   │                             #   energy throughput, actual outcomes,
+│   │                             #   unintended consequences, excluded
+│   │                             #   populations, substrate-coupled
+│   │                             #   primary metrics),
+│   │                             #   FalsifiabilityGate (declared and
+│   │                             #   measurable failure conditions, can
+│   │                             #   be defunded, working external
+│   │                             #   oversight), CognitiveDiversityGate
+│   │                             #   (>=3 of: dissenting methodologies
+│   │                             #   funded, alternative frameworks,
+│   │                             #   substrate-primary in decision roles,
+│   │                             #   indigenous knowledge integrated,
+│   │                             #   cross-domain required).
+│   │                             #   MutationDirection: PIVOTING_TO_
+│   │                             #   SCIENCE (>=4 pass) / MIXED_SIGNALS
+│   │                             #   (3) / CALCIFYING_TO_RELIGION (2) /
+│   │                             #   ALREADY_RELIGION (1) / AT_RISK_OF_
+│   │                             #   COLLAPSE (0). Sister to political_
+│   │                             #   audit/{institutional_audit_protocol,
+│   │                             #   substrate_audit, standardization_
+│   │                             #   audit}.py (the political_audit/
+│   │                             #   trio is one-time audit; this one
+│   │                             #   is real-time tracker).
 │   ├── narrative_thermodynamics.py  # Open-class structural detector for
 │   │                             #   anti-reality. Encodes any text blob
 │   │                             #   as a 6-amplitude octahedral seed
@@ -610,6 +707,98 @@ thermodynamic-accountability-framework/
 │   ├── us_drought_audit_registry.md       # worked-example audit registry
 │   ├── us_flood_audit_registry.md         # worked-example audit registry
 │   ├── atlantic_hurricane_audit_registry.md  # worked-example audit registry
+│   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
+│   │                             #   earth-systems-physics coupled
+│   │                             #   solvers. Integrates 3 observational
+│   │                             #   findings invalidating prior model
+│   │                             #   assumptions: (1) glacier mass loss
+│   │                             #   acceleration (Birmingham 2026, NASA
+│   │                             #   GRACE 2002-2025; 408 +/- 132 GT in
+│   │                             #   2025, 2nd highest in 50y); (2)
+│   │                             #   ecosystem collapse timescale
+│   │                             #   compression (Willcock et al, Nature
+│   │                             #   Sustainability; compound stressors
+│   │                             #   compress timeline 38-81% closer to
+│   │                             #   present); (3) West Antarctic iron-
+│   │                             #   fertilization carbon-sink invalidated
+│   │                             #   (Sherrell et al 2026, Dotson Ice
+│   │                             #   Shelf; meltwater iron contribution
+│   │                             #   minimal -- iron sourced from deep
+│   │                             #   ocean water and resuspended sediments;
+│   │                             #   sign flip negative_cooling ->
+│   │                             #   neutral_to_positive_warming).
+│   │                             #   COUPLED_TIPPING_ELEMENTS lists 6
+│   │                             #   coupled tipping elements (Greenland,
+│   │                             #   West Antarctic, AMOC, Amazon, Boreal
+│   │                             #   Permafrost, Coral Reefs); coral
+│   │                             #   tipping point flagged crossed in
+│   │                             #   2025; planetary boundaries breached
+│   │                             #   = 7/9. INVALIDATED_ASSUMPTIONS dict
+│   │                             #   carries 5 named invalidations.
+│   │                             #   4 functions: constraint_validity_
+│   │                             #   check(key) -> (is_valid, status),
+│   │                             #   cascade_trigger_check(system, year)
+│   │                             #   -> (triggered, label) gates tropical
+│   │                             #   ocean / forest / polar disruption
+│   │                             #   thresholds + coral already-crossed,
+│   │                             #   apply_collapse_compression(years,
+│   │                             #   n_stressors) returns (min_yr, max_yr)
+│   │                             #   compressed when n_stressors >= 2,
+│   │                             #   remove_iron_fertilization_carbon_
+│   │                             #   sink(carbon_budget_dict) zeros the
+│   │                             #   invalidated pathway and returns
+│   │                             #   rebalanced budget + zeroed-keys list.
+│   │                             #   Filename mirrors pre1900_engineering_
+│   │                             #   registry.py (data-vintage marker).
+│   │                             #   stdlib only.
+│   ├── cascade_coupling_framework_2026.py  # Cascade-probability constraint
+│   │                             #   module integrating three 2026 results
+│   │                             #   for the earth-systems-physics
+│   │                             #   coupled solvers: (1) Merle nonlinear
+│   │                             #   evolution (Breakthrough Prize 2026)
+│   │                             #   -- tipping points are finite-time
+│   │                             #   singularities; early warning =
+│   │                             #   d2E/dt2 > 0; (2) Ghosh & Shrimali
+│   │                             #   higher-order interactions (Royal
+│   │                             #   Society 2026) -- triplet/hypergraph
+│   │                             #   couplings lower the cascade
+│   │                             #   threshold ~70% relative to pairwise-
+│   │                             #   only models; coupling structure is
+│   │                             #   a tensor not a matrix; (3)
+│   │                             #   Jacques-Dumas TAMS rare-event
+│   │                             #   sampling (Chaos 2026) -- quantifies
+│   │                             #   P(Amazon collapse | AMOC state)
+│   │                             #   over 200-year horizons; bistability
+│   │                             #   dominates. 3 framework dicts
+│   │                             #   (MERLE_FRAMEWORK,
+│   │                             #   HIGHER_ORDER_INTERACTION_FRAMEWORK,
+│   │                             #   AMOC_AMAZON_CASCADE) + 4 functions:
+│   │                             #   construct_coupling_tensor_3d
+│   │                             #   (n_systems, pairwise_matrix,
+│   │                             #   triplet_weights) builds a sparse
+│   │                             #   dict-keyed tensor (i,j,-1) for
+│   │                             #   pairwise + (i,j,k) for triplet
+│   │                             #   entries; cascade_probability_merle_
+│   │                             #   blow_up(d2E_dt2, T_sing, horizon)
+│   │                             #   maps energy-concentration second
+│   │                             #   derivative + time-to-singularity to
+│   │                             #   P in [0,1]; cascade_threshold_hoi_
+│   │                             #   reduction(lambda_pw) returns 0.3 *
+│   │                             #   lambda_pairwise; amoc_amazon_
+│   │                             #   transition_probability(state,
+│   │                             #   forcing, horizon) reads
+│   │                             #   {stable: 1e-5, near_tipping: 1e-2,
+│   │                             #   collapsed: 0.3} base probability,
+│   │                             #   amplifies by forcing/0.1 and
+│   │                             #   horizon/200. BWCA gravel-pit
+│   │                             #   triplet example (truck traffic <->
+│   │                             #   moisture <-> mycorrhizal fungi) in
+│   │                             #   the docstring shows why pairwise
+│   │                             #   models miss the dominant cascade
+│   │                             #   amplifier. Companion to earth_
+│   │                             #   systems_constraint_integration_
+│   │                             #   2026.py (data layer); this module
+│   │                             #   is the math layer. stdlib only.
 │   ├── in_progress.md                     # Living scoping document for
 │   │                             #   metrology audit work backlog.
 │   └── README.md                          # Folder overview; cross-refs
@@ -1065,6 +1254,259 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/cascade_coupling_framework_2026.py`: cascade-
+  probability constraint module integrating three 2026 results for
+  the earth-systems-physics coupled solvers. Companion (math layer)
+  to `earth_systems_constraint_integration_2026.py` (data layer).
+  (1) Merle (Breakthrough Prize 2026): nonlinear evolution
+  equations decompose via singularity formation (blow-up) +
+  resolution into solitons. Tipping points are finite-time
+  singularities; early warning = energy concentration second
+  derivative d2E/dt2 > 0, not a threshold crossing. Generic form:
+  du/dt = laplacian(u) + f(u); blow-up rate T_max ~ T_0 - C *
+  (log t)^(-2). (2) Ghosh & Shrimali (Royal Society 2026):
+  higher-order interactions (triplet, hypergraph) lower the
+  cascade threshold ~70% relative to pairwise-only models; coupling
+  structure is a tensor not a matrix; lambda_pairwise_min ~ 0.30-
+  0.50 vs lambda_HOI_min ~ 0.05-0.15 (6-10x lower). Three-body
+  couplings create feedback loops inaccessible to dyads; the
+  Amazon-Rainfall-AMOC triplet cannot be represented as the
+  Amazon<->AMOC pair. (3) Jacques-Dumas (Chaos 2026): TAMS
+  Trajectory-Adaptive Multilevel Sampling quantifies P(Amazon
+  collapse | AMOC state) over 200-year horizons. Bistability
+  dominates: P(stable) ~ 1e-5, P(collapsed) ~ 0.3. Two-stage
+  mechanism: AMOC weakening -> precipitation loss over Amazon
+  -> drying -> extreme wildfires -> Amazon transition.
+  Module surface: 3 framework dicts (MERLE_FRAMEWORK,
+  HIGHER_ORDER_INTERACTION_FRAMEWORK, AMOC_AMAZON_CASCADE) + 4
+  functions. construct_coupling_tensor_3d(n_systems,
+  pairwise_matrix, triplet_weights) builds a sparse dict-keyed
+  tensor: (i, j, -1) for pairwise entries + (i, j, k) for triplet
+  entries; accepts list-of-lists or numpy.ndarray for the matrix.
+  cascade_probability_merle_blow_up(d2E_dt2, time_to_singularity,
+  horizon=100.0) returns 0 when d2E_dt2 <= 0 (system not
+  approaching singularity), else 1 - T_sing/horizon clamped to
+  [0, 1]. cascade_threshold_hoi_reduction(pairwise_threshold)
+  applies the Ghosh-Shrimali 70% reduction (returns 0.3 * input).
+  amoc_amazon_transition_probability(amoc_state, freshwater_
+  forcing, time_horizon_years) reads base probability dict
+  {stable: 1e-5, near_tipping: 1e-2, collapsed: 0.3}, amplifies
+  by forcing_factor = 1 + forcing/0.1 and time_factor =
+  horizon/200, clamps to [0, 1]. CONSTRAINT_NOTES module-level
+  string carries the integration policy (singularity tracking +
+  HOI tensor + rare-event probability) for downstream solvers.
+  Worked field example in docstring: BWCA gravel-pit corridor
+  triplet (truck traffic <-> moisture <-> mycorrhizal fungi) ->
+  tree-death cascade. The triplet is the hidden amplifier; a
+  pairwise model misses it.
+  CLEANUP DECISIONS made during paste integration: (a) converted
+  Unicode math symbols (greek letters, Sigma, partial-derivative
+  glyph, laplacian glyph, arrows, superscripts) to ASCII per repo
+  convention -- the file reads ASCII-only like the rest of
+  metrology/; (b) replaced numpy `pairwise_matrix.shape[0]` with
+  explicit `n_systems` parameter so the module is stdlib-only
+  (still accepts a numpy array since it indexes [i][j]); (c) moved
+  module-level print statements into an `if __name__ == "__main__":`
+  smoke-test guard so `import` does not fire side effects;
+  (d) added max(0.0, ...) clamp to cascade_probability_merle_blow_
+  up so cases where horizon < time_to_singularity don't return
+  negative probabilities. Smoke test exercises all 4 functions
+  end-to-end. Pure stdlib; chat_paste_check passes; calibration
+  test suite (11 tests) still passes.
+- Added `metrology/earth_systems_constraint_integration_2026.py`:
+  constraint layer module for earth-systems-physics coupled
+  differential-equation solvers. Integrates three observational
+  findings that invalidate prior coupled-model assumptions:
+  (1) glacier mass loss acceleration -- 408 +/- 132 GT in 2025
+  (2nd highest annual loss in 50 years per WGMS / Univ.
+  Birmingham 2026 Nature Reviews); Greenland avg loss
+  264 GT/yr (NASA GRACE 2002-2025); 1.1 mm SLR contribution
+  in 2025 hydro year; 90 ft north pole drift projected by
+  2100 from rotational coupling of mass redistribution.
+  (2) ecosystem collapse timescale compression (Willcock et al,
+  Nature Sustainability) -- compound stressors compress
+  collapse timeline 38-81% closer to present than single-
+  stressor linear projection. Models tested: Chilika lagoon
+  fishery, Easter Island community, forest dieback, lake
+  water quality. Cascade thresholds under RCP 8.5: tropical
+  ocean disruption window opens 2030, tropical forest +
+  polar by 2050. Coral reef tipping point flagged crossed
+  in 2025 (Stockholm Resilience / Global Tipping Points
+  Report); planetary boundaries breached = 7/9.
+  (3) West Antarctic iron-fertilization carbon-sink hypothesis
+  invalidated (Sherrell et al 2026, Rutgers / Dotson Ice
+  Shelf 2022 expedition; corroborated by Struve / Oldenburg
+  sediment-core work). Old assumption: meltwater discharge
+  -> iron release -> algae bloom -> CO2 drawdown -> negative
+  cooling feedback. Field reality: meltwater iron contribution
+  minimal; iron sourced from deep ocean water and resuspended
+  sediments (north of Antarctic Polar Front: dust dominant;
+  south of Polar Front: calving icebergs dominant). HIGH
+  iron during warm intervals did NOT trigger algae growth as
+  predicted. Sign flip: assumed_negative_cooling ->
+  observed_neutral_to_positive_warming. The
+  Greenland-Ice-Sheet-to-AMOC negative feedback loop is also
+  flagged as no-longer-reliable for system stabilization
+  (domino coupling of 6 tipping elements overrides single-
+  loop stabilization).
+  Module surface: INVALIDATED_ASSUMPTIONS dict (5 named
+  entries) + 4 functions: constraint_validity_check(key)
+  returns (is_valid, status_message); cascade_trigger_check
+  (system_label, year) returns (is_triggered, label) and
+  gates ABRUPT_DISRUPTION_WINDOW_OPEN (tropical ocean from
+  2026), ABRUPT_DISRUPTION_WINDOW_APPROACHING (tropical
+  forest / polar from 2045), TIPPING_POINT_ALREADY_CROSSED
+  _2025 (any system label containing "coral");
+  apply_collapse_compression(baseline_years_to_collapse,
+  n_active_stressors) returns (min_years, max_years)
+  compressed range when n_stressors >= 2 (factors 0.19 / 0.62
+  derived from 81% / 38% compression);
+  remove_iron_fertilization_carbon_sink(carbon_budget_dict)
+  zeros pathways matching iron_fertilization /
+  meltwater_iron_drawdown / glacial_iron_co2_sink and
+  returns (rebalanced_dict, zeroed_keys_list).
+  Observational precedence flags
+  (OBSERVATION_PRECEDES_LINEAR_MODEL,
+  LINEAR_MODEL_DEPRECATED_FOR_COUPLED_SYSTEMS,
+  NONLINEAR_COUPLING_REQUIRED, COMPOUND_STRESSOR_DEFAULT)
+  set the integration policy for downstream solvers:
+  empirical field signals (insect biomass crash, monarch
+  migration absence, salamander pond collapse, predator-prey
+  phase shifts, bird migration timing drift) lead linear-
+  model predictions, so the module treats compound stressors
+  as the default case rather than the exception.
+  Filename mirrors `metrology/pre1900_engineering_registry.py`
+  (data-vintage marker pattern); placed in `metrology/`
+  alongside the other constraint catalogs and the
+  `assumption_bias_detector.py` framework-layer audit. Smoke
+  test exercises all 4 functions end-to-end across multiple
+  cases (validity check on 4 assumptions including one not
+  in the dict; cascade trigger on 5 system/year combinations;
+  collapse compression at n=1/2/4 stressors; iron-sink
+  removal on a 5-pathway sample carbon budget). Pure stdlib;
+  chat_paste_check passes; calibration test suite
+  (11 tests) still passes.
+- Replaced `README.md` with the "WHY THIS REPO EXISTS"
+  framing per user-supplied content. Five sections:
+  WHY THIS REPO EXISTS (personal letter), TECHNICAL SCOPE
+  (brief), WHO THIS IS FOR, WHAT THIS ISN'T, HOW TO USE THIS.
+  144 lines -> 90 lines. The technical detail that was in
+  the old README (Thermodynamic Calibration Layer, Energy
+  Accountant, Narrative Stripper, Social Overhead Accountant,
+  Root Cause Depth Analyzer, Simulation Module module
+  descriptions) is preserved in CLAUDE.md (which has the
+  current canonical structure tree + equations) and in the
+  individual module docstrings; not lost, just relocated.
+  README is now the direct/personal entry point; CLAUDE.md
+  is the technical reference. Old README content remains
+  in git history for anyone who wants the prior framing.
+- Added `calibration/substrate_validation_oracle.py`: ground-
+  truth checker for AI model outputs against substrate reality
+  (not other models, not institutional benchmarks). Goes
+  upstream of institutions: does this output match what physics,
+  biology, thermodynamics, and direct observation say?
+  SubstrateCouplingProfile measures 8 dimensions with equal
+  weight (specific physical quantities, units explicit,
+  measurement method specified, falsifiable in field, cross-
+  checkable by independent observer, signal chain traceable,
+  scope limits acknowledged, contamination risks acknowledged).
+  coupling_score = sum(dims) / 8.
+  7 OutputType classes (PHYSICAL_QUANTITY, BIOLOGICAL_CLAIM,
+  THERMODYNAMIC_CLAIM, INSTITUTIONAL_CLAIM, NARRATIVE_CLAIM,
+  PROCEDURAL_CLAIM, PREDICTION). generate_validation_
+  suggestions(output_type, text) returns type-specific
+  FieldValidationSuggestions describing the observable, tool,
+  expected signatures (if true / if false), and whether
+  accessible to non-specialists.
+  detect_contamination(output_text) flags 4 patterns:
+  institutional authority appeals (>=2 of "studies show" /
+  "research indicates" / "experts agree" etc.), narrative
+  hedging (>=3 of "may" / "could" / "potentially" etc.),
+  universalizing scope tokens ("humans", "everyone", "all",
+  "fundamentally", etc.), and absence of numeric quantities.
+  ValidationVerdict ladder: UNVERIFIABLE (short-circuit if
+  falsifiable_in_field=False) > NARRATIVE_ONLY (<0.2) >
+  LOOSELY_COUPLED (>=0.2) > PARTIALLY_COUPLED (>=0.4) >
+  SUBSTRATE_COUPLED (>=0.75).
+  Demo on two examples:
+  (1) Substrate-coupled wind-corridor measurement (45 mph,
+      gyroscope reading, scope-disambiguation against runway
+      anemometer 5 miles south): coupling_score=1.0,
+      VERDICT: SUBSTRATE_COUPLED.
+  (2) Narrative-only "studies show humans universally" claim
+      with all 4 contamination patterns: coupling_score=0.0,
+      VERDICT: UNVERIFIABLE (falsifiable_in_field=False
+      short-circuits ahead of the score-bucket check, which
+      is the correct behavior -- a claim that cannot be
+      field-tested isn't even narrative-only, it's
+      structurally unverifiable).
+  Pairs with substrate_audit.py (study-level audit),
+  narrative_thermodynamics.py (open-class structural
+  detector), and dark_ages_preservation.py (knowledge
+  extinction risk). Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
+- Added `calibration/dark_ages_preservation.py`: knowledge-
+  extinction risk classifier. Frame: actual Dark Ages
+  (300-1000 CE) showed Roman institutional knowledge died
+  with Roman institutions while substrate-coupled knowledge
+  (oral tradition, craft skills, indigenous practices)
+  survived. The 1000-year recovery was caused by knowledge
+  HOARDING, not loss of capacity.
+  Module classifies any knowledge artifact via 7 enums:
+  KnowledgeCategory (EMBODIED, CRAFT, INDIGENOUS,
+  INSTITUTIONAL, PROPRIETARY, OPEN_TECHNICAL, ORAL_TRADITION),
+  ExtinctionRisk (LOW / MODERATE / HIGH / CRITICAL /
+  IMMINENT), PreservationFormat (8 formats: open_source_code,
+  distributed_text, video_documentation, apprenticeship_
+  program, community_practice, ai_training_corpus, physical_
+  artifact, landscape_encoded).
+  KnowledgeArtifact has 8 fields covering carrier count,
+  distribution outside institutions, substrate dependence,
+  open documentation, machine-readable form, cross-
+  generational transmission active, institutional dependency.
+  assess_extinction_risk() computes risk_score from these +
+  carrier count buckets (<10 / <100 / <1000); maps to enum.
+  recommend_preservation_formats() picks formats per category.
+  assess() returns PreservationAssessment with priority_score
+  in [0, 10] and reasoning notes.
+  Demo on 3 artifacts:
+  (1) Relational sensing (EMBODIED, no documentation, no
+      machine-readable form, no cross-generational transmission)
+      -> MODERATE risk, priority 4.
+  (2) Anishinaabe burning (INDIGENOUS, ~200 carriers, cross-
+      generational active) -> MODERATE risk, priority 4.
+  (3) Proprietary AI safety (PROPRIETARY, NDA, 50 carriers,
+      institutional_dependency=1.0) -> IMMINENT risk, priority
+      10. As designed -- proprietary knowledge has highest
+      extinction risk in the model.
+  Pairs with institutional_mutation_tracker.py (which
+  institutions are collapse-prone) and political_audit/
+  substrate_audit.py. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
+- Added `calibration/institutional_mutation_tracker.py`:
+  real-time tracker (vs the political_audit/ trio's one-time
+  audits) for which way an institution is mutating under
+  pressure -- toward science (substrate-coupled, falsifiable,
+  feedback-honest) or religion (circular reasoning, narrative
+  defense, unfalsifiability). 5 gates with passes() +
+  religion_signals() each: FeedbackVisibilityGate,
+  ErrorAdmissionGate, SubstrateMeasurementGate,
+  FalsifiabilityGate, CognitiveDiversityGate.
+  mutation_risk_score in [0, 1] (0 = pivoting to science,
+  1 = full religion). MutationDirection ladder: PIVOTING_TO_
+  SCIENCE (>=4 pass) > MIXED_SIGNALS (3) >
+  CALCIFYING_TO_RELIGION (2) > ALREADY_RELIGION (1) >
+  AT_RISK_OF_COLLAPSE (0). Demo on a worked AI-safety-lab
+  example (every gate fails on every dimension): MUTATION
+  RISK 1.0, DIRECTION AT_RISK_OF_COLLAPSE. Placed in
+  calibration/ rather than political_audit/ per user request
+  ("Calibration or resilience folder") -- the gates touch
+  substrate measurement / cognitive diversity / falsifiability
+  which are calibration's general substrate-vs-narrative
+  concerns, and the real-time cadence distinguishes it from
+  the one-time political_audit/ pattern. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `political_audit/standardization_audit.py`: six-gate
   audit for claims that a standardization "worked". Measures
   what got eliminated, suppressed, or made invisible to
