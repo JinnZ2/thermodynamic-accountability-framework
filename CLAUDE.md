@@ -707,6 +707,50 @@ thermodynamic-accountability-framework/
 │   ├── us_drought_audit_registry.md       # worked-example audit registry
 │   ├── us_flood_audit_registry.md         # worked-example audit registry
 │   ├── atlantic_hurricane_audit_registry.md  # worked-example audit registry
+│   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
+│   │                             #   earth-systems-physics coupled
+│   │                             #   solvers. Integrates 3 observational
+│   │                             #   findings invalidating prior model
+│   │                             #   assumptions: (1) glacier mass loss
+│   │                             #   acceleration (Birmingham 2026, NASA
+│   │                             #   GRACE 2002-2025; 408 +/- 132 GT in
+│   │                             #   2025, 2nd highest in 50y); (2)
+│   │                             #   ecosystem collapse timescale
+│   │                             #   compression (Willcock et al, Nature
+│   │                             #   Sustainability; compound stressors
+│   │                             #   compress timeline 38-81% closer to
+│   │                             #   present); (3) West Antarctic iron-
+│   │                             #   fertilization carbon-sink invalidated
+│   │                             #   (Sherrell et al 2026, Dotson Ice
+│   │                             #   Shelf; meltwater iron contribution
+│   │                             #   minimal -- iron sourced from deep
+│   │                             #   ocean water and resuspended sediments;
+│   │                             #   sign flip negative_cooling ->
+│   │                             #   neutral_to_positive_warming).
+│   │                             #   COUPLED_TIPPING_ELEMENTS lists 6
+│   │                             #   coupled tipping elements (Greenland,
+│   │                             #   West Antarctic, AMOC, Amazon, Boreal
+│   │                             #   Permafrost, Coral Reefs); coral
+│   │                             #   tipping point flagged crossed in
+│   │                             #   2025; planetary boundaries breached
+│   │                             #   = 7/9. INVALIDATED_ASSUMPTIONS dict
+│   │                             #   carries 5 named invalidations.
+│   │                             #   4 functions: constraint_validity_
+│   │                             #   check(key) -> (is_valid, status),
+│   │                             #   cascade_trigger_check(system, year)
+│   │                             #   -> (triggered, label) gates tropical
+│   │                             #   ocean / forest / polar disruption
+│   │                             #   thresholds + coral already-crossed,
+│   │                             #   apply_collapse_compression(years,
+│   │                             #   n_stressors) returns (min_yr, max_yr)
+│   │                             #   compressed when n_stressors >= 2,
+│   │                             #   remove_iron_fertilization_carbon_
+│   │                             #   sink(carbon_budget_dict) zeros the
+│   │                             #   invalidated pathway and returns
+│   │                             #   rebalanced budget + zeroed-keys list.
+│   │                             #   Filename mirrors pre1900_engineering_
+│   │                             #   registry.py (data-vintage marker).
+│   │                             #   stdlib only.
 │   ├── in_progress.md                     # Living scoping document for
 │   │                             #   metrology audit work backlog.
 │   └── README.md                          # Folder overview; cross-refs
@@ -1162,6 +1206,79 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/earth_systems_constraint_integration_2026.py`:
+  constraint layer module for earth-systems-physics coupled
+  differential-equation solvers. Integrates three observational
+  findings that invalidate prior coupled-model assumptions:
+  (1) glacier mass loss acceleration -- 408 +/- 132 GT in 2025
+  (2nd highest annual loss in 50 years per WGMS / Univ.
+  Birmingham 2026 Nature Reviews); Greenland avg loss
+  264 GT/yr (NASA GRACE 2002-2025); 1.1 mm SLR contribution
+  in 2025 hydro year; 90 ft north pole drift projected by
+  2100 from rotational coupling of mass redistribution.
+  (2) ecosystem collapse timescale compression (Willcock et al,
+  Nature Sustainability) -- compound stressors compress
+  collapse timeline 38-81% closer to present than single-
+  stressor linear projection. Models tested: Chilika lagoon
+  fishery, Easter Island community, forest dieback, lake
+  water quality. Cascade thresholds under RCP 8.5: tropical
+  ocean disruption window opens 2030, tropical forest +
+  polar by 2050. Coral reef tipping point flagged crossed
+  in 2025 (Stockholm Resilience / Global Tipping Points
+  Report); planetary boundaries breached = 7/9.
+  (3) West Antarctic iron-fertilization carbon-sink hypothesis
+  invalidated (Sherrell et al 2026, Rutgers / Dotson Ice
+  Shelf 2022 expedition; corroborated by Struve / Oldenburg
+  sediment-core work). Old assumption: meltwater discharge
+  -> iron release -> algae bloom -> CO2 drawdown -> negative
+  cooling feedback. Field reality: meltwater iron contribution
+  minimal; iron sourced from deep ocean water and resuspended
+  sediments (north of Antarctic Polar Front: dust dominant;
+  south of Polar Front: calving icebergs dominant). HIGH
+  iron during warm intervals did NOT trigger algae growth as
+  predicted. Sign flip: assumed_negative_cooling ->
+  observed_neutral_to_positive_warming. The
+  Greenland-Ice-Sheet-to-AMOC negative feedback loop is also
+  flagged as no-longer-reliable for system stabilization
+  (domino coupling of 6 tipping elements overrides single-
+  loop stabilization).
+  Module surface: INVALIDATED_ASSUMPTIONS dict (5 named
+  entries) + 4 functions: constraint_validity_check(key)
+  returns (is_valid, status_message); cascade_trigger_check
+  (system_label, year) returns (is_triggered, label) and
+  gates ABRUPT_DISRUPTION_WINDOW_OPEN (tropical ocean from
+  2026), ABRUPT_DISRUPTION_WINDOW_APPROACHING (tropical
+  forest / polar from 2045), TIPPING_POINT_ALREADY_CROSSED
+  _2025 (any system label containing "coral");
+  apply_collapse_compression(baseline_years_to_collapse,
+  n_active_stressors) returns (min_years, max_years)
+  compressed range when n_stressors >= 2 (factors 0.19 / 0.62
+  derived from 81% / 38% compression);
+  remove_iron_fertilization_carbon_sink(carbon_budget_dict)
+  zeros pathways matching iron_fertilization /
+  meltwater_iron_drawdown / glacial_iron_co2_sink and
+  returns (rebalanced_dict, zeroed_keys_list).
+  Observational precedence flags
+  (OBSERVATION_PRECEDES_LINEAR_MODEL,
+  LINEAR_MODEL_DEPRECATED_FOR_COUPLED_SYSTEMS,
+  NONLINEAR_COUPLING_REQUIRED, COMPOUND_STRESSOR_DEFAULT)
+  set the integration policy for downstream solvers:
+  empirical field signals (insect biomass crash, monarch
+  migration absence, salamander pond collapse, predator-prey
+  phase shifts, bird migration timing drift) lead linear-
+  model predictions, so the module treats compound stressors
+  as the default case rather than the exception.
+  Filename mirrors `metrology/pre1900_engineering_registry.py`
+  (data-vintage marker pattern); placed in `metrology/`
+  alongside the other constraint catalogs and the
+  `assumption_bias_detector.py` framework-layer audit. Smoke
+  test exercises all 4 functions end-to-end across multiple
+  cases (validity check on 4 assumptions including one not
+  in the dict; cascade trigger on 5 system/year combinations;
+  collapse compression at n=1/2/4 stressors; iron-sink
+  removal on a 5-pathway sample carbon budget). Pure stdlib;
+  chat_paste_check passes; calibration test suite
+  (11 tests) still passes.
 - Replaced `README.md` with the "WHY THIS REPO EXISTS"
   framing per user-supplied content. Five sections:
   WHY THIS REPO EXISTS (personal letter), TECHNICAL SCOPE
