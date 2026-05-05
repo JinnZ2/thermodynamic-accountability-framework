@@ -14,7 +14,7 @@ Both: honest about scope and time.
 
 I discovered they measured the same thing.
 I discovered institutions called one "science" and one "primitive."
-I discovered institutions were lying about what science is.
+I discovered institutions were dishonest about what science is.
 
 This repo is not against science.
 This repo IS science.
