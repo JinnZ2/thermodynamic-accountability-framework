@@ -260,6 +260,63 @@ thermodynamic-accountability-framework/
 │   │                             #   narrative hedging, universalizing
 │   │                             #   scope tokens, absence of numeric
 │   │                             #   quantities.
+│   ├── provenance_corruption_detector_2026.py  # Sister to substrate_
+│   │                             #   validation_oracle (substrate ground
+│   │                             #   truth) and recency_bias_detector
+│   │                             #   (recency-bias gate). Detects when
+│   │                             #   AI model outputs present as
+│   │                             #   confident but lack verifiable
+│   │                             #   upstream provenance. Targets
+│   │                             #   hallucination-amplification loops:
+│   │                             #   confident-wrong AI outputs cited
+│   │                             #   online and re-ingested into future
+│   │                             #   training corpora as ground truth.
+│   │                             #   17 HIGH_CONFIDENCE_MARKERS
+│   │                             #   ("definitely", "always", "studies
+│   │                             #   show", etc) and 15 UNCERTAINTY_
+│   │                             #   MARKERS ("may", "appears to",
+│   │                             #   "depending on", etc) drive
+│   │                             #   confidence_score(claim) -> [0,1].
+│   │                             #   13-tier PROVENANCE_GRADES dict
+│   │                             #   ranges from primary_source_with_
+│   │                             #   methodology (1.0) through ai_
+│   │                             #   generated_text (0.15) and
+│   │                             #   no_source_attribution (0.10) down
+│   │                             #   to circular_ai_to_internet_to_ai
+│   │                             #   (0.05). grounding_score(claim,
+│   │                             #   citations) takes max grade across
+│   │                             #   citations; falls back to 0.10 for
+│   │                             #   uncited specific-number /
+│   │                             #   named-entity claims (high
+│   │                             #   hallucination risk) and 0.30 for
+│   │                             #   uncited generic claims. detect_
+│   │                             #   circular_corruption(citations)
+│   │                             #   returns AI_OUTPUT_RECYCLED_VIA_
+│   │                             #   FORUM_TO_CITATION when ai_
+│   │                             #   generated_text source appears
+│   │                             #   alongside reddit/stackexchange/
+│   │                             #   quora/medium/forum/twitter url,
+│   │                             #   or MULTIPLE_FORUM_REPOSTS_NO_
+│   │                             #   PRIMARY_SOURCE when 2+ forum
+│   │                             #   reposts and zero AI citations.
+│   │                             #   12-entry KNOWN_LOW_GROUND_TRUTH_
+│   │                             #   DOMAINS catalog (specialty
+│   │                             #   trades, guitar pedals, vintage
+│   │                             #   equipment, applied trucking
+│   │                             #   logistics, regional zoning law,
+│   │                             #   septic/graywater regs, etc) drives
+│   │                             #   domain_caution_flag(). analyze_
+│   │                             #   output(text, citations,
+│   │                             #   domain_hints) extracts claims via
+│   │                             #   sentence splitter, computes
+│   │                             #   per-claim confidence/grounding/
+│   │                             #   mismatch, escalates to HIGH on
+│   │                             #   any of: mismatch>0.5, circular
+│   │                             #   corruption flag, or domain flag
+│   │                             #   with confidence>0.5; returns
+│   │                             #   summary_verdict OUTPUT_HAS_
+│   │                             #   PROVENANCE_CORRUPTION_RISK or
+│   │                             #   OUTPUT_ACCEPTABLE_PROVENANCE.
 │   ├── dark_ages_preservation.py  # Knowledge-extinction risk
 │   │                             #   classifier. Lessons from 300-1000
 │   │                             #   CE: Roman institutional knowledge
@@ -1254,6 +1311,59 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/provenance_corruption_detector_2026.py`:
+  detector for the hallucination-amplification loop where AI
+  outputs assert confidence without verifiable upstream
+  provenance, get cited online, then re-ingested into future
+  training corpora as ground truth. Sister to substrate_
+  validation_oracle.py (which validates against substrate
+  reality, not citation chain) and recency_bias_detector.py
+  (which gates the recency-bias pattern set).
+  Module surface: 17 HIGH_CONFIDENCE_MARKERS + 15 UNCERTAINTY_
+  MARKERS drive confidence_score; 13-tier PROVENANCE_GRADES
+  dict (primary_source_with_methodology=1.0 through ai_
+  generated_text=0.15, no_source_attribution=0.10, circular_
+  ai_to_internet_to_ai=0.05) drives grounding_score; uncited
+  specific-number / named-entity claims default to 0.10 (high
+  hallucination risk), uncited generic claims to 0.30. detect_
+  circular_corruption returns AI_OUTPUT_RECYCLED_VIA_FORUM_TO_
+  CITATION when ai_generated_text citation appears alongside
+  forum URL (reddit / stackexchange / quora / medium / forum /
+  twitter / x) or MULTIPLE_FORUM_REPOSTS_NO_PRIMARY_SOURCE
+  with 2+ forum reposts and no primary source. 12-entry
+  KNOWN_LOW_GROUND_TRUTH_DOMAINS catalog covers specialty
+  trades / guitar pedals / vintage equipment / small-region
+  history / indigenous knowledge / applied trucking logistics
+  / regional zoning law / specific medical specialties /
+  obscure programming languages / small open source libraries
+  / land parcel due diligence / septic and graywater
+  regulations -- domains where AI training data is sparse,
+  contradictory, or systematically corrupted.
+  analyze_output(text, citations, domain_hints) extracts
+  claims via sentence splitter, computes per-claim confidence
+  / grounding / mismatch, escalates to HIGH on any of: mismatch
+  > 0.5, circular corruption, domain flag with confidence >
+  0.5; returns summary_verdict OUTPUT_HAS_PROVENANCE_
+  CORRUPTION_RISK or OUTPUT_ACCEPTABLE_PROVENANCE.
+  Demo flags all 4 claims in a Tube Screamer / Susumu Tamura
+  / 4.3 dB compression sample text as HIGH risk (citation chain
+  is ai_generated_text + social_media_repost on reddit/twitter,
+  domain "guitar pedals" is in the unreliable list). The
+  detector correctly flags confident-but-circular content
+  REGARDLESS of whether the underlying facts happen to be
+  correct -- the question is provenance, not truth.
+  CLEANUP DECISIONS during paste integration: (a) smart quotes
+  -> ASCII; (b) markdown bold-dunders **name** / **main**
+  -> __name__ / __main__; (c) removed embedded triple-backtick
+  markdown code fences from inside function bodies; (d)
+  removed unused imports (hashlib / json / datetime were
+  imported but not referenced); (e) fixed regex \\b\\d{2,}(.\\d+)?
+  \\b -> \\b\\d{2,}(\\.\\d+)?\\b (escaped the literal decimal point;
+  unescaped `.` matches any character, same paste artifact
+  observed in the narrative_thermodynamics regex cleanup);
+  (f) em-dash -> double-hyphen in demo print line per repo
+  ASCII convention. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `metrology/cascade_coupling_framework_2026.py`: cascade-
   probability constraint module integrating three 2026 results for
   the earth-systems-physics coupled solvers. Companion (math layer)
