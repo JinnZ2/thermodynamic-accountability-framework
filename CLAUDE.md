@@ -742,6 +742,73 @@ thermodynamic-accountability-framework/
 │                                      #   (standardization claims) --
 │                                      #   same substrate-vs-institutional-
 │                                      #   consensus methodology.
+│   └── validation_timeline_audit_2026.py  # Companion to ai_economic_
+│                                      #   forecast_audit_2026. Quantifies
+│                                      #   how long forecast validation
+│                                      #   should take given AI compute
+│                                      #   investment, and flags when
+│                                      #   institutions invoke "complex
+│                                      #   systems need more time" past
+│                                      #   the threshold where ground
+│                                      #   truth is already conclusive.
+│                                      #   Three-layer audit: (1)
+│                                      #   baseline_validation_window
+│                                      #   reads DEFAULT_BASELINE_
+│                                      #   VALIDATION_YEARS catalog
+│                                      #   (10 domains: macroeconomic_
+│                                      #   forecast 5y, labor_displacement
+│                                      #   4y, inflation 2y, wage 3y,
+│                                      #   monetary 3y, infrastructure 7y,
+│                                      #   ecological_recovery 10y,
+│                                      #   policy 4y, consumer 2y,
+│                                      #   financial_stability 5y); (2)
+│                                      #   accelerated_validation_window
+│                                      #   divides baseline by ai_speedup_
+│                                      #   factor_assumed (default 100x)
+│                                      #   to compute the AI-equivalent
+│                                      #   validation deadline; (3)
+│                                      #   gap_analysis compares
+│                                      #   reference_date against ground-
+│                                      #   truth availability and
+│                                      #   institution behavior, raising
+│                                      #   FULL_GROUND_TRUTH_AVAILABLE,
+│                                      #   AI_VALIDATION_WINDOW_EXPIRED,
+│                                      #   INSTITUTION_INVOKES_UNCERTAINTY_
+│                                      #   DESPITE_GROUND_TRUTH (-> verdict
+│                                      #   INSTITUTIONAL_AVOIDANCE_DETECTED),
+│                                      #   NO_VALIDATION_CHECK_PERFORMED_
+│                                      #   PAST_DEADLINE (-> verdict
+│                                      #   VALIDATION_OVERDUE).
+│                                      #   ValidationTimelineRecord
+│                                      #   dataclass carries forecast_id /
+│                                      #   domain / publication_date /
+│                                      #   horizon_years / earliest +
+│                                      #   full outcome data dates /
+│                                      #   institution_validation_check_
+│                                      #   date / institution_still_claims_
+│                                      #   uncertainty flag / human_
+│                                      #   equivalent_research_years_
+│                                      #   invested / ai_speedup_factor_
+│                                      #   assumed. audit_timeline(record,
+│                                      #   reference_date) returns the
+│                                      #   3-layer composite report.
+│                                      #   Demo: McKinsey 2022 labor
+│                                      #   displacement forecast, 520
+│                                      #   human-research-years invested,
+│                                      #   AI speedup 100x -> AI
+│                                      #   validation should have
+│                                      #   completed 2022-06-29 (14 days
+│                                      #   after publication); ground
+│                                      #   truth fully available since
+│                                      #   2024-06-01; institution still
+│                                      #   claims uncertainty as of
+│                                      #   2026-05-05. All 4 flags fire,
+│                                      #   verdict INSTITUTIONAL_
+│                                      #   AVOIDANCE_DETECTED. The
+│                                      #   substantive measurement: AI
+│                                      #   compute investment + ground-
+│                                      #   truth availability collapses
+│                                      #   the "needs more time" excuse.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -1546,6 +1613,69 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/validation_timeline_audit_2026.py`:
+  companion to ai_economic_forecast_audit_2026 (which scores
+  forecast accuracy against substrate ground truth). This module
+  asks the orthogonal question: how long should validation TAKE,
+  given the AI compute investment behind the forecast? And: is
+  the institution still claiming uncertainty past the threshold
+  where ground truth is already conclusive?
+  Three-layer audit. Layer 1 baseline_validation_window reads
+  DEFAULT_BASELINE_VALIDATION_YEARS catalog (10 domains:
+  macroeconomic 5y, labor_displacement 4y, inflation 2y, wage 3y,
+  monetary 3y, infrastructure 7y, ecological_recovery 10y,
+  policy 4y, consumer 2y, financial_stability 5y) and returns
+  expected traditional-science validation date. Layer 2
+  accelerated_validation_window divides baseline by ai_speedup_
+  factor_assumed (default 100x conservative) to compute the
+  AI-equivalent validation deadline -- a forecast with 200+
+  human-research-years equivalent compute should validate within
+  days, not years. Layer 3 gap_analysis compares reference_date
+  against ground-truth availability and institution behavior,
+  raising flag set FULL_GROUND_TRUTH_AVAILABLE,
+  AI_VALIDATION_WINDOW_EXPIRED,
+  INSTITUTION_INVOKES_UNCERTAINTY_DESPITE_GROUND_TRUTH (->
+  verdict INSTITUTIONAL_AVOIDANCE_DETECTED), NO_VALIDATION_
+  CHECK_PERFORMED_PAST_DEADLINE (-> verdict VALIDATION_OVERDUE).
+  Verdict ladder is INSTITUTIONAL_AVOIDANCE_DETECTED >
+  VALIDATION_OVERDUE > ACCEPTABLE.
+  ValidationTimelineRecord dataclass carries forecast_id /
+  domain / forecast_publication_date / forecast_horizon_years
+  / earliest_outcome_data_date / full_outcome_data_date /
+  institution_validation_check_date /
+  institution_still_claims_uncertainty /
+  human_equivalent_research_years_invested /
+  ai_speedup_factor_assumed. audit_timeline(record,
+  reference_date) returns 3-layer composite report.
+  Demo: McKinsey 2022 labor displacement forecast, 520
+  human-research-years equivalent invested, AI speedup 100x.
+  Baseline traditional validation expected 2026-06-15 (still
+  ~6 weeks out). AI-accelerated validation expected 2022-06-29
+  (14 days post-publication). Full ground truth available
+  since 2024-06-01 (1.92 years before reference_date 2026-05-05).
+  Institution still claims uncertainty AND has not performed
+  any validation check. All 4 flags fire; verdict
+  INSTITUTIONAL_AVOIDANCE_DETECTED. The substantive measurement
+  the module produces: AI compute investment + ground-truth
+  availability together collapse the "complex systems need
+  more time" excuse, because the timeline math no longer
+  supports it.
+  CLEANUP DECISIONS during paste integration: (a) smart
+  quotes -> ASCII; (b) markdown bold-dunders **name** /
+  **main** -> __name__ / __main__; (c) em-dash -> double-
+  hyphen in docstring + demo print; (d) markdown numbered
+  list `1. 1. 1.` -> proper `1. 2. 3.` numbering in docstring;
+  (e) dropped unused imports (math, field, asdict, List,
+  Tuple); (f) noted that
+  human_equivalent_research_years_invested is currently
+  metadata-only -- it appears in the accelerated_validation_
+  window output dict but does not affect the speedup
+  calculation, which is driven solely by
+  ai_speedup_factor_assumed. Left as-is per the source
+  paste; user can wire the human-years field into the
+  speedup calculation if intended. Pure stdlib;
+  chat_paste_check passes; calibration test suite
+  (11 tests) still passes.
 - Added `political_audit/ai_economic_forecast_audit_2026.py`:
   audits institutional economic forecasts against substrate-
   measurable ground truth (BLS, FRED, Census, bankruptcy
