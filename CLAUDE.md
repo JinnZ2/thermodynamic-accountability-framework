@@ -226,6 +226,43 @@ thermodynamic-accountability-framework/
 │   │                             #   one lineage so the AI can surface
 │   │                             #   the convergence with others.
 │   │                             #   Sister to relational_ontology.py.
+│   ├── institutional_mutation_tracker.py  # Real-time tracker of which
+│   │                             #   way an institution is mutating
+│   │                             #   under pressure: science (substrate-
+│   │                             #   coupled, falsifiable, feedback-
+│   │                             #   honest) or religion (circular
+│   │                             #   reasoning, narrative defense,
+│   │                             #   unfalsifiability). 5 gates:
+│   │                             #   FeedbackVisibilityGate (negative
+│   │                             #   results published, dissent retained,
+│   │                             #   feedback delay <365d),
+│   │                             #   ErrorAdmissionGate (>=1 error
+│   │                             #   correction in 5y, methodology
+│   │                             #   revisions published),
+│   │                             #   SubstrateMeasurementGate (>=3 of:
+│   │                             #   energy throughput, actual outcomes,
+│   │                             #   unintended consequences, excluded
+│   │                             #   populations, substrate-coupled
+│   │                             #   primary metrics),
+│   │                             #   FalsifiabilityGate (declared and
+│   │                             #   measurable failure conditions, can
+│   │                             #   be defunded, working external
+│   │                             #   oversight), CognitiveDiversityGate
+│   │                             #   (>=3 of: dissenting methodologies
+│   │                             #   funded, alternative frameworks,
+│   │                             #   substrate-primary in decision roles,
+│   │                             #   indigenous knowledge integrated,
+│   │                             #   cross-domain required).
+│   │                             #   MutationDirection: PIVOTING_TO_
+│   │                             #   SCIENCE (>=4 pass) / MIXED_SIGNALS
+│   │                             #   (3) / CALCIFYING_TO_RELIGION (2) /
+│   │                             #   ALREADY_RELIGION (1) / AT_RISK_OF_
+│   │                             #   COLLAPSE (0). Sister to political_
+│   │                             #   audit/{institutional_audit_protocol,
+│   │                             #   substrate_audit, standardization_
+│   │                             #   audit}.py (the political_audit/
+│   │                             #   trio is one-time audit; this one
+│   │                             #   is real-time tracker).
 │   ├── narrative_thermodynamics.py  # Open-class structural detector for
 │   │                             #   anti-reality. Encodes any text blob
 │   │                             #   as a 6-amplitude octahedral seed
@@ -1065,6 +1102,30 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/institutional_mutation_tracker.py`:
+  real-time tracker (vs the political_audit/ trio's one-time
+  audits) for which way an institution is mutating under
+  pressure -- toward science (substrate-coupled, falsifiable,
+  feedback-honest) or religion (circular reasoning, narrative
+  defense, unfalsifiability). 5 gates with passes() +
+  religion_signals() each: FeedbackVisibilityGate,
+  ErrorAdmissionGate, SubstrateMeasurementGate,
+  FalsifiabilityGate, CognitiveDiversityGate.
+  mutation_risk_score in [0, 1] (0 = pivoting to science,
+  1 = full religion). MutationDirection ladder: PIVOTING_TO_
+  SCIENCE (>=4 pass) > MIXED_SIGNALS (3) >
+  CALCIFYING_TO_RELIGION (2) > ALREADY_RELIGION (1) >
+  AT_RISK_OF_COLLAPSE (0). Demo on a worked AI-safety-lab
+  example (every gate fails on every dimension): MUTATION
+  RISK 1.0, DIRECTION AT_RISK_OF_COLLAPSE. Placed in
+  calibration/ rather than political_audit/ per user request
+  ("Calibration or resilience folder") -- the gates touch
+  substrate measurement / cognitive diversity / falsifiability
+  which are calibration's general substrate-vs-narrative
+  concerns, and the real-time cadence distinguishes it from
+  the one-time political_audit/ pattern. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `political_audit/standardization_audit.py`: six-gate
   audit for claims that a standardization "worked". Measures
   what got eliminated, suppressed, or made invisible to
