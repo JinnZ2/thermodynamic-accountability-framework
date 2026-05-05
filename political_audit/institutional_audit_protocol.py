@@ -344,3 +344,31 @@ if __name__ == "__main__":
     from json import dumps
     print(dumps(audit.report(), indent=2, default=str))
     print(f"\nVERDICT: {audit.verdict().value.upper()}")
+
+# =============================================================================
+# GATE 5: STRUCTURAL CONTINUITY (The "Slippery Case" Gate)
+# =============================================================================
+
+@dataclass
+class ContinuityGate:
+    """Does the institution's identity survive its internal turnover?"""
+    invariant_declared: str            # The "mechanical soul" that must stay same
+    personnel_turnover_percent: float   # % change in membership since last audit
+    ownership_shifted: bool             # Has control changed?
+    last_structural_audit: Optional[datetime]
+
+    def calculate_drift(self) -> float:
+        # High turnover + ownership change = High Drift
+        drift = self.personnel_turnover_percent / 100.0
+        if self.ownership_shifted:
+            drift += 0.5
+        return min(drift, 1.0)
+
+    def passes(self) -> bool:
+        # A drift > 0.7 suggests the institution is a 're-skin' of a failure
+        if self.calculate_drift() > 0.7:
+            return False
+        if not self.invariant_declared:
+            return False
+        return True
+
