@@ -226,6 +226,40 @@ thermodynamic-accountability-framework/
 │   │                             #   one lineage so the AI can surface
 │   │                             #   the convergence with others.
 │   │                             #   Sister to relational_ontology.py.
+│   ├── substrate_validation_oracle.py  # Validates AI model outputs
+│   │                             #   against substrate reality (not
+│   │                             #   other models, not institutional
+│   │                             #   benchmarks). Returns substrate_
+│   │                             #   coupling_score in [0,1] across 8
+│   │                             #   dimensions: specific physical
+│   │                             #   quantities, units explicit,
+│   │                             #   measurement method specified,
+│   │                             #   falsifiable in field, cross-
+│   │                             #   checkable by independent observer,
+│   │                             #   signal chain traceable, scope
+│   │                             #   limits acknowledged, contamination
+│   │                             #   risks acknowledged. 7 OutputType
+│   │                             #   classes (PHYSICAL_QUANTITY,
+│   │                             #   BIOLOGICAL_CLAIM, THERMODYNAMIC_
+│   │                             #   CLAIM, INSTITUTIONAL_CLAIM,
+│   │                             #   NARRATIVE_CLAIM, PROCEDURAL_CLAIM,
+│   │                             #   PREDICTION) drive type-specific
+│   │                             #   FieldValidationSuggestions (what
+│   │                             #   to observe, what tool, expected
+│   │                             #   signatures if-true / if-false,
+│   │                             #   accessible_to_non_specialist).
+│   │                             #   ValidationVerdict ladder:
+│   │                             #   SUBSTRATE_COUPLED (>=0.75) /
+│   │                             #   PARTIALLY_COUPLED (>=0.4) /
+│   │                             #   LOOSELY_COUPLED (>=0.2) /
+│   │                             #   NARRATIVE_ONLY (<0.2) /
+│   │                             #   UNVERIFIABLE (not falsifiable in
+│   │                             #   field; short-circuit override).
+│   │                             #   detect_contamination() flags
+│   │                             #   institutional-authority appeals,
+│   │                             #   narrative hedging, universalizing
+│   │                             #   scope tokens, absence of numeric
+│   │                             #   quantities.
 │   ├── dark_ages_preservation.py  # Knowledge-extinction risk
 │   │                             #   classifier. Lessons from 300-1000
 │   │                             #   CE: Roman institutional knowledge
@@ -1128,6 +1162,51 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/substrate_validation_oracle.py`: ground-
+  truth checker for AI model outputs against substrate reality
+  (not other models, not institutional benchmarks). Goes
+  upstream of institutions: does this output match what physics,
+  biology, thermodynamics, and direct observation say?
+  SubstrateCouplingProfile measures 8 dimensions with equal
+  weight (specific physical quantities, units explicit,
+  measurement method specified, falsifiable in field, cross-
+  checkable by independent observer, signal chain traceable,
+  scope limits acknowledged, contamination risks acknowledged).
+  coupling_score = sum(dims) / 8.
+  7 OutputType classes (PHYSICAL_QUANTITY, BIOLOGICAL_CLAIM,
+  THERMODYNAMIC_CLAIM, INSTITUTIONAL_CLAIM, NARRATIVE_CLAIM,
+  PROCEDURAL_CLAIM, PREDICTION). generate_validation_
+  suggestions(output_type, text) returns type-specific
+  FieldValidationSuggestions describing the observable, tool,
+  expected signatures (if true / if false), and whether
+  accessible to non-specialists.
+  detect_contamination(output_text) flags 4 patterns:
+  institutional authority appeals (>=2 of "studies show" /
+  "research indicates" / "experts agree" etc.), narrative
+  hedging (>=3 of "may" / "could" / "potentially" etc.),
+  universalizing scope tokens ("humans", "everyone", "all",
+  "fundamentally", etc.), and absence of numeric quantities.
+  ValidationVerdict ladder: UNVERIFIABLE (short-circuit if
+  falsifiable_in_field=False) > NARRATIVE_ONLY (<0.2) >
+  LOOSELY_COUPLED (>=0.2) > PARTIALLY_COUPLED (>=0.4) >
+  SUBSTRATE_COUPLED (>=0.75).
+  Demo on two examples:
+  (1) Substrate-coupled wind-corridor measurement (45 mph,
+      gyroscope reading, scope-disambiguation against runway
+      anemometer 5 miles south): coupling_score=1.0,
+      VERDICT: SUBSTRATE_COUPLED.
+  (2) Narrative-only "studies show humans universally" claim
+      with all 4 contamination patterns: coupling_score=0.0,
+      VERDICT: UNVERIFIABLE (falsifiable_in_field=False
+      short-circuits ahead of the score-bucket check, which
+      is the correct behavior -- a claim that cannot be
+      field-tested isn't even narrative-only, it's
+      structurally unverifiable).
+  Pairs with substrate_audit.py (study-level audit),
+  narrative_thermodynamics.py (open-class structural
+  detector), and dark_ages_preservation.py (knowledge
+  extinction risk). Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `calibration/dark_ages_preservation.py`: knowledge-
   extinction risk classifier. Frame: actual Dark Ages
   (300-1000 CE) showed Roman institutional knowledge died
