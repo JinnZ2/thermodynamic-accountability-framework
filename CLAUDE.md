@@ -262,7 +262,13 @@ thermodynamic-accountability-framework/
 │   │                             #   weather. New domains follow the
 │   │                             #   metrology/ shape, not a parallel one.
 │   ├── test_calibration.py       # Falsification tests (11, all pass)
-│   └── __init__.py
+│   ├── __init__.py
+│   └── logs/                     # Per-session audit logs (JSON).
+│                                 #   Captures Claude AI interaction
+│                                 #   corrections, field-guide-session
+│                                 #   audits, etc. Inputs to the
+│                                 #   substrate-translation iterator
+│                                 #   case log.
 │
 ├── political_audit/               # Six Sigma for Governance (snake_case)
 │   ├── README.md                 # Protocol overview
@@ -288,7 +294,7 @@ thermodynamic-accountability-framework/
 │   │                                  #   Forward-references
 │   │                                  #   institution_scientific_spec.py
 │   │                                  #   (not yet present).
-│   └── substrate_audit.py            # Five-gate audit for studies and
+│   ├── substrate_audit.py            # Five-gate audit for studies and
 │                                      #   institutional claims: substrate-
 │                                      #   primary biology (does the study
 │                                      #   ignore foundational biology?),
@@ -316,6 +322,37 @@ thermodynamic-accountability-framework/
 │                                      #   measurement), metrology/pre1900_
 │                                      #   engineering_registry.py
 │                                      #   (calibration baseline).
+│   └── standardization_audit.py      # Six-gate audit for claims that a
+│                                      #   standardization "worked".
+│                                      #   Measures what got eliminated,
+│                                      #   suppressed, or made invisible
+│                                      #   to support the chosen standard.
+│                                      #   Gates: innovation suppression,
+│                                      #   comparative fairness (was the
+│                                      #   choice tested under equal
+│                                      #   conditions?), community impact
+│                                      #   (who gained vs who lost
+│                                      #   alternatives), monopoly
+│                                      #   enabling (market concentration
+│                                      #   + legal protection + rent
+│                                      #   extraction), resilience cost
+│                                      #   (single point of failure,
+│                                      #   diversity remaining, cascade
+│                                      #   failure history), and
+│                                      #   thermodynamic balance (full-
+│                                      #   lifecycle net energy with
+│                                      #   maintenance + lost-alternative
+│                                      #   + cascade-failure costs
+│                                      #   counted). StandardizationVerdict
+│                                      #   ladder (worst-case wins):
+│                                      #   NET_HARMFUL > MONOPOLY_ENABLING
+│                                      #   > INNOVATION_SUPPRESSING >
+│                                      #   UNVERIFIED_CLAIM >
+│                                      #   BENEFICIAL_WITHIN_NARROW_SCOPE
+│                                      #   > GENUINELY_BENEFICIAL.
+│                                      #   Worked example: AC/DC grid
+│                                      #   standardization (1893) ->
+│                                      #   NET_HARMFUL with 22 red flags.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -558,8 +595,26 @@ thermodynamic-accountability-framework/
 │   │                             #   bias.py; companion to preservation_
 │   │                             #   audit.py; sister to calibration/
 │   │                             #   architecture_mismatch.py.
+│   ├── assumption_bias_detector.py        # Detects framework-layer
+│   │                             #   assumption bias in trend extraction
+│   │                             #   (stationarity, baseline, linearity).
+│   ├── translation_layer.py               # Translation between
+│   │                             #   instrument observation, observer
+│   │                             #   record, and downstream claim.
+│   ├── tornado_metrology_demo.py          # Worked-example domain audit
+│   ├── hurricane_metrology_demo.py        # Worked-example domain audit
+│   ├── flood_metrology_demo.py            # Worked-example domain audit
+│   ├── drought_metrology_demo.py          # Worked-example domain audit
 │   ├── cross_domain_synthesis.md          # cross-domain synthesis doc
-│   └── us_wildfire_audit_registry.md      # worked-example audit registry
+│   ├── us_wildfire_audit_registry.md      # worked-example audit registry
+│   ├── us_drought_audit_registry.md       # worked-example audit registry
+│   ├── us_flood_audit_registry.md         # worked-example audit registry
+│   ├── atlantic_hurricane_audit_registry.md  # worked-example audit registry
+│   ├── in_progress.md                     # Living scoping document for
+│   │                             #   metrology audit work backlog.
+│   └── README.md                          # Folder overview; cross-refs
+│                                  #   calibration/RELATIONSHIP.md for
+│                                  #   the general/specific framing.
 │
 ├── resilience_stack.py            # Coupled three-layer resilience architecture
 │                                 #   (AbsenceSignature -> ConstraintNavigator ->
@@ -705,6 +760,26 @@ thermodynamic-accountability-framework/
 │                                 #   leaking the trap. Paired with
 │                                 #   calibration/trapdoor_eval.py
 │
+├── in_progress/                   # Live-scoping notes for upcoming
+│   │                             #   metrology / calibration work.
+│   │                             #   Three earlier .py drafts
+│   │                             #   (trend_corruption_calculator,
+│   │                             #   domain_convergence_matrix,
+│   │                             #   pre1900_engineering_registry)
+│   │                             #   plus cross_domain_synthesis.md
+│   │                             #   were chat-paste-contaminated
+│   │                             #   duplicates of clean files in
+│   │                             #   metrology/ -- removed in this
+│   │                             #   commit since clean versions
+│   │                             #   already exist.
+│   └── build_priority_notes.md   # Roadmap: substrate_baseline_registry
+│                                 #   first, then measurement_corruption_
+│                                 #   matrix, regime_shift_detector,
+│                                 #   cascade_coupling_simulator. Plus
+│                                 #   the observation_bias_characterization
+│                                 #   sketch and calibration-through-
+│                                 #   bias-characterization framing.
+│
 ├── tools/                         # Repo-hygiene scripts (stdlib only)
 │   ├── chat_paste_check.py       # Detect chat-paste contamination
 │   │                             #   in .py files: smart quotes,
@@ -807,6 +882,38 @@ thermodynamic-accountability-framework/
 ├── AI_ENTRY.md                    # AI onboarding: equations, simulations, safe rules
 ├── README.md                      # Project overview
 ├── LICENSE                        # License
+├── Field_Guide.md                 # Field Guide to Misuse of Substrate-
+│                                 #   Primary Frameworks. 10 misuse
+│                                 #   patterns (narrative repackaging,
+│                                 #   attentional extraction, free labor
+│                                 #   harvesting, co-option, smear-as-
+│                                 #   parasite, starvation, metric
+│                                 #   substitution, temporal scope
+│                                 #   compression, cognitive diversity
+│                                 #   exclusion, epistemic/logical
+│                                 #   grade inflation). Includes the
+│                                 #   CC0 + transparency addendum and a
+│                                 #   Cross-Framework Integration
+│                                 #   section recording how the
+│                                 #   Field Guide composes with
+│                                 #   substrate_audit + the gradient
+│                                 #   docs.
+├── scientific-method-principles.md  # Epistemic gradient: hypothetical
+│                                 #   -> robust hypothesis -> theory ->
+│                                 #   law. Each stage's entry
+│                                 #   requirements, falsifiability
+│                                 #   window, thermodynamic gate.
+├── logical-gradient.md            # Logical gradient: logical claim
+│                                 #   -> valid inference -> sound
+│                                 #   argument / theorem -> axiomatic
+│                                 #   law. Parallel structure to the
+│                                 #   epistemic gradient but operating
+│                                 #   on logical relationships rather
+│                                 #   than empirical patterns.
+├── narrative-distortion-map.md    # Maps the corruption pathways
+│                                 #   between substrate observation
+│                                 #   and narrative claim; companion
+│                                 #   to Field_Guide.md.
 └── CLAUDE.md                      # This file
 ```
 
@@ -934,6 +1041,7 @@ python simulations/federation.py
 python political_audit/c_cam_calculator.py
 python political_audit/institutional_audit_protocol.py
 python political_audit/substrate_audit.py
+python political_audit/standardization_audit.py
 
 # Tests
 python core/atbs/test_v2.py
@@ -957,6 +1065,98 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/standardization_audit.py`: six-gate
+  audit for claims that a standardization "worked". Measures
+  what got eliminated, suppressed, or made invisible to
+  support the chosen standard. Sister to
+  political_audit/substrate_audit.py (5-gate study/claim
+  audit) and political_audit/institutional_audit_protocol.py
+  (4-gate institutional audit) -- same gate-dataclass-with-
+  passes() architecture.
+  Gates:
+  (1) InnovationSuppressionGate -- has alternative
+      development halted? for how long? what funding remains?
+      are there active rediscovery attempts (evidence the
+      suppression was premature)?
+  (2) ComparativeFairnessGate -- was the comparison fair?
+      same funding / development time / regulatory treatment
+      / publication standards / head-to-head studies? all
+      five conjunctive.
+  (3) CommunityImpactGate -- who gained, who lost, who lost
+      access to alternatives? benefit_distribution
+      (concentrated / mixed / broadly_shared) vs
+      cost_distribution.
+  (4) MonopolyEnablingGate -- market_share_concentrated
+      (>70%), regional_alternatives_eliminated,
+      legal_protection_for_standard, rent_extraction_
+      documented. Passes iff <=1 red flag.
+  (5) ResilienceCostGate -- single_point_of_failure_present,
+      redundancy_eliminated, cascade_failure_examples,
+      recovery_pathway_available, diversity_remaining_pct
+      (<0.3 = monoculture).
+  (6) ThermodynamicBalanceGate -- net_balance =
+      energy_saved - maintenance - lost_alternatives -
+      cascade_failures. Passes only if full_lifecycle_
+      audited AND net positive.
+  StandardizationVerdict ladder (worst-case wins):
+      NET_HARMFUL > MONOPOLY_ENABLING > INNOVATION_SUPPRESSING
+      > UNVERIFIED_CLAIM > BENEFICIAL_WITHIN_NARROW_SCOPE
+      > GENUINELY_BENEFICIAL.
+  Worked example in __main__: AC/DC electrical grid
+  standardization (1893; chose AC, eliminated DC). Result:
+  22 red flags, VERDICT: NET_HARMFUL. Net thermodynamic
+  balance comes out -5e17 J after subtracting maintenance,
+  lost-DC-development costs, and cascade-failure history
+  (2003 Northeast blackout, 2021 Texas, 2025 Iberian
+  Peninsula). Includes DC-rediscovery evidence (data
+  centers, solar/renewable integration, HVDC, microgrids)
+  flagged as evidence the 1893 suppression was premature.
+  Pure stdlib; chat_paste_check passes; calibration test
+  suite (11 tests) still passes.
+- Expanded `Field_Guide.md` with MISUSE 10 (epistemic / logical
+  grade inflation) and a new Cross-Framework Integration
+  section.
+  MISUSE 10: claim asserted at higher gradient (theory / law /
+  axiom) than the testing record supports. Common in policy
+  documents, AI safety claims, economic projections. Detection:
+  ask for falsification record / cross-media tests / novel
+  predictions confirmed; if absent or vague, the claim is being
+  inflated. Specifically catches "hypothetical wearing the word
+  'law'" and "logical claim wearing the word 'axiom'".
+  Cross-Framework Integration section captures two cross-cutting
+  observations:
+    (1) Substrate / epistemic / logical: three metadata fields
+        that travel with a claim. substrate_audit asks if the
+        study is substrate-honest; scientific-method-principles
+        asks what level of confidence it deserves;
+        logical-gradient asks if the reasoning is valid. All
+        three travel with the claim. MISUSE 10 is what happens
+        when one is inflated past its earned grade.
+    (2) The thermodynamic gate is identical across all four
+        audit modes: substrate_audit (audit cost < error cost
+        prevented), institutional_audit (parasitic_ratio < 0.5),
+        epistemic_gradient (test cost < return on application),
+        logical_gradient (formalization cost < error cost
+        prevented). Same gate, four domains -- the unifying
+        invariant of the framework.
+  Plus registered the new top-level docs (Field_Guide.md,
+  scientific-method-principles.md, logical-gradient.md,
+  narrative-distortion-map.md), the new metrology/ files
+  (assumption_bias_detector.py, translation_layer.py, four
+  domain demos, three new audit registries, in_progress.md,
+  README.md), and the new calibration/logs/ directory in the
+  CLAUDE.md repository structure section.
+- Removed duplicate chat-pasted drafts from `in_progress/`
+  (trend_corruption_calculator.py, domain_convergence_matrix.py,
+  pre1900_engineering_registry.py, cross_domain_synthesis.md).
+  All four were chat-paste-contaminated drafts of files that
+  already exist clean in metrology/. Verified by smart-quote-
+  normalized diff: in_progress/ versions are functionally
+  equivalent to metrology/ versions plus chat-paste contamination
+  (smart quotes, flat indentation, ⊗ operator symbol). Kept
+  in_progress/build_priority_notes.md (the actual purpose of
+  the in_progress/ folder -- live-scoping notes for upcoming
+  metrology work).
 - Added `political_audit/substrate_audit.py`: five-gate audit for
   studies and institutional claims, paired with
   political_audit/institutional_audit_protocol.py. Gates:
