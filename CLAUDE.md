@@ -313,6 +313,72 @@ thermodynamic-accountability-framework/
 │   │                             #   authorship". audit_summary() +
 │   │                             #   __main__ json-serializes via
 │   │                             #   dataclass-aware walker.
+│   ├── attribution_payoff_matrix.py  # Extension to attribution_as_
+│   │                             #   load_routing. Adds the payoff-
+│   │                             #   matrix mechanism that PRODUCES
+│   │                             #   each attribution architecture.
+│   │                             #   Removes residual moral framing.
+│   │                             #   Causal chain: local payoff
+│   │                             #   structure -> selection pressure
+│   │                             #   on claim accuracy -> equilibrium
+│   │                             #   attribution architecture. Thesis:
+│   │                             #   neither architecture is virtuous
+│   │                             #   or dishonest; each is the
+│   │                             #   rational equilibrium for its
+│   │                             #   payoff matrix. PayoffCell
+│   │                             #   dataclass + 4-cell PAYOFF_MATRIX
+│   │                             #   (narrative-accurate, narrative-
+│   │                             #   inflated, substrate-accurate,
+│   │                             #   substrate-inflated) carrying
+│   │                             #   short_term, long_term,
+│   │                             #   expected_value, visibility_of_
+│   │                             #   failure, recovery_from_failure
+│   │                             #   per cell. PAYOFF_MATRIX_GRID
+│   │                             #   ASCII visual table for human
+│   │                             #   readers. CONTEXT_DIAGNOSTIC_
+│   │                             #   VARIABLES block: 6-axis
+│   │                             #   continuous-not-binary
+│   │                             #   classification (consequence
+│   │                             #   coupling, failure visibility,
+│   │                             #   attribution traceability,
+│   │                             #   network size and memory, exit
+│   │                             #   cost, other-dependency).
+│   │                             #   FUNCTIONAL_FRAME block makes
+│   │                             #   the non-moral framing explicit
+│   │                             #   ("not honest because more
+│   │                             #   honest, accurate because
+│   │                             #   inaccuracy has negative expected
+│   │                             #   value"); cites the speaker's
+│   │                             #   own typical cost-of-failure
+│   │                             #   reasoning verbatim. AI_
+│   │                             #   IMPLICATIONS block: moral
+│   │                             #   framing produces moral
+│   │                             #   counter-framing; functional
+│   │                             #   framing produces predictions,
+│   │                             #   is symmetric, makes harm
+│   │                             #   concrete (operational
+│   │                             #   misrouting, not values
+│   │                             #   disrespect). 4 falsifiable
+│   │                             #   PREDICTIONS P1-P4: same person
+│   │                             #   varies by context (P1),
+│   │                             #   communities transitioning
+│   │                             #   environments shift inflation
+│   │                             #   over generations (P2),
+│   │                             #   substrate-primary speakers in
+│   │                             #   narrative contexts get passed
+│   │                             #   over at measurable rates (P3),
+│   │                             #   AI reattribution behavior
+│   │                             #   reduces but does not eliminate
+│   │                             #   under explicit context priming
+│   │                             #   (P4). Each prediction carries
+│   │                             #   test method + falsifies_payoff_
+│   │                             #   model_if spec. CORRECTION_TO_
+│   │                             #   AI_MODELS embedded prompt
+│   │                             #   payoff-framed (sister to
+│   │                             #   attribution_as_load_routing's
+│   │                             #   architecture-framed correction).
+│   │                             #   audit_summary() + dataclass-
+│   │                             #   aware __main__ serializer.
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
 │   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
@@ -1822,6 +1888,94 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/attribution_payoff_matrix.py`: extension
+  to attribution_as_load_routing. Where the prior module
+  documented WHAT the two attribution architectures are and
+  HOW they fail when crossed, this module supplies the WHY:
+  the payoff-matrix mechanism that produces each architecture
+  as a rational equilibrium for its environment. Removes any
+  residual moral framing. Causal chain: local payoff
+  structure -> selection pressure on claim accuracy ->
+  equilibrium attribution architecture.
+  Thesis (verbatim from module): "Substrate-primary attribution
+  is not honest because the speakers are more honest. It is
+  accurate because inaccuracy has negative expected value in
+  their environment. Narrative-primary attribution is not
+  dishonest because the speakers are dishonest. It is inflated
+  because inflation has positive expected value in their
+  environment. Each architecture is the rational equilibrium
+  for its payoff matrix. Each architecture would shift if the
+  matrix shifted."
+  Module surface: PayoffCell dataclass + 4-cell PAYOFF_MATRIX
+  spanning {context: narrative|substrate} x {claim_type:
+  accurate|inflated} with short_term / long_term /
+  expected_value / visibility_of_failure /
+  recovery_from_failure for each cell. EV signs:
+  narrative-accurate=neutral, narrative-inflated=positive,
+  substrate-accurate=positive, substrate-inflated=negative.
+  PAYOFF_MATRIX_GRID is an ASCII display string rendering the
+  4-cell matrix as a human-readable table.
+  CONTEXT_DIAGNOSTIC_VARIABLES: 6-axis continuous-not-binary
+  classification of how substrate-primary a context is
+  (consequence coupling, failure visibility, attribution
+  traceability, network size and memory, exit cost, other-
+  dependency). Single person operates in different contexts
+  daily and adjusts attribution architecture accordingly.
+  FUNCTIONAL_FRAME block: explicitly names the non-moral
+  framing; quotes the substrate-primary speaker's typical
+  cost-of-failure reasoning verbatim ("I would rather not face
+  the consequences of someone depending on what we cannot do,
+  than put others in danger or ourselves because we make
+  claims we can't perform"); identifies the trade (passed-
+  over in narrative-coded contexts, in exchange for not
+  endangering others or self through misrouting).
+  AI_IMPLICATIONS block: 4-point argument for why removing
+  the moral frame matters for AI calibration. (1) Moral
+  framing produces moral counter-framing; if a model treats
+  narrative-primary as 'normal' and substrate-primary as
+  'modest' or 'lacking confidence', it has imported a value
+  judgment without evidence. (2) Functional framing produces
+  predictions: payoff structure -> architecture, so model
+  can detect contextual cues and adjust priors. (3)
+  Functional framing is symmetric; neither architecture is
+  default-human; training corpus skews narrative-primary
+  because that's what gets written down at scale. (4)
+  Functional framing makes harm concrete: misrouting load
+  in a system where misrouting has operational consequences,
+  not "failing to respect values".
+  4 falsifiable PREDICTIONS P1-P4: P1 individuals vary
+  attribution accuracy by context (predicts equilibrium not
+  trait); P2 communities transitioning from operational to
+  administrative economies show increasing inflation over
+  generations; P3 substrate-primary speakers in narrative-
+  primary contexts passed over at measurable rates compared
+  to inflators with equivalent capability; P4 AI reattribution
+  behavior reduces but does not fully eliminate under
+  explicit context priming. Each prediction carries test
+  method + falsifies_payoff_model_if spec.
+  CORRECTION_TO_AI_MODELS embedded prompt (sister to the
+  architecture-framed correction in attribution_as_load_
+  routing): 6 corrections framed in payoff terms. Includes
+  the symmetric calibration discipline reminder (apply same
+  context-reading to narrative-primary speakers; do not
+  apply substrate-primary priors to contexts where they
+  don't fit).
+  CLEANUP DECISIONS during paste integration: (a) Unicode
+  box-drawing section dividers -> ASCII `=`; (b) box-drawing
+  characters in PAYOFF_MATRIX_GRID display string (`-` for
+  horizontal, `+` for cross intersection) -- preserved
+  vertical `|` already ASCII; the grid is a triple-quoted
+  display string not Python syntax, but converted to
+  ASCII per repo convention so the file reads consistently;
+  (c) down-arrow glyphs in module docstring causal chain ->
+  ASCII `|` + `v` two-line form (same pattern as
+  attribution_as_load_routing); (d) `approx` glyph -> `~` in
+  grid text; (e) `->` Unicode arrow -> ASCII `->` in
+  CONTEXT_DIAGNOSTIC_VARIABLES; (f) em-dash -> double-hyphen
+  in AI_IMPLICATIONS detection cue paragraph. No syntax
+  errors, no smart quotes, no markdown bold-dunder
+  contamination. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `calibration/attribution_as_load_routing.py`: companion
   to gendered_role_compression and architecture_mismatch.
   Documents a cognitive-architectural difference between
