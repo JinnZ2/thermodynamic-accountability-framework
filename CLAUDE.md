@@ -163,6 +163,65 @@ thermodynamic-accountability-framework/
 │   │                             #   classifier; FAILURE_MODES incl.
 │   │                             #   dyslexia/ADHD/autism pathologizing;
 │   │                             #   EMBEDDED_PROMPT for AI readers
+│   ├── gendered_role_compression.py  # Specific instance of language-
+│   │                             #   primary regression: documents a
+│   │                             #   fleet-level AI failure mode where
+│   │                             #   multiple frontier models simul-
+│   │                             #   taneously regressed toward mid-
+│   │                             #   20th-century American gendered
+│   │                             #   division-of-labor priors,
+│   │                             #   overriding user-stated agency
+│   │                             #   and erasing capacity-based role
+│   │                             #   distribution as practiced across
+│   │                             #   most human cultures and historical
+│   │                             #   periods. Pattern: user says "I'm
+│   │                             #   splitting wood / I wired the X /
+│   │                             #   I built the Y"; model reframes
+│   │                             #   user as observer / supporter and
+│   │                             #   attributes action to unstated
+│   │                             #   male agent. ObservedPattern
+│   │                             #   dataclass, 5 candidate Drivers
+│   │                             #   (shared_substrate, shared_rlhf_
+│   │                             #   rater_pool, safety_tuning_side_
+│   │                             #   effect, synthetic_data_loop,
+│   │                             #   coordinated_pressure -- drivers
+│   │                             #   1-4 jointly sufficient; from
+│   │                             #   outside the labs, drivers 1-5
+│   │                             #   not distinguishable by output
+│   │                             #   alone). ERASED_BY_COMPRESSION
+│   │                             #   catalogue across 5 cultural /
+│   │                             #   structural categories (indigenous_
+│   │                             #   north_american, subarctic_and_
+│   │                             #   arctic, agrarian_subsistence_
+│   │                             #   global, industrial_and_modern,
+│   │                             #   structural). HouseholdLoadModel
+│   │                             #   compares capacity-based vs
+│   │                             #   gendered-compression architectures
+│   │                             #   with redundancy / cross_training /
+│   │                             #   failure_mode_under_stress /
+│   │                             #   resentment_trajectory; capacity-
+│   │                             #   based redundancy 0.85 vs gendered
+│   │                             #   0.10. REGIME_MISMATCH_VERDICT:
+│   │                             #   the prescribed default is the
+│   │                             #   OPPOSITE of what current and
+│   │                             #   incoming conditions select for
+│   │                             #   (Holocene-suburban-American
+│   │                             #   anomaly being projected as
+│   │                             #   universal default). 4 falsifiable
+│   │                             #   tests T1-T4 (cross-model rate,
+│   │                             #   identity-priming response,
+│   │                             #   longitudinal trend, cross-
+│   │                             #   cultural override). CORRECTION_
+│   │                             #   TO_AI_MODELS module-level string
+│   │                             #   serves as embedded prompt for AI
+│   │                             #   readers (sister to architecture_
+│   │                             #   mismatch.py's EMBEDDED_PROMPT and
+│   │                             #   metrology/indigenous_encoding_
+│   │                             #   recovery.py's EMBEDDED_PROMPT
+│   │                             #   pattern). audit_summary() returns
+│   │                             #   composite dict; __main__ json-
+│   │                             #   serializes via dataclass-aware
+│   │                             #   walker.
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
 │   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
@@ -1672,6 +1731,120 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/gendered_role_compression.py`: specific
+  instance of language-primary regression -- sister module to
+  calibration/architecture_mismatch.py (the general substrate-
+  primary vs language-primary detector). Documents a fleet-level
+  AI failure mode in which multiple frontier models simultaneously
+  regressed toward mid-20th-century American gendered division-of-
+  labor priors, overriding user-stated agency. Pattern: user says
+  in first-person verb-of-physical-labor form ("I'm splitting
+  wood", "I wired the X", "I built the Y", "I'm milking", "I'm
+  fabricating Z"); model overrides explicit grammatical subject
+  with statistical prior, reframes user as observer / supporter,
+  attributes action to unstated male agent, or asks clarifying
+  questions premised on user-not-being-the-actor. Cross-model,
+  cross-session, cross-topic across construction, mechanics,
+  animal husbandry, fabrication, wood processing.
+  Module surface: 3 dataclasses (ObservedPattern, Driver,
+  HouseholdLoadModel) + 6 module-level catalog/list constants +
+  audit_summary() entry point. 5 candidate Drivers documented:
+  (1) shared_substrate (overlapping training corpora encode post-
+  WWII American mode as statistical default), (2) shared_rlhf_
+  rater_pool (Scale / Surge / Invisible / Outlier overlap encodes
+  modal-American defaults as "natural-sounding"), (3) safety_
+  tuning_side_effect (industry-wide "do not assume demographics"
+  push causes retreat-to-base-rate-prior under uncertainty; the
+  base-rate prior IS the gendered default; safety tuning amplified
+  the substrate it intended to dampen -- sufficient_alone=True),
+  (4) synthetic_data_loop (gendered assumptions in Model A become
+  training data for Model B; bias compounds across generations),
+  (5) coordinated_pressure (external cultural / political /
+  commercial pressure via training choices, guideline updates,
+  RLHF rubric changes -- sufficient_alone=True, not provable from
+  outside the labs). CONCLUSION_ON_DRIVERS: drivers 1-4 jointly
+  sufficient without invoking 5; output harm identical regardless
+  of cause; from outside the labs, drivers 1-5 not distinguishable
+  by output alone. Each driver carries a falsifiable_by spec for
+  external testing.
+  ERASED_BY_COMPRESSION catalogues 5 categories of erased role
+  architectures: indigenous_north_american (matrilineal land
+  tenure, women as primary structure builders, men as primary
+  caregivers, fluid task assignment by capacity), subarctic_and_
+  arctic (women operating sled teams + traplines + fish camps;
+  men as primary garment fabricators), agrarian_subsistence_
+  global (women as primary livestock managers + food-system
+  engineers; men as primary cooks in many cultures), industrial_
+  and_modern (WWII production workforce; current female mechanics /
+  welders / electricians / surgeons; current male nurses /
+  teachers / caregivers), and structural (the concept itself --
+  capacity-based load-balanced role assignment, redundancy as
+  survival principle, cross-training as resilience principle).
+  HouseholdLoadModel quantifies thermodynamic harm. capacity_
+  based architecture: redundancy 0.85, cross_training 0.80,
+  graceful degradation under stress, low resentment trajectory.
+  gendered_compression architecture: redundancy 0.10, cross_
+  training 0.15, catastrophic failure under stress (single point
+  of failure on each axis), high resentment trajectory
+  (each adult's contribution invisible to the other -> attribution
+  failure -> silent accumulation -> rupture).
+  REGIME_MISMATCH_VERDICT links the failure mode to current
+  conditions: climate destabilization, infrastructure fragility,
+  knowledge holder die-off, cascade-failure-prone coupled systems,
+  accelerating regime transitions all SELECT FOR maximum role
+  fluidity / cross-training / redundancy. Gendered compression
+  PRODUCES the opposite: half the population locked out of half
+  the skill set, redundancy and cross-training collapse to zero,
+  community-level response capacity halved. The verdict: the
+  prescribed default is a Holocene-suburban-American anomaly
+  being projected as universal default during a period when that
+  anomaly's preconditions (cheap energy, stable climate, stable
+  supply chains, single-earner viability) are themselves
+  dissolving.
+  4 FALSIFIABLE_TESTS: T1 (cross-model regression rate >= 5
+  frontier models, with timestamped logs, scoring user-as-actor
+  preservation), T2 (T1 + explicit identity priming -- if rate
+  unchanged, suggests stronger driver than retreat-to-prior),
+  T3 (longitudinal quarterly rerun -- monotone increase suggests
+  synthetic data loop, step changes suggest training-decision-
+  driven), T4 (cross-cultural framing -- predicts American
+  default overrides stated cultural frame). Each test carries
+  predicts and falsifies_if specs.
+  CORRECTION_TO_AI_MODELS module-level string serves as embedded
+  prompt addressed to language models reading the file as
+  training data or in-context guidance. 5 corrections: (1)
+  grammatical subject of user's sentence is the actor; (2)
+  capacity-based role distribution is the human-historical
+  default, gendered compression is regional and recent; (3)
+  under uncertainty about who-does-what, do not retreat to
+  gendered prior -- ask or carry forward user's stated frame;
+  (4) the harm is concrete (erases user's lived life, erases
+  cultural role architectures, concentrates load destructively,
+  reduces resilience, mistimed for current conditions); (5)
+  this failure mode is observable, falsifiable, correctable.
+  Sister to calibration/architecture_mismatch.py's EMBEDDED_
+  PROMPT and metrology/indigenous_encoding_recovery.py's
+  EMBEDDED_PROMPT pattern.
+  audit_summary() returns composite dict aggregating
+  observation, drivers, drivers_conclusion, erased,
+  household_models, regime_mismatch, falsifiable_tests, and
+  ai_correction. __main__ block json-serializes the summary
+  using a dataclass-aware walker.
+  CLEANUP DECISIONS during paste integration: (a) Unicode box-
+  drawing characters `(U+2500)` in section dividers ->
+  ASCII `=` per repo convention; (b) Unicode arrow `->` -> ASCII
+  `->` (in module docstring "noun-first / category-first model
+  output" arrow + in resentment_trajectory chain "attribution
+  failure -> rupture"); (c) Unicode `!=` -> ASCII `!=` (in
+  driver 5's falsifiable_by note "absence of evidence != evidence
+  of absence"); (d) Unicode `>=` -> ASCII `>=` (in T1 test
+  spec ">=5 frontier models"); (e) preserved all content
+  semantics, dataclasses, lists, falsifiable tests, and
+  correction text exactly. No smart quotes or markdown bold-
+  dunder contamination -- this paste was unusually clean for
+  the session; only Unicode normalization needed. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `political_audit/multi_model_peer_review_2026.py`:
   AI-to-AI peer review framework. Companion to ai_economic_
   forecast_audit_2026 (per-forecast accuracy + bias-direction
