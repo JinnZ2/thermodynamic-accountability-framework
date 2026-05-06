@@ -1966,6 +1966,46 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Appended a "Why physics underneath" addendum to `calibration/
+  README.md` framing the philosophical underpinning that ties
+  together the recent calibration/ attribution-stack additions
+  (architecture_mismatch, gendered_role_compression, attribution_
+  as_load_routing, attribution_payoff_matrix, evidence_resistant_
+  priors). Six sections: "Why physics underneath" (the recurring
+  structural insight: a system that allows priors to operate
+  above its physical-constraint layer produces outputs that
+  diverge from reality; divergence is bounded only by adding
+  physics underneath); "What we are measuring" (LAYER STACK
+  ASCII diagram contrasting correct ordering -- physics floor
+  beneath cultural priors -- against currently observed frontier
+  model behavior where priors override physics); "Why this
+  framing matters" (the moral/cultural/political framing makes
+  failures contestable and unfalsifiable; the functional framing
+  makes them testable -- a 6'3" person with hands too large for
+  the access space cannot have performed the cylinder 8 work,
+  not because of values but because of physical possibility);
+  "Common-sense as a check" (sense common to anyone with sensor
+  presence in the relevant domain, as the layer where physics-
+  violating outputs first become visible); "Scope of this
+  repository" (in scope: physical constraint satisfaction,
+  prior-vs-evidence ordering, load distribution viability,
+  regime validity, attribution architecture; out of scope:
+  which roles people should occupy, which cultural practices
+  are correct, which moral / political / lifestyle positions
+  are correct); "The axiom" (Physics underneath, everything
+  else on top -- correction requires installing physics below).
+  CLEANUP at integration: em-dashes -> ASCII `--` throughout;
+  Unicode box-drawing horizontal lines `(U+2500)` in the LAYER
+  STACK diagram -> ASCII `-`; Unicode left and right arrows
+  `<- ->` in `<- physics floor ->` -> ASCII; LAYER STACK
+  wrapped in markdown code fence so monospace alignment renders
+  in markdown viewers. Section titles using em-dash separator
+  -> double-hyphen. The chat_paste_check tool flags the
+  surrounding original README content (smart quotes,
+  pre-existing markdown code fences) but those warnings are
+  pre-existing and not introduced by this addendum -- the
+  appended portion (line 644 onward) is ASCII-clean. Pure
+  markdown; calibration test suite (11 tests) still passes.
 - Added `calibration/evidence_resistant_priors.py`: the most
   concrete failure-mode instance in the calibration/ attribution
   stack. Documents override-of-evidence-by-prior, qualitatively
