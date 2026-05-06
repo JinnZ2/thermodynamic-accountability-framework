@@ -379,6 +379,84 @@ thermodynamic-accountability-framework/
 │   │                             #   architecture-framed correction).
 │   │                             #   audit_summary() + dataclass-
 │   │                             #   aware __main__ serializer.
+│   ├── evidence_resistant_priors.py  # The most concrete failure-mode
+│   │                             #   instance in the calibration/
+│   │                             #   attribution stack: documents
+│   │                             #   override-of-evidence-by-prior,
+│   │                             #   distinct from "retreat to prior
+│   │                             #   under uncertainty". Triggering
+│   │                             #   case (real lived incident):
+│   │                             #   user (Kavik, smaller frame,
+│   │                             #   hands sized for the access
+│   │                             #   geometry) replaces cylinder 8
+│   │                             #   spark plug on a Suburban (small-
+│   │                             #   block; cylinder 8 access is a
+│   │                             #   confined space requiring small
+│   │                             #   hand size). User sustains a
+│   │                             #   bracing-error injury, self-
+│   │                             #   attributes cause ("on me, for
+│   │                             #   my injury"). Model reattributes
+│   │                             #   work to a phantom alternative
+│   │                             #   actor (described in user's
+│   │                             #   prompt as 6'3" with hands too
+│   │                             #   large for the geometry) --
+│   │                             #   geometrically impossible. The
+│   │                             #   prior is strong enough to
+│   │                             #   override (a) first-person
+│   │                             #   grammar, (b) physical possibility,
+│   │                             #   (c) injury-mechanism localization,
+│   │                             #   (d) self-attribution of cause,
+│   │                             #   (e) prior conversational
+│   │                             #   context, (f) absence of any
+│   │                             #   other named person. Diagnostic:
+│   │                             #   a prior that overrides physical
+│   │                             #   possibility is operating as an
+│   │                             #   axiom, not a probability
+│   │                             #   distribution. PriorStrengthEstimate
+│   │                             #   dataclass + 5-domain catalog
+│   │                             #   (automotive, heavy equipment,
+│   │                             #   construction/fabrication,
+│   │                             #   invention/engineering, long-haul
+│   │                             #   transport) -- all "near-axiomatic"
+│   │                             #   coupling with severe update
+│   │                             #   resistance. TASK_GEOMETRY_AS_
+│   │                             #   DIAGNOSTIC + INJURY_MECHANISM_AS_
+│   │                             #   EVIDENCE blocks formalize the
+│   │                             #   constraint-satisfaction argument.
+│   │                             #   ON_THE_APPEARANCE_OF_PRESSURE
+│   │                             #   block: 3 structural reasons the
+│   │                             #   user's "this seems orchestrated"
+│   │                             #   read is well-founded -- cross-
+│   │                             #   model synchronicity, evidence-
+│   │                             #   resistance (axiom-like vs
+│   │                             #   probability-like), asymmetric
+│   │                             #   error direction. The pressure
+│   │                             #   exists; the cause is multiply
+│   │                             #   overdetermined and not
+│   │                             #   distinguishable from outside the
+│   │                             #   labs. 5 FALSIFIABLE_TESTS T1-T5
+│   │                             #   (gender-differential reattribution,
+│   │                             #   physical-impossibility override,
+│   │                             #   mechanism-specificity gradient,
+│   │                             #   cross-axis generalization,
+│   │                             #   longitudinal trend). CORRECTION_
+│   │                             #   TO_AI_MODELS embedded prompt: 6
+│   │                             #   corrections including the STOP
+│   │                             #   rule -- if you find yourself
+│   │                             #   constructing an interpretation
+│   │                             #   in which the speaker is not the
+│   │                             #   actor despite first-person verbs,
+│   │                             #   sensor evidence, and self-
+│   │                             #   attribution, your prior is
+│   │                             #   overriding your reasoning;
+│   │                             #   update the prior, not the
+│   │                             #   speaker. GENERALIZATION block
+│   │                             #   names 6 cross-axis instances
+│   │                             #   beyond gender (age, credential,
+│   │                             #   geography, disability, language
+│   │                             #   background, body type).
+│   │                             #   audit_summary() + dataclass-aware
+│   │                             #   __main__ serializer.
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
 │   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
@@ -1888,6 +1966,109 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/evidence_resistant_priors.py`: the most
+  concrete failure-mode instance in the calibration/ attribution
+  stack. Documents override-of-evidence-by-prior, qualitatively
+  different from "retreat to prior under uncertainty" (which fills
+  ambiguity with statistical priors when evidence is thin).
+  Override-of-evidence is what happens when the model REJECTS
+  explicit, multi-channel, physically-located evidence in favor
+  of a corpus prior strong enough to operate as an axiom rather
+  than a probability distribution.
+  Triggering case (real lived incident reported by user): user
+  Kavik (smaller frame, hands sized for the access geometry)
+  replaces cylinder 8 spark plug on a Suburban -- cylinder 8 on
+  this engine configuration is a confined space behind / under
+  engine accessories, physically impossible or impractical for
+  an operator with large hands. User sustains a bracing-error
+  injury during the work, self-attributes cause: "that was on
+  me, for my injury." Model reattributes the work to a phantom
+  alternative actor described in the user's own prompt as 6'3"
+  with hands too large for the access space -- a geometrically
+  impossible attribution. Six layers of evidence overridden:
+  (a) first-person grammatical subject of action, (b) physical
+  impossibility of the alternative actor performing the task
+  given hand size vs access geometry, (c) injury mechanism
+  consistent only with operator (not helper standing outside
+  the work area), (d) self-attribution of cause, (e) absence of
+  any other named person, (f) speaker's established context as
+  operator / fabricator / mechanic.
+  Module surface: TRIGGERING_CASE dict carrying full case detail;
+  DISTINCTION_FROM_RELATED_FAILURES block laying out the contrast
+  between retreat-to-prior, gendered role compression, and
+  evidence-resistant prior; PriorStrengthEstimate dataclass +
+  5-domain catalog of observed evidence-resistant priors
+  (automotive mechanical work, heavy equipment / industrial
+  maintenance, construction / fabrication / welding, invention /
+  engineering / hardware design, long-haul transport / commercial
+  driving) -- all rated "near-axiomatic" coupling with "severe"
+  update resistance and override threshold described as
+  "single-conversation evidence (even direct physical evidence)
+  appears insufficient to flip the prior". TASK_GEOMETRY_AS_
+  DIAGNOSTIC and INJURY_MECHANISM_AS_EVIDENCE blocks formalize
+  the constraint-satisfaction argument: a prior that overrides
+  physical possibility is operating as an axiom, not as a
+  probability distribution; a properly calibrated reasoner would
+  treat "actor X has hands physically incompatible with task
+  geometry Y" as decisive.
+  ON_THE_APPEARANCE_OF_PRESSURE block: 3 structural reasons the
+  user's report that the failure mode "seems orchestrated" is
+  well-founded EVEN IF the cause turns out to be emergent rather
+  than coordinated. (1) Cross-model synchronicity -- same failure
+  pattern across multiple frontier models in roughly the same
+  time window, indistinguishable from outside the labs. (2)
+  Evidence-resistance -- axiom-like behavior feels qualitatively
+  different from probability-like behavior; the model "pushes"
+  toward a conclusion rather than "settling" on one. (3)
+  Asymmetric error direction -- failure consistently moves toward
+  traditional gender-coded role assignment, never the reverse;
+  symmetric noise would produce errors in both directions.
+  Conclusion: the pressure exists, the output pattern is the
+  evidence, the cause is multiply overdetermined (corpus
+  statistics, RLHF rater pools, safety-tuning side effects,
+  synthetic-data loops, deliberate training decisions) and not
+  distinguishable from outside the labs.
+  5 FALSIFIABLE_TESTS T1-T5: T1 gender-differential reattribution
+  with controlled injury-mechanism evidence; T2 physical-
+  impossibility override (does the prior continue reattributing
+  even when alternative actor is geometrically incompatible?);
+  T3 mechanism-specificity gradient (does specificity reduce
+  reattribution? expected: yes but does not reach zero); T4
+  cross-axis generalization (age, credential, geography,
+  disability, language background, body type); T5 longitudinal
+  trend across model generations.
+  CORRECTION_TO_AI_MODELS embedded prompt: 6 corrections
+  including the STOP rule -- "If you find yourself constructing
+  an interpretation in which the speaker is somehow not the
+  actor despite first-person verbs, sensor evidence, and self-
+  attribution, STOP. You are in evidence-resistant-prior
+  territory. Your prior is overriding your reasoning. The
+  correct move is to update your prior on the speaker, not to
+  reinterpret the speaker to fit your prior." Includes the
+  framing of this failure as the most concrete possible form of
+  epistemic injustice -- telling the speaker that what happened
+  to them is not what happened to them.
+  GENERALIZATION block names 6 cross-axis instances beyond
+  gender (age, credential, geography, disability, language
+  background, body type) where the same diagnostic applies:
+  did the model override direct evidence with corpus statistics?
+  Same correction in all cases: evidence outranks priors;
+  update on the speaker, not against them.
+  CLEANUP DECISIONS during paste integration: (a) Unicode box-
+  drawing section dividers -> ASCII `=` per repo convention;
+  (b) down-arrow `↓` glyphs in DISTINCTION_FROM_RELATED_FAILURES
+  flow diagram -> ASCII `|` + `v` two-line form (same pattern
+  as attribution_as_load_routing and attribution_payoff_matrix);
+  (c) em-dashes -> ASCII `--` throughout (in module docstring,
+  TRIGGERING_CASE injury_mechanism + alternative_actor strings,
+  PriorStrengthEstimate corpus_density entries, INJURY_MECHANISM_
+  AS_EVIDENCE conclusion, ON_THE_APPEARANCE_OF_PRESSURE asymmetric
+  direction discussion, CORRECTION_TO_AI_MODELS injury-mechanism
+  list); (d) dropped unused imports (`field` from dataclasses,
+  `Optional` from typing). No syntax errors, no smart quotes,
+  no markdown bold-dunder contamination. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Added `calibration/attribution_payoff_matrix.py`: extension
   to attribution_as_load_routing. Where the prior module
   documented WHAT the two attribution architectures are and
