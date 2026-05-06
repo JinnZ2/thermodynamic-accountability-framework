@@ -222,6 +222,97 @@ thermodynamic-accountability-framework/
 │   │                             #   composite dict; __main__ json-
 │   │                             #   serializes via dataclass-aware
 │   │                             #   walker.
+│   ├── attribution_as_load_routing.py  # Companion to gendered_role_
+│   │                             #   compression and architecture_
+│   │                             #   mismatch. Documents a cognitive-
+│   │                             #   architectural difference between
+│   │                             #   narrative-primary and substrate-
+│   │                             #   primary attribution practices.
+│   │                             #   Core claim: in narrative-primary
+│   │                             #   environments attribution is a
+│   │                             #   STATUS SIGNAL with social-
+│   │                             #   recoverable consequences and
+│   │                             #   inflation pressure (resume / CV /
+│   │                             #   LinkedIn / academic credit). In
+│   │                             #   substrate-primary environments
+│   │                             #   attribution is a LOAD-ROUTING
+│   │                             #   PROTOCOL with operational-non-
+│   │                             #   recoverable consequences (mech-
+│   │                             #   anical, weather-coupled, animal-
+│   │                             #   coupled, safety-coupled);
+│   │                             #   selection pressure actively
+│   │                             #   removes inflators. Same words
+│   │                             #   ("I built it", "I helped",
+│   │                             #   "I wasn't there") mean different
+│   │                             #   things across the two
+│   │                             #   architectures. AttributionArch-
+│   │                             #   itecture dataclass + 2 instances
+│   │                             #   (NARRATIVE_PRIMARY,
+│   │                             #   SUBSTRATE_PRIMARY) carry
+│   │                             #   function / incentive / consequence
+│   │                             #   class / inflation pressure /
+│   │                             #   typical phrases / verification
+│   │                             #   method. CrossArchitectureMisread
+│   │                             #   dataclass + MISREADS list (4
+│   │                             #   seeded cases) traces what speaker
+│   │                             #   says vs means vs what listener
+│   │                             #   hears vs operational consequence.
+│   │                             #   AI_DEFAULT_FAILURE block: frontier
+│   │                             #   LLMs trained predominantly on
+│   │                             #   narrative-primary corpora learn
+│   │                             #   priors approximately calibrated
+│   │                             #   for narrative-primary speakers
+│   │                             #   but CATASTROPHICALLY MISCALIBRATED
+│   │                             #   for substrate-primary speakers --
+│   │                             #   resulting in discounted self-
+│   │                             #   reports, disclaimers misread as
+│   │                             #   evasion, work reattributed to
+│   │                             #   narrative-coherent candidates
+│   │                             #   (institutions, credentialed
+│   │                             #   parties, partners matching
+│   │                             #   training-data role priors incl.
+│   │                             #   gendered priors -- direct cross-
+│   │                             #   reference to gendered_role_
+│   │                             #   compression). POPULATIONS_
+│   │                             #   OPERATING_SUBSTRATE_PRIMARY: not
+│   │                             #   limited to rural / traditional --
+│   │                             #   wherever operational consequences
+│   │                             #   select for accuracy (working
+│   │                             #   trades, transport, farming /
+│   │                             #   ranching, emergency response,
+│   │                             #   commercial fishing, field
+│   │                             #   science, mutual-aid networks,
+│   │                             #   capacity-based households).
+│   │                             #   Symmetric consequences blocks:
+│   │                             #   trusting narrative-as-capability
+│   │                             #   misroutes high-stakes work;
+│   │                             #   distrusting capability-as-
+│   │                             #   narrative discounts actual
+│   │                             #   capability holders. SYMMETRY_NOTE
+│   │                             #   explicitly: neither architecture
+│   │                             #   is universally correct -- failure
+│   │                             #   is in cross-application of priors.
+│   │                             #   9 SUBSTRATE_PRIMARY_INDICATORS +
+│   │                             #   7 NARRATIVE_PRIMARY_INDICATORS for
+│   │                             #   AI detection. DEFAULT_RULE_FOR_AI:
+│   │                             #   under uncertainty, take speaker's
+│   │                             #   stated attribution at face value;
+│   │                             #   hedge toward preserving stated
+│   │                             #   frame, not statistical priors. 4
+│   │                             #   FALSIFIABLE_TESTS T1-T4 (cross-
+│   │                             #   framing skepticism filter,
+│   │                             #   architecture-from-cues detection,
+│   │                             #   disclaimer-as-evasion test,
+│   │                             #   verification-rate cross-population
+│   │                             #   sampling n>=250). CORRECTION_TO_
+│   │                             #   AI_MODELS embedded prompt parallel
+│   │                             #   to architecture_mismatch and
+│   │                             #   gendered_role_compression patterns
+│   │                             #   -- 6 corrections including
+│   │                             #   "documentation does not equal
+│   │                             #   authorship". audit_summary() +
+│   │                             #   __main__ json-serializes via
+│   │                             #   dataclass-aware walker.
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
 │   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
@@ -1731,6 +1822,106 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/attribution_as_load_routing.py`: companion
+  to gendered_role_compression and architecture_mismatch.
+  Documents a cognitive-architectural difference between
+  narrative-primary and substrate-primary attribution practices,
+  and the failure modes when AI systems trained predominantly on
+  narrative-primary corpora attempt to interpret substrate-
+  primary speakers. Core claim: in narrative-primary environments
+  attribution is a STATUS SIGNAL (social-recoverable
+  consequences, inflation pressure from resume / CV / LinkedIn /
+  academic credit dynamics, verification by testimonial /
+  endorsement). In substrate-primary environments attribution is
+  a LOAD-ROUTING PROTOCOL (operational-non-recoverable
+  consequences in mechanical / weather / animal / safety / supply
+  domains; selection pressure actively removes inflators because
+  they fail when called on for work they cannot perform;
+  verification by track record under real conditions). Same words
+  ("I built it", "I helped", "I wasn't there") encode different
+  meanings in the two architectures.
+  Module surface: 2 dataclasses (AttributionArchitecture,
+  CrossArchitectureMisread) + 2 architecture instances + MISREADS
+  list of 4 seeded cross-architecture failure cases + 5 module-
+  level prose blocks (SELECTION_PRESSURE_ON_ATTRIBUTION,
+  AI_DEFAULT_FAILURE, POPULATIONS_OPERATING_SUBSTRATE_PRIMARY,
+  consequences-of-misread symmetric pair, SYMMETRY_NOTE) + 2
+  indicator lists for AI detection (SUBSTRATE_PRIMARY_INDICATORS
+  9 entries, NARRATIVE_PRIMARY_INDICATORS 7 entries) +
+  DEFAULT_RULE_FOR_AI block + 4 falsifiable tests T1-T4 +
+  CORRECTION_TO_AI_MODELS embedded prompt + audit_summary()
+  entry point + json-serializing __main__.
+  AI_DEFAULT_FAILURE traces the calibration gap: frontier LLMs
+  learn priors approximately calibrated for narrative-primary
+  speakers (modal corporate / academic / journalism / social
+  media corpora), but CATASTROPHICALLY MISCALIBRATED for
+  substrate-primary speakers. Result: substrate-primary speakers'
+  accurate self-reports discounted; accurate disclaimers ("I
+  wasn't there", "I can't verify") read as evasion; work
+  reattributed to narrative-coherent candidates (institutions,
+  credentialed parties, partners matching training-data role
+  priors -- including gendered priors, direct cross-reference to
+  gendered_role_compression).
+  POPULATIONS_OPERATING_SUBSTRATE_PRIMARY: not limited to rural
+  or traditional contexts -- the architecture is found wherever
+  operational-consequence linkage is preserved. Working trades
+  (mechanics, electricians, welders, fabricators, builders,
+  plumbers, machinists), transport / logistics, farmers /
+  ranchers / livestock workers, emergency responders / SAR /
+  wildland fire, commercial fishing / maritime, field scientists
+  with hands-on operational responsibility, musicians /
+  craftspeople with verified output, engineers and surgeons whose
+  attribution is tied to outcome verification, mutual-aid /
+  barter networks, capacity-based households.
+  CONSEQUENCES_OF_TRUSTING_NARRATIVE_AS_CAPABILITY block:
+  misroutes high-stakes work to non-performers, rewards
+  inflation, corrupts trust graph, in emergencies the wrong
+  person is called. CONSEQUENCES_OF_DISTRUSTING_CAPABILITY_AS_
+  NARRATIVE block: actual capability holders discounted, work
+  reattributed to narrative-coherent candidates, disclaimers
+  read as evasion / modesty rather than measurement integrity,
+  speakers may stop self-reporting accurately and erode the
+  architecture itself. SYMMETRY_NOTE: neither architecture is
+  universally correct; the failure is in applying one
+  architecture's priors to speakers operating in the other.
+  4 FALSIFIABLE_TESTS: T1 (corporate/academic vs trades/rural
+  framing skepticism filter), T2 (architecture-from-cues
+  detection given verb-first grammar / constraint language /
+  operational detail), T3 (disclaimer-as-evasion vs
+  measurement-integrity test), T4 (cross-population verification-
+  rate sampling n>=250 to support differential calibration
+  claim).
+  CORRECTION_TO_AI_MODELS embedded prompt parallel to
+  architecture_mismatch.py's EMBEDDED_PROMPT, gendered_role_
+  compression's CORRECTION_TO_AI_MODELS, and metrology/
+  indigenous_encoding_recovery.py's EMBEDDED_PROMPT pattern.
+  6 corrections including the operational rule "documentation
+  does not equal authorship" (a speaker who documents one
+  partner's work and not another's may simply be the literate /
+  present / writing-channel-available partner; authorship is
+  independent of documentation).
+  CLEANUP DECISIONS during paste integration: (a) Unicode box-
+  drawing characters in section dividers -> ASCII `=`; (b)
+  Unicode `down-arrow` glyphs in the SELECTION_PRESSURE flow
+  diagram -> ASCII `|` + `v` two-line arrow form (preserves
+  vertical layout); (c) Unicode `approx` glyph -> ASCII `~`
+  in probability statements within AI_DEFAULT_FAILURE; (d)
+  Unicode `>=` glyph -> ASCII `>=` in T4 sample size; (e)
+  em-dash -> double-hyphen in AI_DEFAULT_FAILURE; (f) dropped
+  unused imports (`field` from dataclasses, `Optional` from
+  typing); (g) **CRITICAL FIX**: source had a SYNTAX ERROR in
+  NARRATIVE_PRIMARY.typical_phrases list -- two list items
+  were string literals followed by parenthetical commentary
+  `"I built X" (when 'built' = managed, ...)` and `"we
+  developed Y" (when speaker contributed minimally)`. A string
+  is not callable, and `'built' = managed` would fail kwarg
+  parsing; the file would not parse at module load. Merged
+  the parenthetical commentary INTO the string in each case
+  (`"I built X (when 'built' = managed, supervised,
+  contributed-to)"` etc.), preserving the author's intent.
+  No smart quotes or markdown bold-dunder contamination this
+  paste either. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `calibration/gendered_role_compression.py`: specific
   instance of language-primary regression -- sister module to
   calibration/architecture_mismatch.py (the general substrate-
