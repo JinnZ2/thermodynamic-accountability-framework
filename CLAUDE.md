@@ -457,6 +457,64 @@ thermodynamic-accountability-framework/
 │   │                             #   background, body type).
 │   │                             #   audit_summary() + dataclass-aware
 │   │                             #   __main__ serializer.
+│   ├── metrology_cancer_detector.py  # Substrate audit framework
+│   │                             #   that detects measurement
+│   │                             #   substrate corruption before it
+│   │                             #   metastasizes through downstream
+│   │                             #   AI / economic / institutional
+│   │                             #   systems. Core question: what
+│   │                             #   work is invisible in this
+│   │                             #   dataset? Five-layer audit:
+│   │                             #   (1) inventory -- what categories
+│   │                             #   exist; (2) absence -- what
+│   │                             #   categories are MISSING (invisible
+│   │                             #   work); (3) weighting -- are
+│   │                             #   measured categories weighted by
+│   │                             #   actual load; (4) correlation --
+│   │                             #   what unmeasured work does
+│   │                             #   measured work depend on;
+│   │                             #   (5) cascade -- if unmeasured work
+│   │                             #   stops, what collapses. RED_FLAGS
+│   │                             #   constant lists 6 falsifiable
+│   │                             #   detection signals (category with
+│   │                             #   no time/cost, work labeled
+│   │                             #   "automatic" or "natural", gendered
+│   │                             #   division matching measurement
+│   │                             #   gaps, dependent variables not
+│   │                             #   accounting for prerequisite
+│   │                             #   labor, system stability claim
+│   │                             #   coupled to unmeasured work,
+│   │                             #   downstream failure traceable to
+│   │                             #   missing upstream measurement).
+│   │                             #   MetrologyAudit dataclass takes
+│   │                             #   dataset_name + measured_
+│   │                             #   categories + absent_categories
+│   │                             #   + dependencies dict (measured ->
+│   │                             #   prereqs); detect_cancer()
+│   │                             #   surfaces every "X depends on
+│   │                             #   unmeasured Y" pair; report()
+│   │                             #   formats human-readable damage
+│   │                             #   report. Demo: GDP labor
+│   │                             #   statistics with 3 measured
+│   │                             #   categories (paid employment,
+│   │                             #   wage income, manufacturing
+│   │                             #   output) and 6 absent (childcare,
+│   │                             #   food processing, household
+│   │                             #   maintenance, emotional labor,
+│   │                             #   appearance maintenance,
+│   │                             #   knowledge transmission); audit
+│   │                             #   surfaces 7 metastasis risks
+│   │                             #   (wage income depends on
+│   │                             #   unmeasured childcare etc).
+│   │                             #   Sister to substrate_validation_
+│   │                             #   oracle (AI output validation),
+│   │                             #   political_audit/substrate_audit
+│   │                             #   (study claim audit), and
+│   │                             #   labor_thermodynamics/ (markdown
+│   │                             #   specs of invisible-labor failure
+│   │                             #   modes -- this module is the
+│   │                             #   executable analogue applied to
+│   │                             #   any dataset).
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
 │   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
@@ -1966,6 +2024,54 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/metrology_cancer_detector.py`: substrate
+  audit framework that detects measurement-substrate corruption
+  before it metastasizes through downstream AI / economic /
+  institutional systems. Core question: what work is invisible
+  in this dataset? Five-layer audit (inventory, absence,
+  weighting, correlation, cascade). 6-entry RED_FLAGS list of
+  falsifiable detection signals (category with no time/cost
+  attached, work labeled "automatic" or "natural", gendered
+  division matching measurement gaps, dependent variables not
+  accounting for prerequisite labor, system stability claims
+  coupled to unmeasured work, downstream failures traceable to
+  missing upstream measurement).
+  Module surface: 3 module-level metadata dicts (MODULE_STRUCTURE,
+  RED_FLAGS, USAGE_PATTERN) for documentation + MetrologyAudit
+  dataclass with detect_cancer() and report() methods. dataclass
+  fields: dataset_name, measured_categories, absent_categories,
+  dependencies (dict mapping measured -> list of prereqs).
+  detect_cancer() iterates dependencies and emits "X depends on
+  unmeasured Y" for every prereq not in measured_categories.
+  report() returns human-readable damage report.
+  Demo: GDP labor statistics with 3 measured categories (paid
+  employment hours, wage income, manufacturing output) and 6
+  absent invisible-work categories (childcare labor, food
+  processing labor, household maintenance, emotional labor,
+  appearance maintenance, knowledge transmission); audit
+  surfaces 7 metastasis risks where downstream wage / output /
+  population-health metrics are coupled to unmeasured upstream
+  labor categories. Sister to calibration/substrate_validation_
+  oracle.py (AI output validation), political_audit/substrate_
+  audit.py (study claim audit), and labor_thermodynamics/
+  markdown specs (this module is the executable analogue
+  applied generically to any dataset, not just labor).
+  CLEANUP DECISIONS: source paste was a "skeleton" template
+  with the actual MetrologyAudit class wrapped inside a triple-
+  quoted string under a `skeleton =` variable -- not actually
+  importable / runnable Python on import. Extracted the dataclass
+  out of the string literal into a real module-level definition
+  so the file works on import; preserved the metadata dicts as
+  module constants for documentation. Renamed lowercase `module_
+  structure` / `red_flags` / `application` to UPPERCASE per repo
+  convention for module-level constants. Dropped unused imports
+  (json, field). Demo example moved into `if __name__ ==
+  "__main__":` smoke-test guard. \\n escape sequence inside the
+  source's `"\\\\n".join(...)` (which would produce literal "\\n"
+  in output if exec'd from inside the skeleton) replaced with
+  proper `"\\n".join(...)` for actual newlines. Pure stdlib;
+  chat_paste_check passes; calibration test suite (11 tests)
+  still passes.
 - Appended a "Why physics underneath" addendum to `calibration/
   README.md` framing the philosophical underpinning that ties
   together the recent calibration/ attribution-stack additions
