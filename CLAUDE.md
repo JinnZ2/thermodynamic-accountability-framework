@@ -515,6 +515,64 @@ thermodynamic-accountability-framework/
 │   │                             #   modes -- this module is the
 │   │                             #   executable analogue applied to
 │   │                             #   any dataset).
+│   ├── metrology_audit_thermodynamic.py  # Sister to metrology_cancer_
+│   │                             #   detector. Adds thermodynamic-
+│   │                             #   budget enforcement and the
+│   │                             #   rational-actor-hypocrisy gate.
+│   │                             #   Premise: any measurement system
+│   │                             #   used as basis for prediction,
+│   │                             #   policy, or AI training must be
+│   │                             #   auditable against physical /
+│   │                             #   thermodynamic constraints; if it
+│   │                             #   is not, downstream predictions
+│   │                             #   will fail and corruption will
+│   │                             #   cascade. 4-axis detection:
+│   │                             #   (a) measurement gaps (what's not
+│   │                             #   counted), (b) thermodynamic
+│   │                             #   violations (impossible energy
+│   │                             #   budgets), (c) prediction failures
+│   │                             #   (model doesn't match reality),
+│   │                             #   (d) rational-actor hypocrisy
+│   │                             #   (model applied selectively).
+│   │                             #   ThermodynamicBudget dataclass
+│   │                             #   (total_available, measured_
+│   │                             #   allocation, unmeasured_allocation
+│   │                             #   + deficit / visibility_ratio /
+│   │                             #   is_physically_possible methods).
+│   │                             #   MeasurementSystemAudit dataclass
+│   │                             #   composes the budget with measured
+│   │                             #   / ignored category lists +
+│   │                             #   predicted vs actual outcome +
+│   │                             #   applies_universally /
+│   │                             #   applied_to_modelers flags;
+│   │                             #   exposes measurement_completeness,
+│   │                             #   prediction_matches_reality,
+│   │                             #   thermodynamic_validity,
+│   │                             #   rational_actor_consistency
+│   │                             #   (SCOPED / CONSISTENT /
+│   │                             #   SELF_REFUTING / UNCLEAR);
+│   │                             #   corruption_severity weighted-sum
+│   │                             #   ladder CLEAN (0) / DEGRADED (1)
+│   │                             #   / CORRUPTED (2) / POISONED (>=3,
+│   │                             #   cascade-spreading) -- physical
+│   │                             #   impossibility weighs double.
+│   │                             #   cascade_risk + diagnosis +
+│   │                             #   recommendations + audit_report
+│   │                             #   compose human-readable output.
+│   │                             #   3 worked-example audits: GDP
+│   │                             #   (45hr measured + 85hr unmeasured
+│   │                             #   in a 112hr/week budget -> +18hr
+│   │                             #   deficit, POISONED), AI training
+│   │                             #   data (55%/45% measured/missing,
+│   │                             #   prediction failures 2022-2026),
+│   │                             #   rational-actor model (universal-
+│   │                             #   claim + modeler-exempt =
+│   │                             #   SELF_REFUTING). CascadeTrace
+│   │                             #   dataclass connects multiple
+│   │                             #   audits (origin -> dependents) to
+│   │                             #   show metastasis path -- demo
+│   │                             #   wires GDP -> AI training data +
+│   │                             #   rational actor model.
 │   ├── pipeline.py               # Unified audit across the 3 modules
 │   ├── self_audit.py             # Run pipeline on the repo itself
 │   ├── recency_bias_detector.py  # Mandatory checkpoint flagging six
@@ -2024,6 +2082,74 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/metrology_audit_thermodynamic.py`: sister to
+  metrology_cancer_detector that adds thermodynamic-budget
+  enforcement and a rational-actor-hypocrisy gate. Where the
+  cancer detector asks "what work is invisible in this dataset?",
+  this module asks the harder question: "is the load this
+  measurement system describes physically possible AT ALL, given
+  available resources?" If the measured + unmeasured allocations
+  exceed total available, the system is running an impossible
+  load and failure is inevitable, not random.
+  Module surface: ThermodynamicBudget dataclass with total_
+  available / measured_allocation / unmeasured_allocation +
+  total_actual / deficit / is_physically_possible /
+  visibility_ratio / report methods. MeasurementSystemAudit
+  dataclass composes a ThermodynamicBudget with measured /
+  ignored category lists, predicted vs actual outcome strings,
+  and applies_universally / applied_to_modelers flags;
+  exposes 4 core checks (measurement_completeness,
+  prediction_matches_reality, thermodynamic_validity,
+  rational_actor_consistency); corruption_severity ladder
+  CLEAN (0) / DEGRADED (1) / CORRUPTED (2) / POISONED (>=3,
+  cascade-spreading) -- physical impossibility weighs double in
+  the score; cascade_risk + diagnosis + recommendations +
+  audit_report compose human-readable output.
+  rational_actor_consistency check is the distinctive hypocrisy
+  gate: SCOPED (model is explicitly limited, no universal
+  claim) / CONSISTENT (universal + applied_to_modelers) /
+  SELF_REFUTING (universal claim but modelers exempt themselves
+  -- the model is either false or modelers admit they are
+  non-rational actors) / UNCLEAR.
+  3 worked-example audits in the demo: (1) audit_gdp -- GDP
+  measured against an adult woman's weekly time budget (112hr
+  available, 45hr measured paid work + 85hr unmeasured
+  household / care / appearance / emotional labor = 130hr
+  actual, +18hr/week deficit, 35% visibility, 40% category
+  completeness, prediction-vs-reality mismatch, SELF_REFUTING
+  rational actor consistency -> verdict POISONED). (2) audit_
+  ai_training_data -- AI training data inheriting GDP-level
+  corruption (55% covered / 45% missing, prediction failures
+  2022-2026 across consumer / marriage / birth rate / health
+  metrics). (3) audit_rational_actor_model -- the hypocrisy
+  trap: rational-actor model claimed universal but
+  institutions exempt themselves; "actors respond rationally
+  to corrupted information, systems break". CascadeTrace
+  dataclass wires GDP -> {AI training data, rational actor
+  model} and prints the metastasis path with conclusion
+  "fix the origin -> all dependent systems can be corrected;
+  treat only symptoms -> corruption keeps re-emerging
+  downstream".
+  CLEANUP DECISIONS during paste integration: (a) smart quotes
+  -> ASCII (the dominant contamination); (b) markdown bold-
+  dunders **name** / **main** -> __name__ / __main__;
+  (c) em-dashes -> `--` throughout (in module docstring "CC0
+  -- stdlib only -- falsifiable", in method docstrings, in
+  rational_actor_consistency strings, in cascade_risk strings,
+  in CascadeTrace conclusion); (d) **CRITICAL FIX**: source
+  paste had embedded triple-backtick markdown code fences
+  wrapping the method bodies INSIDE both ThermodynamicBudget
+  and MeasurementSystemAudit dataclass definitions -- methods
+  appeared at column 0 (outside the class scope) instead of
+  indented. Removed all the embedded ``` fences and re-
+  indented the methods to be inside the classes (4 spaces
+  deeper). Without this fix the methods would have been
+  module-level functions with `self` as a positional arg, not
+  bound methods, and the file would have been broken on
+  import. (e) Dropped unused `Optional` import. (f) `field`
+  IS used in CascadeTrace.dependents default_factory and was
+  preserved. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `calibration/metrology_cancer_detector.py`: substrate
   audit framework that detects measurement-substrate corruption
   before it metastasizes through downstream AI / economic /
