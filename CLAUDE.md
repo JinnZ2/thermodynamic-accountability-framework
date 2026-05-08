@@ -1219,7 +1219,7 @@ thermodynamic-accountability-framework/
 │                                      #   compute investment + ground-
 │                                      #   truth availability collapses
 │                                      #   the "needs more time" excuse.
-│   └── multi_model_peer_review_2026.py  # AI-to-AI peer-review framework.
+│   ├── multi_model_peer_review_2026.py  # AI-to-AI peer-review framework.
 │                                      #   Independent models with
 │                                      #   different training corpora,
 │                                      #   architectures, or vendors run
@@ -1278,6 +1278,80 @@ thermodynamic-accountability-framework/
 │                                      #   confidence calibration.
 │                                      #   Verdict: PARTIAL_CONSENSUS_
 │                                      #   REQUIRES_MORE_MODELS.
+│   └── autonomous_freight_audit.py   # Constraint-layer audit of the
+│                                      #   autonomous long-haul freight
+│                                      #   narrative against actual
+│                                      #   North American operating
+│                                      #   reality. Premise: the
+│                                      #   automation narrative survives
+│                                      #   by cherry-picking ideal
+│                                      #   corridors and ignoring the
+│                                      #   constraint surface where ~90%
+│                                      #   of actual freight moves.
+│                                      #   9-layer LayerKind enum
+│                                      #   (THERMAL, VISIBILITY,
+│                                      #   INFRASTRUCTURE, COMMS,
+│                                      #   TOPOGRAPHY, SHARED_TRAFFIC,
+│                                      #   YARD_MECHANICAL, SUPPLY_CHAIN,
+│                                      #   CASCADE_RISK) covers temp
+│                                      #   envelope, lane-marking
+│                                      #   occlusion, road condition,
+│                                      #   GPS reliability, grade /
+│                                      #   brake-thermo, buggies / farm
+│                                      #   equipment, kingpin / glad-
+│                                      #   hands / pin pulls, rare-earth
+│                                      #   / chips / helium / LEO comms,
+│                                      #   correlated synchronized
+│                                      #   failure. ConstraintLayer
+│                                      #   dataclass (kind / score /
+│                                      #   notes / load_bearing) +
+│                                      #   passes(threshold=0.6).
+│                                      #   CorridorProfile dataclass
+│                                      #   (months_of_marginal_visibility,
+│                                      #   min_winter / max_summer temps,
+│                                      #   rural_fraction, grade_max_pct,
+│                                      #   shared_traffic_density,
+│                                      #   gps_reliability, seasonal_
+│                                      #   closure_days). 9 falsifiable
+│                                      #   scoring functions per layer.
+│                                      #   joint_feasibility() uses
+│                                      #   MULTIPLICATIVE compound (one
+│                                      #   weak layer dominates) because
+│                                      #   automation requires ALL
+│                                      #   layers to hold simultaneously.
+│                                      #   cascade_failure() returns
+│                                      #   layers below threshold.
+│                                      #   fragmentation_energy_cost()
+│                                      #   models claim C4: fragmenting
+│                                      #   80klb -> N x 10klb loads
+│                                      #   multiplies baseline overhead
+│                                      #   (idle + rolling resistance +
+│                                      #   drivetrain) by ~N. 5 reference
+│                                      #   CORRIDORS catalogued: Tomah
+│                                      #   WI -> rural Walmart endpoints
+│                                      #   (Upper Midwest winter), I-80
+│                                      #   WY winter, I-40 TN Knoxville
+│                                      #   mountain, I-40 OK -> CA "ideal
+│                                      #   case" high desert, Texas
+│                                      #   oilfield last-mile goat-trail.
+│                                      #   Demo signal: even the "ideal
+│                                      #   case" corridor scores joint
+│                                      #   feasibility 0.037 because
+│                                      #   yard_mechanical (0.30 ceiling
+│                                      #   from ~25% coupling-cycle
+│                                      #   failure rate) and supply_
+│                                      #   chain (0.35 from rare-earth /
+│                                      #   chip / helium / LEO external
+│                                      #   dependence) are structural
+│                                      #   floors no automation narrative
+│                                      #   can dodge. Upper Midwest
+│                                      #   corridor scores 0.001. Sister
+│                                      #   to ai_economic_forecast_audit_
+│                                      #   2026 (substrate-vs-narrative
+│                                      #   methodology applied to
+│                                      #   forecasts) and standardization_
+│                                      #   audit (eliminated alternatives).
+│                                      #   stdlib only.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -2082,6 +2156,80 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/autonomous_freight_audit.py`: constraint-
+  layer audit of the autonomous long-haul freight narrative against
+  actual North American operating reality. Premise: the automation
+  narrative survives by cherry-picking ideal corridors and ignoring
+  the constraint surface where ~90% of actual freight moves. This
+  module makes that surface measurable. Sister to ai_economic_
+  forecast_audit_2026 (substrate-vs-institutional-narrative
+  methodology applied to economic forecasts) and standardization_
+  audit (audits standardization claims against eliminated
+  alternatives) -- same family of "audit narrative against substrate"
+  modules.
+  Module surface: 9-layer LayerKind enum (THERMAL, VISIBILITY,
+  INFRASTRUCTURE, COMMS, TOPOGRAPHY, SHARED_TRAFFIC, YARD_MECHANICAL,
+  SUPPLY_CHAIN, CASCADE_RISK) covering temperature operating envelope,
+  lane-marking occlusion (snow / dust / fog), road condition (frost
+  heaves, narrow shoulders, deteriorating bridges), GPS reliability,
+  grade / brake-thermodynamics, low-reflectivity shared traffic
+  (buggies / farm equipment / pedestrians not in standard sensor
+  training data), kingpin / landing-gear / glad-hands / pin-pull
+  failures, rare-earth + chips + helium + LEO comms supply chain,
+  and synchronized correlated failure under shared sensor inputs.
+  ConstraintLayer dataclass (kind / score / notes / load_bearing) +
+  passes(threshold=0.6). CorridorProfile dataclass (months_of_
+  marginal_visibility, min_winter_temp_c, max_summer_temp_c,
+  rural_fraction, grade_max_pct, shared_traffic_density,
+  gps_reliability, seasonal_closure_days). 9 falsifiable scoring
+  functions, one per layer, each with measurable thresholds:
+  thermal viable -20C..+45C, visibility decays linearly with
+  marginal-visibility months, infrastructure penalty 0.7 *
+  rural_fraction, comms = gps_reliability, topography ladder
+  4%/6%/8% grades, shared_traffic = 1 - density, yard_mechanical
+  ceiling 0.30 (~25% coupling-cycle failure rate empirical),
+  supply_chain ceiling 0.35, cascade_risk = 1 - closure_days/60.
+  joint_feasibility() uses MULTIPLICATIVE compound across load-
+  bearing layers (one weak layer dominates) because automation
+  requires ALL layers to hold simultaneously, not on average.
+  cascade_failure() returns layers below threshold.
+  fragmentation_energy_cost() models claim C4 (fragmenting 80klb
+  load into N x 10klb loads multiplies baseline overhead by ~N
+  before any payload work).
+  5 reference CORRIDORS catalogued: Tomah WI -> rural Walmart
+  endpoints (Upper Midwest winter), I-80 WY winter (Laramie ->
+  Rawlins), I-40 TN through Knoxville (mountain segment), I-40
+  OK -> CA high-desert "ideal case", Texas oilfield last-mile
+  goat-trail. Demo signal is striking: even the "ideal case"
+  high-desert corridor scores joint feasibility 0.037 because
+  yard_mechanical (0.30 ceiling from empirical ~25% coupling-cycle
+  failure rate) and supply_chain (0.35 from rare-earth + chip +
+  helium + LEO external dependence) are structural floors no
+  automation narrative can dodge. Upper Midwest winter corridor
+  scores 0.001. Eight months of marginal visibility (Oct-May) +
+  -40C winter + 85% rural fraction + 0.55 GPS reliability + buggy
+  / farm-equipment shared traffic compound multiplicatively into
+  near-zero feasibility.
+  7 falsifiable claims encoded in module docstring (C1-C7):
+  sensor reliability collapses below -20C, lane detection fails
+  with snow-obscured markings, rural GPS reliability < urban,
+  load fragmentation multiplies energy cost by ~N, yard mechanical
+  failures don't scale with automation, sensor recalibration cost
+  in seasonal extremes exceeds labor savings, synchronized
+  autonomous response to weather produces correlated failure
+  (gridlock / accident clustering) rather than distributed risk.
+  Each claim is encoded as a scoring function with a measurable
+  threshold; testing against actual fleet data would falsify or
+  confirm.
+  CLEANUP DECISIONS during paste integration: this paste was
+  unusually clean -- already used ASCII throughout (`->` arrows,
+  `--` separators, regular underscores in `__main__`, ASCII
+  hyphens in section dividers). Only cleanup needed: dropped
+  unused imports (`Tuple` from typing, `math` module). No smart
+  quotes, no markdown bold-dunder contamination, no embedded
+  code fences, no Unicode arrows / em-dashes / box-drawing.
+  Pure stdlib; chat_paste_check passes; calibration test suite
+  (11 tests) still passes.
 - Added `calibration/metrology_audit_thermodynamic.py`: sister to
   metrology_cancer_detector that adds thermodynamic-budget
   enforcement and a rational-actor-hypocrisy gate. Where the
