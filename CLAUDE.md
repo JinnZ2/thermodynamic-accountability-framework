@@ -2242,6 +2242,79 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Expanded `political_audit/transportation_automation_audit.py`
+  with five additional constraint layers: TrafficThermodynamics
+  (Layer 8), VehicleWearThermodynamics (Layer 9), SocialBacklash
+  (Layer 10), InfrastructureLongDuration (Layer 11),
+  FalseAccountingFlags (Layer 12). The cascade_audit() composer
+  now takes 12 layer instances (was 7) and surfaces failure modes
+  / notes from every new layer.
+  Layer 8 (TrafficThermodynamics): models skilled drivers as
+  load-balancing nodes vs aggressive drivers / naive automation
+  as shock-wave generators. shock_wave_amplification combines
+  rigid following distance + aggressive driver % +
+  individual-only optimization; corridor_throughput_loss_pct
+  scales by merge density. fairness_capacity_collapsed flag
+  fires below 15% fairness-encoded drivers. The substantive
+  insight: "the 3% individual gain is fiction" because skilled
+  driver throughput is HIGHER over 1000 miles -- they don't sit
+  in chaos they generated.
+  Layer 9 (VehicleWearThermodynamics): aggressive vs smooth
+  driving-style wear differential. maintenance_cost_differential
+  sums brake + suspension + sensor recalibration + fuel cost
+  deltas. lifespan_reduction_pct from suspension-stress-cycle
+  ratio. Names the externalized cost: "$40K bearing replacement
+  at year 4 because driving style amplified stress cycles".
+  Layer 10 (SocialBacklash): induced-collision attempts on
+  aggressive vs smooth driving, with automation-perception
+  multiplier. annual_backlash_cost includes a +0.5x multiplier
+  when automation_perceived_as_aggressive and a
+  public_anti_automation_sentiment * 0.4 amplifier.
+  backlash_amplifies_with_automation flag fires when
+  perception=True AND sentiment > 0.4.
+  Layer 11 (InfrastructureLongDuration): 5-10yr cascades that
+  quarterly metrics ignore. effective_concrete_life_yrs scales
+  baseline by 1/shock_wave_acceleration_factor;
+  cumulative_repair_cost compounds by yoy growth rate;
+  cascade_detonation_year solves log(2) / log(1+rate) for the
+  year when repair cost hits 2x baseline.
+  Layer 12 (FalseAccountingFlags): six-axis ledger-inversion
+  detector (automation_break_constraint_imposed,
+  infrastructure_cost_externalized,
+  accident_claims_in_separate_ledger,
+  maintenance_cost_in_separate_ledger,
+  fuel_cost_normalized_per_unit,
+  measures_corridor_throughput_not_just_individual).
+  is_efficiency_claim_credible() returns False when 3+ inversions
+  present -- "claimed gains are accounting fiction".
+  cascade_audit() formula expanded: deployable flips False on
+  shock-wave > threshold via traffic checks, on false-accounting
+  count >= 3 via accounting check, plus existing checks.
+  estimated_true_cost_multiplier formula now adds shock-wave * 0.6
+  + (annual_wear_penalty / 50000) + (backlash_cost / 100000) on
+  top of the prior skill-competence term.
+  Demo result on the same Tomah-Superior corridor: cost multiplier
+  jumps 2.41x -> 6.71x. 7 failure modes (was 3): adds
+  shock-wave amplification 0.90 reducing corridor throughput
+  54.1%, fairness-encoding collapsed at 8% drivers, infrastructure
+  cascade detonation year 6.1 with $42M 10-yr cumulative repair,
+  6 false-accounting comparisons making efficiency claim "fiction".
+  Notes add $54k/yr aggressive-driving wear penalty (60% lifespan
+  reduction) and $268k/yr social backlash cost amplified by
+  automation perception. GPS still single point of failure at
+  0.04 reliability; wage-to-capacity inversion 3.05 still flagged.
+  CLEANUP DECISIONS during paste integration: same as the
+  previous version (smart quotes -> ASCII; **name**/**main** ->
+  __name__/__main__; em-dash -> --; CRITICAL fix removing
+  embedded triple-backtick fences from method bodies in every
+  new dataclass plus cascade_audit + differential_cascade_step +
+  __main__ demo). Additional: moved second `import math`
+  occurrence (this time inside InfrastructureLongDuration.
+  cascade_detonation_year) to the top-level imports alongside
+  the SkillDebtTimer one. base_failure_cost still computed but
+  unused in multiplier formula -- preserved as `_` assignment.
+  Pure stdlib; chat_paste_check passes; calibration test suite
+  (11 tests) still passes.
 - Added `political_audit/transportation_automation_audit.py`:
   granular companion to autonomous_freight_audit (which scores
   joint feasibility on 5 reference corridors at the layer level).
