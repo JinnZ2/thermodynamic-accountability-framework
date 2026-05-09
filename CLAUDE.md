@@ -1278,7 +1278,7 @@ thermodynamic-accountability-framework/
 │                                      #   confidence calibration.
 │                                      #   Verdict: PARTIAL_CONSENSUS_
 │                                      #   REQUIRES_MORE_MODELS.
-│   └── autonomous_freight_audit.py   # Constraint-layer audit of the
+│   ├── autonomous_freight_audit.py   # Constraint-layer audit of the
 │                                      #   autonomous long-haul freight
 │                                      #   narrative against actual
 │                                      #   North American operating
@@ -1351,6 +1351,92 @@ thermodynamic-accountability-framework/
 │                                      #   methodology applied to
 │                                      #   forecasts) and standardization_
 │                                      #   audit (eliminated alternatives).
+│                                      #   stdlib only.
+│   └── transportation_automation_audit.py  # Pre-deployment audit
+│                                      #   framework for transportation
+│                                      #   automation systems. Granular
+│                                      #   companion to autonomous_
+│                                      #   freight_audit (which scores
+│                                      #   joint feasibility on 5
+│                                      #   reference corridors at the
+│                                      #   layer level); this module
+│                                      #   composes 7 layer-specific
+│                                      #   dataclasses + cascade
+│                                      #   composer + differential time
+│                                      #   evolution. Architecture:
+│                                      #   GPSReliability (canopy /
+│                                      #   canyon / solar disruption /
+│                                      #   outage hours / coordinate
+│                                      #   accuracy / map data lag,
+│                                      #   reliability_score
+│                                      #   multiplicative across all 6),
+│                                      #   InfrastructureStability
+│                                      #   (frost heaves, construction
+│                                      #   zones, flood buckling, heat
+│                                      #   warping, lane-marker repaint
+│                                      #   cycle; map_update_lag_vs_
+│                                      #   change_ratio detects when
+│                                      #   routing data is structurally
+│                                      #   behind reality), VehicleGeo-
+│                                      #   metry (recovery_agility for
+│                                      #   absorbing routing errors;
+│                                      #   79-ft rig can't reroute mid-
+│                                      #   maneuver), LaborSubstrate
+│                                      #   (5-tier SkillEncodingDepth
+│                                      #   enum: SUBSTRATE_PRIMARY 0.95
+│                                      #   / EXPERIENCED_ADULT 0.75 /
+│                                      #   JOURNEYMAN 0.55 /
+│                                      #   CERTIFIED_ONLY 0.30 /
+│                                      #   DESPERATION_HIRE 0.15;
+│                                      #   wage_inversion_present
+│                                      #   detects certified > experi-
+│                                      #   enced wage; is_labor_
+│                                      #   undeployable gates on depth
+│                                      #   < 0.40 OR wage inversion OR
+│                                      #   exodus > 0.15/yr),
+│                                      #   SkillDebtTimer (atrophy_rate
+│                                      #   18%/yr * automation_handles_
+│                                      #   pct; current_competence =
+│                                      #   baseline * (1-atrophy)^years;
+│                                      #   years_until_recovery_unviable
+│                                      #   solves for threshold-crossing),
+│                                      #   EdgeCaseEnvironment (cold
+│                                      #   <-20F days + mud days + ash
+│                                      #   days + battery curve and
+│                                      #   sensor recalibration
+│                                      #   validation flags + failure
+│                                      #   mode coverage),
+│                                      #   HiddenCostLedger (true_cost_
+│                                      #   per_failure +
+│                                      #   value_inversion_ratio of
+│                                      #   certified vs actual diagnos-
+│                                      #   tic wage). cascade_audit()
+│                                      #   composes the 7 layers into a
+│                                      #   CascadeAuditResult with
+│                                      #   deployable flag, failure
+│                                      #   modes, single points of
+│                                      #   failure, skill-debt horizon,
+│                                      #   true cost multiplier, notes.
+│                                      #   differential_cascade_step()
+│                                      #   single time-step coupled
+│                                      #   ODEs for trajectory: dGPS/dt,
+│                                      #   dInfra/dt, dLabor/dt,
+│                                      #   dDebt/dt with alpha/beta/
+│                                      #   gamma/delta = 0.02/0.05/
+│                                      #   0.08/0.12. Demo: Tomah-
+│                                      #   Superior corridor (food
+│                                      #   distribution, Upper Midwest)
+│                                      #   -> DEPLOYABLE False,
+│                                      #   skill-debt horizon 5.3y,
+│                                      #   2.41x true cost multiplier,
+│                                      #   3 failure modes (infra
+│                                      #   changes 9x faster than map
+│                                      #   updates, labor undeployable,
+│                                      #   edge-case validation 0.00
+│                                      #   with 71 stress-days/yr) +
+│                                      #   GPS as single point of
+│                                      #   failure at 0.04 + 3.05x
+│                                      #   wage-to-capacity inversion.
 │                                      #   stdlib only.
 │
 ├── money_distribution/            # Distributional decomposition of the
@@ -2156,6 +2242,92 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/transportation_automation_audit.py`:
+  granular companion to autonomous_freight_audit (which scores
+  joint feasibility on 5 reference corridors at the layer level).
+  This module composes 7 layer-specific dataclasses
+  (GPSReliability, InfrastructureStability, VehicleGeometry,
+  LaborSubstrate, SkillDebtTimer, EdgeCaseEnvironment,
+  HiddenCostLedger) plus a cascade composer and a differential
+  time-evolution stepper.
+  Distinctive layers vs autonomous_freight_audit: (1) GPS-
+  specific reliability score multiplicative across canopy /
+  canyon / solar / outage / coordinate accuracy / map data lag
+  (6 dimensions); (2) Infrastructure map_update_lag_vs_
+  change_ratio that detects when routing data is structurally
+  behind reality; (3) LaborSubstrate with 5-tier
+  SkillEncodingDepth enum (SUBSTRATE_PRIMARY 0.95 /
+  EXPERIENCED_ADULT 0.75 / JOURNEYMAN 0.55 / CERTIFIED_ONLY
+  0.30 / DESPERATION_HIRE 0.15) + wage_inversion_present()
+  flag for "experienced paid less than certified" + is_labor_
+  undeployable() gating on depth < 0.40 OR wage inversion OR
+  exodus rate > 0.15/yr; (4) SkillDebtTimer with explicit
+  atrophy model: atrophy_rate = automation_handles_pct * 0.18,
+  current_competence = baseline * (1-atrophy)^years,
+  years_until_recovery_unviable solves backwards for threshold-
+  crossing; (5) EdgeCaseEnvironment with battery_withdrawal_
+  curve_validated + sensor_recalibration_under_stress_validated
+  flags + failure_mode_coverage ratio; (6) HiddenCostLedger
+  with value_inversion_ratio (certified_wage /
+  actual_diagnostic_wage).
+  cascade_audit() composer runs all coupled checks and produces
+  CascadeAuditResult with deployable flag + failure_modes +
+  single_points_of_failure + skill_debt_horizon_years +
+  estimated_true_cost_multiplier + notes. Any single critical
+  failure (GPS single-point-of-failure, infra-vs-map ratio > 1,
+  labor undeployable, edge-case validation < 0.5 with > 30
+  stress days) flips deployable to False. Soft notes for
+  wage-to-capacity inversion > 1.5 (paying for credentials,
+  not output).
+  differential_cascade_step() single time-step coupled ODEs:
+  dGPS/dt = -alpha * (infra_change_rate / 365), dInfra/dt =
+  +beta, dLabor/dt = -gamma, dDebt/dt = +delta * (1 -
+  labor_depth) with alpha/beta/gamma/delta = 0.02/0.05/0.08/
+  0.12. For trajectory analysis (run iteratively).
+  Demo: Tomah-Superior corridor (food distribution, Upper
+  Midwest rural). DEPLOYABLE False; skill-debt horizon 5.3
+  years; 2.41x true cost multiplier; 3 failure modes
+  (infrastructure changes 9.0x faster than map updates, labor
+  undeployable with encoding depth 0.34 + wage inversion +
+  exodus 0.22/yr, edge-case validation 0.00 with 71 stress-
+  days/yr); GPS single point of failure at reliability 0.04
+  (both automation AND human fallback depend on the same
+  corrupted data layer); 3.05x wage-to-capacity inversion
+  flagged. Forcing deployment under these conditions
+  "guarantees cascade failure with cost detonation in 3-7
+  year window".
+  CLEANUP DECISIONS during paste integration: (a) smart
+  quotes -> ASCII; (b) markdown bold-dunders **name** /
+  **main** -> __name__ / __main__; (c) **CRITICAL FIX**:
+  source paste had embedded triple-backtick markdown code
+  fences wrapping the method bodies INSIDE every dataclass
+  (GPSReliability, InfrastructureStability, VehicleGeometry,
+  LaborSubstrate, SkillDebtTimer, EdgeCaseEnvironment,
+  HiddenCostLedger) AND the cascade_audit() function body
+  AND the differential_cascade_step() function body AND the
+  __main__ demo block. Methods appeared at column 0 (outside
+  class scope) instead of indented. Without this fix the
+  methods would have been loose string literals at module
+  level and the dataclasses would have had no behavior;
+  attempting `gps.reliability_score()` would AttributeError.
+  Removed all the embedded ``` fences and re-indented method
+  bodies to be inside their classes (4 spaces deeper) and
+  function bodies inside their `def` blocks. (d) moved
+  `import math` from inside SkillDebtTimer.years_until_
+  recovery_unviable to top-level imports per repo convention.
+  (e) renamed unused `base_failure_cost` local variable to
+  `_` (computed for reference but not surfaced in the result;
+  preserved expression so downstream consumers can wire it
+  up). (f) dropped unused `Optional` import. (g) em-dash in
+  GPSReliability docstring "GPS as foundational assumption -
+  usually false" -> ASCII `--`. (h) removed editorial side
+  references ("the Mighty Atom problem", "the Kens still
+  working") from inline comments since those reference
+  individuals whose names live in calibration/evidence_
+  resistant_priors and could be content-level distractions
+  here -- replaced with neutral "working diagnostic
+  generalist" framing. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
 - Added `political_audit/autonomous_freight_audit.py`: constraint-
   layer audit of the autonomous long-haul freight narrative against
   actual North American operating reality. Premise: the automation
