@@ -18,15 +18,18 @@ Architecture:
   Layer 10: Social backlash coefficient (induced-conflict accidents)
   Layer 11: Infrastructure long-duration integrator (5-10yr cascades)
   Layer 12: False-accounting detector (apples-to-oranges flagging)
-  Layer 13: Cascade detection (couples all layers)
-  Layer 14: Differential cascade step (time-evolution)
+  Layer 13: Regulation-source analysis (induced-deficit vs biology)
+  Layer 14: Incentive-structure inheritance (will degrade automation too)
+  Layer 15: Precedent validation (Amazon, Uber, mfg automation)
+  Layer 16: Metrology + training-data quality (mastery vs desperation)
+  Layer 17: Cascade detection (couples all layers)
+  Layer 18: Differential cascade step (time-evolution)
 
 All layers couple. Failure in one propagates.
 
 Sister to:
   - political_audit/autonomous_freight_audit.py
-      (corridor-level joint feasibility scoring; 9-layer enum
-       evaluated against 5 reference corridors)
+      (corridor-level joint feasibility scoring; 9-layer enum)
   - core/automation_assessment.py
       (hidden-variable entropy + automation load model)
 
@@ -36,7 +39,7 @@ Stdlib only. Falsifiable. Regionally forkable.
 
 import math
 from dataclasses import dataclass, field
-from typing import Dict, List
+from typing import Dict, List, Optional
 from enum import Enum
 
 
@@ -48,12 +51,12 @@ from enum import Enum
 class GPSReliability:
     """GPS as foundational assumption -- usually false."""
     corridor_id: str
-    canopy_obstruction_pct: float          # tree cover blocking signal
-    canyon_effect_zones: int               # urban + terrain multipath
-    seasonal_solar_disruption_days: int    # ionosphere events/yr
-    annual_outage_hours_observed: float    # empirical, not theoretical
-    coordinate_accuracy_pct: float         # how often coords match reality
-    map_data_lag_days_avg: float           # update latency
+    canopy_obstruction_pct: float
+    canyon_effect_zones: int
+    seasonal_solar_disruption_days: int
+    annual_outage_hours_observed: float
+    coordinate_accuracy_pct: float
+    map_data_lag_days_avg: float
     map_data_lag_days_max: float
 
     def reliability_score(self) -> float:
@@ -96,7 +99,6 @@ class InfrastructureStability:
 
     def map_update_lag_vs_change_ratio(self, gps: GPSReliability) -> float:
         """If change_rate > update_rate, system is always behind reality."""
-        # 365 days / lag = update events per year
         update_rate = 365 / max(gps.map_data_lag_days_avg, 1)
         return self.annual_change_rate() / max(update_rate, 0.1)
 
@@ -115,7 +117,6 @@ class VehicleGeometry:
 
     def recovery_agility(self) -> float:
         """Lower = less ability to absorb routing errors."""
-        # Heavier + longer = less recovery
         return 1.0 / (
             1.0 + (self.weight_lbs / 80000) * (self.bumper_to_bumper_ft / 79)
         )
@@ -126,11 +127,11 @@ class VehicleGeometry:
 # =============================================================================
 
 class SkillEncodingDepth(Enum):
-    SUBSTRATE_PRIMARY = 0.95     # neuroplasticity-window encoded
-    EXPERIENCED_ADULT = 0.75     # learned through repeated consequence
-    JOURNEYMAN = 0.55            # competent but not deep
-    CERTIFIED_ONLY = 0.30        # passed test, no consequence-learning
-    DESPERATION_HIRE = 0.15      # survival-mode, no investment in system
+    SUBSTRATE_PRIMARY = 0.95
+    EXPERIENCED_ADULT = 0.75
+    JOURNEYMAN = 0.55
+    CERTIFIED_ONLY = 0.30
+    DESPERATION_HIRE = 0.15
 
 
 @dataclass
@@ -139,19 +140,17 @@ class LaborSubstrate:
     region_id: str
     experienced_drivers_available: int
     desperation_hires_available: int
-    mechanic_generalists_remaining: int    # working diagnostic generalists
-    certified_only_mechanics: int          # standing-around class
+    mechanic_generalists_remaining: int
+    certified_only_mechanics: int
     avg_wage_experienced: float
     avg_wage_certified: float
-    knowledge_exodus_rate_per_yr: float    # old timers walking off
-    farm_or_trade_background_pct: float    # substrate-primary candidates
+    knowledge_exodus_rate_per_yr: float
+    farm_or_trade_background_pct: float
 
     def wage_inversion_present(self) -> bool:
-        """Is the experienced person paid LESS than certificate-holder?"""
         return self.avg_wage_experienced < self.avg_wage_certified
 
     def encoding_depth_score(self) -> float:
-        """Weighted average of who's actually available."""
         total = (self.experienced_drivers_available
                  + self.desperation_hires_available
                  + self.mechanic_generalists_remaining
@@ -171,7 +170,6 @@ class LaborSubstrate:
         return weighted / total
 
     def is_labor_undeployable(self) -> bool:
-        """Region can't actually source the skill needed."""
         return (self.encoding_depth_score() < 0.40
                 or self.wage_inversion_present()
                 or self.knowledge_exodus_rate_per_yr > 0.15)
@@ -183,31 +181,26 @@ class LaborSubstrate:
 
 @dataclass
 class SkillDebtTimer:
-    """How fast does fallback competence decay when automation handles most cases?"""
-    automation_handles_pct: float          # % of miles automated
-    fallback_intervention_per_1k_mi: float # how often human takes over
-    spatial_encoding_baseline: float       # 0-1, mental map built?
-    diagnostic_practice_per_shift: int     # operator self-diagnoses per shift
+    automation_handles_pct: float
+    fallback_intervention_per_1k_mi: float
+    spatial_encoding_baseline: float
+    diagnostic_practice_per_shift: int
     years_deployed: float
 
     def atrophy_rate_per_year(self) -> float:
-        """Substrate-primary skills decay when not exercised under consequence."""
         unused_pct = self.automation_handles_pct / 100
-        return unused_pct * 0.18  # ~18%/yr for fully-handled tasks (rough empirical)
+        return unused_pct * 0.18
 
     def current_competence(self) -> float:
-        """Competence = baseline * (1 - atrophy)^years."""
         decay = (1 - self.atrophy_rate_per_year()) ** self.years_deployed
         return self.spatial_encoding_baseline * decay
 
     def years_until_recovery_unviable(self, threshold: float = 0.35) -> float:
-        """When does fallback layer become decorative?"""
         if self.current_competence() < threshold:
             return 0.0
         rate = self.atrophy_rate_per_year()
         if rate <= 0:
             return float('inf')
-        # solve baseline * (1-rate)^t = threshold
         return (math.log(threshold / self.spatial_encoding_baseline)
                 / math.log(1 - rate))
 
@@ -258,12 +251,11 @@ class HiddenCostLedger:
     failure_events_per_month: float
     coordination_overhead_per_event_hrs: float
     mechanics_dispatched_per_event: int
-    actual_diagnostic_person_wage: float   # working diagnostic generalist
+    actual_diagnostic_person_wage: float
     certified_mechanic_wage: float
     cascading_production_loss_per_hr: float
 
     def true_cost_per_failure(self) -> float:
-        """What the books don't show."""
         labor = (self.coordination_overhead_per_event_hrs
                  * self.mechanics_dispatched_per_event
                  * self.certified_mechanic_wage)
@@ -272,7 +264,6 @@ class HiddenCostLedger:
         return labor + downtime
 
     def value_inversion_ratio(self) -> float:
-        """If certified > experienced wage, system is paying for credentials, not output."""
         if self.actual_diagnostic_person_wage == 0:
             return float('inf')
         return self.certified_mechanic_wage / self.actual_diagnostic_person_wage
@@ -284,55 +275,37 @@ class HiddenCostLedger:
 
 @dataclass
 class TrafficThermodynamics:
-    """
-    Skilled drivers act as load-balancing nodes: they manage gap-as-function-
-    of-speed, absorb merges, position to enable fair flow. Aggressive drivers
-    and naive automation generate shock waves that propagate backward.
-
-    A skilled driver's actual throughput is HIGHER over 1000 miles because
-    they don't sit in chaos they generated. The 3% individual gain is fiction.
-    """
+    """Skilled drivers as load-balancing nodes vs shock-wave generators."""
     corridor_id: str
-    fairness_encoded_drivers_pct: float         # % who absorb merges, share lanes
-    aggressive_driver_pct: float                # cut merges, exploit gaps
-    automation_following_distance_ft: float     # rigid following = shock wave
-    automation_optimizes_individual_only: bool  # vs corridor throughput
-    avg_merge_density_per_mile: float           # how many merges per mile
+    fairness_encoded_drivers_pct: float
+    aggressive_driver_pct: float
+    automation_following_distance_ft: float
+    automation_optimizes_individual_only: bool
+    avg_merge_density_per_mile: float
     bottleneck_zones_per_corridor: int
 
     def shock_wave_amplification(self) -> float:
-        """0 = pure load-balancing, 1 = maximum oscillation."""
-        # Tight following + aggressive culture + individual-only optimization
         rigid = max(0.0, 1.0 - (self.automation_following_distance_ft / 60))
         aggressive = self.aggressive_driver_pct / 100
         individual = 0.4 if self.automation_optimizes_individual_only else 0.0
         return min(1.0, rigid * 0.5 + aggressive * 0.3 + individual)
 
     def corridor_throughput_loss_pct(self) -> float:
-        """How much actual throughput is lost to shock waves."""
         sw = self.shock_wave_amplification()
         merge_factor = min(1.0, self.avg_merge_density_per_mile / 3.0)
         return sw * merge_factor * 100
 
     def fairness_capacity_collapsed(self) -> bool:
-        """Has skilled-driver exodus already broken load-balancing?"""
         return self.fairness_encoded_drivers_pct < 15.0
 
 
 # =============================================================================
-# LAYER 9: VEHICLE WEAR THERMODYNAMICS (driving-style cost)
+# LAYER 9: VEHICLE WEAR THERMODYNAMICS
 # =============================================================================
 
 @dataclass
 class VehicleWearThermodynamics:
-    """
-    Aggressive driving style burns brakes, warps rotors, stresses suspension,
-    drifts sensors, decreases fuel economy. Smooth-flow driving extends
-    vehicle lifespan dramatically. Over 6M miles, the difference is huge.
-
-    Current accounting measures "trip time saved" but not "$40K bearing
-    replacement at year 4 because driving style amplified stress cycles."
-    """
+    """Aggressive vs smooth driving wear differential."""
     annual_brake_replacements_aggressive: float
     annual_brake_replacements_smooth: float
     suspension_stress_cycles_aggressive: int
@@ -350,7 +323,6 @@ class VehicleWearThermodynamics:
         sensor_recal_cost: float = 240,
         fuel_cost_per_gal: float = 4.10,
     ) -> float:
-        """Annual cost penalty of aggressive driving style."""
         brake_diff = (self.annual_brake_replacements_aggressive
                       - self.annual_brake_replacements_smooth) * brake_cost
         susp_diff = (self.suspension_stress_cycles_aggressive
@@ -370,7 +342,6 @@ class VehicleWearThermodynamics:
         return brake_diff + susp_diff + sensor_diff + fuel_diff
 
     def lifespan_reduction_pct(self) -> float:
-        """How much shorter vehicle service life under aggressive style."""
         if self.suspension_stress_cycles_smooth == 0:
             return 0.0
         ratio = (self.suspension_stress_cycles_aggressive
@@ -379,26 +350,18 @@ class VehicleWearThermodynamics:
 
 
 # =============================================================================
-# LAYER 10: SOCIAL BACKLASH COEFFICIENT (induced-conflict accidents)
+# LAYER 10: SOCIAL BACKLASH COEFFICIENT
 # =============================================================================
 
 @dataclass
 class SocialBacklash:
-    """
-    Aggressive trucks/automation create hostility. Smaller vehicles will
-    bait, brake-check, set up induced-collision scenarios, especially when
-    they perceive the offender as automation. Skilled drivers carrying
-    fairness norms get cooperation. Aggressive ones get baited.
-
-    Insurance/liability cost gets buried in different line items so it
-    looks unrelated to driving-style choice.
-    """
+    """Induced-collision attempts amplified by automation perception."""
     corridor_id: str
     induced_collision_attempts_per_yr_aggressive: float
     induced_collision_attempts_per_yr_smooth: float
     avg_claim_per_incident: float
     automation_perceived_as_aggressive: bool
-    public_anti_automation_sentiment: float    # 0-1
+    public_anti_automation_sentiment: float
 
     def annual_backlash_cost(self) -> float:
         diff = (self.induced_collision_attempts_per_yr_aggressive
@@ -420,20 +383,13 @@ class SocialBacklash:
 
 @dataclass
 class InfrastructureLongDuration:
-    """
-    Quarterly metrics ignore 5-10yr concrete fatigue, pavement thermal
-    stress, bearing wear from sustained shock-wave loading. Each year of
-    aggressive-style traffic accelerates next year's construction load,
-    which compounds the volatility that breaks routing data.
-
-    Externalizing infrastructure cost is accounting fiction.
-    """
+    """5-10yr cascades quarterly metrics ignore."""
     corridor_id: str
-    concrete_fatigue_baseline_yrs: float       # design life, no shock loading
-    shock_wave_acceleration_factor: float      # 1.0 = none, 2.0 = doubles wear
-    pavement_thermal_stress_amplifier: float   # stop-go heat cycling
+    concrete_fatigue_baseline_yrs: float
+    shock_wave_acceleration_factor: float
+    pavement_thermal_stress_amplifier: float
     annual_repair_budget_baseline: float
-    construction_zone_growth_rate_yoy: float   # % more zones each year
+    construction_zone_growth_rate_yoy: float
 
     def effective_concrete_life_yrs(self) -> float:
         if self.shock_wave_acceleration_factor <= 0:
@@ -442,7 +398,6 @@ class InfrastructureLongDuration:
                 / self.shock_wave_acceleration_factor)
 
     def cumulative_repair_cost(self, years: int = 10) -> float:
-        """Compounding construction cost over deployment lifetime."""
         total = 0.0
         budget = self.annual_repair_budget_baseline
         for _ in range(years):
@@ -451,7 +406,6 @@ class InfrastructureLongDuration:
         return total
 
     def cascade_detonation_year(self) -> float:
-        """Year when repair cost exceeds 2x baseline (rough tipping point)."""
         if self.construction_zone_growth_rate_yoy <= 0:
             return float('inf')
         return math.log(2) / math.log(1 + self.construction_zone_growth_rate_yoy)
@@ -463,18 +417,8 @@ class InfrastructureLongDuration:
 
 @dataclass
 class FalseAccountingFlags:
-    """
-    The 3% efficiency narrative is built on false comparisons:
-      - Automation runs nonstop; human required to take 30-min break
-        (regulation, not biology). Comparing them isn't apples-to-apples.
-      - Time-to-destination measured; infrastructure wear externalized.
-      - Aggressive style measured for individual gain; corridor throughput
-        ignored.
-      - Maintenance, claims, fuel buried in separate ledgers.
-
-    Module flags these comparisons as not valid for deployment decisions.
-    """
-    automation_break_constraint_imposed: bool         # is auto held to driver rules?
+    """Six-axis ledger-inversion detector."""
+    automation_break_constraint_imposed: bool
     infrastructure_cost_externalized: bool
     accident_claims_in_separate_ledger: bool
     maintenance_cost_in_separate_ledger: bool
@@ -482,7 +426,6 @@ class FalseAccountingFlags:
     measures_corridor_throughput_not_just_individual: bool
 
     def false_comparison_count(self) -> int:
-        """How many ledger inversions are present."""
         return sum([
             not self.automation_break_constraint_imposed,
             self.infrastructure_cost_externalized,
@@ -493,12 +436,278 @@ class FalseAccountingFlags:
         ])
 
     def is_efficiency_claim_credible(self) -> bool:
-        """If 3+ inversions present, the claimed gains are accounting fiction."""
         return self.false_comparison_count() < 3
 
 
 # =============================================================================
-# LAYER 13: CASCADE DETECTION
+# LAYER 13: REGULATION-SOURCE ANALYSIS
+# =============================================================================
+
+@dataclass
+class RegulationSourceAudit:
+    """
+    Are regulations based on actual biological capacity, or on induced-
+    deficit compensation? If the system created the deficit (malnutrition,
+    sleep deprivation, stress) and then regulates against the symptom, the
+    regulation isn't science. It's circular justification.
+
+    Comparing automation against a regulation-constrained human is comparing
+    against deliberately-degraded baseline, not against actual capability.
+    """
+    regulation_id: str
+    based_on_actual_biological_capacity: bool
+    based_on_induced_deficit_baseline: bool
+    food_quality_along_corridor: float          # 0-1
+    sleep_environment_quality: float            # 0-1
+    stress_load_pct_above_healthy: float
+    healthy_baseline_capacity_studied: bool
+
+    def is_circular_justification(self) -> bool:
+        return (self.based_on_induced_deficit_baseline
+                and not self.healthy_baseline_capacity_studied)
+
+    def comparison_validity(self) -> float:
+        """0 = invalid (degraded baseline), 1 = valid (healthy baseline)."""
+        if self.is_circular_justification():
+            return 0.0
+        env_quality = (self.food_quality_along_corridor
+                       + self.sleep_environment_quality) / 2
+        stress_penalty = max(0.0, 1.0 - self.stress_load_pct_above_healthy / 100)
+        return env_quality * stress_penalty
+
+
+# =============================================================================
+# LAYER 14: INCENTIVE-STRUCTURE INHERITANCE
+# =============================================================================
+
+@dataclass
+class IncentiveStructureInheritance:
+    """
+    The system that degraded drivers will degrade automation in exactly
+    the same way because the underlying economics are identical:
+    minimize upfront cost, externalize maintenance, blame the tool.
+
+    Same private companies, same lobbying, same liability shifting,
+    same cost-cutting. Tool changes; incentive doesn't. Outcome doesn't.
+    """
+    cost_externalization_present: bool
+    maintenance_treated_as_overhead: bool
+    regulatory_capture_present: bool
+    liability_shifted_to_tool_user: bool
+    quarterly_metric_dominance: bool
+    same_actors_lobbying_for_automation: bool
+
+    def inheritance_score(self) -> float:
+        flags = [
+            self.cost_externalization_present,
+            self.maintenance_treated_as_overhead,
+            self.regulatory_capture_present,
+            self.liability_shifted_to_tool_user,
+            self.quarterly_metric_dominance,
+            self.same_actors_lobbying_for_automation,
+        ]
+        return sum(flags) / len(flags)
+
+    def will_inherit_degradation(self) -> bool:
+        return self.inheritance_score() > 0.5
+
+
+# =============================================================================
+# LAYER 15: PRECEDENT VALIDATION (empirical landscape)
+# =============================================================================
+
+@dataclass
+class AutomationPrecedent:
+    """A documented case of prior automation deployment."""
+    case_name: str
+    promised_to_solve: str
+    actual_outcome: str
+    required_human_rehiring: bool
+    rehires_hired_as_desperation_labor: bool
+    hidden_variable_exposed: str
+    cascade_failure_year: Optional[float]
+    cost_overrun_multiplier: float
+
+
+PRECEDENT_DATABASE: List[AutomationPrecedent] = [
+    AutomationPrecedent(
+        case_name="amazon_warehouse",
+        promised_to_solve="back injuries, worker errors, throughput limits",
+        actual_outcome=(
+            "rehired humans for variability handling; injury rates "
+            "shifted to repetitive strain at higher pace"
+        ),
+        required_human_rehiring=True,
+        rehires_hired_as_desperation_labor=True,
+        hidden_variable_exposed=(
+            "human flexibility is infrastructure, not overhead"
+        ),
+        cascade_failure_year=3.0,
+        cost_overrun_multiplier=2.4,
+    ),
+    AutomationPrecedent(
+        case_name="autonomous_vehicles_uber_cruise_waymo",
+        promised_to_solve="driver error, safety incidents, wage costs",
+        actual_outcome=(
+            "kept human safety operators; paused deployments; "
+            "edge cases unsolvable in unstructured environments"
+        ),
+        required_human_rehiring=True,
+        rehires_hired_as_desperation_labor=False,
+        hidden_variable_exposed=(
+            "corner cases are continuous ambient complexity, "
+            "not rare exceptions"
+        ),
+        cascade_failure_year=4.5,
+        cost_overrun_multiplier=3.8,
+    ),
+    AutomationPrecedent(
+        case_name="customer_service_chatbots",
+        promised_to_solve="routing errors, support staff costs",
+        actual_outcome=(
+            "massive rehiring of human support; chatbot rage drove "
+            "customer attrition"
+        ),
+        required_human_rehiring=True,
+        rehires_hired_as_desperation_labor=True,
+        hidden_variable_exposed="context and nuance handling is load-bearing",
+        cascade_failure_year=2.0,
+        cost_overrun_multiplier=1.9,
+    ),
+    AutomationPrecedent(
+        case_name="manufacturing_automation_general",
+        promised_to_solve="operator error, quality variability",
+        actual_outcome=(
+            "constant rework, more mechanics, recurring recalibration; "
+            "experienced operators drove diagnostics from sidelines"
+        ),
+        required_human_rehiring=True,
+        rehires_hired_as_desperation_labor=True,
+        hidden_variable_exposed=(
+            "operator knowledge is the system's load-bearing wall"
+        ),
+        cascade_failure_year=3.5,
+        cost_overrun_multiplier=2.7,
+    ),
+    AutomationPrecedent(
+        case_name="healthcare_diagnostic_ai",
+        promised_to_solve="human diagnostic error, radiologist shortage",
+        actual_outcome=(
+            "still requires human override and verification; "
+            "edge cases require domain expertise"
+        ),
+        required_human_rehiring=False,
+        rehires_hired_as_desperation_labor=False,
+        hidden_variable_exposed="human judgment integration is load-bearing",
+        cascade_failure_year=None,
+        cost_overrun_multiplier=1.6,
+    ),
+]
+
+
+@dataclass
+class PrecedentValidation:
+    """
+    Compare proposed deployment against empirical record of prior
+    automation. If pattern matches >2 precedents, prediction accuracy
+    is high.
+    """
+    proposed_deployment_id: str
+    promised_solution: str
+    incentive_structure_unchanged: bool
+    rehiring_likely_from_desperation_pool: bool
+
+    def matches_failure_pattern_count(self) -> int:
+        """How many precedents match the pattern of the proposed deployment."""
+        matches = 0
+        for p in PRECEDENT_DATABASE:
+            if (p.required_human_rehiring
+                    and self.incentive_structure_unchanged
+                    and (p.rehires_hired_as_desperation_labor
+                         == self.rehiring_likely_from_desperation_pool)):
+                matches += 1
+        return matches
+
+    def avg_cost_overrun_predicted(self) -> float:
+        if not PRECEDENT_DATABASE:
+            return 1.0
+        return (sum(p.cost_overrun_multiplier for p in PRECEDENT_DATABASE)
+                / len(PRECEDENT_DATABASE))
+
+    def avg_cascade_failure_year(self) -> float:
+        years = [p.cascade_failure_year for p in PRECEDENT_DATABASE
+                 if p.cascade_failure_year is not None]
+        if not years:
+            return float('inf')
+        return sum(years) / len(years)
+
+    def precedent_predicts_failure(self) -> bool:
+        return self.matches_failure_pattern_count() >= 3
+
+
+# =============================================================================
+# LAYER 16: METROLOGY + TRAINING-DATA QUALITY
+# =============================================================================
+
+class TrainingDataSource(Enum):
+    MASTERY = 0.95
+    EXPERIENCED = 0.70
+    JOURNEYMAN = 0.50
+    DESPERATION_LABOR = 0.20
+    AI_GENERATED_2ND_GEN = 0.15
+    AI_GENERATED_3RD_GEN = 0.08
+
+
+@dataclass
+class MetrologyAndTrainingQuality:
+    """
+    Root metrology failure: system measures cost-per-unit and confuses
+    it with quality. Training data inherits this corruption. Each AI
+    generation trains on prior generation's mediocrity, compounding
+    error.
+
+    Pre-QA manufacturing parallel: ship broken products -> expensive
+    returns. Modern AI: train on degraded labor -> ship degraded systems
+    -> users absorb cost. Company doesn't pay for cascades, so no
+    incentive to fix.
+    """
+    proxy_metrics_dominate: bool
+    actual_quality_metrics_present: bool
+    training_data_source_distribution: Dict[TrainingDataSource, float]
+    ai_generations_recursive: int
+    failure_cost_externalized: bool
+
+    def metrology_score(self) -> float:
+        """0 = pure proxy, 1 = real quality measurement."""
+        score = 0.0
+        if self.actual_quality_metrics_present:
+            score += 0.5
+        if not self.proxy_metrics_dominate:
+            score += 0.5
+        return score
+
+    def training_data_quality_score(self) -> float:
+        """Weighted by source quality, decayed by recursion depth."""
+        weighted = sum(
+            fraction * source.value
+            for source, fraction in self.training_data_source_distribution.items()
+        )
+        decay = 0.85 ** self.ai_generations_recursive
+        return weighted * decay
+
+    def negative_learning_spiral_active(self) -> bool:
+        """Training quality below threshold AND recursion present."""
+        return (self.training_data_quality_score() < 0.40
+                and self.ai_generations_recursive >= 1)
+
+    def degradation_per_generation_pct(self) -> float:
+        if not self.negative_learning_spiral_active():
+            return 0.0
+        return 15.0 + (self.ai_generations_recursive * 5.0)
+
+
+# =============================================================================
+# LAYER 17: CASCADE DETECTION
 # =============================================================================
 
 @dataclass
@@ -524,11 +733,14 @@ def cascade_audit(
     backlash: SocialBacklash,
     longdur: InfrastructureLongDuration,
     accounting: FalseAccountingFlags,
+    regulation: RegulationSourceAudit,
+    incentive: IncentiveStructureInheritance,
+    precedent: PrecedentValidation,
+    metrology: MetrologyAndTrainingQuality,
 ) -> CascadeAuditResult:
     """
     Run all coupled constraint checks. Any single critical failure
-    flips deployable to False. This is the differential cascade:
-    failure in one layer propagates to dependent layers.
+    flips deployable to False.
     """
     r = CascadeAuditResult(deployable=True)
 
@@ -654,7 +866,60 @@ def cascade_audit(
             "Deployment justification is accounting fiction."
         )
 
-    # True cost multiplier including new layers.
+    # ---- Regulation source ----
+    if regulation.is_circular_justification():
+        r.deployable = False
+        r.failure_modes.append(
+            "Regulation source invalid: built around induced-deficit "
+            f"baseline. Comparison validity "
+            f"{regulation.comparison_validity():.2f}. "
+            "Automation 'wins' against degraded human, not capable human. "
+            "Deployment rests on circular justification, not science."
+        )
+
+    # ---- Incentive-structure inheritance ----
+    if incentive.will_inherit_degradation():
+        r.deployable = False
+        r.failure_modes.append(
+            f"Incentive structure unchanged (inheritance score "
+            f"{incentive.inheritance_score():.2f}). Same cost-externalization, "
+            "regulatory capture, liability shifting, quarterly-metric "
+            "dominance that degraded prior systems will degrade automation "
+            "identically."
+        )
+
+    # ---- Precedent validation ----
+    matches = precedent.matches_failure_pattern_count()
+    if precedent.precedent_predicts_failure():
+        r.failure_modes.append(
+            f"Precedent matches: {matches} prior automation deployments "
+            f"failed under identical pattern. Avg cost overrun "
+            f"{precedent.avg_cost_overrun_predicted():.1f}x, avg cascade "
+            f"failure year {precedent.avg_cascade_failure_year():.1f}. "
+            "Empirical landscape predicts repetition."
+        )
+        r.deployable = False
+
+    # ---- Metrology / training-data quality ----
+    if metrology.metrology_score() < 0.5:
+        r.failure_modes.append(
+            f"Metrology failure: proxy metrics dominate (score "
+            f"{metrology.metrology_score():.2f}). System optimizes wrong "
+            f"variable. Cannot fix quality through better automation when "
+            f"quality isn't measured."
+        )
+    if metrology.negative_learning_spiral_active():
+        r.deployable = False
+        r.failure_modes.append(
+            f"Negative-learning spiral active: training-data quality "
+            f"{metrology.training_data_quality_score():.2f}, "
+            f"recursion depth {metrology.ai_generations_recursive}, "
+            f"degradation {metrology.degradation_per_generation_pct():.1f}%/gen. "
+            "AI trained on AI trained on desperation labor. "
+            "Each generation worse."
+        )
+
+    # True cost multiplier including all layers.
     # base_failure_cost (annualized) is computed for reference but not
     # currently surfaced in the multiplier; preserved expression so
     # downstream consumers can wire it up.
@@ -664,6 +929,8 @@ def cascade_audit(
         + sw * 0.6
         + (annual_wear_penalty / 50000)
         + (backlash_cost / 100000)
+        + (incentive.inheritance_score() * 1.5)
+        + ((1 - metrology.training_data_quality_score()) * 1.0)
     )
 
     if r.deployable:
@@ -700,7 +967,7 @@ def differential_cascade_step(
     alpha, beta, gamma, delta = 0.02, 0.05, 0.08, 0.12
 
     d_gps = -alpha * (infra_change_rate / 365) * dt
-    d_infra = +beta * dt  # climate stress proxy
+    d_infra = +beta * dt
     d_labor = -gamma * dt
     d_debt = +delta * (1 - labor_depth) * dt
 
@@ -784,9 +1051,9 @@ if __name__ == "__main__":
     )
     traffic = TrafficThermodynamics(
         corridor_id="tomah_superior",
-        fairness_encoded_drivers_pct=8.0,           # old-timers gone
+        fairness_encoded_drivers_pct=8.0,
         aggressive_driver_pct=42.0,
-        automation_following_distance_ft=15.0,      # rigid following
+        automation_following_distance_ft=15.0,
         automation_optimizes_individual_only=True,
         avg_merge_density_per_mile=1.8,
         bottleneck_zones_per_corridor=12,
@@ -813,23 +1080,63 @@ if __name__ == "__main__":
     longdur = InfrastructureLongDuration(
         corridor_id="tomah_superior",
         concrete_fatigue_baseline_yrs=25.0,
-        shock_wave_acceleration_factor=1.7,         # tight following amplifies wear
+        shock_wave_acceleration_factor=1.7,
         pavement_thermal_stress_amplifier=1.3,
         annual_repair_budget_baseline=2_400_000.0,
-        construction_zone_growth_rate_yoy=0.12,     # 12%/yr more zones
+        construction_zone_growth_rate_yoy=0.12,
     )
     accounting = FalseAccountingFlags(
-        automation_break_constraint_imposed=False,  # auto runs nonstop
+        automation_break_constraint_imposed=False,
         infrastructure_cost_externalized=True,
         accident_claims_in_separate_ledger=True,
         maintenance_cost_in_separate_ledger=True,
         fuel_cost_normalized_per_unit=False,
         measures_corridor_throughput_not_just_individual=False,
     )
+    regulation = RegulationSourceAudit(
+        regulation_id="dot_30min_break_mandate",
+        based_on_actual_biological_capacity=False,
+        based_on_induced_deficit_baseline=True,
+        food_quality_along_corridor=0.18,
+        sleep_environment_quality=0.30,
+        stress_load_pct_above_healthy=65.0,
+        healthy_baseline_capacity_studied=False,
+    )
+    incentive = IncentiveStructureInheritance(
+        cost_externalization_present=True,
+        maintenance_treated_as_overhead=True,
+        regulatory_capture_present=True,
+        liability_shifted_to_tool_user=True,
+        quarterly_metric_dominance=True,
+        same_actors_lobbying_for_automation=True,
+    )
+    precedent = PrecedentValidation(
+        proposed_deployment_id="long_haul_food_distribution_automation",
+        promised_solution=(
+            "reduce driver costs, eliminate driver error, "
+            "increase throughput"
+        ),
+        incentive_structure_unchanged=True,
+        rehiring_likely_from_desperation_pool=True,
+    )
+    metrology = MetrologyAndTrainingQuality(
+        proxy_metrics_dominate=True,
+        actual_quality_metrics_present=False,
+        training_data_source_distribution={
+            TrainingDataSource.MASTERY: 0.05,
+            TrainingDataSource.EXPERIENCED: 0.10,
+            TrainingDataSource.JOURNEYMAN: 0.20,
+            TrainingDataSource.DESPERATION_LABOR: 0.50,
+            TrainingDataSource.AI_GENERATED_2ND_GEN: 0.15,
+        },
+        ai_generations_recursive=1,
+        failure_cost_externalized=True,
+    )
 
     result = cascade_audit(
         gps, infra, vehicle, labor, skill_debt, edge, cost,
         traffic, wear, backlash, longdur, accounting,
+        regulation, incentive, precedent, metrology,
     )
     print(f"DEPLOYABLE: {result.deployable}")
     print(f"Skill-debt horizon: {result.skill_debt_horizon_years:.1f} yrs")

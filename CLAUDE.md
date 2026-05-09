@@ -2243,6 +2243,93 @@ session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
 - Expanded `political_audit/transportation_automation_audit.py`
+  again with four more constraint layers:
+  RegulationSourceAudit (Layer 13),
+  IncentiveStructureInheritance (Layer 14),
+  PrecedentValidation + AutomationPrecedent + 5-entry PRECEDENT_
+  DATABASE (Layer 15), and MetrologyAndTrainingQuality with
+  TrainingDataSource enum (Layer 16). cascade_audit() now takes
+  16 layer instances (was 12); cost multiplier formula extended
+  with incentive.inheritance_score() * 1.5 + (1 - metrology.
+  training_data_quality_score()) * 1.0.
+  Layer 13 (RegulationSourceAudit): tests whether a regulation
+  is based on actual biological capacity (healthy population
+  studied) or on induced-deficit baseline (system creates the
+  deficit -- malnutrition, sleep deprivation, stress -- and
+  then regulates against the symptom). is_circular_
+  justification() fires when based_on_induced_deficit_baseline
+  AND not healthy_baseline_capacity_studied. comparison_
+  validity score combines food_quality_along_corridor +
+  sleep_environment_quality with stress_load_pct_above_healthy
+  penalty -- 0 means automation is being compared against a
+  deliberately-degraded baseline rather than against actual
+  capability. Names the structural critique: "Comparing
+  automation against a regulation-constrained human is
+  comparing against deliberately-degraded baseline."
+  Layer 14 (IncentiveStructureInheritance): six-axis flag
+  set (cost_externalization_present, maintenance_treated_as_
+  overhead, regulatory_capture_present, liability_shifted_to_
+  tool_user, quarterly_metric_dominance, same_actors_lobbying_
+  for_automation). inheritance_score = mean of flags;
+  will_inherit_degradation fires above 0.5. The diagnostic:
+  "Tool changes; incentive doesn't. Outcome doesn't."
+  Layer 15 (PrecedentValidation): empirical-landscape match
+  against 5-entry PRECEDENT_DATABASE: amazon_warehouse (2.4x
+  cost overrun, year 3 cascade), autonomous_vehicles_uber_
+  cruise_waymo (3.8x, year 4.5), customer_service_chatbots
+  (1.9x, year 2), manufacturing_automation_general (2.7x,
+  year 3.5), healthcare_diagnostic_ai (1.6x, no cascade
+  recorded). matches_failure_pattern_count counts precedents
+  where required_human_rehiring AND incentive_structure_
+  unchanged AND desperation-rehiring profile matches.
+  precedent_predicts_failure fires at >=3 matches. avg_cost_
+  overrun_predicted and avg_cascade_failure_year aggregate
+  across the database for projection.
+  Layer 16 (MetrologyAndTrainingQuality): TrainingDataSource
+  enum (MASTERY 0.95 / EXPERIENCED 0.70 / JOURNEYMAN 0.50 /
+  DESPERATION_LABOR 0.20 / AI_GENERATED_2ND_GEN 0.15 /
+  AI_GENERATED_3RD_GEN 0.08). metrology_score combines
+  proxy_metrics_dominate + actual_quality_metrics_present.
+  training_data_quality_score = sum(fraction * source.value)
+  * 0.85^ai_generations_recursive (recursion compounds 15%
+  decay per generation). negative_learning_spiral_active
+  fires when training quality < 0.40 AND recursion >= 1.
+  degradation_per_generation_pct = 15 + 5 * recursion. The
+  pre-QA manufacturing parallel made explicit: ship broken
+  products -> expensive returns; modern AI trains on
+  degraded labor -> ships degraded systems -> users absorb
+  cost; company doesn't pay for cascades, so no incentive
+  to fix.
+  cascade_audit() additions: regulation.is_circular_
+  justification() flips deployable False; incentive.will_
+  inherit_degradation() flips deployable False; precedent.
+  precedent_predicts_failure() flips deployable False;
+  metrology.metrology_score() < 0.5 adds failure mode (soft);
+  metrology.negative_learning_spiral_active() flips
+  deployable False.
+  Demo on the same Tomah-Superior corridor: cost multiplier
+  jumps 6.71x -> 8.92x. 12 failure modes (was 7) -- adds
+  regulation invalid (DOT 30-min break mandate built around
+  induced-deficit baseline; comparison validity 0.00),
+  incentive structure unchanged (1.00 inheritance), 3-precedent
+  match (Amazon + chatbots + manufacturing automation), proxy-
+  metrics-dominant metrology (score 0.00), and active
+  negative-learning spiral (training quality 0.29 with
+  recursion depth 1, 20%/gen degradation -- AI trained on AI
+  trained on desperation labor).
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior versions (smart quotes -> ASCII; **name**/**main** ->
+  __name__/__main__; em-dashes -> --; embedded triple-backtick
+  fences removed from method bodies inside RegulationSourceAudit,
+  IncentiveStructureInheritance, PrecedentValidation,
+  MetrologyAndTrainingQuality + cascade_audit + differential_
+  cascade_step + __main__ demo block; methods re-indented from
+  column 0 to inside-class). All 5 PRECEDENT_DATABASE entries
+  preserved verbatim. base_failure_cost still computed for
+  reference but not surfaced in multiplier formula -- preserved
+  as `_` assignment. Pure stdlib; chat_paste_check passes;
+  calibration test suite (11 tests) still passes.
+- Expanded `political_audit/transportation_automation_audit.py`
   with five additional constraint layers: TrafficThermodynamics
   (Layer 8), VehicleWearThermodynamics (Layer 9), SocialBacklash
   (Layer 10), InfrastructureLongDuration (Layer 11),
