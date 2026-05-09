@@ -1352,7 +1352,7 @@ thermodynamic-accountability-framework/
 │                                      #   forecasts) and standardization_
 │                                      #   audit (eliminated alternatives).
 │                                      #   stdlib only.
-│   └── transportation_automation_audit.py  # Pre-deployment audit
+│   ├── transportation_automation_audit.py  # Pre-deployment audit
 │                                      #   framework for transportation
 │                                      #   automation systems. Granular
 │                                      #   companion to autonomous_
@@ -1438,6 +1438,61 @@ thermodynamic-accountability-framework/
 │                                      #   failure at 0.04 + 3.05x
 │                                      #   wage-to-capacity inversion.
 │                                      #   stdlib only.
+│   └── regulation_lcd_incentive_audit.py  # Domain-agnostic add-on
+│                                      #   to transportation_automation_
+│                                      #   audit. Detects three coupled
+│                                      #   structural failure patterns
+│                                      #   (lowest-common-denominator
+│                                      #   regulation, induced-deficit
+│                                      #   feedback loop, incentive-
+│                                      #   structure cycling) across 10
+│                                      #   regulated domains
+│                                      #   (transportation, manufacturing,
+│                                      #   healthcare, agriculture,
+│                                      #   education, AI deployment,
+│                                      #   labor general, food systems,
+│                                      #   housing, energy). 3 layer
+│                                      #   dataclasses: LCDRegulation
+│                                      #   (lcd_compression_ratio,
+│                                      #   is_lcd_imposed, capable_
+│                                      #   individuals_constrained_pct);
+│                                      #   InducedDeficitChain (5
+│                                      #   upstream-cause variables +
+│                                      #   observed dysfunction rate +
+│                                      #   system-response flags;
+│                                      #   is_circular_justification
+│                                      #   fires when induced deficit
+│                                      #   cited as proof of biological
+│                                      #   limit; fuels_replacement_
+│                                      #   narrative flags weaponization
+│                                      #   for automation justification);
+│                                      #   IncentiveCycle (IncentiveActor
+│                                      #   list + 9-axis pattern flags;
+│                                      #   actors_carrying_over_count;
+│                                      #   degradation_pattern_score;
+│                                      #   will_repeat at score >0.6 AND
+│                                      #   >=2 carryover AND new tool
+│                                      #   promised). coupled_pattern_
+│                                      #   audit returns CoupledFailureResult
+│                                      #   with pattern_active flag (>=2
+│                                      #   of 3 core layers fire),
+│                                      #   severity_score, predicted_
+│                                      #   repetition_count, breaking_
+│                                      #   intervention_points list.
+│                                      #   6-entry CROSS_DOMAIN_DATABASE
+│                                      #   catalogues the loop in
+│                                      #   trucking fatigue regulation,
+│                                      #   manufacturing operator
+│                                      #   displacement, public education
+│                                      #   LCD, agriculture industrial
+│                                      #   inputs, healthcare chronic
+│                                      #   disease management, AI
+│                                      #   deployment LCD emerging.
+│                                      #   Demo: trucking end-to-end ->
+│                                      #   PATTERN ACTIVE, severity 0.73,
+│                                      #   3 remaining cycles predicted,
+│                                      #   all 5 layer flags firing, 5
+│                                      #   intervention points enumerated.
 │
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
@@ -2242,6 +2297,79 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/regulation_lcd_incentive_audit.py`:
+  domain-agnostic add-on to transportation_automation_audit
+  that extracts the LCD-regulation / induced-deficit /
+  incentive-cycling triad as a coupled-pattern check applicable
+  to any regulated domain. RegulatedDomain enum covers 10
+  domains (transportation, manufacturing, healthcare,
+  agriculture, education, AI deployment, labor general, food
+  systems, housing, energy).
+  Three coupled layers, each detecting one structural failure
+  pattern: (1) LCDRegulation -- rules built around worst-
+  performing baseline applied universally; lcd_compression_ratio
+  measures how much capable individuals are constrained;
+  is_lcd_imposed fires when ratio < 0.6 AND universal AND no
+  individual assessment permitted. (2) InducedDeficitChain --
+  detects when degraded population condition was caused by
+  upstream system choices (food quality, sleep environment,
+  stress load, skill training quality, economic pressure) not
+  by inherent biology. is_circular_justification fires when
+  induced deficit is cited as proof biology limits the
+  population (the deepest pattern); fuels_replacement_narrative
+  flags when the induced deficit is being weaponized to
+  justify automation/displacement. (3) IncentiveCycle --
+  IncentiveActor entries flagged with profits_from_degradation
+  / regulation / replacement + same_actor_across_generations;
+  9-axis degradation_pattern_score; will_repeat fires when
+  pattern score > 0.6 AND >= 2 actors carry over AND new tool
+  is being promised.
+  coupled_pattern_audit returns CoupledFailureResult with
+  pattern_active flag (>=2 of 3 core layers fire),
+  severity_score (weighted sum of LCD compression + upstream
+  degradation + cycle pattern), predicted_repetition_count
+  (max(0, 5 - cycle_number) representing rough ceiling before
+  structural collapse), and breaking_intervention_points list
+  -- one per active layer naming the specific intervention
+  that would break the loop (capability-tiered assessment,
+  upstream cause repair, prohibition on induced-deficit
+  justification, blocking displacement-narrative use,
+  regulatory recusal for cycle-actors).
+  CrossDomainPattern dataclass + 6-entry CROSS_DOMAIN_DATABASE
+  catalogues the loop in trucking fatigue regulation,
+  manufacturing operator displacement, public education LCD,
+  agriculture industrial inputs, healthcare chronic disease
+  management, AI deployment LCD emerging. Each carries
+  cycle_number_at_observation (4 for ag/education, 3 for
+  healthcare/manufacturing, 2 for trucking, 1 for AI -- AI
+  cycle just beginning, pattern markers present).
+  cross_domain_match_count + matching_precedents helpers for
+  empirical-landscape grounding when applying the audit to a
+  new domain.
+  Demo: trucking domain end-to-end. DOT 30-min break mandate
+  (baseline 0.45 vs healthy 0.92 -> compression 0.49) +
+  trucker metabolic/sleep dysfunction (upstream score 0.72,
+  observed dysfunction 0.55, all justification flags True) +
+  cycle_2 (3 actors, 2 carrying over, all 9 pattern flags
+  True). Result: PATTERN ACTIVE, severity 0.73, 3 remaining
+  cycles predicted, all 5 layer-specific flags firing,
+  STRUCTURAL FAILURE LOOP ACTIVE verdict, 5 breaking-
+  intervention points enumerated.
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior expansions (smart quotes -> ASCII; **name**/**main**
+  -> __name__/__main__; em-dashes -> --; embedded triple-
+  backtick fences removed from method bodies inside
+  LCDRegulation, InducedDeficitChain, IncentiveCycle plus the
+  coupled_pattern_audit function body and the __main__ demo;
+  methods re-indented from column 0 to inside-class).
+  Markdown numbered list `1. 1. 1.` in module docstring ->
+  proper `1. 2. 3.`. Smart apostrophes inside string literals
+  ("doesn't", "drivers can't self-regulate") -> ASCII.
+  Dropped unused imports (Optional, Set from typing). All 6
+  CROSS_DOMAIN_DATABASE entries preserved verbatim including
+  multi-line description / mechanism / outcome strings.
+  Pure stdlib; chat_paste_check passes; calibration test
+  suite (11 tests) still passes.
 - Expanded `political_audit/transportation_automation_audit.py`
   again with four more constraint layers:
   RegulationSourceAudit (Layer 13),
