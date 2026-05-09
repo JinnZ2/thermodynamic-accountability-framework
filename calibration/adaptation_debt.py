@@ -78,8 +78,10 @@ def compute_event_debt(event: dict[str, Any]) -> float:
     r = event.get("compounding_rate", DEFAULT_COMPOUNDING_RATE.get(domain, 0.08))
 
     return load * ((1.0 + r) ** t)
-def score_total_debt(friction_events: list[dict[str, Any]],
-cliff: float = 10.0) -> DimensionScore:
+def score_total_debt(
+    friction_events: list[dict[str, Any]],
+    cliff: float = 10.0,
+) -> DimensionScore:
     """
     Total debt normalized against cliff threshold.
     Cliff = point where debt exceeds system's remaining adaptive capacity.
@@ -114,7 +116,8 @@ falsifier="provide ≥5 friction events with removal status",
         "restoration or system reset, dimension flips to GREEN"
     ),
 )
-def score_friction_preservation(friction_events: list[dict[str, Any]]
+def score_friction_preservation(
+    friction_events: list[dict[str, Any]],
 ) -> DimensionScore:
     """
     Fraction of friction events still preserved.
@@ -149,8 +152,10 @@ falsifier="log friction events",
         "instructional pain; dimension flips to GREEN"
     ),
 )
-def score_cliff_proximity(friction_events: list[dict[str, Any]],
-cliff: float = 10.0) -> DimensionScore:
+def score_cliff_proximity(
+    friction_events: list[dict[str, Any]],
+    cliff: float = 10.0,
+) -> DimensionScore:
     """
     Years-to-cliff estimate. Projects current debt trajectory forward.
     If current debt D, growth rate r_avg, cliff C:
