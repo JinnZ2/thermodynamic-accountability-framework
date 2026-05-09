@@ -1438,7 +1438,7 @@ thermodynamic-accountability-framework/
 │                                      #   failure at 0.04 + 3.05x
 │                                      #   wage-to-capacity inversion.
 │                                      #   stdlib only.
-│   └── regulation_lcd_incentive_audit.py  # Domain-agnostic add-on
+│   ├── regulation_lcd_incentive_audit.py  # Domain-agnostic add-on
 │                                      #   to transportation_automation_
 │                                      #   audit. Detects three coupled
 │                                      #   structural failure patterns
@@ -1493,7 +1493,84 @@ thermodynamic-accountability-framework/
 │                                      #   3 remaining cycles predicted,
 │                                      #   all 5 layer flags firing, 5
 │                                      #   intervention points enumerated.
-│
+│   └── success_specification_validator.py  # Capstone audit module
+│                                      #   for the transportation_
+│                                      #   automation_audit family.
+│                                      #   Defines what SUCCESS actually
+│                                      #   means thermodynamically across
+│                                      #   all coupled constraint layers,
+│                                      #   then measures whether the
+│                                      #   system being deployed is aimed
+│                                      #   at that target or at its
+│                                      #   inverse. Core insight: success
+│                                      #   is FLUIDITY across coupled
+│                                      #   layers (traffic flow load-
+│                                      #   balancing, infrastructure
+│                                      #   health, human coordination,
+│                                      #   vehicle longevity, ecological
+│                                      #   coexistence, schedule
+│                                      #   integration, customer-node
+│                                      #   cooperation), measured as
+│                                      #   total-system energy
+│                                      #   dissipation minimized + total
+│                                      #   throughput maximized -- NOT
+│                                      #   individual-vehicle metrics.
+│                                      #   Mastery-specification, not
+│                                      #   mastery-comparison; bar isn't
+│                                      #   "match the median driver" but
+│                                      #   "operate at the thermodynamic
+│                                      #   ceiling". 7-member
+│                                      #   FluidityDimension enum + 7
+│                                      #   FluiditySpec entries with
+│                                      #   mastery_description +
+│                                      #   measurable_criteria +
+│                                      #   inverse_failure_mode per
+│                                      #   dimension. SystemAimAssessment
+│                                      #   (9 binary aim flags;
+│                                      #   fluidity_aim_score = 7
+│                                      #   positive aims / 7;
+│                                      #   inverse_aim_score = 2 negative
+│                                      #   aims / 2; is_aimed_at_inverse
+│                                      #   fires when inverse > fluidity
+│                                      #   OR fluidity < 0.30).
+│                                      #   MasteryBaseline + kavik_
+│                                      #   baseline() function (30y /
+│                                      #   6M-mile practitioner across
+│                                      #   all 7 dimensions) used as
+│                                      #   ceiling target, not
+│                                      #   comparison metric.
+│                                      #   TrainingDataSufficiency
+│                                      #   tracks fraction from
+│                                      #   substrate-primary
+│                                      #   practitioners vs median vs
+│                                      #   below-median + 7 dimensional-
+│                                      #   coverage flags;
+│                                      #   encodes_mastery_specification
+│                                      #   requires >=30% mastery-source
+│                                      #   AND >=70% coverage;
+│                                      #   standardizes_mediocrity fires
+│                                      #   when mastery <10% AND median
+│                                      #   >50%. success_specification_
+│                                      #   audit composes the three
+│                                      #   layers into SuccessSpec-
+│                                      #   ificationResult (aimed_at_
+│                                      #   success, fluidity/inverse
+│                                      #   scores, training metrics,
+│                                      #   dimensional_failures,
+│                                      #   inverse_failure_predictions,
+│                                      #   required_corrections, notes).
+│                                      #   Demo: typical autonomous
+│                                      #   trucking 2025 -> fluidity aim
+│                                      #   0.00, inverse aim 1.00, 14%
+│                                      #   training coverage,
+│                                      #   standardizes_mediocrity True;
+│                                      #   verdict DEPLOYMENT NOT AIMED
+│                                      #   AT SUCCESS -- "better
+│                                      #   engineering, more compute,
+│                                      #   more data will not fix this;
+│                                      #   the optimization target
+│                                      #   itself must be redefined".
+
 ├── money_distribution/            # Distributional decomposition of the
 │   │                             #   Money Equation's per-receiver p_i
 │   │                             #   term. Pre-1.0 interface-stub per
@@ -2297,6 +2374,86 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `political_audit/success_specification_validator.py`:
+  capstone audit module for the transportation_automation_audit
+  family. Defines what SUCCESS actually means thermodynamically
+  across all coupled constraint layers, then measures whether
+  the system being deployed is aimed at that target or at its
+  inverse. Core insight: success is FLUIDITY across coupled
+  layers (traffic flow load-balancing, infrastructure health,
+  human coordination, vehicle longevity, ecological coexistence,
+  schedule integration, customer-node cooperation), measured as
+  total-system energy dissipation minimized + total throughput
+  maximized -- NOT individual-vehicle metrics. The two metric
+  families are not just different but OPPOSITE; optimizing for
+  one actively degrades the other.
+  This is mastery-specification, not mastery-comparison. The
+  bar isn't "match the median driver" but "operate at the
+  thermodynamic ceiling". The audit doesn't ask "can automation
+  match the master?" -- it asks "what would automation need to
+  learn to operate at mastery level, and is the current
+  training data even capable of teaching it?"
+  Module surface: 7-member FluidityDimension enum + 7
+  FluiditySpec entries (TRAFFIC_FLOW, INFRASTRUCTURE_HEALTH,
+  HUMAN_COORDINATION, VEHICLE_LONGEVITY, ECOLOGICAL_
+  COEXISTENCE, SCHEDULE_INTEGRATION, CUSTOMER_NODE_COOPERATION).
+  Each spec carries mastery_description sourced from lived
+  practitioner knowledge + measurable_criteria list +
+  inverse_failure_mode prediction. SystemAimAssessment with 9
+  binary aim flags reading the actual reward function;
+  fluidity_aim_score = 7 positive-aim flags / 7; inverse_aim_
+  score = 2 negative-aim flags / 2; is_aimed_at_inverse fires
+  when inverse > fluidity OR fluidity < 0.30. MasteryBaseline
+  dataclass + kavik_baseline() function carrying a 30-year /
+  6M-mile practitioner profile with documented capability
+  across all 7 dimensions, used as ceiling target rather than
+  comparison metric. TrainingDataSufficiency tracks fraction
+  from substrate-primary practitioners vs median performance
+  vs below-median + 7 dimensional-coverage flags;
+  encodes_mastery_specification requires >=30% mastery-source
+  AND >=70% coverage; standardizes_mediocrity fires when
+  mastery-source <10% AND median-source >50%.
+  success_specification_audit composes the three layers into
+  SuccessSpecificationResult with aimed_at_success flag,
+  fluidity/inverse scores, training metrics, dimensional_
+  failures (one per uncovered dimension naming the predicted
+  failure mode), inverse_failure_predictions (full set when
+  aimed at inverse), required_corrections (specific reward-
+  function and training-data fixes), and notes (final verdict).
+  Distinctive contribution: when system is aimed at the
+  inverse of success, the verdict is "DEPLOYMENT NOT AIMED AT
+  SUCCESS. The system is optimized for the inverse of fluidity.
+  Better engineering, more compute, more data will not fix
+  this. The optimization target itself must be redefined to
+  mastery specification before deployment can produce success
+  rather than its opposite." This is the audit module's most
+  pointed claim: optimization-target wrongness is not solvable
+  by engineering improvement; only by redefining the target.
+  Demo: typical autonomous trucking 2025 (optimizes
+  individual-vehicle time + quarterly metric, none of the 7
+  fluidity dimensions in reward function) -> fluidity_aim
+  0.00, inverse_aim 1.00, 5% training mastery fraction, 14%
+  dimensional coverage, standardizes_mediocrity True. 6 of 7
+  dimensional failures predicted from training-data gaps. 8
+  inverse failure predictions covering every dimension.
+  Verdict: DEPLOYMENT NOT AIMED AT SUCCESS.
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior expansions (smart quotes -> ASCII, including smart
+  apostrophes inside string literals; **name**/**main** ->
+  __name__/__main__; embedded triple-backtick code fences
+  removed from method bodies inside SystemAimAssessment +
+  TrainingDataSufficiency dataclasses + the
+  success_specification_audit function body + the __main__
+  demo block; methods re-indented from column 0 to inside-
+  class). All 7 FluiditySpec entries preserved verbatim
+  including the multi-line mastery_description /
+  measurable_criteria / inverse_failure_mode strings.
+  Practitioner-baseline framing (kavik_baseline function name,
+  30y/6M-mile profile) preserved as content-level naming the
+  user has been carrying across the calibration/ attribution
+  stack and the transportation audit family. Pure stdlib;
+  chat_paste_check passes (repo-wide exit 0); calibration test
+  suite (11 tests) still passes.
 - Added `political_audit/regulation_lcd_incentive_audit.py`:
   domain-agnostic add-on to transportation_automation_audit
   that extracts the LCD-regulation / induced-deficit /
