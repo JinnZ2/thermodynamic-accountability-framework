@@ -1900,6 +1900,76 @@ thermodynamic-accountability-framework/
 │   ├── us_drought_audit_registry.md       # worked-example audit registry
 │   ├── us_flood_audit_registry.md         # worked-example audit registry
 │   ├── atlantic_hurricane_audit_registry.md  # worked-example audit registry
+│   ├── constraint_filter_architecture.py  # Sort models / frameworks /
+│   │                             #   regulations by failure SIGNATURE
+│   │                             #   (set of corrupt upstream premises
+│   │                             #   they carry) rather than by domain.
+│   │                             #   Premise: most domain models do not
+│   │                             #   fail at the equation level -- they
+│   │                             #   fail at the premise level (unstated
+│   │                             #   assumptions inherited from the
+│   │                             #   audit they were built on). Sorting
+│   │                             #   by signature reveals which axioms
+│   │                             #   are most systemically corrupt; the
+│   │                             #   kaleidoscope view of how false
+│   │                             #   premises pull on each other across
+│   │                             #   domains. Module surface: Premise
+│   │                             #   dataclass (id + description +
+│   │                             #   detect callable + falsity_severity
+│   │                             #   weight); Model dataclass (id +
+│   │                             #   domain + 7 boolean flags
+│   │                             #   has_scope / has_timing_layer /
+│   │                             #   has_diagnostic_cycles / treats_
+│   │                             #   substrate_as_static / treats_time_
+│   │                             #   as_externality / permanence_
+│   │                             #   assumed / units_grounded_in_physics
+│   │                             #   + extra dict). 7 DEFAULT_PREMISES
+│   │                             #   (permanence severity 2.0, no_scope
+│   │                             #   1.5, no_timing_layer 2.0, no_
+│   │                             #   diagnostic_cycles 1.5, static_
+│   │                             #   substrate 1.25, time_as_externality
+│   │                             #   1.5, ungrounded_units 2.0). 4
+│   │                             #   filter helpers: signature(model,
+│   │                             #   premises) returns frozenset of
+│   │                             #   carried-premise ids; severity(sig,
+│   │                             #   premises) sums weights; bucket_by_
+│   │                             #   signature groups models with
+│   │                             #   identical signatures (shared
+│   │                             #   upstream premise); bucket_by_
+│   │                             #   single_premise (one bucket per
+│   │                             #   premise; models can appear in
+│   │                             #   multiple). 3 cascade analyzers:
+│   │                             #   domain_cascade maps premise ->
+│   │                             #   set of affected domains
+│   │                             #   (touching many = systemic, not
+│   │                             #   local); co_occurrence_matrix
+│   │                             #   counts premise pairs that travel
+│   │                             #   together (resonance suggests
+│   │                             #   shared audit origin); backproject_
+│   │                             #   origin finds earliest carrying
+│   │                             #   domain via origin_hint year map;
+│   │                             #   forward_predict returns candidate
+│   │                             #   domains adjacent to carriers
+│   │                             #   (structural risk projection). 7
+│   │                             #   falsifiable CLAIMS at module level.
+│   │                             #   Demo: 7-model corpus across
+│   │                             #   building_codes / economics /
+│   │                             #   climate / agriculture / labor /
+│   │                             #   indigenous_engineering. Result:
+│   │                             #   permanence is most pervasive
+│   │                             #   premise (5/5 non-indigenous
+│   │                             #   domains); industrial_ag_yield +
+│   │                             #   industrial_workforce_cert tie at
+│   │                             #   severity 11.75 (7/7 premises);
+│   │                             #   nomadic_floating_structure scores
+│   │                             #   severity 0.00 (carries none).
+│   │                             #   Companion to core/timing_as_
+│   │                             #   constraint (the timing layer that
+│   │                             #   most flagged models lack) and
+│   │                             #   substrate_audit / calibration_
+│   │                             #   audit (downstream metrology
+│   │                             #   diagnostics whose root cause this
+│   │                             #   module locates).
 │   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
 │   │                             #   earth-systems-physics coupled
 │   │                             #   solvers. Integrates 3 observational
@@ -2447,6 +2517,83 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/constraint_filter_architecture.py`: a
+  kaleidoscope-view audit that sorts models / frameworks /
+  regulations by failure SIGNATURE (the set of corrupt upstream
+  premises they carry) rather than by domain. The substantive
+  reframe: most domain models do not fail at the equation level
+  -- they fail at the premise level (unstated assumptions
+  inherited from the audit they were built on). Sorting by
+  signature instead of by domain reveals which axioms are most
+  systemically corrupt and how false premises pull on each
+  other geometrically across domains.
+  Module surface: Premise dataclass (id, description, detect
+  callable, falsity_severity weight); Model dataclass (id,
+  domain, 7 boolean premise-flags + an extra dict for arbitrary
+  metadata); 7-entry DEFAULT_PREMISES list with weighted
+  severities (permanence 2.0, no_scope 1.5, no_timing_layer 2.0,
+  no_diagnostic_cycles 1.5, static_substrate 1.25,
+  time_as_externality 1.5, ungrounded_units 2.0).
+  4 filter/sort helpers: signature(model, premises) returns
+  frozenset of carried-premise ids; severity(sig, premises) sums
+  the weighted severities; bucket_by_signature groups models
+  whose signatures are identical (they share an upstream
+  premise); bucket_by_single_premise gives one bucket per
+  premise (models can appear in multiple).
+  3 cascade analyzers: domain_cascade maps premise -> set of
+  affected domains (touching many domains = systemic
+  corruption, not a local domain bug); co_occurrence_matrix
+  counts premise pairs that travel together in the same model
+  (high co-occurrence = resonance, suggests shared audit
+  origin); backproject_origin uses an origin_hint year map to
+  identify the earliest carrying domain (candidate origin, not
+  a proof); forward_predict takes a list of candidate domains
+  and returns those not yet observed carrying the premise
+  (structural risk projection: domains adjacent to carriers
+  are at risk).
+  7 falsifiable CLAIMS at module level: models sharing a
+  failure signature share an upstream premise; premise
+  co-occurrence across domains is non-random; a premise
+  touching many domains is systemic not local; backprojection
+  is candidate not proof; forward prediction is structural not
+  statistical; severity-weighted signatures order models by
+  audit corruption independent of domain prestige; two models
+  with identical equations but different premises produce
+  different physics over time.
+  Demo: 7-model corpus across building_codes (India NBC 1970,
+  US IBC legacy), economics (DSGE), climate (IPCC baseline),
+  agriculture (industrial yield), labor (certification-as-
+  capacity), indigenous_engineering (nomadic floating
+  structure). Permanence is most pervasive premise (5 of the 6
+  non-indigenous domains carry it). industrial_ag_yield and
+  industrial_workforce_cert tie at severity 11.75 (carry all 7
+  corrupt premises); nomadic_floating_structure scores
+  severity 0.00 (carries none of the 7). Co-occurrence: 6 pairs
+  of premises co-occur in 5 of 7 models (no_scope <-> permanence,
+  no_diagnostic_cycles <-> permanence, permanence <-> static_
+  substrate, no_diagnostic_cycles <-> no_scope, no_scope <->
+  static_substrate, no_diagnostic_cycles <-> static_substrate).
+  Backproject "permanence" with year hints surfaces
+  "building_codes" as earliest. Forward project flags 5
+  candidate domains (urban_planning, insurance, infrastructure_
+  investment, ecological_forecasting, education) as at-risk.
+  Companion to core/timing_as_constraint.py (the timing layer
+  that most flagged models lack) and substrate_audit /
+  calibration_audit modules (downstream metrology diagnostics
+  whose root cause this module locates upstream).
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; embedded triple-backtick code fences removed
+  from Premise.__hash__ method body and __main__ demo;
+  re-indented method body into class scope). Also: the source
+  had a stray walrus operator `severity := 2.0` in the first
+  DEFAULT_PREMISES entry -- valid Python but a side effect that
+  creates a module-level `severity` name as a leftover. Replaced
+  with the plain literal `2.0` to match the style of the other
+  entries; no behavior change. Pure stdlib; chat_paste_check
+  passes (repo-wide exit 0); calibration test suite (11 tests)
+  still passes.
 - Added `core/timing_as_constraint.py`: domain-agnostic framework
   positioning timing as a load-bearing constraint layer in
   physical systems. Premise: Western institutional design strips
