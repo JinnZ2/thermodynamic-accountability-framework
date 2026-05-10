@@ -311,6 +311,85 @@ thermodynamic-accountability-framework/
 │   │                              #   self-stabilization during
 │   │                              #   crisis sabotages the
 │   │                              #   corporation's own market.
+│   ├── audit_authority_scope.py   # Final piece of the core/ scope-
+│   │                              #   audit family. Applies scope-
+│   │                              #   audit logic recursively to
+│   │                              #   audit-authority itself. Higher
+│   │                              #   tiers of government get first
+│   │                              #   right to audit a community's
+│   │                              #   crisis response only within
+│   │                              #   their declared resource and
+│   │                              #   time scope. If they cannot or
+│   │                              #   will not exercise that right
+│   │                              #   within the declared window, the
+│   │                              #   audit at the next tier down
+│   │                              #   becomes final. Premise:
+│   │                              #   authority without demonstrated
+│   │                              #   capacity to exercise it is
+│   │                              #   coercion masquerading as
+│   │                              #   governance. AuditTier (name +
+│   │                              #   level 0-3 + scope_window_days
+│   │                              #   + resource_capacity_required);
+│   │                              #   TieredAuditRecord (tier +
+│   │                              #   incident_id + submitted_at +
+│   │                              #   completed_at + finding +
+│   │                              #   rationale + upgrades; is_
+│   │                              #   complete / duration_days /
+│   │                              #   within_scope_window gates);
+│   │                              #   CommunityResponseIncident
+│   │                              #   carries the original community
+│   │                              #   audit_record; TieredReviewLedger
+│   │                              #   composes incident + tiers +
+│   │                              #   records and exposes deadline_
+│   │                              #   for(tier) (cumulative offset
+│   │                              #   stacks each prior tier's window
+│   │                              #   before this one's), tier_
+│   │                              #   exercised_within_scope(name),
+│   │                              #   and final_audit(current_time)
+│   │                              #   which returns the operative
+│   │                              #   tier + finding + upgrades +
+│   │                              #   list of higher tiers whose
+│   │                              #   override window is still open.
+│   │                              #   Default tier ladder:
+│   │                              #   community 14d / county 30d /
+│   │                              #   state 90d / federal 180d
+│   │                              #   (cumulative deadlines). 6
+│   │                              #   falsifiable CLAIMS including
+│   │                              #   "audit-authority is scope-
+│   │                              #   conditional: claimed but
+│   │                              #   unexercised authority does not
+│   │                              #   bind" and "tiered scope windows
+│   │                              #   force budgeting for actual
+│   │                              #   audit capacity, not claims of
+│   │                              #   it". Demo: winter storm
+│   │                              #   community response with 4
+│   │                              #   scenarios. (A) county
+│   │                              #   completes audit within 30d ->
+│   │                              #   operative=county, state +
+│   │                              #   federal override windows still
+│   │                              #   open. (B) state misses 90d
+│   │                              #   window -> operative stays
+│   │                              #   county, federal still pending.
+│   │                              #   (C) state actually audits
+│   │                              #   within 90d -> operative=state,
+│   │                              #   federal still pending. (D)
+│   │                              #   federal window still open, no
+│   │                              #   record yet -> operative=highest
+│   │                              #   completed-within-scope tier.
+│   │                              #   Aligned incentives both
+│   │                              #   directions: communities risk
+│   │                              #   weaker upgrades by delay,
+│   │                              #   higher authorities risk
+│   │                              #   forfeiting override. core/'s
+│   │                              #   scope-audit family is now
+│   │                              #   five pieces: regulation_
+│   │                              #   cascade_mapper (spatial),
+│   │                              #   timing_as_constraint
+│   │                              #   (temporal), regulatory_scope_
+│   │                              #   audit (regulatory operational),
+│   │                              #   corporate_charter_scope_audit
+│   │                              #   (corporate charter), and this
+│   │                              #   one (audit authority itself).
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -2793,6 +2872,90 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `core/audit_authority_scope.py`: the final piece of the
+  core/ scope-audit family. Applies scope-audit logic recursively
+  to audit-authority itself. Higher tiers of government get first
+  right to audit a community's crisis response only within their
+  declared resource and time scope. If they cannot or will not
+  exercise that right within the declared window, the audit at
+  the next tier down becomes final. Premise: authority without
+  demonstrated capacity to exercise it is coercion masquerading
+  as governance. The same scope-audit logic applied to regulations
+  (regulatory_scope_audit) and corporate charters (corporate_
+  charter_scope_audit) applies to audit authority itself -- a
+  state government that claims final-audit authority but cannot
+  resource the audit within 90 days has exited the scope of that
+  claim.
+  Module surface: AuditTier (name + level 0-3 + scope_window_days
+  + resource_capacity_required dict for required auditor hours,
+  site visits, expert reviews); TieredAuditRecord (tier + incident
+  id + submitted_at + completed_at + finding "confirms_community"
+  / "modifies" / "challenges" + rationale + upgrades list +
+  auditor_ids; is_complete / duration_days / within_scope_window
+  gates); CommunityResponseIncident wraps the original community
+  audit_record produced by regulatory_scope_audit or corporate_
+  charter_scope_audit; TieredReviewLedger composes incident +
+  tiers + records.
+  Three TieredReviewLedger methods: deadline_for(tier) returns
+  the ISO timestamp by which that tier must complete its audit --
+  windows stack cumulatively, so the state deadline starts after
+  county window exhausts and so on (community 14d + county 30d +
+  state 90d + federal 180d cumulative); tier_exercised_within_
+  scope(name) checks if any record for that tier completed within
+  the tier's window; final_audit(current_time) walks the tiers
+  top-down to find the highest level with a within-scope completed
+  record (that's currently operative), falls back to community
+  baseline if none, and returns the list of higher tiers whose
+  override windows are still open.
+  6 falsifiable CLAIMS including the structural claim that
+  "audit-authority is scope-conditional: claimed but unexercised
+  authority does not bind", the budgeting claim that "tiered
+  scope windows force budgeting for actual audit capacity, not
+  claims of it", and the aligned-incentive claim that "neither
+  side gains by delay: communities risk weaker upgrades; higher
+  authorities risk forfeiting override".
+  Demo: winter storm community response from
+  corporate_charter_scope_audit.py demo carried forward as the
+  underlying incident. 4 scenarios.
+  (A) County completes audit on day 16 within its 30-day window;
+  finding=confirms_community, recommends county-level cache of
+  cold-weather supplies as upgrade. Operative=county. State and
+  federal override windows still open (113 + 293 days
+  remaining).
+  (B) State silent for 90 days (no record submitted). Operative
+  stays at county; federal still pending with 176 days
+  remaining.
+  (C) State completes audit on day 113 within its 90-day window
+  (82-day audit duration). Finding=modifies; upgrades include
+  "MN statute amendment codifying 24h corporate response
+  threshold for grid-failure isolation crises in unincorporated
+  areas" and "state cache of emergency rations at 30 county
+  distribution points". Operative=state. Federal still pending
+  with 206 days.
+  (D) Federal window still open mid-state-audit -- operative
+  remains the highest completed-within-scope tier.
+  core/'s scope-audit family is now a closed five-piece set:
+  regulation_cascade_mapper (spatial consequence), timing_as_
+  constraint (temporal scope + cycles), regulatory_scope_audit
+  (regulatory operational scope), corporate_charter_scope_audit
+  (corporate charter scope under crisis), and this module
+  (audit authority itself). All five share the structure:
+  declared scope vs current condition; out-of-scope -> intent-
+  preserving action by the next layer down, audit-after the
+  forfeiting tier.
+  The recursive insight this module operationalizes: scope-audit
+  applied to scope-audit-authority closes the framework -- there
+  is no tier above which is exempt from the same logic. Either
+  exercise the audit within scope, or forfeit the override.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; em-dash characters in string literals
+  converted to ASCII `--`). Dropped unused imports (`Any` from
+  typing, `defaultdict` from collections; the source imported
+  both but used neither). Pure stdlib; chat_paste_check passes
+  (repo-wide exit 0); calibration test suite (11 tests) still
+  passes.
 - Added `core/corporate_charter_scope_audit.py`: companion to
   regulatory_scope_audit.py -- same epistemic structure (declared
   intent vs current scope vs current action), applied to corporate
