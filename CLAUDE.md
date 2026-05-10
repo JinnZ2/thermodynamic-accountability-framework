@@ -83,6 +83,79 @@ thermodynamic-accountability-framework/
 │   │                              #   regulations through the same physics
 │   │                              #   lens as heat_leak_case.py and
 │   │                              #   data_logger.py.
+│   ├── timing_as_constraint.py    # Domain-agnostic framework: timing as
+│   │                              #   a load-bearing constraint layer in
+│   │                              #   physical systems. Premise: Western
+│   │                              #   institutional design strips temporal
+│   │                              #   scope from physical systems in
+│   │                              #   pursuit of permanence; a motor
+│   │                              #   without timing is dead metal, a
+│   │                              #   building code without scope is a
+│   │                              #   falsified audit. Restores timing
+│   │                              #   to its position as a precision
+│   │                              #   measurement instrument, not a
+│   │                              #   decoration. Core claim: every
+│   │                              #   physical system has a valid
+│   │                              #   operational window defined by
+│   │                              #   coupled variables (thermal,
+│   │                              #   moisture, load, substrate motion,
+│   │                              #   material decay); strip the
+│   │                              #   temporal scope and you remove the
+│   │                              #   diagnostic signature that tells
+│   │                              #   you the system is failing -- so
+│   │                              #   failure becomes catastrophic
+│   │                              #   instead of observable. 4
+│   │                              #   composable structures: Scope
+│   │                              #   dataclass (thermal_range_c +
+│   │                              #   moisture_range_pct + load_range_kn
+│   │                              #   + substrate_motion_mm_yr +
+│   │                              #   material_decay_pct_yr; in_scope()
+│   │                              #   gates state against bounds;
+│   │                              #   scope_exit_signature() returns
+│   │                              #   list of variables that have left
+│   │                              #   scope -- diagnostic signature);
+│   │                              #   Cycle dataclass (interval_years +
+│   │                              #   measurement + threshold + units;
+│   │                              #   due() gates against last_run);
+│   │                              #   TemporalAudit dataclass (system +
+│   │                              #   scope + cycles; is_falsified()
+│   │                              #   flags no_scope_declared OR no_
+│   │                              #   diagnostic_cycles -- a code with
+│   │                              #   neither claims permanence the
+│   │                              #   physics does not grant);
+│   │                              #   lifecycle_energy_cost(counteract_
+│   │                              #   kwh_per_year, adaptation_setup_
+│   │                              #   kwh, cycle_kwh_per_event,
+│   │                              #   cycle_interval_years, horizon_
+│   │                              #   years) compares two design
+│   │                              #   philosophies (continuous
+│   │                              #   resistance to substrate motion vs
+│   │                              #   one-time setup + periodic
+│   │                              #   adjustment cycles) and returns
+│   │                              #   the ratio. 8 falsifiable CLAIMS
+│   │                              #   (regulation without scope is
+│   │                              #   falsified audit; system stripped
+│   │                              #   of timing has no diagnostic
+│   │                              #   signature; adaptation cost is
+│   │                              #   bounded over horizon while
+│   │                              #   counteraction cost is unbounded;
+│   │                              #   material decay is scope-exit not
+│   │                              #   failure; etc). Demo: 1970
+│   │                              #   national building code (no scope,
+│   │                              #   no cycles) -> falsified=True;
+│   │                              #   scope-aware delta code (Ganga
+│   │                              #   delta, 5-45C, 30-95% RH, -30..+5
+│   │                              #   mm/yr substrate motion, 3
+│   │                              #   diagnostic cycles) -> falsified=
+│   │                              #   False; 50-year energy ledger
+│   │                              #   counteract 600,000 kWh vs
+│   │                              #   adaptation 18,000 kWh = 33x
+│   │                              #   ratio. Sister to regulation_
+│   │                              #   cascade_mapper (thermodynamic
+│   │                              #   consequence mapping) and
+│   │                              #   calibration/recency_bias_detector
+│   │                              #   (permanence-without-scope is a
+│   │                              #   recency anomaly).
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -2374,6 +2447,70 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `core/timing_as_constraint.py`: domain-agnostic framework
+  positioning timing as a load-bearing constraint layer in
+  physical systems. Premise: Western institutional design strips
+  temporal scope from physical systems in pursuit of permanence;
+  a motor without timing is dead metal, a building code without
+  scope is a falsified audit. The module restores timing to its
+  position as a precision measurement instrument rather than a
+  decoration. Core claim: every physical system has a valid
+  operational window defined by coupled variables (thermal,
+  moisture, load, substrate motion, material decay); stripping
+  the temporal scope removes the diagnostic signature that tells
+  you the system is failing, so failure becomes catastrophic
+  instead of observable.
+  Module surface: 4 composable structures. Scope dataclass with
+  thermal_range_c / moisture_range_pct / load_range_kn /
+  substrate_motion_mm_yr / material_decay_pct_yr; in_scope(state)
+  gates against bounds; scope_exit_signature(state) returns the
+  list of variables that have left scope (diagnostic signature
+  for graceful failure). Cycle dataclass with interval_years +
+  measurement + threshold + units; due(last_run, current) gates
+  scheduling. TemporalAudit composes Scope + cycles into an
+  is_falsified() check that flags no_scope_declared OR no_
+  diagnostic_cycles -- a code with neither is claiming permanence
+  the physics does not grant. lifecycle_energy_cost compares two
+  design philosophies (continuous counteraction of substrate
+  motion vs one-time setup + periodic adjustment cycles) over a
+  time horizon and returns the ratio.
+  8 falsifiable CLAIMS at module level: regulation without
+  scope is falsified audit; system stripped of timing has no
+  diagnostic signature so failure is catastrophic not observable;
+  adaptation cost is bounded over horizon while counteraction
+  cost is unbounded; material decay is scope-exit not failure;
+  building codes inheriting Western permanence assumptions cannot
+  represent substrate motion as design input; cycles are
+  measurement instruments and removing them blinds the system;
+  two systems with identical static specs but different temporal
+  scopes have different physics; maintenance scheduled to scope
+  is design while maintenance triggered by visible failure is
+  salvage.
+  Demo: 1970 national building code (no scope, no cycles) ->
+  falsified=True with both reasons. Scope-aware delta code for
+  the Ganga delta (thermal 5-45C, moisture 30-95%, substrate
+  motion -30..+5 mm/yr, 3 diagnostic cycles for foundation
+  settlement / material density / substrate motion) ->
+  falsified=False. 50-year energy ledger: counteract design
+  consumes 600,000 kWh vs adaptation design 18,000 kWh -- a
+  33.3x ratio that makes the bounded-vs-unbounded claim concrete.
+  Placed in core/ alongside regulation_cascade_mapper.py since
+  both audit institutional artifacts through a physics lens; the
+  new module adds the temporal dimension that regulation_cascade_
+  mapper currently lacks. Sister to calibration/recency_bias_
+  detector.py via the recency-anomaly framing (permanence-
+  without-scope is a Holocene-suburban-American assumption being
+  projected as universal default).
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior expansions (smart quotes -> ASCII; **name**/**main** ->
+  __name__/__main__; Unicode em-dash horizontal-line dividers
+  -> ASCII `=` per repo convention; embedded triple-backtick
+  code fences removed from method bodies inside Scope, Cycle,
+  TemporalAudit dataclasses + lifecycle_energy_cost function +
+  __main__ demo block; methods re-indented from column 0 to
+  inside-class). Dropped unused `Callable` import. Pure stdlib;
+  chat_paste_check passes (repo-wide exit 0); calibration test
+  suite (11 tests) still passes.
 - Added `political_audit/success_specification_validator.py`:
   capstone audit module for the transportation_automation_audit
   family. Defines what SUCCESS actually means thermodynamically
