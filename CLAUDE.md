@@ -156,6 +156,85 @@ thermodynamic-accountability-framework/
 │   │                              #   calibration/recency_bias_detector
 │   │                              #   (permanence-without-scope is a
 │   │                              #   recency anomaly).
+│   ├── regulatory_scope_audit.py  # Substrate-primary scope-validity
+│   │                              #   audit for regulations. Pairs with
+│   │                              #   regulation_cascade_mapper
+│   │                              #   (consequence mapping) and timing_
+│   │                              #   as_constraint (temporal scope).
+│   │                              #   Premise: every regulation was
+│   │                              #   written for a specific operating
+│   │                              #   envelope (thermal range, population
+│   │                              #   density, substrate stability,
+│   │                              #   infrastructure assumption); when
+│   │                              #   real conditions exit that envelope
+│   │                              #   the regulation is outside its
+│   │                              #   scope, and enforcing it produces
+│   │                              #   the harm it was designed to
+│   │                              #   prevent. Surface: ScopeVar (name +
+│   │                              #   valid_range + units + in_range
+│   │                              #   gate); Regulation (id +
+│   │                              #   jurisdiction + year_enacted +
+│   │                              #   first_principle_intent + scope
+│   │                              #   list + enforcement_text; in_scope
+│   │                              #   gates all ScopeVars; scope_exit_
+│   │                              #   signature returns dict per
+│   │                              #   exited variable with current_
+│   │                              #   value / valid_range / deviation);
+│   │                              #   Situation (id + location +
+│   │                              #   conditions dict); ScopeAudit
+│   │                              #   composes Regulation + Situation +
+│   │                              #   in_scope + scope_exits + intent_
+│   │                              #   still_applicable; summary() emits
+│   │                              #   one of IN SCOPE / OUT OF SCOPE
+│   │                              #   INTENT EXPIRED / OUT OF SCOPE
+│   │                              #   INTENT PRESERVED verdicts.
+│   │                              #   audit(reg, sit, intent_check=None)
+│   │                              #   runs the full scope check.
+│   │                              #   LocalResponseRecord captures the
+│   │                              #   constructive output: what
+│   │                              #   community did + which regs were
+│   │                              #   out of scope + what intent they
+│   │                              #   preserved + when post-hoc audit
+│   │                              #   is due (typically 60-90 days).
+│   │                              #   build_response_record helper.
+│   │                              #   6 falsifiable CLAIMS including
+│   │                              #   "burden of proof shifts to central
+│   │                              #   authority to produce a scope-
+│   │                              #   current rule when the legacy rule
+│   │                              #   has exited scope". Demo: 2
+│   │                              #   worked examples. (1) MN 7080
+│   │                              #   centralized-sewer rule (scoped
+│   │                              #   for 2000-20000 pop/km^2 +
+│   │                              #   <0.2ha lots) applied to a 4
+│   │                              #   pop/km^2 / 0.8ha homestead with
+│   │                              #   composting toilet -> OUT OF
+│   │                              #   SCOPE, intent (prevent
+│   │                              #   groundwater contamination)
+│   │                              #   preserved via composting +
+│   │                              #   graywater per MN 7080/7083.
+│   │                              #   (2) State bridge permit (scoped
+│   │                              #   for 500-50000 vehicles/day +
+│   │                              #   15-500m spans + 50-100yr design
+│   │                              #   life + $1M-$200M budget) applied
+│   │                              #   to a 0-vehicle 6m pedestrian
+│   │                              #   crossing serving 14 households
+│   │                              #   -> OUT OF SCOPE on all 4 scope
+│   │                              #   variables, intent (load-bearing
+│   │                              #   safety) preserved via standard
+│   │                              #   timber-truss + immediate
+│   │                              #   community inspection. Inversion
+│   │                              #   flag: both regulations enforced
+│   │                              #   literally would produce the
+│   │                              #   exact harm they were designed
+│   │                              #   to prevent. Companion to
+│   │                              #   simulations/biological_response_
+│   │                              #   infrastructure (the dynamic
+│   │                              #   counterpart -- this module is
+│   │                              #   the legal-epistemic instrument
+│   │                              #   that lets biological-mode
+│   │                              #   response operate without
+│   │                              #   violating regulations' original
+│   │                              #   good-faith intent).
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -2638,6 +2717,89 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `core/regulatory_scope_audit.py`: substrate-primary scope-
+  validity audit for regulations. Companion to regulation_cascade_
+  mapper (which maps consequence chains) and timing_as_constraint
+  (which adds the temporal dimension). Together the three core/
+  modules form a regulation-audit triad: cascade consequence
+  (spatial), temporal scope (when), and operational scope (under
+  what physical conditions).
+  Premise: every regulation was written for a specific operating
+  envelope -- thermal range, population density, substrate
+  stability, infrastructure assumption. When real conditions exit
+  that envelope, the regulation is outside its scope, and continuing
+  to enforce it inverts its purpose and produces the harm it was
+  designed to prevent. The constructive output: communities can
+  preserve first-principle intent while exiting expired letter,
+  acting inside the regulation's purpose rather than against it.
+  Module surface: ScopeVar (name + valid_range + units + in_range
+  gate); Regulation (id + jurisdiction + year_enacted + first_
+  principle_intent + scope list + enforcement_text; in_scope gates
+  all ScopeVars; scope_exit_signature returns dict per exited
+  variable with current_value / valid_range / deviation); Situation
+  (id + location + conditions dict); ScopeAudit (composes Regulation
+  + Situation + flags + intent_still_applicable; summary() emits
+  IN SCOPE / OUT OF SCOPE INTENT EXPIRED / OUT OF SCOPE INTENT
+  PRESERVED). audit(reg, sit, intent_check=None) runs the full
+  check. LocalResponseRecord captures the constructive audit
+  trail: what the community did, which regulations were out of
+  scope, what intent they preserved, when the post-hoc central
+  audit is due. build_response_record helper.
+  6 falsifiable CLAIMS including the burden-of-proof claim that
+  central authority must produce a scope-current rule when the
+  legacy rule has exited scope, and the legitimacy claim that
+  communities preserving first-principle intent while exiting
+  expired letter act inside the regulation's purpose.
+  Demo: 2 worked examples.
+  (1) MN 7080 centralized-sewer rule (scoped for 2000-20000
+  pop/km^2 + <0.2ha lots) applied to a 4 pop/km^2 / 0.8ha rural
+  homestead with composting toilet + graywater proposal. Result:
+  OUT OF SCOPE -- INTENT PRESERVED. Two scope variables flagged
+  (population_density 4.00 vs valid 2000-20000; lot_size 0.80ha
+  vs valid 0-0.2ha). Original intent (prevent groundwater
+  contamination from improper waste in high-density populations)
+  preserved via composting design with safe well separation per
+  substrate-current MN rules 7080/7083.
+  (2) State bridge permit (scoped for 500-50000 vehicles/day +
+  15-500m spans + 50-100yr design life + $1M-$200M budget)
+  applied to a 0-vehicle 6m pedestrian crossing serving 14
+  households after seasonal creek washout. Result: OUT OF SCOPE
+  on ALL 4 scope variables. Original intent (load-bearing safety
+  on permanent high-traffic vehicular bridges) preserved via
+  standard timber-truss design and immediate community inspection
+  cycle.
+  Inversion flag at end of demo: both regulations enforced
+  literally in these situations would produce the EXACT harm
+  they were designed to prevent. Septic rule: forcing
+  centralized sewer where none exists delays sanitation,
+  increasing risk of improvised disposal and contamination.
+  Bridge rule: blocking community crossing isolates households,
+  impedes emergency access, creates the access-failure the
+  safety framework was meant to address. The scope audit
+  surfaces this inversion. Communities act inside the original
+  intent; central authority audits afterward.
+  Sister to simulations/biological_response_infrastructure.py
+  (the dynamic counterpart simulating distributed-vs-centralized
+  response). This module is the legal-epistemic instrument that
+  lets the biological-mode response operate without violating
+  the original good-faith intent of the regulations being
+  exited.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; em-dash characters inside string literals
+  -- including jurisdiction strings, intent descriptions, and
+  verdict labels like "OUT OF SCOPE — INTENT PRESERVED" --
+  converted to ASCII `--`). Also: Unicode en-dash `–` in
+  the deviations_human_readable f-string formatter
+  ("(valid 2000.00-20000.00)") converted to ASCII `-`. Replaced
+  the source's `intent_check: callable = None` annotation
+  (using the builtin `callable` as a type) with proper `Callable
+  | None = None` and added `from typing import Callable`.
+  Dropped unused imports (`Any` from typing, `defaultdict` from
+  collections; the source imported both but used neither). Pure
+  stdlib; chat_paste_check passes (repo-wide exit 0);
+  calibration test suite (11 tests) still passes.
 - Added `simulations/biological_response_infrastructure.py`:
   distributed-infrastructure simulation modeled on biological
   immune / metabolic systems. Premise: cells don't ask permission
