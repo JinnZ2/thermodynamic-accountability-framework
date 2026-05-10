@@ -201,15 +201,74 @@ thermodynamic-accountability-framework/
 │   ├── node_v3_ipi.py            # Node v3 focused on Intergenerational Production Integration
 │   ├── lhri_sim.py               # Longitudinal Human Resilience Index simulation
 │   ├── seed_sim.py               # Community + seed AI network dynamics
-│   └── loop_6_ai_default_prior_distortion.py  # Monte Carlo loop sim for AI
-│                                 #   default-prior distortion. Models the
-│                                 #   feedback where AI systems default to
-│                                 #   "generic stable baseline" priors when
-│                                 #   asked about active-crisis systems,
-│                                 #   substrate-primary observers carry the
-│                                 #   correction load, and decision damage
-│                                 #   compounds via DECISION_LAG_FACTOR.
-│                                 #   Stdlib only (random, statistics).
+│   ├── loop_6_ai_default_prior_distortion.py  # Monte Carlo loop sim for AI
+│   │                             #   default-prior distortion. Models the
+│   │                             #   feedback where AI systems default to
+│   │                             #   "generic stable baseline" priors when
+│   │                             #   asked about active-crisis systems,
+│   │                             #   substrate-primary observers carry the
+│   │                             #   correction load, and decision damage
+│   │                             #   compounds via DECISION_LAG_FACTOR.
+│   │                             #   Stdlib only (random, statistics).
+│   └── biological_response_infrastructure.py  # Distributed infrastructure
+│                                 #   simulation modeled on biological
+│                                 #   immune / metabolic systems. Compares
+│                                 #   two response regimes on identical
+│                                 #   mesh networks under identical
+│                                 #   damage shocks: (a) biological mode
+│                                 #   -- nodes sense local damage and
+│                                 #   respond immediately, central audit
+│                                 #   reviews after the fact; (b)
+│                                 #   permission-required mode -- nodes
+│                                 #   must request central authorization
+│                                 #   first, repair occurs only after
+│                                 #   central_authority_latency_steps
+│                                 #   have elapsed. Premise: cells don't
+│                                 #   ask permission to respond to
+│                                 #   tissue damage; an immune system
+│                                 #   that waited for central
+│                                 #   authorization would be a dead
+│                                 #   immune system. Module surface:
+│                                 #   Node dataclass (capacity / damage_
+│                                 #   threshold / response_latency_steps
+│                                 #   / neighbors / autonomous flag /
+│                                 #   audit_log; sense_damage, can_
+│                                 #   respond, respond methods); Network
+│                                 #   dataclass (nodes dict + central_
+│                                 #   authority_latency_steps + central_
+│                                 #   authority_required; neighbors_of,
+│                                 #   total_capacity, healthy_fraction,
+│                                 #   has_collapsed methods); DamageEvent
+│                                 #   dataclass (step + target_nodes +
+│                                 #   severity; apply method). 2 step
+│                                 #   functions (step_biological, step_
+│                                 #   permission_required) implement the
+│                                 #   regimes. propagate_damage() spreads
+│                                 #   untended failure to neighbors
+│                                 #   (sepsis analog). simulate()
+│                                 #   composes scheduled shocks + step
+│                                 #   regime + propagation across a
+│                                 #   horizon, returns history +
+│                                 #   collapsed_at marker. mesh_network()
+│                                 #   builder constructs a sqrt(n) x
+│                                 #   sqrt(n) lattice with 4-nearest-
+│                                 #   neighbor adjacency. 7 falsifiable
+│                                 #   CLAIMS at module level. Demo: 64-
+│                                 #   node mesh, 5 damage shocks at
+│                                 #   steps 10/25/50/75/95 with
+│                                 #   severities 0.5-0.7, 120-step
+│                                 #   horizon. Result: biological mode
+│                                 #   finishes at 64.00 capacity /
+│                                 #   100% healthy (survived all 120
+│                                 #   steps); permission-required mode
+│                                 #   collapses at step 33 (3 steps
+│                                 #   after the second shock), finishes
+│                                 #   at 0.10 capacity / 0% healthy.
+│                                 #   The 30-step central-authority
+│                                 #   latency is longer than the
+│                                 #   cascade detonation window, so
+│                                 #   damage spreads faster than
+│                                 #   approval propagates. Stdlib only.
 │
 ├── game_theory/                   # Formal proofs of game theory failures
 │   ├── proof-pipeline.py         # 6-module proof pipeline (50KB)
@@ -2579,6 +2638,66 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `simulations/biological_response_infrastructure.py`:
+  distributed-infrastructure simulation modeled on biological
+  immune / metabolic systems. Premise: cells don't ask permission
+  to respond to tissue damage; an immune system that waited for
+  central authorization would be a dead immune system. Current
+  regulatory infrastructure inverts this -- communities must
+  request central approval before responding to local constraints
+  (washed-out creek, failed septic, lost grid power); by the time
+  approval arrives, the local system has degraded. Same pathology
+  as a finger waiting for brain authorization while infection
+  propagates. This module models the inversion and runs the math.
+  Module surface: Node dataclass (capacity / damage_threshold /
+  response_latency_steps / neighbors list / autonomous flag /
+  last_response_step / audit_log; sense_damage, can_respond,
+  respond methods); Network dataclass (nodes dict + central_
+  authority_latency_steps + central_authority_required; neighbors_
+  of, total_capacity, healthy_fraction, has_collapsed methods);
+  DamageEvent dataclass (step + target_nodes + severity; apply
+  method). step_biological iterates nodes and lets each sense and
+  respond locally. step_permission_required collects requests,
+  holds them in a pending dict, and only releases repairs after
+  central_authority_latency_steps have elapsed. propagate_damage
+  spreads untended damage to neighbors (sepsis analog). simulate
+  composes scheduled shocks + step regime + propagation across a
+  horizon, returns full history + collapsed_at marker.
+  mesh_network() builder constructs sqrt(n) x sqrt(n) lattice with
+  4-nearest-neighbor adjacency. 7 falsifiable CLAIMS including
+  "damage propagation rate exceeds central-authority latency in
+  distributed shocks; the math is not subjective" and "the cost
+  of a permission system exceeds the cost of post-hoc audit by a
+  factor proportional to network size and shock frequency".
+  Demo: 64-node mesh networks under identical 5-shock schedule
+  (steps 10/25/50/75/95, severities 0.5-0.7), 120-step horizon,
+  30-step central-authority latency for the permission-required
+  variant. Result: biological mode finishes at 64.00 capacity /
+  100% healthy (survived all 120 steps); permission-required mode
+  collapses at step 33 (3 steps after the second shock), finishes
+  at 0.10 capacity / 0% healthy. The 30-step central-authority
+  latency is longer than the cascade detonation window, so damage
+  spreads faster than approval propagates. The dramatic delta
+  isn't a parameter choice -- it's the structural claim the model
+  operationalizes: damage propagation rate exceeds central-
+  authority latency in distributed shocks. Extends metrology/
+  institutional_audit.py and metrology/constraint_filter_
+  architecture.py with the same premise-level critique applied
+  to distributed-vs-centralized response.
+  Placed in simulations/ alongside loop_6_ai_default_prior_
+  distortion (the other stdlib-only Monte Carlo / loop sim in
+  the repo); content is structurally a simulation, not an audit.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; embedded triple-backtick fences removed from
+  method bodies inside Node + Network + DamageEvent dataclasses
+  + step_biological + step_permission_required + propagate_
+  damage + simulate + mesh_network + __main__ demo block;
+  methods re-indented from column 0 to inside-class). Dropped
+  unused `Callable` import from typing. Pure stdlib; chat_paste_
+  check passes (repo-wide exit 0); calibration test suite
+  (11 tests) still passes.
 - Added `metrology/institutional_audit.py`: cross-domain audit
   that extends constraint_filter_architecture with four
   institutional premises (performance_over_function,
