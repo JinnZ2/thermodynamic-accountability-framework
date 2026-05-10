@@ -444,7 +444,7 @@ thermodynamic-accountability-framework/
 │   │                             #   correction load, and decision damage
 │   │                             #   compounds via DECISION_LAG_FACTOR.
 │   │                             #   Stdlib only (random, statistics).
-│   └── biological_response_infrastructure.py  # Distributed infrastructure
+│   ├── biological_response_infrastructure.py  # Distributed infrastructure
 │                                 #   simulation modeled on biological
 │                                 #   immune / metabolic systems. Compares
 │                                 #   two response regimes on identical
@@ -503,6 +503,71 @@ thermodynamic-accountability-framework/
 │                                 #   cascade detonation window, so
 │                                 #   damage spreads faster than
 │                                 #   approval propagates. Stdlib only.
+│   └── monte_carlo_resilience_sim.py  # Stochastic Monte Carlo
+│                                 #   companion to biological_response_
+│                                 #   infrastructure. Compares two
+│                                 #   response architectures across N
+│                                 #   randomized crisis scenarios:
+│                                 #   distributed (local autonomous
+│                                 #   response + scope-audit governance)
+│                                 #   vs centralized (permission-gated
+│                                 #   response, no local agency). Each
+│                                 #   iteration samples a Crisis
+│                                 #   (7 types: weather/grid, economic,
+│                                 #   supply chain, corporate withdrawal,
+│                                 #   infrastructure, public health,
+│                                 #   regulatory collapse) + Community
+│                                 #   (morale, local_capacity, cohesion,
+│                                 #   audit_transparency) + Central
+│                                 #   Authority (response_latency_days,
+│                                 #   capacity, geographic_reach), then
+│                                 #   runs both architectures against
+│                                 #   the same crisis with their
+│                                 #   respective response logic. Outcome
+│                                 #   dataclass tracks 7 axes: survival
+│                                 #   fraction, infrastructure_intact,
+│                                 #   cohesion_post, cascade_failures,
+│                                 #   trust_post, recovery_days,
+│                                 #   cost_usd. summarize() rolls each
+│                                 #   architecture's outcomes into
+│                                 #   mean/median/std + p05_survival
+│                                 #   tail metric + cascade_zero_rate;
+│                                 #   compare() returns deltas across
+│                                 #   all 7 axes. correlate() exposes
+│                                 #   per-parameter sensitivity (which
+│                                 #   variables move outcomes per
+│                                 #   architecture). 7 falsifiable
+│                                 #   CLAIMS at module level including
+│                                 #   ">15pp survival advantage",
+│                                 #   ">2x zero-cascade rate", "tail-
+│                                 #   risk worst 5% distributed beats
+│                                 #   median centralized", and the
+│                                 #   reproducibility claim (same seed
+│                                 #   yields same outcomes). Limitations
+│                                 #   block names what's NOT modeled:
+│                                 #   audit capture, community
+│                                 #   unwillingness, state suppression
+│                                 #   of local response, communication
+│                                 #   infrastructure failure, city-
+│                                 #   scale dynamics. Demo at N=5000,
+│                                 #   seed=42: distributed 77.5%
+│                                 #   survival / 78.7% infrastructure /
+│                                 #   97.9% zero-cascade / $381k mean
+│                                 #   cost / 10-day recovery vs
+│                                 #   centralized 46.5% / 47.2% / 16.8%
+│                                 #   / $2.7M / 73-day recovery.
+│                                 #   Deltas: +31pp survival, +48pp
+│                                 #   trust, +62.6 days recovery
+│                                 #   speedup, $2.3M cost savings.
+│                                 #   p05 (worst-5%) distributed
+│                                 #   survival 50.7% beats centralized
+│                                 #   median 48.4% on the tail-risk
+│                                 #   axis. Sensitivity confirms
+│                                 #   sensitivity-differs claim:
+│                                 #   distributed local_capacity vs
+│                                 #   survival r=+0.348; centralized
+│                                 #   response_latency vs survival
+│                                 #   r=-0.319. Stdlib only.
 │
 ├── game_theory/                   # Formal proofs of game theory failures
 │   ├── proof-pipeline.py         # 6-module proof pipeline (50KB)
@@ -2872,6 +2937,90 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `simulations/monte_carlo_resilience_sim.py`: stochastic
+  companion to biological_response_infrastructure.py. Where the
+  prior module runs ONE deterministic mesh under a fixed shock
+  schedule, this module runs N stochastic iterations sampling
+  crisis type / severity / community / central-authority
+  parameters from beta distributions, exposing the architecture
+  delta across the entire random landscape rather than from a
+  single trajectory.
+  Module surface: 7 CRISIS_TYPES (weather_grid_failure,
+  economic_shock, supply_chain_break, corporate_withdrawal,
+  infrastructure_failure, public_health_event, regulatory_collapse);
+  Crisis / Community / CentralAuthority / Outcome dataclasses;
+  sample_crisis/community/central() use rng.betavariate for
+  realistic skewed distributions; run_distributed and
+  run_centralized implement the two architectures' response logic
+  (distributed combines local_capacity + cohesion + audit_
+  transparency for immediate response; centralized has latency
+  delay during which damage propagates and community sits in
+  helplessness); simulate() runs N iterations with seeded RNG;
+  summarize/compare report mean/median/std + tail metric
+  (p05_survival) + cascade_zero_rate + deltas across 7 outcome
+  axes; correlate() exposes per-parameter sensitivity (which
+  variables move outcomes per architecture).
+  7 falsifiable CLAIMS including ">15pp survival advantage",
+  ">2x zero-cascade rate", "tail-risk worst 5% distributed beats
+  median centralized", "trust recovery faster under distributed
+  because action is validated post-hoc", and the reproducibility
+  claim (same seed yields same outcomes; framework is
+  falsifiable, not rhetorical).
+  Explicit Limitations block names what's NOT modeled: audit
+  integrity assumed (real-world capture unmodeled); community
+  willingness assumed (learned-helplessness baseline only); no
+  external prohibition (state suppression of local response
+  unmodeled); communication infrastructure assumed intact;
+  small-community dynamics, city-scale not validated. This is
+  the methodological discipline that distinguishes substantive
+  simulation from rhetorical one.
+  Demo at N=5000, seed=42 produces dramatic deltas across the
+  random landscape: distributed 77.5% survival / 78.7%
+  infrastructure intact / 97.9% zero-cascade rate / $381k mean
+  cost / 10-day mean recovery vs centralized 46.5% / 47.2% /
+  16.8% / $2.7M / 73-day recovery. Aggregated deltas: +31pp
+  survival, +31pp infrastructure, +48pp trust, +62.6 days
+  recovery speedup, $2.3M cost savings per crisis. The
+  tail-risk finding is the most pointed: p05 (worst-5%)
+  distributed survival of 50.7% exceeds the centralized
+  median of 48.4% -- meaning even the worst 5% of distributed
+  outcomes still beats the typical centralized outcome on the
+  survival axis. Sensitivity confirms the sensitivity-differs
+  claim: distributed survival correlates with local_capacity
+  at r=+0.348 (local skill/supplies/leadership is the
+  dominant driver); centralized survival correlates with
+  response_latency at r=-0.319 (delay is the dominant driver
+  in the wrong direction).
+  Methodologically distinctive: the simulation isn't a
+  parameter-tuning exercise. The advantage delta emerges from
+  the structural difference in response logic (immediate-local
+  vs latency-delayed), not from cherry-picked parameters.
+  Modify parameter distributions, response functions, or
+  scoring -- if the distributed advantage disappears under your
+  modifications, that's the data point. Either you've found a
+  regime where it doesn't help, or where the model assumptions
+  were doing the work. That's the falsifiability the explicit
+  Limitations block enables.
+  Sister to core/'s five-piece scope-audit family
+  (regulation_cascade_mapper, timing_as_constraint,
+  regulatory_scope_audit, corporate_charter_scope_audit,
+  audit_authority_scope) and simulations/biological_response_
+  infrastructure (deterministic mesh counterpart). Stochastic
+  simulation tests the governance machinery whose effectiveness
+  the audit modules describe.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; em-dash characters in string literals
+  converted to ASCII `--`; Unicode `->` arrow in docstring
+  "same random seed -> same outcomes" -> ASCII `->`; function
+  bodies at column 0 throughout the source -- same indentation
+  contamination as prior pastes -- re-indented to proper
+  4-space inside-function and 8-space inside-method positions).
+  Dropped unused `Counter` import from collections (source
+  imported it but did not use it). Pure stdlib; chat_paste_
+  check passes (repo-wide exit 0); calibration test suite
+  (11 tests) still passes.
 - Added `core/audit_authority_scope.py`: the final piece of the
   core/ scope-audit family. Applies scope-audit logic recursively
   to audit-authority itself. Higher tiers of government get first
