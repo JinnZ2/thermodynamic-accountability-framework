@@ -235,6 +235,82 @@ thermodynamic-accountability-framework/
 │   │                              #   response operate without
 │   │                              #   violating regulations' original
 │   │                              #   good-faith intent).
+│   ├── corporate_charter_scope_audit.py  # Companion to regulatory_
+│   │                              #   scope_audit (same epistemic
+│   │                              #   structure: declared intent vs
+│   │                              #   current scope vs current action).
+│   │                              #   Audits corporate operating
+│   │                              #   privileges as scope-conditional:
+│   │                              #   any corporation operating within
+│   │                              #   a community holds an implicit
+│   │                              #   charter to extract value from
+│   │                              #   the market AND stabilize with
+│   │                              #   the community when crisis
+│   │                              #   arrives. Failure to respond
+│   │                              #   within a declared response
+│   │                              #   threshold (default 24h)
+│   │                              #   suspends operating privileges
+│   │                              #   and activates community asset-
+│   │                              #   access contingency until
+│   │                              #   response is delivered. Not
+│   │                              #   seizure -- enforcement of the
+│   │                              #   actual terms of operating
+│   │                              #   inside the community. Surface:
+│   │                              #   CorporateCharter (corporation_
+│   │                              #   id + community_id + function_
+│   │                              #   served + value_extracted_
+│   │                              #   categories + response_threshold_
+│   │                              #   hours + on_site_assets dict);
+│   │                              #   CommunityCrisis (id + community
+│   │                              #   + crisis_type + declared_at +
+│   │                              #   needs dict); CorporateResponse
+│   │                              #   (delivered_within_hours +
+│   │                              #   resources_delivered + personnel_
+│   │                              #   deployed; is_adequate() checks
+│   │                              #   threshold + 50% delivery
+│   │                              #   fraction); CharterAudit
+│   │                              #   composes the three; audit_
+│   │                              #   charter() runs the check;
+│   │                              #   CommunityAccessClaim is the
+│   │                              #   constructive output activated
+│   │                              #   when audit returns out-of-scope.
+│   │                              #   proportionate_claim() caps the
+│   │                              #   claim at declared need AND
+│   │                              #   on-site availability -- surplus
+│   │                              #   stays with the corporation.
+│   │                              #   activate_contingency() returns
+│   │                              #   None if charter is in-scope
+│   │                              #   (no claim activated). 6
+│   │                              #   falsifiable CLAIMS including
+│   │                              #   "asset-access contingency
+│   │                              #   activated under audit-after-
+│   │                              #   action is enforcement of
+│   │                              #   charter terms, not seizure".
+│   │                              #   Demo: 3 scenarios for big-box
+│   │                              #   retailer in N. Minnesota
+│   │                              #   community during winter storm
+│   │                              #   grid failure (declared needs:
+│   │                              #   3200kg food, 2400L water, 180
+│   │                              #   blankets). (A) responds in
+│   │                              #   18h with 2800kg/2400L/200 +
+│   │                              #   4 personnel -> IN SCOPE, no
+│   │                              #   contingency. (B) no response
+│   │                              #   in 24h -> OUT OF SCOPE, full
+│   │                              #   proportionate claim 3200kg/
+│   │                              #   2400L/180 capped at on-site
+│   │                              #   availability. (C) partial
+│   │                              #   delivery 800kg/600L/50 (under
+│   │                              #   50% threshold) -> OUT OF
+│   │                              #   SCOPE, shortfall-only claim
+│   │                              #   2400kg/1800L/130 (remainder
+│   │                              #   only). Aligned-incentive
+│   │                              #   framing: corporations depend
+│   │                              #   on community stability for
+│   │                              #   customers / workforce / supply
+│   │                              #   chain; blocking community
+│   │                              #   self-stabilization during
+│   │                              #   crisis sabotages the
+│   │                              #   corporation's own market.
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -2717,6 +2793,78 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `core/corporate_charter_scope_audit.py`: companion to
+  regulatory_scope_audit.py -- same epistemic structure (declared
+  intent vs current scope vs current action), applied to corporate
+  charters rather than regulations. Premise: any corporation
+  operating within a community holds an implicit charter to extract
+  value from the market AND stabilize with the community when crisis
+  arrives. When the corporation exits the scope of that function --
+  most clearly during a crisis the corporation refuses to respond
+  to -- the charter is in scope exit. The community's claim on the
+  corporation's locally held resources supersedes the corporation's
+  disposal logic for the duration of the crisis, subject to post-hoc
+  audit. This is not seizure; it is enforcement of the actual terms
+  of operating inside the community.
+  Module surface: CorporateCharter (corporation + community +
+  function_served + value_extracted_categories + response_threshold_
+  hours + on_site_assets dict); CommunityCrisis (id + community +
+  crisis_type + declared_at_iso + needs dict); CorporateResponse
+  (delivered_within_hours + resources_delivered + personnel_deployed;
+  is_adequate() gates threshold + 50% delivery fraction); CharterAudit
+  (composes Charter + Crisis + Response + adequacy flag +
+  scope_exit_reasons; summary emits IN SCOPE or OUT OF SCOPE verdict
+  with reason list); audit_charter() runs the full check.
+  Constructive output: CommunityAccessClaim captures what the
+  community is claiming access to, why, when activated, when the
+  post-hoc audit is due, and whether the claim is proportionate +
+  stabilization-only. proportionate_claim() caps at declared need
+  AND on-site availability -- surplus stays with the corporation,
+  enforcing the bounded nature of the contingency. activate_
+  contingency() returns None if the audit is in-scope (no claim
+  triggered).
+  6 falsifiable CLAIMS including: corporate charter is scope-
+  conditional; asset-access contingency under audit-after-action is
+  enforcement of charter terms not seizure; proportionate claims
+  limited to declared need and on-site availability are auditable
+  and reproducible; charter audit and regulatory scope audit share
+  the same epistemic structure.
+  Demo: 3 scenarios for a big-box retailer in a Northern Minnesota
+  community during a winter-storm grid failure (community-declared
+  needs: 3200kg food, 2400L water, 180 blankets; corporation has
+  8500kg food, 4000L water, 320 blankets on site).
+  (A) Corporation responds in 18h with 2800kg food / 2400L water /
+  200 blankets + 4 personnel deployed -> IN SCOPE, operating
+  privileges intact, no contingency.
+  (B) Corporation does not respond within 24h -> OUT OF SCOPE.
+  Full proportionate claim activates: 3200kg/2400L/180 (matched to
+  declared need, all within on-site availability).
+  (C) Corporation delivers 800kg/600L/50 inside the window but
+  below the 50% threshold -> OUT OF SCOPE. Shortfall-only
+  contingency: claim adjusted to 2400kg/1800L/130 (remainder
+  only; corporation keeps what it delivered toward).
+  Inversion flag at demo end: corporations depend on community
+  stability for customers, workforce, and supply-chain continuity.
+  Blocking community self-stabilization during crisis sabotages the
+  corporation's own market. The audit framework restores aligned
+  incentives -- respond and your charter strengthens; fail to
+  respond and the community uses your on-site resources for the
+  duration of the crisis, under post-hoc audit.
+  Three-piece regulation-audit triad in core/ now becomes a four-
+  piece scope-audit family: regulation_cascade_mapper (consequence),
+  timing_as_constraint (temporal), regulatory_scope_audit
+  (regulatory operational), corporate_charter_scope_audit
+  (corporate charter). All share the structure: declared scope vs
+  current condition; out-of-scope -> intent-preserving action,
+  audit-after.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per repo
+  convention; em-dash characters in string literals converted to
+  ASCII `--`). Dropped unused imports (`Any` from typing,
+  `defaultdict` from collections; the source imported both but
+  used neither). Pure stdlib; chat_paste_check passes (repo-wide
+  exit 0); calibration test suite (11 tests) still passes.
 - Added `core/regulatory_scope_audit.py`: substrate-primary scope-
   validity audit for regulations. Companion to regulation_cascade_
   mapper (which maps consequence chains) and timing_as_constraint
