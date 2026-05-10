@@ -1970,6 +1970,68 @@ thermodynamic-accountability-framework/
 │   │                             #   audit (downstream metrology
 │   │                             #   diagnostics whose root cause this
 │   │                             #   module locates).
+│   ├── institutional_audit.py     # Cross-domain audit extending
+│   │                             #   constraint_filter_architecture
+│   │                             #   with 4 institutional premises
+│   │                             #   (performance_over_function,
+│   │                             #   appearance_over_audit, hidden_
+│   │                             #   load_bearing, self_referential)
+│   │                             #   plus the COLLAPSE_SIGNATURE
+│   │                             #   pattern. The historical claim:
+│   │                             #   when permanence + performance_
+│   │                             #   over_function + appearance_over_
+│   │                             #   audit + no_diagnostic_cycles all
+│   │                             #   co-occur, the system is in pre-
+│   │                             #   collapse configuration -- the
+│   │                             #   pattern observed at late Rapa
+│   │                             #   Nui (moai-monument valorization
+│   │                             #   while substrate decayed) and
+│   │                             #   late Rome (grain dole as
+│   │                             #   stability performance over
+│   │                             #   functional production capacity).
+│   │                             #   11-entry PREMISES list (the 7
+│   │                             #   from constraint_filter_
+│   │                             #   architecture + 4 new), each
+│   │                             #   declared inline as a Premise
+│   │                             #   with lambda detect + severity
+│   │                             #   weight. carries_collapse_
+│   │                             #   signature() short-circuit;
+│   │                             #   collapse_carriers() returns
+│   │                             #   matching subset; domain_risk_
+│   │                             #   density() per-domain mean_
+│   │                             #   severity + max_severity +
+│   │                             #   collapse_fraction. 30-model
+│   │                             #   build_corpus() spans finance /
+│   │                             #   infrastructure / education /
+│   │                             #   healthcare / ecology /
+│   │                             #   governance / corporate /
+│   │                             #   agriculture / religious /
+│   │                             #   military / historical_collapse
+│   │                             #   / reference_adaptive. Demo
+│   │                             #   result: 14 of 30 models carry
+│   │                             #   the collapse signature
+│   │                             #   including modern CEO apex
+│   │                             #   hierarchy, credit rating system,
+│   │                             #   standardized testing, election
+│   │                             #   cycle, doctrinal hierarchy, and
+│   │                             #   military rank logic -- sitting
+│   │                             #   in the same signature bucket as
+│   │                             #   late_rapa_nui_moai_logic and
+│   │                             #   late_rome_grain_dole. Two
+│   │                             #   reference_adaptive models
+│   │                             #   (nomadic floating structure,
+│   │                             #   seasonal harvest cycle) score
+│   │                             #   severity 0.00. The substantive
+│   │                             #   claim the corpus operationalizes:
+│   │                             #   pre-collapse civilizations and
+│   │                             #   modern institutional systems
+│   │                             #   share signature, not domain.
+│   │                             #   Companion to constraint_filter_
+│   │                             #   architecture (provides the base
+│   │                             #   premise framework) and core/
+│   │                             #   timing_as_constraint (provides
+│   │                             #   the temporal-scope premise that
+│   │                             #   collapse-carriers lack).
 │   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
 │   │                             #   earth-systems-physics coupled
 │   │                             #   solvers. Integrates 3 observational
@@ -2517,6 +2579,77 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/institutional_audit.py`: cross-domain audit
+  that extends constraint_filter_architecture with four
+  institutional premises (performance_over_function,
+  appearance_over_audit, hidden_load_bearing, self_referential)
+  plus the COLLAPSE_SIGNATURE detection pattern. The historical
+  claim the module operationalizes: when permanence +
+  performance_over_function + appearance_over_audit +
+  no_diagnostic_cycles all co-occur, the system is in pre-
+  collapse configuration -- the pattern observed at late Rapa
+  Nui (moai-monument valorization while substrate decayed) and
+  late Rome (grain dole as stability performance over functional
+  production capacity).
+  Module surface: self-contained -- redefines Model and Premise
+  dataclasses locally rather than importing from constraint_
+  filter_architecture (preserves standalone runnability). Model
+  has the 7 base premise flags + 4 new institutional flags
+  (pays_for_role_not_function, appearance_replaces_audit, hides_
+  load_bearing_node, self_referential_validation). 11-entry
+  PREMISES list with weighted severities (the 4 new institutional
+  premises weighted 2.0-2.5, comparable to the highest-weight
+  base premises). Filter operations parallel to the base module
+  (signature, severity, bucket_by_signature, domain_cascade,
+  co_occurrence). COLLAPSE_SIGNATURE = frozenset of 4 premises;
+  carries_collapse_signature() returns True when all 4 are
+  present in a model's signature; collapse_carriers() returns
+  matching subset of corpus. domain_risk_density() returns per-
+  domain mean_severity + max_severity + collapse_fraction.
+  30-model build_corpus spans 12 domains: finance (credit rating,
+  fiat baseline, quarterly earnings, stock buyback), infrastructure
+  (legacy building code, bridge inspection ritual, deferred
+  maintenance), education (standardized testing, credential
+  hierarchy, classroom rank), healthcare (medical credential,
+  insurance actuarial, hospital hierarchy), ecology (carbon
+  credit, species count, Holocene stability assumption),
+  governance (hierarchical bureaucracy, election cycle, budget
+  ritual), corporate (CEO apex, quarterly targets, performance
+  review), agriculture (industrial monoculture, pesticide
+  certification), religious (doctrinal hierarchy), military
+  (rank promotion), historical_collapse (late_rapa_nui_moai_
+  logic, late_rome_grain_dole), reference_adaptive (nomadic
+  floating structure, seasonal harvest cycle).
+  Demo signal is the substantive claim: 14 of 30 models carry
+  the collapse signature, including modern CEO apex hierarchy,
+  credit rating system, standardized testing, credential
+  hierarchy, election cycle, medical credential, doctrinal
+  hierarchy, and military rank logic -- sitting in the same
+  signature bucket as the two explicitly-tagged historical
+  pre-collapse cases. The two reference_adaptive models score
+  severity 0.00 (carry none of the 11 corrupt premises).
+  Domain risk-density ranking: religious 20.75 / military 18.75
+  / historical_collapse 18.75 / corporate 17.58 / finance 17.25
+  / education 17.25 / healthcare 15.08 / governance 14.75 /
+  agriculture 13.25 / ecology 12.75 / infrastructure 10.75 /
+  reference_adaptive 0.00.
+  The substantive operationalization: pre-collapse civilizations
+  and modern institutional systems share signature, not domain.
+  Sorting by failure signature surfaces the structural pattern
+  that domain-by-domain analysis misses.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; embedded triple-backtick fences removed from
+  Premise.__hash__ method body and __main__ demo block; method
+  re-indented into class scope). Unicode `!=` operator-glyph
+  in Model dataclass field comments -> ASCII `!=`. Unicode
+  black-star `*` (U+2605) in the demo's COLLAPSE marker -> ASCII
+  `[!] COLLAPSE` for repo consistency. Dropped unused `field`
+  import from dataclasses (no field() calls in this module's
+  dataclasses; both use simple defaults only). Pure stdlib;
+  chat_paste_check passes (repo-wide exit 0); calibration test
+  suite (11 tests) still passes.
 - Added `metrology/constraint_filter_architecture.py`: a
   kaleidoscope-view audit that sorts models / frameworks /
   regulations by failure SIGNATURE (the set of corrupt upstream
