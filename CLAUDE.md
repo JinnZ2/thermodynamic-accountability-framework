@@ -2390,6 +2390,81 @@ thermodynamic-accountability-framework/
 │   │                             #   timing_as_constraint (provides
 │   │                             #   the temporal-scope premise that
 │   │                             #   collapse-carriers lack).
+│   ├── substrate_damage_audit.py  # Audit for behavioral / collapse-
+│   │                             #   prediction / human-capacity models
+│   │                             #   built on populations exhibiting
+│   │                             #   institutional substrate damage
+│   │                             #   rather than baseline human capacity.
+│   │                             #   Core metrology problem: most
+│   │                             #   "human nature" and "collapse
+│   │                             #   behavior" models train on
+│   │                             #   populations several generations
+│   │                             #   into accumulated institutional
+│   │                             #   stress (chronic racism, patriarchy,
+│   │                             #   socioeconomic hierarchy, ecological
+│   │                             #   disconnection). Measured fragility
+│   │                             #   gets misread as biological
+│   │                             #   universal; resulting predictions
+│   │                             #   justify policies that deepen the
+│   │                             #   damage, closing a self-validating
+│   │                             #   loop. 7-entry CLAIMS registry
+│   │                             #   (Claim dataclass with id +
+│   │                             #   statement + mechanism + falsifier
+│   │                             #   + confirmer + Confidence + refs):
+│   │                             #   C1 collapse models on damaged
+│   │                             #   substrate; C2 chronic stress
+│   │                             #   alters substrate via HPA/glucocort/
+│   │                             #   inflammatory pathways (HIGH conf,
+│   │                             #   refs Amedor & Giussani 2026);
+│   │                             #   C3 low-stress communities show
+│   │                             #   different patterns; C4 escape
+│   │                             #   narratives as symptom; C5
+│   │                             #   disaster research methodologically
+│   │                             #   biased; C6 multigenerational
+│   │                             #   compounding; C7 hierarchy as
+│   │                             #   substrate degradation (HIGH conf,
+│   │                             #   refs Black maternal mortality 3x
+│   │                             #   physiologically mediated). 10
+│   │                             #   DIMENSIONS for the scope-audit
+│   │                             #   gate: substrate_state_flagged,
+│   │                             #   comparison_population_balanced,
+│   │                             #   generational_accumulation_
+│   │                             #   acknowledged, fragility_
+│   │                             #   attribution, kinship_network_
+│   │                             #   treatment, escape_narrative_
+│   │                             #   handling, feedback_loop_disclosed,
+│   │                             #   falsifiability, policy_
+│   │                             #   recommendation_direction,
+│   │                             #   metrology_audit. ModelDescriptor
+│   │                             #   dataclass + audit(model) function
+│   │                             #   sums the 10 dimensions to a 4-tier
+│   │                             #   verdict ladder: ADMISSIBLE (>=8)
+│   │                             #   / PARTIAL (>=5) / CONTAMINATED
+│   │                             #   (>=2) / FULLY CAPTURED (< 2,
+│   │                             #   measuring institutional damage as
+│   │                             #   nature). 7 RESEARCH_QUESTIONS
+│   │                             #   queued (disaster-recovery
+│   │                             #   comparison, multigenerational
+│   │                             #   stress-marker drift, escape-
+│   │                             #   narrative incidence by stress
+│   │                             #   load, hierarchy-tier resilience
+│   │                             #   differential, recovery latency,
+│   │                             #   methodological audit of collapse
+│   │                             #   literature, adaptive-capacity
+│   │                             #   ceiling in low-stress populations).
+│   │                             #   Demo: typical Western collapse-
+│   │                             #   behavior model scores 0/10 ->
+│   │                             #   FULLY CAPTURED verdict; substrate-
+│   │                             #   aware alternative scores 10/10
+│   │                             #   -> ADMISSIBLE. Companion to
+│   │                             #   constraint_filter_architecture
+│   │                             #   (premise filtering) and
+│   │                             #   institutional_audit (collapse-
+│   │                             #   signature detection) -- same
+│   │                             #   model-audit family applied to
+│   │                             #   behavioral / capacity claims
+│   │                             #   rather than institutional
+│   │                             #   structures.
 │   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
 │   │                             #   earth-systems-physics coupled
 │   │                             #   solvers. Integrates 3 observational
@@ -2937,6 +3012,91 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/substrate_damage_audit.py`: audit framework for
+  behavioral, collapse-prediction, and human-capacity models that
+  measures whether the model treats institutional substrate damage
+  as biological universal. Sister to constraint_filter_architecture
+  and institutional_audit (same model-audit family applied to
+  behavioral / capacity claims rather than institutional structures).
+  Core metrology problem the module names: most "human nature" and
+  "collapse behavior" models train on populations several generations
+  into accumulated institutional stress (chronic racism, patriarchy,
+  socioeconomic hierarchy, ecological disconnection). Measured
+  fragility gets misread as biological universal. Resulting
+  predictions justify policies that deepen the damage, closing a
+  self-validating loop.
+  Module surface: Confidence enum (HIGH / MODERATE / LOW); Claim
+  dataclass (id + statement + mechanism + falsifier + confirmer +
+  Confidence + references); 7-entry CLAIMS registry covering the
+  full cascade:
+    C1 collapse models on damaged substrate (HIGH conf)
+    C2 chronic stress alters substrate via HPA-axis / glucocorticoid /
+       inflammatory pathways (HIGH conf, refs Amedor & Giussani 2026
+       on pregnancy-outcome physiology)
+    C3 low-stress communities show different adaptive patterns
+       (MODERATE conf)
+    C4 escape narratives (transhumanism / body-rejection / off-world)
+       as substrate-damage symptom rather than evidence of biological
+       inadequacy (MODERATE conf)
+    C5 disaster research methodologically biased -- damaged sample
+       implicitly treated as control (HIGH conf)
+    C6 multigenerational compounding via maternal-stress gestational
+       transmission; no living Western-industrial cohort represents
+       unstressed baseline (MODERATE conf)
+    C7 hierarchy as measurable substrate degradation affecting
+       reproductive biology and population resilience (HIGH conf,
+       refs Black maternal mortality 3x with documented physiological
+       mediation)
+  10-entry DIMENSIONS dict drives the scope-audit gate:
+  substrate_state_flagged, comparison_population_balanced,
+  generational_accumulation_acknowledged, fragility_attribution,
+  kinship_network_treatment, escape_narrative_handling,
+  feedback_loop_disclosed, falsifiability,
+  policy_recommendation_direction, metrology_audit. ModelDescriptor
+  dataclass with int flags (default-failure direction set so that
+  unaware models score 0 by default); audit(model) returns score +
+  verdict + passed dimensions + flagged dimensions. 4-tier verdict
+  ladder: ADMISSIBLE (>=8/10, substrate-aware) / PARTIAL (>=5/10,
+  substrate-aware with gaps) / CONTAMINATED (>=2/10, claims about
+  'human nature' not admissible) / FULLY CAPTURED (<2/10, measuring
+  institutional damage as nature).
+  7 RESEARCH_QUESTIONS queued as the explicit research agenda:
+  disaster-recovery matched-event comparison across kinship-networked
+  traditional vs Western individualist populations with substrate-
+  stress markers as primary variable; multi-generational epigenetic
+  drift across 3+ generations; escape-narrative incidence by stress
+  load; hierarchy-tier resilience differential across positions in
+  hierarchical systems; recovery latency after stressor removal at
+  individual and generational scales; systematic methodological audit
+  of cited collapse-modeling literature for substrate-state treatment;
+  adaptive-capacity ceiling in low-stress / network-embedded
+  populations (current baselines almost certainly underestimate).
+  Demo: typical Western collapse-behavior model with all flags at
+  default-failure scores 0/10 -> FULLY CAPTURED: measuring
+  institutional damage as nature, all 10 dimensions flagged.
+  Substrate-aware alternative with all flags set scores 10/10 ->
+  ADMISSIBLE. The verdict ladder makes the bias quantitative:
+  the typical disaster / collapse / capacity model rests at the
+  bottom of the ladder, and the audit surfaces what would need to
+  change for its claims about "human nature" to be admissible.
+  The substantive operationalization: this is the calibration/
+  recency-bias-detector applied to capacity claims specifically.
+  Fragility measured in damaged populations is recency artifact,
+  not universal biology. The audit forces the question: what
+  would unstressed substrate look like, and have we ever measured
+  it?
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior pastes (smart quotes -> ASCII; **name**/**main** ->
+  __name__/__main__; Unicode em-dash horizontal-line dividers
+  -> ASCII `=` per repo convention; smart apostrophes in
+  CLAIMS statement text and DIMENSIONS description text ->
+  ASCII; function and class bodies at column 0 throughout the
+  source -- re-indented to proper 4-space inside-function and
+  8-space inside-method positions). Dropped unused imports
+  (`Callable` and `Optional` from typing; the source imported
+  both but used neither). Pure stdlib; chat_paste_check passes
+  (repo-wide exit 0); calibration test suite (11 tests) still
+  passes.
 - Added `simulations/monte_carlo_resilience_sim.py`: stochastic
   companion to biological_response_infrastructure.py. Where the
   prior module runs ONE deterministic mesh under a fixed shock
