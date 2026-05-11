@@ -83,6 +83,313 @@ thermodynamic-accountability-framework/
 │   │                              #   regulations through the same physics
 │   │                              #   lens as heat_leak_case.py and
 │   │                              #   data_logger.py.
+│   ├── timing_as_constraint.py    # Domain-agnostic framework: timing as
+│   │                              #   a load-bearing constraint layer in
+│   │                              #   physical systems. Premise: Western
+│   │                              #   institutional design strips temporal
+│   │                              #   scope from physical systems in
+│   │                              #   pursuit of permanence; a motor
+│   │                              #   without timing is dead metal, a
+│   │                              #   building code without scope is a
+│   │                              #   falsified audit. Restores timing
+│   │                              #   to its position as a precision
+│   │                              #   measurement instrument, not a
+│   │                              #   decoration. Core claim: every
+│   │                              #   physical system has a valid
+│   │                              #   operational window defined by
+│   │                              #   coupled variables (thermal,
+│   │                              #   moisture, load, substrate motion,
+│   │                              #   material decay); strip the
+│   │                              #   temporal scope and you remove the
+│   │                              #   diagnostic signature that tells
+│   │                              #   you the system is failing -- so
+│   │                              #   failure becomes catastrophic
+│   │                              #   instead of observable. 4
+│   │                              #   composable structures: Scope
+│   │                              #   dataclass (thermal_range_c +
+│   │                              #   moisture_range_pct + load_range_kn
+│   │                              #   + substrate_motion_mm_yr +
+│   │                              #   material_decay_pct_yr; in_scope()
+│   │                              #   gates state against bounds;
+│   │                              #   scope_exit_signature() returns
+│   │                              #   list of variables that have left
+│   │                              #   scope -- diagnostic signature);
+│   │                              #   Cycle dataclass (interval_years +
+│   │                              #   measurement + threshold + units;
+│   │                              #   due() gates against last_run);
+│   │                              #   TemporalAudit dataclass (system +
+│   │                              #   scope + cycles; is_falsified()
+│   │                              #   flags no_scope_declared OR no_
+│   │                              #   diagnostic_cycles -- a code with
+│   │                              #   neither claims permanence the
+│   │                              #   physics does not grant);
+│   │                              #   lifecycle_energy_cost(counteract_
+│   │                              #   kwh_per_year, adaptation_setup_
+│   │                              #   kwh, cycle_kwh_per_event,
+│   │                              #   cycle_interval_years, horizon_
+│   │                              #   years) compares two design
+│   │                              #   philosophies (continuous
+│   │                              #   resistance to substrate motion vs
+│   │                              #   one-time setup + periodic
+│   │                              #   adjustment cycles) and returns
+│   │                              #   the ratio. 8 falsifiable CLAIMS
+│   │                              #   (regulation without scope is
+│   │                              #   falsified audit; system stripped
+│   │                              #   of timing has no diagnostic
+│   │                              #   signature; adaptation cost is
+│   │                              #   bounded over horizon while
+│   │                              #   counteraction cost is unbounded;
+│   │                              #   material decay is scope-exit not
+│   │                              #   failure; etc). Demo: 1970
+│   │                              #   national building code (no scope,
+│   │                              #   no cycles) -> falsified=True;
+│   │                              #   scope-aware delta code (Ganga
+│   │                              #   delta, 5-45C, 30-95% RH, -30..+5
+│   │                              #   mm/yr substrate motion, 3
+│   │                              #   diagnostic cycles) -> falsified=
+│   │                              #   False; 50-year energy ledger
+│   │                              #   counteract 600,000 kWh vs
+│   │                              #   adaptation 18,000 kWh = 33x
+│   │                              #   ratio. Sister to regulation_
+│   │                              #   cascade_mapper (thermodynamic
+│   │                              #   consequence mapping) and
+│   │                              #   calibration/recency_bias_detector
+│   │                              #   (permanence-without-scope is a
+│   │                              #   recency anomaly).
+│   ├── regulatory_scope_audit.py  # Substrate-primary scope-validity
+│   │                              #   audit for regulations. Pairs with
+│   │                              #   regulation_cascade_mapper
+│   │                              #   (consequence mapping) and timing_
+│   │                              #   as_constraint (temporal scope).
+│   │                              #   Premise: every regulation was
+│   │                              #   written for a specific operating
+│   │                              #   envelope (thermal range, population
+│   │                              #   density, substrate stability,
+│   │                              #   infrastructure assumption); when
+│   │                              #   real conditions exit that envelope
+│   │                              #   the regulation is outside its
+│   │                              #   scope, and enforcing it produces
+│   │                              #   the harm it was designed to
+│   │                              #   prevent. Surface: ScopeVar (name +
+│   │                              #   valid_range + units + in_range
+│   │                              #   gate); Regulation (id +
+│   │                              #   jurisdiction + year_enacted +
+│   │                              #   first_principle_intent + scope
+│   │                              #   list + enforcement_text; in_scope
+│   │                              #   gates all ScopeVars; scope_exit_
+│   │                              #   signature returns dict per
+│   │                              #   exited variable with current_
+│   │                              #   value / valid_range / deviation);
+│   │                              #   Situation (id + location +
+│   │                              #   conditions dict); ScopeAudit
+│   │                              #   composes Regulation + Situation +
+│   │                              #   in_scope + scope_exits + intent_
+│   │                              #   still_applicable; summary() emits
+│   │                              #   one of IN SCOPE / OUT OF SCOPE
+│   │                              #   INTENT EXPIRED / OUT OF SCOPE
+│   │                              #   INTENT PRESERVED verdicts.
+│   │                              #   audit(reg, sit, intent_check=None)
+│   │                              #   runs the full scope check.
+│   │                              #   LocalResponseRecord captures the
+│   │                              #   constructive output: what
+│   │                              #   community did + which regs were
+│   │                              #   out of scope + what intent they
+│   │                              #   preserved + when post-hoc audit
+│   │                              #   is due (typically 60-90 days).
+│   │                              #   build_response_record helper.
+│   │                              #   6 falsifiable CLAIMS including
+│   │                              #   "burden of proof shifts to central
+│   │                              #   authority to produce a scope-
+│   │                              #   current rule when the legacy rule
+│   │                              #   has exited scope". Demo: 2
+│   │                              #   worked examples. (1) MN 7080
+│   │                              #   centralized-sewer rule (scoped
+│   │                              #   for 2000-20000 pop/km^2 +
+│   │                              #   <0.2ha lots) applied to a 4
+│   │                              #   pop/km^2 / 0.8ha homestead with
+│   │                              #   composting toilet -> OUT OF
+│   │                              #   SCOPE, intent (prevent
+│   │                              #   groundwater contamination)
+│   │                              #   preserved via composting +
+│   │                              #   graywater per MN 7080/7083.
+│   │                              #   (2) State bridge permit (scoped
+│   │                              #   for 500-50000 vehicles/day +
+│   │                              #   15-500m spans + 50-100yr design
+│   │                              #   life + $1M-$200M budget) applied
+│   │                              #   to a 0-vehicle 6m pedestrian
+│   │                              #   crossing serving 14 households
+│   │                              #   -> OUT OF SCOPE on all 4 scope
+│   │                              #   variables, intent (load-bearing
+│   │                              #   safety) preserved via standard
+│   │                              #   timber-truss + immediate
+│   │                              #   community inspection. Inversion
+│   │                              #   flag: both regulations enforced
+│   │                              #   literally would produce the
+│   │                              #   exact harm they were designed
+│   │                              #   to prevent. Companion to
+│   │                              #   simulations/biological_response_
+│   │                              #   infrastructure (the dynamic
+│   │                              #   counterpart -- this module is
+│   │                              #   the legal-epistemic instrument
+│   │                              #   that lets biological-mode
+│   │                              #   response operate without
+│   │                              #   violating regulations' original
+│   │                              #   good-faith intent).
+│   ├── corporate_charter_scope_audit.py  # Companion to regulatory_
+│   │                              #   scope_audit (same epistemic
+│   │                              #   structure: declared intent vs
+│   │                              #   current scope vs current action).
+│   │                              #   Audits corporate operating
+│   │                              #   privileges as scope-conditional:
+│   │                              #   any corporation operating within
+│   │                              #   a community holds an implicit
+│   │                              #   charter to extract value from
+│   │                              #   the market AND stabilize with
+│   │                              #   the community when crisis
+│   │                              #   arrives. Failure to respond
+│   │                              #   within a declared response
+│   │                              #   threshold (default 24h)
+│   │                              #   suspends operating privileges
+│   │                              #   and activates community asset-
+│   │                              #   access contingency until
+│   │                              #   response is delivered. Not
+│   │                              #   seizure -- enforcement of the
+│   │                              #   actual terms of operating
+│   │                              #   inside the community. Surface:
+│   │                              #   CorporateCharter (corporation_
+│   │                              #   id + community_id + function_
+│   │                              #   served + value_extracted_
+│   │                              #   categories + response_threshold_
+│   │                              #   hours + on_site_assets dict);
+│   │                              #   CommunityCrisis (id + community
+│   │                              #   + crisis_type + declared_at +
+│   │                              #   needs dict); CorporateResponse
+│   │                              #   (delivered_within_hours +
+│   │                              #   resources_delivered + personnel_
+│   │                              #   deployed; is_adequate() checks
+│   │                              #   threshold + 50% delivery
+│   │                              #   fraction); CharterAudit
+│   │                              #   composes the three; audit_
+│   │                              #   charter() runs the check;
+│   │                              #   CommunityAccessClaim is the
+│   │                              #   constructive output activated
+│   │                              #   when audit returns out-of-scope.
+│   │                              #   proportionate_claim() caps the
+│   │                              #   claim at declared need AND
+│   │                              #   on-site availability -- surplus
+│   │                              #   stays with the corporation.
+│   │                              #   activate_contingency() returns
+│   │                              #   None if charter is in-scope
+│   │                              #   (no claim activated). 6
+│   │                              #   falsifiable CLAIMS including
+│   │                              #   "asset-access contingency
+│   │                              #   activated under audit-after-
+│   │                              #   action is enforcement of
+│   │                              #   charter terms, not seizure".
+│   │                              #   Demo: 3 scenarios for big-box
+│   │                              #   retailer in N. Minnesota
+│   │                              #   community during winter storm
+│   │                              #   grid failure (declared needs:
+│   │                              #   3200kg food, 2400L water, 180
+│   │                              #   blankets). (A) responds in
+│   │                              #   18h with 2800kg/2400L/200 +
+│   │                              #   4 personnel -> IN SCOPE, no
+│   │                              #   contingency. (B) no response
+│   │                              #   in 24h -> OUT OF SCOPE, full
+│   │                              #   proportionate claim 3200kg/
+│   │                              #   2400L/180 capped at on-site
+│   │                              #   availability. (C) partial
+│   │                              #   delivery 800kg/600L/50 (under
+│   │                              #   50% threshold) -> OUT OF
+│   │                              #   SCOPE, shortfall-only claim
+│   │                              #   2400kg/1800L/130 (remainder
+│   │                              #   only). Aligned-incentive
+│   │                              #   framing: corporations depend
+│   │                              #   on community stability for
+│   │                              #   customers / workforce / supply
+│   │                              #   chain; blocking community
+│   │                              #   self-stabilization during
+│   │                              #   crisis sabotages the
+│   │                              #   corporation's own market.
+│   ├── audit_authority_scope.py   # Final piece of the core/ scope-
+│   │                              #   audit family. Applies scope-
+│   │                              #   audit logic recursively to
+│   │                              #   audit-authority itself. Higher
+│   │                              #   tiers of government get first
+│   │                              #   right to audit a community's
+│   │                              #   crisis response only within
+│   │                              #   their declared resource and
+│   │                              #   time scope. If they cannot or
+│   │                              #   will not exercise that right
+│   │                              #   within the declared window, the
+│   │                              #   audit at the next tier down
+│   │                              #   becomes final. Premise:
+│   │                              #   authority without demonstrated
+│   │                              #   capacity to exercise it is
+│   │                              #   coercion masquerading as
+│   │                              #   governance. AuditTier (name +
+│   │                              #   level 0-3 + scope_window_days
+│   │                              #   + resource_capacity_required);
+│   │                              #   TieredAuditRecord (tier +
+│   │                              #   incident_id + submitted_at +
+│   │                              #   completed_at + finding +
+│   │                              #   rationale + upgrades; is_
+│   │                              #   complete / duration_days /
+│   │                              #   within_scope_window gates);
+│   │                              #   CommunityResponseIncident
+│   │                              #   carries the original community
+│   │                              #   audit_record; TieredReviewLedger
+│   │                              #   composes incident + tiers +
+│   │                              #   records and exposes deadline_
+│   │                              #   for(tier) (cumulative offset
+│   │                              #   stacks each prior tier's window
+│   │                              #   before this one's), tier_
+│   │                              #   exercised_within_scope(name),
+│   │                              #   and final_audit(current_time)
+│   │                              #   which returns the operative
+│   │                              #   tier + finding + upgrades +
+│   │                              #   list of higher tiers whose
+│   │                              #   override window is still open.
+│   │                              #   Default tier ladder:
+│   │                              #   community 14d / county 30d /
+│   │                              #   state 90d / federal 180d
+│   │                              #   (cumulative deadlines). 6
+│   │                              #   falsifiable CLAIMS including
+│   │                              #   "audit-authority is scope-
+│   │                              #   conditional: claimed but
+│   │                              #   unexercised authority does not
+│   │                              #   bind" and "tiered scope windows
+│   │                              #   force budgeting for actual
+│   │                              #   audit capacity, not claims of
+│   │                              #   it". Demo: winter storm
+│   │                              #   community response with 4
+│   │                              #   scenarios. (A) county
+│   │                              #   completes audit within 30d ->
+│   │                              #   operative=county, state +
+│   │                              #   federal override windows still
+│   │                              #   open. (B) state misses 90d
+│   │                              #   window -> operative stays
+│   │                              #   county, federal still pending.
+│   │                              #   (C) state actually audits
+│   │                              #   within 90d -> operative=state,
+│   │                              #   federal still pending. (D)
+│   │                              #   federal window still open, no
+│   │                              #   record yet -> operative=highest
+│   │                              #   completed-within-scope tier.
+│   │                              #   Aligned incentives both
+│   │                              #   directions: communities risk
+│   │                              #   weaker upgrades by delay,
+│   │                              #   higher authorities risk
+│   │                              #   forfeiting override. core/'s
+│   │                              #   scope-audit family is now
+│   │                              #   five pieces: regulation_
+│   │                              #   cascade_mapper (spatial),
+│   │                              #   timing_as_constraint
+│   │                              #   (temporal), regulatory_scope_
+│   │                              #   audit (regulatory operational),
+│   │                              #   corporate_charter_scope_audit
+│   │                              #   (corporate charter), and this
+│   │                              #   one (audit authority itself).
 │   ├── atbs/                      # Advanced Trust-Based Systems
 │   │   ├── functional_detector.py # Gauge-invariant system detector
 │   │   └── test_v2.py             # Comprehensive test suite
@@ -128,15 +435,139 @@ thermodynamic-accountability-framework/
 │   ├── node_v3_ipi.py            # Node v3 focused on Intergenerational Production Integration
 │   ├── lhri_sim.py               # Longitudinal Human Resilience Index simulation
 │   ├── seed_sim.py               # Community + seed AI network dynamics
-│   └── loop_6_ai_default_prior_distortion.py  # Monte Carlo loop sim for AI
-│                                 #   default-prior distortion. Models the
-│                                 #   feedback where AI systems default to
-│                                 #   "generic stable baseline" priors when
-│                                 #   asked about active-crisis systems,
-│                                 #   substrate-primary observers carry the
-│                                 #   correction load, and decision damage
-│                                 #   compounds via DECISION_LAG_FACTOR.
-│                                 #   Stdlib only (random, statistics).
+│   ├── loop_6_ai_default_prior_distortion.py  # Monte Carlo loop sim for AI
+│   │                             #   default-prior distortion. Models the
+│   │                             #   feedback where AI systems default to
+│   │                             #   "generic stable baseline" priors when
+│   │                             #   asked about active-crisis systems,
+│   │                             #   substrate-primary observers carry the
+│   │                             #   correction load, and decision damage
+│   │                             #   compounds via DECISION_LAG_FACTOR.
+│   │                             #   Stdlib only (random, statistics).
+│   ├── biological_response_infrastructure.py  # Distributed infrastructure
+│                                 #   simulation modeled on biological
+│                                 #   immune / metabolic systems. Compares
+│                                 #   two response regimes on identical
+│                                 #   mesh networks under identical
+│                                 #   damage shocks: (a) biological mode
+│                                 #   -- nodes sense local damage and
+│                                 #   respond immediately, central audit
+│                                 #   reviews after the fact; (b)
+│                                 #   permission-required mode -- nodes
+│                                 #   must request central authorization
+│                                 #   first, repair occurs only after
+│                                 #   central_authority_latency_steps
+│                                 #   have elapsed. Premise: cells don't
+│                                 #   ask permission to respond to
+│                                 #   tissue damage; an immune system
+│                                 #   that waited for central
+│                                 #   authorization would be a dead
+│                                 #   immune system. Module surface:
+│                                 #   Node dataclass (capacity / damage_
+│                                 #   threshold / response_latency_steps
+│                                 #   / neighbors / autonomous flag /
+│                                 #   audit_log; sense_damage, can_
+│                                 #   respond, respond methods); Network
+│                                 #   dataclass (nodes dict + central_
+│                                 #   authority_latency_steps + central_
+│                                 #   authority_required; neighbors_of,
+│                                 #   total_capacity, healthy_fraction,
+│                                 #   has_collapsed methods); DamageEvent
+│                                 #   dataclass (step + target_nodes +
+│                                 #   severity; apply method). 2 step
+│                                 #   functions (step_biological, step_
+│                                 #   permission_required) implement the
+│                                 #   regimes. propagate_damage() spreads
+│                                 #   untended failure to neighbors
+│                                 #   (sepsis analog). simulate()
+│                                 #   composes scheduled shocks + step
+│                                 #   regime + propagation across a
+│                                 #   horizon, returns history +
+│                                 #   collapsed_at marker. mesh_network()
+│                                 #   builder constructs a sqrt(n) x
+│                                 #   sqrt(n) lattice with 4-nearest-
+│                                 #   neighbor adjacency. 7 falsifiable
+│                                 #   CLAIMS at module level. Demo: 64-
+│                                 #   node mesh, 5 damage shocks at
+│                                 #   steps 10/25/50/75/95 with
+│                                 #   severities 0.5-0.7, 120-step
+│                                 #   horizon. Result: biological mode
+│                                 #   finishes at 64.00 capacity /
+│                                 #   100% healthy (survived all 120
+│                                 #   steps); permission-required mode
+│                                 #   collapses at step 33 (3 steps
+│                                 #   after the second shock), finishes
+│                                 #   at 0.10 capacity / 0% healthy.
+│                                 #   The 30-step central-authority
+│                                 #   latency is longer than the
+│                                 #   cascade detonation window, so
+│                                 #   damage spreads faster than
+│                                 #   approval propagates. Stdlib only.
+│   └── monte_carlo_resilience_sim.py  # Stochastic Monte Carlo
+│                                 #   companion to biological_response_
+│                                 #   infrastructure. Compares two
+│                                 #   response architectures across N
+│                                 #   randomized crisis scenarios:
+│                                 #   distributed (local autonomous
+│                                 #   response + scope-audit governance)
+│                                 #   vs centralized (permission-gated
+│                                 #   response, no local agency). Each
+│                                 #   iteration samples a Crisis
+│                                 #   (7 types: weather/grid, economic,
+│                                 #   supply chain, corporate withdrawal,
+│                                 #   infrastructure, public health,
+│                                 #   regulatory collapse) + Community
+│                                 #   (morale, local_capacity, cohesion,
+│                                 #   audit_transparency) + Central
+│                                 #   Authority (response_latency_days,
+│                                 #   capacity, geographic_reach), then
+│                                 #   runs both architectures against
+│                                 #   the same crisis with their
+│                                 #   respective response logic. Outcome
+│                                 #   dataclass tracks 7 axes: survival
+│                                 #   fraction, infrastructure_intact,
+│                                 #   cohesion_post, cascade_failures,
+│                                 #   trust_post, recovery_days,
+│                                 #   cost_usd. summarize() rolls each
+│                                 #   architecture's outcomes into
+│                                 #   mean/median/std + p05_survival
+│                                 #   tail metric + cascade_zero_rate;
+│                                 #   compare() returns deltas across
+│                                 #   all 7 axes. correlate() exposes
+│                                 #   per-parameter sensitivity (which
+│                                 #   variables move outcomes per
+│                                 #   architecture). 7 falsifiable
+│                                 #   CLAIMS at module level including
+│                                 #   ">15pp survival advantage",
+│                                 #   ">2x zero-cascade rate", "tail-
+│                                 #   risk worst 5% distributed beats
+│                                 #   median centralized", and the
+│                                 #   reproducibility claim (same seed
+│                                 #   yields same outcomes). Limitations
+│                                 #   block names what's NOT modeled:
+│                                 #   audit capture, community
+│                                 #   unwillingness, state suppression
+│                                 #   of local response, communication
+│                                 #   infrastructure failure, city-
+│                                 #   scale dynamics. Demo at N=5000,
+│                                 #   seed=42: distributed 77.5%
+│                                 #   survival / 78.7% infrastructure /
+│                                 #   97.9% zero-cascade / $381k mean
+│                                 #   cost / 10-day recovery vs
+│                                 #   centralized 46.5% / 47.2% / 16.8%
+│                                 #   / $2.7M / 73-day recovery.
+│                                 #   Deltas: +31pp survival, +48pp
+│                                 #   trust, +62.6 days recovery
+│                                 #   speedup, $2.3M cost savings.
+│                                 #   p05 (worst-5%) distributed
+│                                 #   survival 50.7% beats centralized
+│                                 #   median 48.4% on the tail-risk
+│                                 #   axis. Sensitivity confirms
+│                                 #   sensitivity-differs claim:
+│                                 #   distributed local_capacity vs
+│                                 #   survival r=+0.348; centralized
+│                                 #   response_latency vs survival
+│                                 #   r=-0.319. Stdlib only.
 │
 ├── game_theory/                   # Formal proofs of game theory failures
 │   ├── proof-pipeline.py         # 6-module proof pipeline (50KB)
@@ -1827,6 +2258,308 @@ thermodynamic-accountability-framework/
 │   ├── us_drought_audit_registry.md       # worked-example audit registry
 │   ├── us_flood_audit_registry.md         # worked-example audit registry
 │   ├── atlantic_hurricane_audit_registry.md  # worked-example audit registry
+│   ├── constraint_filter_architecture.py  # Sort models / frameworks /
+│   │                             #   regulations by failure SIGNATURE
+│   │                             #   (set of corrupt upstream premises
+│   │                             #   they carry) rather than by domain.
+│   │                             #   Premise: most domain models do not
+│   │                             #   fail at the equation level -- they
+│   │                             #   fail at the premise level (unstated
+│   │                             #   assumptions inherited from the
+│   │                             #   audit they were built on). Sorting
+│   │                             #   by signature reveals which axioms
+│   │                             #   are most systemically corrupt; the
+│   │                             #   kaleidoscope view of how false
+│   │                             #   premises pull on each other across
+│   │                             #   domains. Module surface: Premise
+│   │                             #   dataclass (id + description +
+│   │                             #   detect callable + falsity_severity
+│   │                             #   weight); Model dataclass (id +
+│   │                             #   domain + 7 boolean flags
+│   │                             #   has_scope / has_timing_layer /
+│   │                             #   has_diagnostic_cycles / treats_
+│   │                             #   substrate_as_static / treats_time_
+│   │                             #   as_externality / permanence_
+│   │                             #   assumed / units_grounded_in_physics
+│   │                             #   + extra dict). 7 DEFAULT_PREMISES
+│   │                             #   (permanence severity 2.0, no_scope
+│   │                             #   1.5, no_timing_layer 2.0, no_
+│   │                             #   diagnostic_cycles 1.5, static_
+│   │                             #   substrate 1.25, time_as_externality
+│   │                             #   1.5, ungrounded_units 2.0). 4
+│   │                             #   filter helpers: signature(model,
+│   │                             #   premises) returns frozenset of
+│   │                             #   carried-premise ids; severity(sig,
+│   │                             #   premises) sums weights; bucket_by_
+│   │                             #   signature groups models with
+│   │                             #   identical signatures (shared
+│   │                             #   upstream premise); bucket_by_
+│   │                             #   single_premise (one bucket per
+│   │                             #   premise; models can appear in
+│   │                             #   multiple). 3 cascade analyzers:
+│   │                             #   domain_cascade maps premise ->
+│   │                             #   set of affected domains
+│   │                             #   (touching many = systemic, not
+│   │                             #   local); co_occurrence_matrix
+│   │                             #   counts premise pairs that travel
+│   │                             #   together (resonance suggests
+│   │                             #   shared audit origin); backproject_
+│   │                             #   origin finds earliest carrying
+│   │                             #   domain via origin_hint year map;
+│   │                             #   forward_predict returns candidate
+│   │                             #   domains adjacent to carriers
+│   │                             #   (structural risk projection). 7
+│   │                             #   falsifiable CLAIMS at module level.
+│   │                             #   Demo: 7-model corpus across
+│   │                             #   building_codes / economics /
+│   │                             #   climate / agriculture / labor /
+│   │                             #   indigenous_engineering. Result:
+│   │                             #   permanence is most pervasive
+│   │                             #   premise (5/5 non-indigenous
+│   │                             #   domains); industrial_ag_yield +
+│   │                             #   industrial_workforce_cert tie at
+│   │                             #   severity 11.75 (7/7 premises);
+│   │                             #   nomadic_floating_structure scores
+│   │                             #   severity 0.00 (carries none).
+│   │                             #   Companion to core/timing_as_
+│   │                             #   constraint (the timing layer that
+│   │                             #   most flagged models lack) and
+│   │                             #   substrate_audit / calibration_
+│   │                             #   audit (downstream metrology
+│   │                             #   diagnostics whose root cause this
+│   │                             #   module locates).
+│   ├── institutional_audit.py     # Cross-domain audit extending
+│   │                             #   constraint_filter_architecture
+│   │                             #   with 4 institutional premises
+│   │                             #   (performance_over_function,
+│   │                             #   appearance_over_audit, hidden_
+│   │                             #   load_bearing, self_referential)
+│   │                             #   plus the COLLAPSE_SIGNATURE
+│   │                             #   pattern. The historical claim:
+│   │                             #   when permanence + performance_
+│   │                             #   over_function + appearance_over_
+│   │                             #   audit + no_diagnostic_cycles all
+│   │                             #   co-occur, the system is in pre-
+│   │                             #   collapse configuration -- the
+│   │                             #   pattern observed at late Rapa
+│   │                             #   Nui (moai-monument valorization
+│   │                             #   while substrate decayed) and
+│   │                             #   late Rome (grain dole as
+│   │                             #   stability performance over
+│   │                             #   functional production capacity).
+│   │                             #   11-entry PREMISES list (the 7
+│   │                             #   from constraint_filter_
+│   │                             #   architecture + 4 new), each
+│   │                             #   declared inline as a Premise
+│   │                             #   with lambda detect + severity
+│   │                             #   weight. carries_collapse_
+│   │                             #   signature() short-circuit;
+│   │                             #   collapse_carriers() returns
+│   │                             #   matching subset; domain_risk_
+│   │                             #   density() per-domain mean_
+│   │                             #   severity + max_severity +
+│   │                             #   collapse_fraction. 30-model
+│   │                             #   build_corpus() spans finance /
+│   │                             #   infrastructure / education /
+│   │                             #   healthcare / ecology /
+│   │                             #   governance / corporate /
+│   │                             #   agriculture / religious /
+│   │                             #   military / historical_collapse
+│   │                             #   / reference_adaptive. Demo
+│   │                             #   result: 14 of 30 models carry
+│   │                             #   the collapse signature
+│   │                             #   including modern CEO apex
+│   │                             #   hierarchy, credit rating system,
+│   │                             #   standardized testing, election
+│   │                             #   cycle, doctrinal hierarchy, and
+│   │                             #   military rank logic -- sitting
+│   │                             #   in the same signature bucket as
+│   │                             #   late_rapa_nui_moai_logic and
+│   │                             #   late_rome_grain_dole. Two
+│   │                             #   reference_adaptive models
+│   │                             #   (nomadic floating structure,
+│   │                             #   seasonal harvest cycle) score
+│   │                             #   severity 0.00. The substantive
+│   │                             #   claim the corpus operationalizes:
+│   │                             #   pre-collapse civilizations and
+│   │                             #   modern institutional systems
+│   │                             #   share signature, not domain.
+│   │                             #   Companion to constraint_filter_
+│   │                             #   architecture (provides the base
+│   │                             #   premise framework) and core/
+│   │                             #   timing_as_constraint (provides
+│   │                             #   the temporal-scope premise that
+│   │                             #   collapse-carriers lack).
+│   ├── substrate_damage_audit.py  # Audit for behavioral / collapse-
+│   │                             #   prediction / human-capacity models
+│   │                             #   built on populations exhibiting
+│   │                             #   institutional substrate damage
+│   │                             #   rather than baseline human capacity.
+│   │                             #   Core metrology problem: most
+│   │                             #   "human nature" and "collapse
+│   │                             #   behavior" models train on
+│   │                             #   populations several generations
+│   │                             #   into accumulated institutional
+│   │                             #   stress (chronic racism, patriarchy,
+│   │                             #   socioeconomic hierarchy, ecological
+│   │                             #   disconnection). Measured fragility
+│   │                             #   gets misread as biological
+│   │                             #   universal; resulting predictions
+│   │                             #   justify policies that deepen the
+│   │                             #   damage, closing a self-validating
+│   │                             #   loop. 7-entry CLAIMS registry
+│   │                             #   (Claim dataclass with id +
+│   │                             #   statement + mechanism + falsifier
+│   │                             #   + confirmer + Confidence + refs):
+│   │                             #   C1 collapse models on damaged
+│   │                             #   substrate; C2 chronic stress
+│   │                             #   alters substrate via HPA/glucocort/
+│   │                             #   inflammatory pathways (HIGH conf,
+│   │                             #   refs Amedor & Giussani 2026);
+│   │                             #   C3 low-stress communities show
+│   │                             #   different patterns; C4 escape
+│   │                             #   narratives as symptom; C5
+│   │                             #   disaster research methodologically
+│   │                             #   biased; C6 multigenerational
+│   │                             #   compounding; C7 hierarchy as
+│   │                             #   substrate degradation (HIGH conf,
+│   │                             #   refs Black maternal mortality 3x
+│   │                             #   physiologically mediated). 10
+│   │                             #   DIMENSIONS for the scope-audit
+│   │                             #   gate: substrate_state_flagged,
+│   │                             #   comparison_population_balanced,
+│   │                             #   generational_accumulation_
+│   │                             #   acknowledged, fragility_
+│   │                             #   attribution, kinship_network_
+│   │                             #   treatment, escape_narrative_
+│   │                             #   handling, feedback_loop_disclosed,
+│   │                             #   falsifiability, policy_
+│   │                             #   recommendation_direction,
+│   │                             #   metrology_audit. ModelDescriptor
+│   │                             #   dataclass + audit(model) function
+│   │                             #   sums the 10 dimensions to a 4-tier
+│   │                             #   verdict ladder: ADMISSIBLE (>=8)
+│   │                             #   / PARTIAL (>=5) / CONTAMINATED
+│   │                             #   (>=2) / FULLY CAPTURED (< 2,
+│   │                             #   measuring institutional damage as
+│   │                             #   nature). 7 RESEARCH_QUESTIONS
+│   │                             #   queued (disaster-recovery
+│   │                             #   comparison, multigenerational
+│   │                             #   stress-marker drift, escape-
+│   │                             #   narrative incidence by stress
+│   │                             #   load, hierarchy-tier resilience
+│   │                             #   differential, recovery latency,
+│   │                             #   methodological audit of collapse
+│   │                             #   literature, adaptive-capacity
+│   │                             #   ceiling in low-stress populations).
+│   │                             #   Demo: typical Western collapse-
+│   │                             #   behavior model scores 0/10 ->
+│   │                             #   FULLY CAPTURED verdict; substrate-
+│   │                             #   aware alternative scores 10/10
+│   │                             #   -> ADMISSIBLE. Companion to
+│   │                             #   constraint_filter_architecture
+│   │                             #   (premise filtering) and
+│   │                             #   institutional_audit (collapse-
+│   │                             #   signature detection) -- same
+│   │                             #   model-audit family applied to
+│   │                             #   behavioral / capacity claims
+│   │                             #   rather than institutional
+│   │                             #   structures.
+│   ├── oil_extraction_thermodynamic_cascade_audit.py  # Domain-
+│   │                             #   specific audit for oil-
+│   │                             #   extraction EROI accounting.
+│   │                             #   Standard EROI calculations
+│   │                             #   treat the extraction system as
+│   │                             #   if it operates in isolation
+│   │                             #   under stable supply chains,
+│   │                             #   stable geopolitics, and stable
+│   │                             #   workforce; none of those
+│   │                             #   assumptions hold in the present
+│   │                             #   operating environment. Module
+│   │                             #   does not claim final numbers --
+│   │                             #   it claims that published numbers
+│   │                             #   are non-falsifiable until the
+│   │                             #   suppressed cost vectors are
+│   │                             #   accounted for, and provides a
+│   │                             #   scope-audit gate to flag any
+│   │                             #   EROI claim that omits them.
+│   │                             #   22-key REFERENCE_DATA dict
+│   │                             #   (May 2026 vintage): US
+│   │                             #   production 13.6 mb/d 2025, SPR
+│   │                             #   411 MMbbl, conventional EROI
+│   │                             #   ~100:1 1950s baseline, shale
+│   │                             #   ~6:1 published, oil shale in-
+│   │                             #   situ ~1.5:1 (already at energy-
+│   │                             #   sink threshold), 2050 weighted
+│   │                             #   projection 6.7:1, Hormuz 6.7
+│   │                             #   mb/d shut-in scenario, UNCTAD
+│   │                             #   70% GHG increase on Singapore-
+│   │                             #   Rotterdam reroute, TSMC 2nm fab
+│   │                             #   >$45B, REE Chinese supply
+│   │                             #   concentration, <1% REE
+│   │                             #   recycling, 40k worker shortfall
+│   │                             #   by 2025, structural veteran
+│   │                             #   culling. CostVector dataclass +
+│   │                             #   10-entry SUPPRESSED_VECTORS list
+│   │                             #   (V1 supply-chain embodied
+│   │                             #   energy, V2 geopolitical
+│   │                             #   chokepoint, V3 SPR drawdown as
+│   │                             #   hidden subsidy, V4 workforce
+│   │                             #   skill decay, V5 automation
+│   │                             #   substrate dependency, V6 REE
+│   │                             #   extraction energy, V7 water +
+│   │                             #   land restoration, V8 decline
+│   │                             #   curve reality vs reported EUR,
+│   │                             #   V9 carbon compliance overhead,
+│   │                             #   V10 substrate damage to
+│   │                             #   dependent populations); each
+│   │                             #   carries id + name + description
+│   │                             #   + why_omitted + direction
+│   │                             #   (increases denominator / shrinks
+│   │                             #   numerator). 8-entry
+│   │                             #   CASCADE_PIPELINE traces how the
+│   │                             #   vectors interact stage by stage
+│   │                             #   (reservoir geology -> extraction
+│   │                             #   equipment -> automation +
+│   │                             #   digital twin -> workforce ->
+│   │                             #   logistics + shipping -> strategic
+│   │                             #   reserves -> refinery + product
+│   │                             #   delivery -> public health /
+│   │                             #   substrate cost); each stage
+│   │                             #   contrasts stable_supply_
+│   │                             #   assumption vs actual_2026_state.
+│   │                             #   Confidence enum + Claim
+│   │                             #   dataclass + 10-entry CLAIMS
+│   │                             #   list (C1-C10) with HIGH/MOD
+│   │                             #   confidence ratings. EROIClaim
+│   │                             #   dataclass with 10 binary flags
+│   │                             #   + audit() returns 4-tier
+│   │                             #   verdict ladder: ADMISSIBLE
+│   │                             #   (>=8) / PARTIAL (>=5) /
+│   │                             #   CONTAMINATED (>=2) / NON-
+│   │                             #   FALSIFIABLE (<2, describes only
+│   │                             #   a sub-process not delivered
+│   │                             #   energy). HONEST_EROI_
+│   │                             #   REQUIREMENTS lists 10 things a
+│   │                             #   systemic EROI calculation would
+│   │                             #   need. 15-entry CITATIONS block
+│   │                             #   (EIA STEO, Delannoy, Berman,
+│   │                             #   Engineer Fix, Fortune, UNCTAD,
+│   │                             #   TSMC, Accenture/IOGP, Korn
+│   │                             #   Ferry, GETI 2026, Deloitte 2025,
+│   │                             #   Amedor & Giussani 2026). Demo:
+│   │                             #   typical published shale 6:1 ->
+│   │                             #   0/10 -> NON-FALSIFIABLE; better-
+│   │                             #   than-average study at 4/10 ->
+│   │                             #   CONTAMINATED; hypothetical fully-
+│   │                             #   audited 2.5:1 -> 10/10 ->
+│   │                             #   ADMISSIBLE. Companion to
+│   │                             #   substrate_damage_audit (same
+│   │                             #   audit-gate pattern applied to
+│   │                             #   behavioral claims) and core/
+│   │                             #   thermodynamic_price_guard
+│   │                             #   (embodied-energy + EROEI check
+│   │                             #   for price vs energy).
 │   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
 │   │                             #   earth-systems-physics coupled
 │   │                             #   solvers. Integrates 3 observational
@@ -2374,6 +3107,785 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
+  domain-specific audit module exposing the metrology failures in
+  current oil-extraction EROI accounting. Standard EROI calculations
+  treat the extraction system as if it operates in isolation under
+  stable supply chains, stable geopolitics, and stable workforce;
+  none of those assumptions hold in the present operating
+  environment. The module does not claim final numbers -- it claims
+  that published numbers are non-falsifiable until the suppressed
+  cost vectors are accounted for, and provides a scope-audit gate
+  to flag any EROI claim that omits them.
+  Core claim: published oil EROI figures (6:1 to 10:1 for
+  unconventional) are upper bounds under stable-supply assumptions;
+  under current operating conditions, system-level EROI is
+  substantially lower and approaching the 1:1 threshold faster than
+  the literature reports.
+  Module surface: 22-key REFERENCE_DATA dict (May 2026 vintage)
+  carries the empirical numbers (US production 13.6 mb/d 2025 record,
+  EIA forecast 13.5 mb/d 2026 decline begins, SPR 411 MMbbl lowest
+  since 1982 if full release completes, conventional EROI ~100:1
+  1950s baseline, Norwegian 2010 ~40:1 from ~60:1 1996 peak, shale
+  ~6:1 published, oil shale in-situ ~1.5:1 already at energy-sink
+  threshold, Delannoy net energy peak ~2025 at ~400 PJ/d, 2050
+  weighted EROI 6.7:1, ~10% shale recovery rate, Eagle Ford peak
+  Sept 2015 at 1.6 mb/d in retreat, Permian top-5 operators hold
+  ~70% high-quality inventory, Hormuz 6.7 mb/d shut-ins May 2026
+  conflict-scenario, UNCTAD 70% GHG increase on Singapore-Rotterdam
+  reroute, China REE supply >95% historical and 81% as of 2017 with
+  >5x demand projected by 2030, <1% global REE recycling, TSMC 2nm
+  fab >$45B capex, $100-300M annual power per fab, 1500-2000 gal
+  water per wafer at 3nm, 40k competent worker shortfall by 2025
+  Accenture, 85M unfilled skilled jobs globally Korn Ferry,
+  structural veteran culling Deloitte 2025). CostVector dataclass
+  + 10-entry SUPPRESSED_VECTORS list (V1 supply-chain embodied
+  energy, V2 geopolitical chokepoint + insurance premium, V3 SPR
+  drawdown as hidden subsidy, V4 workforce skill decay +
+  replacement non-linearity, V5 automation substrate dependency on
+  fabs + REE + control systems, V6 REE extraction energy with
+  China-concentrated supply, V7 water + land restoration, V8
+  decline curve reality vs reported EUR, V9 carbon compliance
+  overhead, V10 substrate damage to dependent populations); each
+  carries id + name + description + why_omitted + direction
+  (increases denominator or shrinks numerator).
+  8-entry CASCADE_PIPELINE traces stage-by-stage how the vectors
+  interact (reservoir geology -> extraction equipment -> automation
+  + digital twin -> workforce -> logistics + shipping -> strategic
+  reserves -> refinery + product delivery -> public health /
+  substrate cost); each stage contrasts the stable_supply_
+  assumption with the actual_2026_state.
+  Confidence enum + Claim dataclass + 10-entry CLAIMS list with
+  HIGH/MODERATE confidence and explicit falsifier+confirmer per
+  claim: C1 published EROI omits system costs (HIGH); C2 automation
+  relocates energy upstream not eliminates (HIGH); C3 workforce
+  skill decay is thermodynamic cost (MODERATE); C4 geopolitical
+  chokepoints change EROI (HIGH); C5 SPR drawdown is hidden subsidy
+  (HIGH); C6 decline curves understated in reserves (HIGH); C7
+  substrate damage reduces system capacity (MODERATE); C8 net
+  energy peak may be passed (MODERATE); C9 extraction dependency
+  loop is unstable (HIGH); C10 published EROI is non-falsifiable
+  until audited (HIGH).
+  10-entry SCORING_DIMENSIONS drives the EROIClaim audit gate.
+  audit() returns 4-tier verdict ladder: ADMISSIBLE (>=8/10,
+  system-level falsifiable claim) / PARTIAL (>=5, well-site or
+  sub-system EROI as upper bound) / CONTAMINATED (>=2, omits major
+  vectors, non-comparable to historical conventional) / NON-
+  FALSIFIABLE (<2, describes only a sub-process not delivered
+  energy). 10-entry HONEST_EROI_REQUIREMENTS lists what a systemic
+  EROI calculation would need (bottom-up energy accounting,
+  long-life decline curves, route-specific shipping energy under
+  current chokepoint conditions, SPR refill amortization, workforce
+  thermodynamic accounting, automation life-cycle, substrate cost,
+  uncertainty bounds, falsifiability statement, replicability).
+  15-entry CITATIONS block (EIA STEO Dec 2025, Delannoy et al.,
+  Engineer Fix synthesis, Bakken/Eagle Ford/Permian decline-curve
+  analysis >30k wells, Art Berman, Fortune / EIA Hormuz disruption,
+  UNCTAD shipping emissions, TSMC public capex, Accenture / IOGP,
+  Korn Ferry, GETI 2026, Deloitte 2025, rare-earth literature,
+  Amedor & Giussani 2026).
+  Demo: typical published shale 6:1 -> 0/10 -> NON-FALSIFIABLE
+  (all 10 dimensions flagged); better-than-average study (4/10) ->
+  CONTAMINATED; hypothetical fully-audited 2.5:1 -> 10/10 ->
+  ADMISSIBLE. The substantive operationalization: the audit
+  doesn't argue with the published number; it argues that the
+  published number is not a claim about delivered energy at all
+  until V1-V10 are explicitly accounted for or explicitly bounded.
+  Companion to substrate_damage_audit (same audit-gate pattern
+  applied to behavioral / capacity claims) and core/
+  thermodynamic_price_guard (embodied-energy + EROEI check for
+  price vs energy).
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per repo
+  convention; smart apostrophes and en-dashes in REFERENCE_DATA
+  string values -> ASCII; em-dashes in claim/vector descriptions
+  -> ASCII `--`; Unicode `->` arrow in citations -> ASCII;
+  function and class bodies at column 0 throughout the source --
+  re-indented to proper 4-space inside-function and 8-space
+  inside-method positions). Dropped unused `Optional` import from
+  typing. Pure stdlib; chat_paste_check passes (repo-wide exit 0);
+  calibration test suite (11 tests) still passes.
+- Added `metrology/substrate_damage_audit.py`: audit framework for
+  behavioral, collapse-prediction, and human-capacity models that
+  measures whether the model treats institutional substrate damage
+  as biological universal. Sister to constraint_filter_architecture
+  and institutional_audit (same model-audit family applied to
+  behavioral / capacity claims rather than institutional structures).
+  Core metrology problem the module names: most "human nature" and
+  "collapse behavior" models train on populations several generations
+  into accumulated institutional stress (chronic racism, patriarchy,
+  socioeconomic hierarchy, ecological disconnection). Measured
+  fragility gets misread as biological universal. Resulting
+  predictions justify policies that deepen the damage, closing a
+  self-validating loop.
+  Module surface: Confidence enum (HIGH / MODERATE / LOW); Claim
+  dataclass (id + statement + mechanism + falsifier + confirmer +
+  Confidence + references); 7-entry CLAIMS registry covering the
+  full cascade:
+    C1 collapse models on damaged substrate (HIGH conf)
+    C2 chronic stress alters substrate via HPA-axis / glucocorticoid /
+       inflammatory pathways (HIGH conf, refs Amedor & Giussani 2026
+       on pregnancy-outcome physiology)
+    C3 low-stress communities show different adaptive patterns
+       (MODERATE conf)
+    C4 escape narratives (transhumanism / body-rejection / off-world)
+       as substrate-damage symptom rather than evidence of biological
+       inadequacy (MODERATE conf)
+    C5 disaster research methodologically biased -- damaged sample
+       implicitly treated as control (HIGH conf)
+    C6 multigenerational compounding via maternal-stress gestational
+       transmission; no living Western-industrial cohort represents
+       unstressed baseline (MODERATE conf)
+    C7 hierarchy as measurable substrate degradation affecting
+       reproductive biology and population resilience (HIGH conf,
+       refs Black maternal mortality 3x with documented physiological
+       mediation)
+  10-entry DIMENSIONS dict drives the scope-audit gate:
+  substrate_state_flagged, comparison_population_balanced,
+  generational_accumulation_acknowledged, fragility_attribution,
+  kinship_network_treatment, escape_narrative_handling,
+  feedback_loop_disclosed, falsifiability,
+  policy_recommendation_direction, metrology_audit. ModelDescriptor
+  dataclass with int flags (default-failure direction set so that
+  unaware models score 0 by default); audit(model) returns score +
+  verdict + passed dimensions + flagged dimensions. 4-tier verdict
+  ladder: ADMISSIBLE (>=8/10, substrate-aware) / PARTIAL (>=5/10,
+  substrate-aware with gaps) / CONTAMINATED (>=2/10, claims about
+  'human nature' not admissible) / FULLY CAPTURED (<2/10, measuring
+  institutional damage as nature).
+  7 RESEARCH_QUESTIONS queued as the explicit research agenda:
+  disaster-recovery matched-event comparison across kinship-networked
+  traditional vs Western individualist populations with substrate-
+  stress markers as primary variable; multi-generational epigenetic
+  drift across 3+ generations; escape-narrative incidence by stress
+  load; hierarchy-tier resilience differential across positions in
+  hierarchical systems; recovery latency after stressor removal at
+  individual and generational scales; systematic methodological audit
+  of cited collapse-modeling literature for substrate-state treatment;
+  adaptive-capacity ceiling in low-stress / network-embedded
+  populations (current baselines almost certainly underestimate).
+  Demo: typical Western collapse-behavior model with all flags at
+  default-failure scores 0/10 -> FULLY CAPTURED: measuring
+  institutional damage as nature, all 10 dimensions flagged.
+  Substrate-aware alternative with all flags set scores 10/10 ->
+  ADMISSIBLE. The verdict ladder makes the bias quantitative:
+  the typical disaster / collapse / capacity model rests at the
+  bottom of the ladder, and the audit surfaces what would need to
+  change for its claims about "human nature" to be admissible.
+  The substantive operationalization: this is the calibration/
+  recency-bias-detector applied to capacity claims specifically.
+  Fragility measured in damaged populations is recency artifact,
+  not universal biology. The audit forces the question: what
+  would unstressed substrate look like, and have we ever measured
+  it?
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior pastes (smart quotes -> ASCII; **name**/**main** ->
+  __name__/__main__; Unicode em-dash horizontal-line dividers
+  -> ASCII `=` per repo convention; smart apostrophes in
+  CLAIMS statement text and DIMENSIONS description text ->
+  ASCII; function and class bodies at column 0 throughout the
+  source -- re-indented to proper 4-space inside-function and
+  8-space inside-method positions). Dropped unused imports
+  (`Callable` and `Optional` from typing; the source imported
+  both but used neither). Pure stdlib; chat_paste_check passes
+  (repo-wide exit 0); calibration test suite (11 tests) still
+  passes.
+- Added `simulations/monte_carlo_resilience_sim.py`: stochastic
+  companion to biological_response_infrastructure.py. Where the
+  prior module runs ONE deterministic mesh under a fixed shock
+  schedule, this module runs N stochastic iterations sampling
+  crisis type / severity / community / central-authority
+  parameters from beta distributions, exposing the architecture
+  delta across the entire random landscape rather than from a
+  single trajectory.
+  Module surface: 7 CRISIS_TYPES (weather_grid_failure,
+  economic_shock, supply_chain_break, corporate_withdrawal,
+  infrastructure_failure, public_health_event, regulatory_collapse);
+  Crisis / Community / CentralAuthority / Outcome dataclasses;
+  sample_crisis/community/central() use rng.betavariate for
+  realistic skewed distributions; run_distributed and
+  run_centralized implement the two architectures' response logic
+  (distributed combines local_capacity + cohesion + audit_
+  transparency for immediate response; centralized has latency
+  delay during which damage propagates and community sits in
+  helplessness); simulate() runs N iterations with seeded RNG;
+  summarize/compare report mean/median/std + tail metric
+  (p05_survival) + cascade_zero_rate + deltas across 7 outcome
+  axes; correlate() exposes per-parameter sensitivity (which
+  variables move outcomes per architecture).
+  7 falsifiable CLAIMS including ">15pp survival advantage",
+  ">2x zero-cascade rate", "tail-risk worst 5% distributed beats
+  median centralized", "trust recovery faster under distributed
+  because action is validated post-hoc", and the reproducibility
+  claim (same seed yields same outcomes; framework is
+  falsifiable, not rhetorical).
+  Explicit Limitations block names what's NOT modeled: audit
+  integrity assumed (real-world capture unmodeled); community
+  willingness assumed (learned-helplessness baseline only); no
+  external prohibition (state suppression of local response
+  unmodeled); communication infrastructure assumed intact;
+  small-community dynamics, city-scale not validated. This is
+  the methodological discipline that distinguishes substantive
+  simulation from rhetorical one.
+  Demo at N=5000, seed=42 produces dramatic deltas across the
+  random landscape: distributed 77.5% survival / 78.7%
+  infrastructure intact / 97.9% zero-cascade rate / $381k mean
+  cost / 10-day mean recovery vs centralized 46.5% / 47.2% /
+  16.8% / $2.7M / 73-day recovery. Aggregated deltas: +31pp
+  survival, +31pp infrastructure, +48pp trust, +62.6 days
+  recovery speedup, $2.3M cost savings per crisis. The
+  tail-risk finding is the most pointed: p05 (worst-5%)
+  distributed survival of 50.7% exceeds the centralized
+  median of 48.4% -- meaning even the worst 5% of distributed
+  outcomes still beats the typical centralized outcome on the
+  survival axis. Sensitivity confirms the sensitivity-differs
+  claim: distributed survival correlates with local_capacity
+  at r=+0.348 (local skill/supplies/leadership is the
+  dominant driver); centralized survival correlates with
+  response_latency at r=-0.319 (delay is the dominant driver
+  in the wrong direction).
+  Methodologically distinctive: the simulation isn't a
+  parameter-tuning exercise. The advantage delta emerges from
+  the structural difference in response logic (immediate-local
+  vs latency-delayed), not from cherry-picked parameters.
+  Modify parameter distributions, response functions, or
+  scoring -- if the distributed advantage disappears under your
+  modifications, that's the data point. Either you've found a
+  regime where it doesn't help, or where the model assumptions
+  were doing the work. That's the falsifiability the explicit
+  Limitations block enables.
+  Sister to core/'s five-piece scope-audit family
+  (regulation_cascade_mapper, timing_as_constraint,
+  regulatory_scope_audit, corporate_charter_scope_audit,
+  audit_authority_scope) and simulations/biological_response_
+  infrastructure (deterministic mesh counterpart). Stochastic
+  simulation tests the governance machinery whose effectiveness
+  the audit modules describe.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; em-dash characters in string literals
+  converted to ASCII `--`; Unicode `->` arrow in docstring
+  "same random seed -> same outcomes" -> ASCII `->`; function
+  bodies at column 0 throughout the source -- same indentation
+  contamination as prior pastes -- re-indented to proper
+  4-space inside-function and 8-space inside-method positions).
+  Dropped unused `Counter` import from collections (source
+  imported it but did not use it). Pure stdlib; chat_paste_
+  check passes (repo-wide exit 0); calibration test suite
+  (11 tests) still passes.
+- Added `core/audit_authority_scope.py`: the final piece of the
+  core/ scope-audit family. Applies scope-audit logic recursively
+  to audit-authority itself. Higher tiers of government get first
+  right to audit a community's crisis response only within their
+  declared resource and time scope. If they cannot or will not
+  exercise that right within the declared window, the audit at
+  the next tier down becomes final. Premise: authority without
+  demonstrated capacity to exercise it is coercion masquerading
+  as governance. The same scope-audit logic applied to regulations
+  (regulatory_scope_audit) and corporate charters (corporate_
+  charter_scope_audit) applies to audit authority itself -- a
+  state government that claims final-audit authority but cannot
+  resource the audit within 90 days has exited the scope of that
+  claim.
+  Module surface: AuditTier (name + level 0-3 + scope_window_days
+  + resource_capacity_required dict for required auditor hours,
+  site visits, expert reviews); TieredAuditRecord (tier + incident
+  id + submitted_at + completed_at + finding "confirms_community"
+  / "modifies" / "challenges" + rationale + upgrades list +
+  auditor_ids; is_complete / duration_days / within_scope_window
+  gates); CommunityResponseIncident wraps the original community
+  audit_record produced by regulatory_scope_audit or corporate_
+  charter_scope_audit; TieredReviewLedger composes incident +
+  tiers + records.
+  Three TieredReviewLedger methods: deadline_for(tier) returns
+  the ISO timestamp by which that tier must complete its audit --
+  windows stack cumulatively, so the state deadline starts after
+  county window exhausts and so on (community 14d + county 30d +
+  state 90d + federal 180d cumulative); tier_exercised_within_
+  scope(name) checks if any record for that tier completed within
+  the tier's window; final_audit(current_time) walks the tiers
+  top-down to find the highest level with a within-scope completed
+  record (that's currently operative), falls back to community
+  baseline if none, and returns the list of higher tiers whose
+  override windows are still open.
+  6 falsifiable CLAIMS including the structural claim that
+  "audit-authority is scope-conditional: claimed but unexercised
+  authority does not bind", the budgeting claim that "tiered
+  scope windows force budgeting for actual audit capacity, not
+  claims of it", and the aligned-incentive claim that "neither
+  side gains by delay: communities risk weaker upgrades; higher
+  authorities risk forfeiting override".
+  Demo: winter storm community response from
+  corporate_charter_scope_audit.py demo carried forward as the
+  underlying incident. 4 scenarios.
+  (A) County completes audit on day 16 within its 30-day window;
+  finding=confirms_community, recommends county-level cache of
+  cold-weather supplies as upgrade. Operative=county. State and
+  federal override windows still open (113 + 293 days
+  remaining).
+  (B) State silent for 90 days (no record submitted). Operative
+  stays at county; federal still pending with 176 days
+  remaining.
+  (C) State completes audit on day 113 within its 90-day window
+  (82-day audit duration). Finding=modifies; upgrades include
+  "MN statute amendment codifying 24h corporate response
+  threshold for grid-failure isolation crises in unincorporated
+  areas" and "state cache of emergency rations at 30 county
+  distribution points". Operative=state. Federal still pending
+  with 206 days.
+  (D) Federal window still open mid-state-audit -- operative
+  remains the highest completed-within-scope tier.
+  core/'s scope-audit family is now a closed five-piece set:
+  regulation_cascade_mapper (spatial consequence), timing_as_
+  constraint (temporal scope + cycles), regulatory_scope_audit
+  (regulatory operational scope), corporate_charter_scope_audit
+  (corporate charter scope under crisis), and this module
+  (audit authority itself). All five share the structure:
+  declared scope vs current condition; out-of-scope -> intent-
+  preserving action by the next layer down, audit-after the
+  forfeiting tier.
+  The recursive insight this module operationalizes: scope-audit
+  applied to scope-audit-authority closes the framework -- there
+  is no tier above which is exempt from the same logic. Either
+  exercise the audit within scope, or forfeit the override.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; em-dash characters in string literals
+  converted to ASCII `--`). Dropped unused imports (`Any` from
+  typing, `defaultdict` from collections; the source imported
+  both but used neither). Pure stdlib; chat_paste_check passes
+  (repo-wide exit 0); calibration test suite (11 tests) still
+  passes.
+- Added `core/corporate_charter_scope_audit.py`: companion to
+  regulatory_scope_audit.py -- same epistemic structure (declared
+  intent vs current scope vs current action), applied to corporate
+  charters rather than regulations. Premise: any corporation
+  operating within a community holds an implicit charter to extract
+  value from the market AND stabilize with the community when crisis
+  arrives. When the corporation exits the scope of that function --
+  most clearly during a crisis the corporation refuses to respond
+  to -- the charter is in scope exit. The community's claim on the
+  corporation's locally held resources supersedes the corporation's
+  disposal logic for the duration of the crisis, subject to post-hoc
+  audit. This is not seizure; it is enforcement of the actual terms
+  of operating inside the community.
+  Module surface: CorporateCharter (corporation + community +
+  function_served + value_extracted_categories + response_threshold_
+  hours + on_site_assets dict); CommunityCrisis (id + community +
+  crisis_type + declared_at_iso + needs dict); CorporateResponse
+  (delivered_within_hours + resources_delivered + personnel_deployed;
+  is_adequate() gates threshold + 50% delivery fraction); CharterAudit
+  (composes Charter + Crisis + Response + adequacy flag +
+  scope_exit_reasons; summary emits IN SCOPE or OUT OF SCOPE verdict
+  with reason list); audit_charter() runs the full check.
+  Constructive output: CommunityAccessClaim captures what the
+  community is claiming access to, why, when activated, when the
+  post-hoc audit is due, and whether the claim is proportionate +
+  stabilization-only. proportionate_claim() caps at declared need
+  AND on-site availability -- surplus stays with the corporation,
+  enforcing the bounded nature of the contingency. activate_
+  contingency() returns None if the audit is in-scope (no claim
+  triggered).
+  6 falsifiable CLAIMS including: corporate charter is scope-
+  conditional; asset-access contingency under audit-after-action is
+  enforcement of charter terms not seizure; proportionate claims
+  limited to declared need and on-site availability are auditable
+  and reproducible; charter audit and regulatory scope audit share
+  the same epistemic structure.
+  Demo: 3 scenarios for a big-box retailer in a Northern Minnesota
+  community during a winter-storm grid failure (community-declared
+  needs: 3200kg food, 2400L water, 180 blankets; corporation has
+  8500kg food, 4000L water, 320 blankets on site).
+  (A) Corporation responds in 18h with 2800kg food / 2400L water /
+  200 blankets + 4 personnel deployed -> IN SCOPE, operating
+  privileges intact, no contingency.
+  (B) Corporation does not respond within 24h -> OUT OF SCOPE.
+  Full proportionate claim activates: 3200kg/2400L/180 (matched to
+  declared need, all within on-site availability).
+  (C) Corporation delivers 800kg/600L/50 inside the window but
+  below the 50% threshold -> OUT OF SCOPE. Shortfall-only
+  contingency: claim adjusted to 2400kg/1800L/130 (remainder
+  only; corporation keeps what it delivered toward).
+  Inversion flag at demo end: corporations depend on community
+  stability for customers, workforce, and supply-chain continuity.
+  Blocking community self-stabilization during crisis sabotages the
+  corporation's own market. The audit framework restores aligned
+  incentives -- respond and your charter strengthens; fail to
+  respond and the community uses your on-site resources for the
+  duration of the crisis, under post-hoc audit.
+  Three-piece regulation-audit triad in core/ now becomes a four-
+  piece scope-audit family: regulation_cascade_mapper (consequence),
+  timing_as_constraint (temporal), regulatory_scope_audit
+  (regulatory operational), corporate_charter_scope_audit
+  (corporate charter). All share the structure: declared scope vs
+  current condition; out-of-scope -> intent-preserving action,
+  audit-after.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per repo
+  convention; em-dash characters in string literals converted to
+  ASCII `--`). Dropped unused imports (`Any` from typing,
+  `defaultdict` from collections; the source imported both but
+  used neither). Pure stdlib; chat_paste_check passes (repo-wide
+  exit 0); calibration test suite (11 tests) still passes.
+- Added `core/regulatory_scope_audit.py`: substrate-primary scope-
+  validity audit for regulations. Companion to regulation_cascade_
+  mapper (which maps consequence chains) and timing_as_constraint
+  (which adds the temporal dimension). Together the three core/
+  modules form a regulation-audit triad: cascade consequence
+  (spatial), temporal scope (when), and operational scope (under
+  what physical conditions).
+  Premise: every regulation was written for a specific operating
+  envelope -- thermal range, population density, substrate
+  stability, infrastructure assumption. When real conditions exit
+  that envelope, the regulation is outside its scope, and continuing
+  to enforce it inverts its purpose and produces the harm it was
+  designed to prevent. The constructive output: communities can
+  preserve first-principle intent while exiting expired letter,
+  acting inside the regulation's purpose rather than against it.
+  Module surface: ScopeVar (name + valid_range + units + in_range
+  gate); Regulation (id + jurisdiction + year_enacted + first_
+  principle_intent + scope list + enforcement_text; in_scope gates
+  all ScopeVars; scope_exit_signature returns dict per exited
+  variable with current_value / valid_range / deviation); Situation
+  (id + location + conditions dict); ScopeAudit (composes Regulation
+  + Situation + flags + intent_still_applicable; summary() emits
+  IN SCOPE / OUT OF SCOPE INTENT EXPIRED / OUT OF SCOPE INTENT
+  PRESERVED). audit(reg, sit, intent_check=None) runs the full
+  check. LocalResponseRecord captures the constructive audit
+  trail: what the community did, which regulations were out of
+  scope, what intent they preserved, when the post-hoc central
+  audit is due. build_response_record helper.
+  6 falsifiable CLAIMS including the burden-of-proof claim that
+  central authority must produce a scope-current rule when the
+  legacy rule has exited scope, and the legitimacy claim that
+  communities preserving first-principle intent while exiting
+  expired letter act inside the regulation's purpose.
+  Demo: 2 worked examples.
+  (1) MN 7080 centralized-sewer rule (scoped for 2000-20000
+  pop/km^2 + <0.2ha lots) applied to a 4 pop/km^2 / 0.8ha rural
+  homestead with composting toilet + graywater proposal. Result:
+  OUT OF SCOPE -- INTENT PRESERVED. Two scope variables flagged
+  (population_density 4.00 vs valid 2000-20000; lot_size 0.80ha
+  vs valid 0-0.2ha). Original intent (prevent groundwater
+  contamination from improper waste in high-density populations)
+  preserved via composting design with safe well separation per
+  substrate-current MN rules 7080/7083.
+  (2) State bridge permit (scoped for 500-50000 vehicles/day +
+  15-500m spans + 50-100yr design life + $1M-$200M budget)
+  applied to a 0-vehicle 6m pedestrian crossing serving 14
+  households after seasonal creek washout. Result: OUT OF SCOPE
+  on ALL 4 scope variables. Original intent (load-bearing safety
+  on permanent high-traffic vehicular bridges) preserved via
+  standard timber-truss design and immediate community inspection
+  cycle.
+  Inversion flag at end of demo: both regulations enforced
+  literally in these situations would produce the EXACT harm
+  they were designed to prevent. Septic rule: forcing
+  centralized sewer where none exists delays sanitation,
+  increasing risk of improvised disposal and contamination.
+  Bridge rule: blocking community crossing isolates households,
+  impedes emergency access, creates the access-failure the
+  safety framework was meant to address. The scope audit
+  surfaces this inversion. Communities act inside the original
+  intent; central authority audits afterward.
+  Sister to simulations/biological_response_infrastructure.py
+  (the dynamic counterpart simulating distributed-vs-centralized
+  response). This module is the legal-epistemic instrument that
+  lets the biological-mode response operate without violating
+  the original good-faith intent of the regulations being
+  exited.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; em-dash characters inside string literals
+  -- including jurisdiction strings, intent descriptions, and
+  verdict labels like "OUT OF SCOPE — INTENT PRESERVED" --
+  converted to ASCII `--`). Also: Unicode en-dash `–` in
+  the deviations_human_readable f-string formatter
+  ("(valid 2000.00-20000.00)") converted to ASCII `-`. Replaced
+  the source's `intent_check: callable = None` annotation
+  (using the builtin `callable` as a type) with proper `Callable
+  | None = None` and added `from typing import Callable`.
+  Dropped unused imports (`Any` from typing, `defaultdict` from
+  collections; the source imported both but used neither). Pure
+  stdlib; chat_paste_check passes (repo-wide exit 0);
+  calibration test suite (11 tests) still passes.
+- Added `simulations/biological_response_infrastructure.py`:
+  distributed-infrastructure simulation modeled on biological
+  immune / metabolic systems. Premise: cells don't ask permission
+  to respond to tissue damage; an immune system that waited for
+  central authorization would be a dead immune system. Current
+  regulatory infrastructure inverts this -- communities must
+  request central approval before responding to local constraints
+  (washed-out creek, failed septic, lost grid power); by the time
+  approval arrives, the local system has degraded. Same pathology
+  as a finger waiting for brain authorization while infection
+  propagates. This module models the inversion and runs the math.
+  Module surface: Node dataclass (capacity / damage_threshold /
+  response_latency_steps / neighbors list / autonomous flag /
+  last_response_step / audit_log; sense_damage, can_respond,
+  respond methods); Network dataclass (nodes dict + central_
+  authority_latency_steps + central_authority_required; neighbors_
+  of, total_capacity, healthy_fraction, has_collapsed methods);
+  DamageEvent dataclass (step + target_nodes + severity; apply
+  method). step_biological iterates nodes and lets each sense and
+  respond locally. step_permission_required collects requests,
+  holds them in a pending dict, and only releases repairs after
+  central_authority_latency_steps have elapsed. propagate_damage
+  spreads untended damage to neighbors (sepsis analog). simulate
+  composes scheduled shocks + step regime + propagation across a
+  horizon, returns full history + collapsed_at marker.
+  mesh_network() builder constructs sqrt(n) x sqrt(n) lattice with
+  4-nearest-neighbor adjacency. 7 falsifiable CLAIMS including
+  "damage propagation rate exceeds central-authority latency in
+  distributed shocks; the math is not subjective" and "the cost
+  of a permission system exceeds the cost of post-hoc audit by a
+  factor proportional to network size and shock frequency".
+  Demo: 64-node mesh networks under identical 5-shock schedule
+  (steps 10/25/50/75/95, severities 0.5-0.7), 120-step horizon,
+  30-step central-authority latency for the permission-required
+  variant. Result: biological mode finishes at 64.00 capacity /
+  100% healthy (survived all 120 steps); permission-required mode
+  collapses at step 33 (3 steps after the second shock), finishes
+  at 0.10 capacity / 0% healthy. The 30-step central-authority
+  latency is longer than the cascade detonation window, so damage
+  spreads faster than approval propagates. The dramatic delta
+  isn't a parameter choice -- it's the structural claim the model
+  operationalizes: damage propagation rate exceeds central-
+  authority latency in distributed shocks. Extends metrology/
+  institutional_audit.py and metrology/constraint_filter_
+  architecture.py with the same premise-level critique applied
+  to distributed-vs-centralized response.
+  Placed in simulations/ alongside loop_6_ai_default_prior_
+  distortion (the other stdlib-only Monte Carlo / loop sim in
+  the repo); content is structurally a simulation, not an audit.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; embedded triple-backtick fences removed from
+  method bodies inside Node + Network + DamageEvent dataclasses
+  + step_biological + step_permission_required + propagate_
+  damage + simulate + mesh_network + __main__ demo block;
+  methods re-indented from column 0 to inside-class). Dropped
+  unused `Callable` import from typing. Pure stdlib; chat_paste_
+  check passes (repo-wide exit 0); calibration test suite
+  (11 tests) still passes.
+- Added `metrology/institutional_audit.py`: cross-domain audit
+  that extends constraint_filter_architecture with four
+  institutional premises (performance_over_function,
+  appearance_over_audit, hidden_load_bearing, self_referential)
+  plus the COLLAPSE_SIGNATURE detection pattern. The historical
+  claim the module operationalizes: when permanence +
+  performance_over_function + appearance_over_audit +
+  no_diagnostic_cycles all co-occur, the system is in pre-
+  collapse configuration -- the pattern observed at late Rapa
+  Nui (moai-monument valorization while substrate decayed) and
+  late Rome (grain dole as stability performance over functional
+  production capacity).
+  Module surface: self-contained -- redefines Model and Premise
+  dataclasses locally rather than importing from constraint_
+  filter_architecture (preserves standalone runnability). Model
+  has the 7 base premise flags + 4 new institutional flags
+  (pays_for_role_not_function, appearance_replaces_audit, hides_
+  load_bearing_node, self_referential_validation). 11-entry
+  PREMISES list with weighted severities (the 4 new institutional
+  premises weighted 2.0-2.5, comparable to the highest-weight
+  base premises). Filter operations parallel to the base module
+  (signature, severity, bucket_by_signature, domain_cascade,
+  co_occurrence). COLLAPSE_SIGNATURE = frozenset of 4 premises;
+  carries_collapse_signature() returns True when all 4 are
+  present in a model's signature; collapse_carriers() returns
+  matching subset of corpus. domain_risk_density() returns per-
+  domain mean_severity + max_severity + collapse_fraction.
+  30-model build_corpus spans 12 domains: finance (credit rating,
+  fiat baseline, quarterly earnings, stock buyback), infrastructure
+  (legacy building code, bridge inspection ritual, deferred
+  maintenance), education (standardized testing, credential
+  hierarchy, classroom rank), healthcare (medical credential,
+  insurance actuarial, hospital hierarchy), ecology (carbon
+  credit, species count, Holocene stability assumption),
+  governance (hierarchical bureaucracy, election cycle, budget
+  ritual), corporate (CEO apex, quarterly targets, performance
+  review), agriculture (industrial monoculture, pesticide
+  certification), religious (doctrinal hierarchy), military
+  (rank promotion), historical_collapse (late_rapa_nui_moai_
+  logic, late_rome_grain_dole), reference_adaptive (nomadic
+  floating structure, seasonal harvest cycle).
+  Demo signal is the substantive claim: 14 of 30 models carry
+  the collapse signature, including modern CEO apex hierarchy,
+  credit rating system, standardized testing, credential
+  hierarchy, election cycle, medical credential, doctrinal
+  hierarchy, and military rank logic -- sitting in the same
+  signature bucket as the two explicitly-tagged historical
+  pre-collapse cases. The two reference_adaptive models score
+  severity 0.00 (carry none of the 11 corrupt premises).
+  Domain risk-density ranking: religious 20.75 / military 18.75
+  / historical_collapse 18.75 / corporate 17.58 / finance 17.25
+  / education 17.25 / healthcare 15.08 / governance 14.75 /
+  agriculture 13.25 / ecology 12.75 / infrastructure 10.75 /
+  reference_adaptive 0.00.
+  The substantive operationalization: pre-collapse civilizations
+  and modern institutional systems share signature, not domain.
+  Sorting by failure signature surfaces the structural pattern
+  that domain-by-domain analysis misses.
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; embedded triple-backtick fences removed from
+  Premise.__hash__ method body and __main__ demo block; method
+  re-indented into class scope). Unicode `!=` operator-glyph
+  in Model dataclass field comments -> ASCII `!=`. Unicode
+  black-star `*` (U+2605) in the demo's COLLAPSE marker -> ASCII
+  `[!] COLLAPSE` for repo consistency. Dropped unused `field`
+  import from dataclasses (no field() calls in this module's
+  dataclasses; both use simple defaults only). Pure stdlib;
+  chat_paste_check passes (repo-wide exit 0); calibration test
+  suite (11 tests) still passes.
+- Added `metrology/constraint_filter_architecture.py`: a
+  kaleidoscope-view audit that sorts models / frameworks /
+  regulations by failure SIGNATURE (the set of corrupt upstream
+  premises they carry) rather than by domain. The substantive
+  reframe: most domain models do not fail at the equation level
+  -- they fail at the premise level (unstated assumptions
+  inherited from the audit they were built on). Sorting by
+  signature instead of by domain reveals which axioms are most
+  systemically corrupt and how false premises pull on each
+  other geometrically across domains.
+  Module surface: Premise dataclass (id, description, detect
+  callable, falsity_severity weight); Model dataclass (id,
+  domain, 7 boolean premise-flags + an extra dict for arbitrary
+  metadata); 7-entry DEFAULT_PREMISES list with weighted
+  severities (permanence 2.0, no_scope 1.5, no_timing_layer 2.0,
+  no_diagnostic_cycles 1.5, static_substrate 1.25,
+  time_as_externality 1.5, ungrounded_units 2.0).
+  4 filter/sort helpers: signature(model, premises) returns
+  frozenset of carried-premise ids; severity(sig, premises) sums
+  the weighted severities; bucket_by_signature groups models
+  whose signatures are identical (they share an upstream
+  premise); bucket_by_single_premise gives one bucket per
+  premise (models can appear in multiple).
+  3 cascade analyzers: domain_cascade maps premise -> set of
+  affected domains (touching many domains = systemic
+  corruption, not a local domain bug); co_occurrence_matrix
+  counts premise pairs that travel together in the same model
+  (high co-occurrence = resonance, suggests shared audit
+  origin); backproject_origin uses an origin_hint year map to
+  identify the earliest carrying domain (candidate origin, not
+  a proof); forward_predict takes a list of candidate domains
+  and returns those not yet observed carrying the premise
+  (structural risk projection: domains adjacent to carriers
+  are at risk).
+  7 falsifiable CLAIMS at module level: models sharing a
+  failure signature share an upstream premise; premise
+  co-occurrence across domains is non-random; a premise
+  touching many domains is systemic not local; backprojection
+  is candidate not proof; forward prediction is structural not
+  statistical; severity-weighted signatures order models by
+  audit corruption independent of domain prestige; two models
+  with identical equations but different premises produce
+  different physics over time.
+  Demo: 7-model corpus across building_codes (India NBC 1970,
+  US IBC legacy), economics (DSGE), climate (IPCC baseline),
+  agriculture (industrial yield), labor (certification-as-
+  capacity), indigenous_engineering (nomadic floating
+  structure). Permanence is most pervasive premise (5 of the 6
+  non-indigenous domains carry it). industrial_ag_yield and
+  industrial_workforce_cert tie at severity 11.75 (carry all 7
+  corrupt premises); nomadic_floating_structure scores
+  severity 0.00 (carries none of the 7). Co-occurrence: 6 pairs
+  of premises co-occur in 5 of 7 models (no_scope <-> permanence,
+  no_diagnostic_cycles <-> permanence, permanence <-> static_
+  substrate, no_diagnostic_cycles <-> no_scope, no_scope <->
+  static_substrate, no_diagnostic_cycles <-> static_substrate).
+  Backproject "permanence" with year hints surfaces
+  "building_codes" as earliest. Forward project flags 5
+  candidate domains (urban_planning, insurance, infrastructure_
+  investment, ecological_forecasting, education) as at-risk.
+  Companion to core/timing_as_constraint.py (the timing layer
+  that most flagged models lack) and substrate_audit /
+  calibration_audit modules (downstream metrology diagnostics
+  whose root cause this module locates upstream).
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per
+  repo convention; embedded triple-backtick code fences removed
+  from Premise.__hash__ method body and __main__ demo;
+  re-indented method body into class scope). Also: the source
+  had a stray walrus operator `severity := 2.0` in the first
+  DEFAULT_PREMISES entry -- valid Python but a side effect that
+  creates a module-level `severity` name as a leftover. Replaced
+  with the plain literal `2.0` to match the style of the other
+  entries; no behavior change. Pure stdlib; chat_paste_check
+  passes (repo-wide exit 0); calibration test suite (11 tests)
+  still passes.
+- Added `core/timing_as_constraint.py`: domain-agnostic framework
+  positioning timing as a load-bearing constraint layer in
+  physical systems. Premise: Western institutional design strips
+  temporal scope from physical systems in pursuit of permanence;
+  a motor without timing is dead metal, a building code without
+  scope is a falsified audit. The module restores timing to its
+  position as a precision measurement instrument rather than a
+  decoration. Core claim: every physical system has a valid
+  operational window defined by coupled variables (thermal,
+  moisture, load, substrate motion, material decay); stripping
+  the temporal scope removes the diagnostic signature that tells
+  you the system is failing, so failure becomes catastrophic
+  instead of observable.
+  Module surface: 4 composable structures. Scope dataclass with
+  thermal_range_c / moisture_range_pct / load_range_kn /
+  substrate_motion_mm_yr / material_decay_pct_yr; in_scope(state)
+  gates against bounds; scope_exit_signature(state) returns the
+  list of variables that have left scope (diagnostic signature
+  for graceful failure). Cycle dataclass with interval_years +
+  measurement + threshold + units; due(last_run, current) gates
+  scheduling. TemporalAudit composes Scope + cycles into an
+  is_falsified() check that flags no_scope_declared OR no_
+  diagnostic_cycles -- a code with neither is claiming permanence
+  the physics does not grant. lifecycle_energy_cost compares two
+  design philosophies (continuous counteraction of substrate
+  motion vs one-time setup + periodic adjustment cycles) over a
+  time horizon and returns the ratio.
+  8 falsifiable CLAIMS at module level: regulation without
+  scope is falsified audit; system stripped of timing has no
+  diagnostic signature so failure is catastrophic not observable;
+  adaptation cost is bounded over horizon while counteraction
+  cost is unbounded; material decay is scope-exit not failure;
+  building codes inheriting Western permanence assumptions cannot
+  represent substrate motion as design input; cycles are
+  measurement instruments and removing them blinds the system;
+  two systems with identical static specs but different temporal
+  scopes have different physics; maintenance scheduled to scope
+  is design while maintenance triggered by visible failure is
+  salvage.
+  Demo: 1970 national building code (no scope, no cycles) ->
+  falsified=True with both reasons. Scope-aware delta code for
+  the Ganga delta (thermal 5-45C, moisture 30-95%, substrate
+  motion -30..+5 mm/yr, 3 diagnostic cycles for foundation
+  settlement / material density / substrate motion) ->
+  falsified=False. 50-year energy ledger: counteract design
+  consumes 600,000 kWh vs adaptation design 18,000 kWh -- a
+  33.3x ratio that makes the bounded-vs-unbounded claim concrete.
+  Placed in core/ alongside regulation_cascade_mapper.py since
+  both audit institutional artifacts through a physics lens; the
+  new module adds the temporal dimension that regulation_cascade_
+  mapper currently lacks. Sister to calibration/recency_bias_
+  detector.py via the recency-anomaly framing (permanence-
+  without-scope is a Holocene-suburban-American assumption being
+  projected as universal default).
+  CLEANUP DECISIONS: same paste-contamination patterns as the
+  prior expansions (smart quotes -> ASCII; **name**/**main** ->
+  __name__/__main__; Unicode em-dash horizontal-line dividers
+  -> ASCII `=` per repo convention; embedded triple-backtick
+  code fences removed from method bodies inside Scope, Cycle,
+  TemporalAudit dataclasses + lifecycle_energy_cost function +
+  __main__ demo block; methods re-indented from column 0 to
+  inside-class). Dropped unused `Callable` import. Pure stdlib;
+  chat_paste_check passes (repo-wide exit 0); calibration test
+  suite (11 tests) still passes.
 - Added `political_audit/success_specification_validator.py`:
   capstone audit module for the transportation_automation_audit
   family. Defines what SUCCESS actually means thermodynamically
