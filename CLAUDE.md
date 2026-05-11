@@ -2465,6 +2465,101 @@ thermodynamic-accountability-framework/
 │   │                             #   behavioral / capacity claims
 │   │                             #   rather than institutional
 │   │                             #   structures.
+│   ├── oil_extraction_thermodynamic_cascade_audit.py  # Domain-
+│   │                             #   specific audit for oil-
+│   │                             #   extraction EROI accounting.
+│   │                             #   Standard EROI calculations
+│   │                             #   treat the extraction system as
+│   │                             #   if it operates in isolation
+│   │                             #   under stable supply chains,
+│   │                             #   stable geopolitics, and stable
+│   │                             #   workforce; none of those
+│   │                             #   assumptions hold in the present
+│   │                             #   operating environment. Module
+│   │                             #   does not claim final numbers --
+│   │                             #   it claims that published numbers
+│   │                             #   are non-falsifiable until the
+│   │                             #   suppressed cost vectors are
+│   │                             #   accounted for, and provides a
+│   │                             #   scope-audit gate to flag any
+│   │                             #   EROI claim that omits them.
+│   │                             #   22-key REFERENCE_DATA dict
+│   │                             #   (May 2026 vintage): US
+│   │                             #   production 13.6 mb/d 2025, SPR
+│   │                             #   411 MMbbl, conventional EROI
+│   │                             #   ~100:1 1950s baseline, shale
+│   │                             #   ~6:1 published, oil shale in-
+│   │                             #   situ ~1.5:1 (already at energy-
+│   │                             #   sink threshold), 2050 weighted
+│   │                             #   projection 6.7:1, Hormuz 6.7
+│   │                             #   mb/d shut-in scenario, UNCTAD
+│   │                             #   70% GHG increase on Singapore-
+│   │                             #   Rotterdam reroute, TSMC 2nm fab
+│   │                             #   >$45B, REE Chinese supply
+│   │                             #   concentration, <1% REE
+│   │                             #   recycling, 40k worker shortfall
+│   │                             #   by 2025, structural veteran
+│   │                             #   culling. CostVector dataclass +
+│   │                             #   10-entry SUPPRESSED_VECTORS list
+│   │                             #   (V1 supply-chain embodied
+│   │                             #   energy, V2 geopolitical
+│   │                             #   chokepoint, V3 SPR drawdown as
+│   │                             #   hidden subsidy, V4 workforce
+│   │                             #   skill decay, V5 automation
+│   │                             #   substrate dependency, V6 REE
+│   │                             #   extraction energy, V7 water +
+│   │                             #   land restoration, V8 decline
+│   │                             #   curve reality vs reported EUR,
+│   │                             #   V9 carbon compliance overhead,
+│   │                             #   V10 substrate damage to
+│   │                             #   dependent populations); each
+│   │                             #   carries id + name + description
+│   │                             #   + why_omitted + direction
+│   │                             #   (increases denominator / shrinks
+│   │                             #   numerator). 8-entry
+│   │                             #   CASCADE_PIPELINE traces how the
+│   │                             #   vectors interact stage by stage
+│   │                             #   (reservoir geology -> extraction
+│   │                             #   equipment -> automation +
+│   │                             #   digital twin -> workforce ->
+│   │                             #   logistics + shipping -> strategic
+│   │                             #   reserves -> refinery + product
+│   │                             #   delivery -> public health /
+│   │                             #   substrate cost); each stage
+│   │                             #   contrasts stable_supply_
+│   │                             #   assumption vs actual_2026_state.
+│   │                             #   Confidence enum + Claim
+│   │                             #   dataclass + 10-entry CLAIMS
+│   │                             #   list (C1-C10) with HIGH/MOD
+│   │                             #   confidence ratings. EROIClaim
+│   │                             #   dataclass with 10 binary flags
+│   │                             #   + audit() returns 4-tier
+│   │                             #   verdict ladder: ADMISSIBLE
+│   │                             #   (>=8) / PARTIAL (>=5) /
+│   │                             #   CONTAMINATED (>=2) / NON-
+│   │                             #   FALSIFIABLE (<2, describes only
+│   │                             #   a sub-process not delivered
+│   │                             #   energy). HONEST_EROI_
+│   │                             #   REQUIREMENTS lists 10 things a
+│   │                             #   systemic EROI calculation would
+│   │                             #   need. 15-entry CITATIONS block
+│   │                             #   (EIA STEO, Delannoy, Berman,
+│   │                             #   Engineer Fix, Fortune, UNCTAD,
+│   │                             #   TSMC, Accenture/IOGP, Korn
+│   │                             #   Ferry, GETI 2026, Deloitte 2025,
+│   │                             #   Amedor & Giussani 2026). Demo:
+│   │                             #   typical published shale 6:1 ->
+│   │                             #   0/10 -> NON-FALSIFIABLE; better-
+│   │                             #   than-average study at 4/10 ->
+│   │                             #   CONTAMINATED; hypothetical fully-
+│   │                             #   audited 2.5:1 -> 10/10 ->
+│   │                             #   ADMISSIBLE. Companion to
+│   │                             #   substrate_damage_audit (same
+│   │                             #   audit-gate pattern applied to
+│   │                             #   behavioral claims) and core/
+│   │                             #   thermodynamic_price_guard
+│   │                             #   (embodied-energy + EROEI check
+│   │                             #   for price vs energy).
 │   ├── earth_systems_constraint_integration_2026.py  # Constraint layer for
 │   │                             #   earth-systems-physics coupled
 │   │                             #   solvers. Integrates 3 observational
@@ -3012,6 +3107,105 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
+  domain-specific audit module exposing the metrology failures in
+  current oil-extraction EROI accounting. Standard EROI calculations
+  treat the extraction system as if it operates in isolation under
+  stable supply chains, stable geopolitics, and stable workforce;
+  none of those assumptions hold in the present operating
+  environment. The module does not claim final numbers -- it claims
+  that published numbers are non-falsifiable until the suppressed
+  cost vectors are accounted for, and provides a scope-audit gate
+  to flag any EROI claim that omits them.
+  Core claim: published oil EROI figures (6:1 to 10:1 for
+  unconventional) are upper bounds under stable-supply assumptions;
+  under current operating conditions, system-level EROI is
+  substantially lower and approaching the 1:1 threshold faster than
+  the literature reports.
+  Module surface: 22-key REFERENCE_DATA dict (May 2026 vintage)
+  carries the empirical numbers (US production 13.6 mb/d 2025 record,
+  EIA forecast 13.5 mb/d 2026 decline begins, SPR 411 MMbbl lowest
+  since 1982 if full release completes, conventional EROI ~100:1
+  1950s baseline, Norwegian 2010 ~40:1 from ~60:1 1996 peak, shale
+  ~6:1 published, oil shale in-situ ~1.5:1 already at energy-sink
+  threshold, Delannoy net energy peak ~2025 at ~400 PJ/d, 2050
+  weighted EROI 6.7:1, ~10% shale recovery rate, Eagle Ford peak
+  Sept 2015 at 1.6 mb/d in retreat, Permian top-5 operators hold
+  ~70% high-quality inventory, Hormuz 6.7 mb/d shut-ins May 2026
+  conflict-scenario, UNCTAD 70% GHG increase on Singapore-Rotterdam
+  reroute, China REE supply >95% historical and 81% as of 2017 with
+  >5x demand projected by 2030, <1% global REE recycling, TSMC 2nm
+  fab >$45B capex, $100-300M annual power per fab, 1500-2000 gal
+  water per wafer at 3nm, 40k competent worker shortfall by 2025
+  Accenture, 85M unfilled skilled jobs globally Korn Ferry,
+  structural veteran culling Deloitte 2025). CostVector dataclass
+  + 10-entry SUPPRESSED_VECTORS list (V1 supply-chain embodied
+  energy, V2 geopolitical chokepoint + insurance premium, V3 SPR
+  drawdown as hidden subsidy, V4 workforce skill decay +
+  replacement non-linearity, V5 automation substrate dependency on
+  fabs + REE + control systems, V6 REE extraction energy with
+  China-concentrated supply, V7 water + land restoration, V8
+  decline curve reality vs reported EUR, V9 carbon compliance
+  overhead, V10 substrate damage to dependent populations); each
+  carries id + name + description + why_omitted + direction
+  (increases denominator or shrinks numerator).
+  8-entry CASCADE_PIPELINE traces stage-by-stage how the vectors
+  interact (reservoir geology -> extraction equipment -> automation
+  + digital twin -> workforce -> logistics + shipping -> strategic
+  reserves -> refinery + product delivery -> public health /
+  substrate cost); each stage contrasts the stable_supply_
+  assumption with the actual_2026_state.
+  Confidence enum + Claim dataclass + 10-entry CLAIMS list with
+  HIGH/MODERATE confidence and explicit falsifier+confirmer per
+  claim: C1 published EROI omits system costs (HIGH); C2 automation
+  relocates energy upstream not eliminates (HIGH); C3 workforce
+  skill decay is thermodynamic cost (MODERATE); C4 geopolitical
+  chokepoints change EROI (HIGH); C5 SPR drawdown is hidden subsidy
+  (HIGH); C6 decline curves understated in reserves (HIGH); C7
+  substrate damage reduces system capacity (MODERATE); C8 net
+  energy peak may be passed (MODERATE); C9 extraction dependency
+  loop is unstable (HIGH); C10 published EROI is non-falsifiable
+  until audited (HIGH).
+  10-entry SCORING_DIMENSIONS drives the EROIClaim audit gate.
+  audit() returns 4-tier verdict ladder: ADMISSIBLE (>=8/10,
+  system-level falsifiable claim) / PARTIAL (>=5, well-site or
+  sub-system EROI as upper bound) / CONTAMINATED (>=2, omits major
+  vectors, non-comparable to historical conventional) / NON-
+  FALSIFIABLE (<2, describes only a sub-process not delivered
+  energy). 10-entry HONEST_EROI_REQUIREMENTS lists what a systemic
+  EROI calculation would need (bottom-up energy accounting,
+  long-life decline curves, route-specific shipping energy under
+  current chokepoint conditions, SPR refill amortization, workforce
+  thermodynamic accounting, automation life-cycle, substrate cost,
+  uncertainty bounds, falsifiability statement, replicability).
+  15-entry CITATIONS block (EIA STEO Dec 2025, Delannoy et al.,
+  Engineer Fix synthesis, Bakken/Eagle Ford/Permian decline-curve
+  analysis >30k wells, Art Berman, Fortune / EIA Hormuz disruption,
+  UNCTAD shipping emissions, TSMC public capex, Accenture / IOGP,
+  Korn Ferry, GETI 2026, Deloitte 2025, rare-earth literature,
+  Amedor & Giussani 2026).
+  Demo: typical published shale 6:1 -> 0/10 -> NON-FALSIFIABLE
+  (all 10 dimensions flagged); better-than-average study (4/10) ->
+  CONTAMINATED; hypothetical fully-audited 2.5:1 -> 10/10 ->
+  ADMISSIBLE. The substantive operationalization: the audit
+  doesn't argue with the published number; it argues that the
+  published number is not a claim about delivered energy at all
+  until V1-V10 are explicitly accounted for or explicitly bounded.
+  Companion to substrate_damage_audit (same audit-gate pattern
+  applied to behavioral / capacity claims) and core/
+  thermodynamic_price_guard (embodied-energy + EROEI check for
+  price vs energy).
+  CLEANUP DECISIONS: same paste-contamination patterns (smart
+  quotes -> ASCII; **name**/**main** -> __name__/__main__;
+  Unicode em-dash horizontal-line dividers -> ASCII `=` per repo
+  convention; smart apostrophes and en-dashes in REFERENCE_DATA
+  string values -> ASCII; em-dashes in claim/vector descriptions
+  -> ASCII `--`; Unicode `->` arrow in citations -> ASCII;
+  function and class bodies at column 0 throughout the source --
+  re-indented to proper 4-space inside-function and 8-space
+  inside-method positions). Dropped unused `Optional` import from
+  typing. Pure stdlib; chat_paste_check passes (repo-wide exit 0);
+  calibration test suite (11 tests) still passes.
 - Added `metrology/substrate_damage_audit.py`: audit framework for
   behavioral, collapse-prediction, and human-capacity models that
   measures whether the model treats institutional substrate damage
