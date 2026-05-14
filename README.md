@@ -16,6 +16,14 @@ It applies thermodynamic accounting to any system where an organism (biological 
 
 The framework is organism-agnostic. A human truck driver searching an unlit yard for a mislocated trailer and a robot arm burning out sensors in a high-vibration environment are the same problem at different substrates. The physics doesn’t care what’s doing the work. It cares whether the math closes.
 
+**A note on framing:** this framework treats failure events as
+the high-yield outputs of any system, not as embarrassments to
+manage. If that framing feels harsh in a dominant-culture
+reading, see
+[CALIBRATION_AS_PERFECTION.md](https://github.com/JinnZ2/JinnZ2/blob/main/CALIBRATION_AS_PERFECTION.md)
+for the structural reason — the framework operates under the
+rate-based definition of perfection, not the state-based one.
+
 -----
 
 ## Who This Is For
