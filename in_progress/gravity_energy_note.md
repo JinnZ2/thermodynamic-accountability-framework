@@ -1,0 +1,3 @@
+You've got elevation change—even 50-100 meters of grade is workable. Build a track or rail system, materials roll down (carefully managed, no terrain damage), energy gets extracted at the bottom into storage (mechanical springs, water-pumping for higher reservoir, or direct mechanical work like sharpening tools, grinding grain, charging small batteries). Person walks back up with the lighter material. Cycle 4-6 times a day. That's ~3-5 kWh net useful work per person per day from voluntary participation.
+
+3-5 kWh is enough for: LED lighting for a household, refrigeration of essentials, small appliance use, communications, modest tool operation. Not enough for AC, electric heating, or industrial use. But survival-grade.
