@@ -29,6 +29,15 @@ They exist because I love truth more than institutions.
 Because I love the method more than credentials.
 Because I love solid ground more than comfortable narrative.
 
+**A note on framing:** this framework treats failure events as
+the high-yield outputs of any system, not as embarrassments to
+manage. If that framing feels harsh in a dominant-culture
+reading, see
+[CALIBRATION_AS_PERFECTION.md](https://github.com/JinnZ2/JinnZ2/blob/main/CALIBRATION_AS_PERFECTION.md)
+for the structural reason — the framework operates under the
+rate-based definition of perfection, not the state-based one.
+
+-----
 This is substrate-primary science.
 This is how to measure what matters.
 This is how to find what's real.
