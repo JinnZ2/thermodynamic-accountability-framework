@@ -63,6 +63,17 @@ class Situation:
     has_citation_chain: bool = False
     """Claims trace back to documented sources."""
 
+    # ---- measurement characteristics ----
+    measurement_substitution_suspected: bool = False
+    """Current metric in use is suspected of measuring extraction
+    or financial proxy rather than the substrate property the
+    question is actually about (e.g. property value used to
+    assess regional sustainability)."""
+
+    baseline_unknown: bool = False
+    """Sustainable load capacity is not measured; decisions are
+    being made without knowing what the substrate can absorb."""
+
 
 # ============================================================
 # AUDIT RECOMMENDATION
@@ -213,6 +224,39 @@ def recommend_audits(situation: Situation) -> List[AuditRecommendation]:
             optional=True,
         ))
 
+    # Operational/policy consequence when load-vs-capacity gap exists
+    if situation.baseline_unknown or (
+        situation.involves_physical_substrate and situation.involves_deployment_decision
+    ):
+        recs.append(AuditRecommendation(
+            module="assessment_first_principle.py",
+            reason=(
+                "When sustainable load capacity is unmeasured and the "
+                "loss-to-formation arithmetic forbids concurrent recovery, "
+                "stopping new load until baseline exists is the minimum "
+                "responsible action, not an extreme position. Module "
+                "names the four conditions under which the pause becomes "
+                "load-bearing rather than precautionary."
+            ),
+            order=11,
+        ))
+
+    # Instrument selection when measurement substitution is at issue
+    if situation.measurement_substitution_suspected or situation.baseline_unknown:
+        recs.append(AuditRecommendation(
+            module="substrate_measurement_audit.py",
+            reason=(
+                "When financial-extraction metrics (property value, GDP, "
+                "density) are being used to assess substrate capacity, "
+                "the wrong instrument is reporting the wrong number. "
+                "This module specifies the 9 substrate instruments "
+                "(soil carbon, aquifer recharge, insect biomass, etc) "
+                "that answer the actual question, and the operational "
+                "tools that already exist to collect that data."
+            ),
+            order=12,
+        ))
+
     recs.sort(key=lambda r: r.order)
     return recs
 
@@ -252,6 +296,16 @@ if __name__ == "__main__":
             has_calibration_anchor=True,
             involves_physical_substrate=True,
             involves_regulatory_authority=True,
+        ),
+        Situation(
+            description=(
+                "A region's regulators report rising property values and "
+                "GDP growth while local observers report soil loss, "
+                "insect collapse, and well failure"
+            ),
+            measurement_substitution_suspected=True,
+            baseline_unknown=True,
+            involves_physical_substrate=True,
         ),
     ]
 

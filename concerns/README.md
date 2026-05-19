@@ -69,6 +69,27 @@ Pick the path that matches what you're trying to do.
    -- sourced current-case record (2025-2026), 7 layers, citations
    to Texas Tribune / E&E News / Built In / OpenAI's own posts
 
+### "I want to know what to do given the cascade."
+
+1. [`assessment_first_principle.py`](assessment_first_principle.py)
+   -- operational consequence of the 65:1 ratio: stop adding load
+   until baseline measurements exist; not forever, long enough to
+   measure. With the four conditions under which this becomes the
+   minimum responsible action rather than an extreme position.
+2. [`substrate_measurement_audit.py`](substrate_measurement_audit.py)
+   -- instrument selection: what to actually measure (soil carbon,
+   aquifer recharge, insect biomass, microbial diversity, frog
+   phenology, wetland function, forest structure, watershed
+   health) and why the current instrument (property value, GDP,
+   density) is the wrong tool for the question.
+
+### "I want the index for the whole folder."
+
+[`checklist.py`](checklist.py) -- router that takes a described
+Situation and recommends which audits to run, in what order, with
+per-module rationale. Use this when you're not sure where to
+start.
+
 ---
 
 ## How the modules compose
@@ -98,6 +119,19 @@ Pick the path that matches what you're trying to do.
   (5-layer constraint         load_map
    stack with calibration
    anchors)
+
+
+  ARITHMETIC                  OPERATIONAL                  INSTRUMENT
+  CONSTRAINT                  CONSEQUENCE                  SELECTION
+  -----------                 ------------                 -----------
+  cascade_failure_      -->   assessment_first_      -->   substrate_
+  rural_degradation           principle                    measurement_
+       |                            |                       audit
+  (65:1 loss-to-              (stop adding load            (what to
+   formation ratio;            until baseline exists)       measure with
+   recovery cannot run                                      and why current
+   concurrently with load)                                  instrument is
+                                                            wrong)
 ```
 
 The standard application path for a concrete case:
@@ -111,6 +145,9 @@ The standard application path for a concrete case:
    per unit effort?)
 5. Score the certification chain (is this decision being made on
    evidence or institutional signoff?)
+6. Check the metrology (are the right substrate instruments being
+   used, or is measurement substitution producing false
+   "success"?)
 
 ---
 
