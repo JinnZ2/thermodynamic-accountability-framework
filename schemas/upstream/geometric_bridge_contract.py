@@ -281,7 +281,7 @@ def validate_upstream_surface(namespace: Dict[str, Any]) -> SurfaceCheckResult:
 # Mirror of upstream's cross_repo_bridge_contract.py. Loads either
 # the live upstream's bridge_contract_manifest.json (when the package
 # is installed) or our local mirror at
-# schemas/bridge_contract_manifest.json. Provides the same accessor
+# schemas/upstream/bridge_contract_manifest.json. Provides the same accessor
 # surface declared by upstream's __all__:
 #     load_bridge_contract, list_bridge_domains, get_bridge_domain,
 #     get_solver_name, get_top_level_encoder, get_silicon_entry_point,
@@ -310,7 +310,7 @@ def load_bridge_contract() -> Dict[str, Any]:
     Resolution order:
       1. The live upstream package's manifest, if importable
          (`from cross_repo_bridge_contract import load_bridge_contract`)
-      2. TAF's local mirror at schemas/bridge_contract_manifest.json
+      2. TAF's local mirror at schemas/upstream/bridge_contract_manifest.json
 
     The two are kept in lockstep by surface_staleness_check.py. The
     upstream commit SHA pinned in this contract (UPSTREAM_COMMIT_SHA)

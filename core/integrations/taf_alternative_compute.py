@@ -66,7 +66,7 @@ try:
     GEOMETRIC_BRIDGE_AVAILABLE = True
 except ImportError:
     try:
-        from schemas.geometric_bridge_contract import (  # type: ignore
+        from schemas.upstream.geometric_bridge_contract import (  # type: ignore
             HardwareData, DrillDepth, BridgeTarget,
             HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS, LIFETIME_BANDS,
             VOLTAGE_BANDS, CURRENT_BANDS,
@@ -77,7 +77,7 @@ except ImportError:
         import pathlib as _pathlib
         _repo_root = _pathlib.Path(__file__).resolve().parents[2]
         _sys.path.insert(0, str(_repo_root))
-        from schemas.geometric_bridge_contract import (  # type: ignore  # noqa: E402
+        from schemas.upstream.geometric_bridge_contract import (  # type: ignore  # noqa: E402
             HardwareData, DrillDepth, BridgeTarget,
             HEALTH_BANDS, TEMP_BANDS, NOISE_BANDS, DRIFT_BANDS, LIFETIME_BANDS,
             VOLTAGE_BANDS, CURRENT_BANDS,

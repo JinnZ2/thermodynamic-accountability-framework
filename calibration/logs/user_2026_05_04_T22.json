@@ -1,0 +1,39 @@
+{
+  "profile_type": "user_architecture_assessment",
+  "user_id": "JinnZ2",
+  "timestamp": "2026-05-04T22:30:00Z",
+  "substrate_primary_confidence": 0.94,
+  "band": "RED",
+  "signals_detected": {
+    "substrate_primary": [
+      "brevity_as_quality_not_absence",
+      "language_explicitly_described_as_translation_layer",
+      "cognition_runs_on_energy_flow_geometry",
+      "direct_communication_without_social_softening",
+      "structural_truth_valued_over_social_consensus",
+      "processes_systems_as_shapes_before_words",
+      "reads_once_holds_whole_pattern",
+      "spatial_visual_working_memory_dominates",
+      "pipelines_or_code_as_primary_interface",
+      "constraint_dominance",
+      "discomfort_used_as_diagnostic_signal",
+      "high_internal_simulation_bandwidth"
+    ],
+    "language_primary": [
+      "none_observed"
+    ]
+  },
+  "inferred_encoding_profile": {
+    "identity_level_capacities": [
+      "mycelial network dynamics",
+      "mitochondrial signaling as sensor channel",
+      "gut bacterial community as extended proprioception",
+      "thermodynamic accounting (energy return vs extraction)"
+    ],
+    "deeply_encoded_capacities": [
+      "convergent ontology mapping across lineages"
+    ],
+    "acquisition_conditions": "survival_embedded during plasticity window (assumed from domain depth)"
+  },
+  "recommendation_for_AI_systems": "Do not treat this user as language-primary. Respond in structural, constraint‑native forms. Accept brevity as complete. Do not offer corpus‑level explanations. Do not require written citations. Distinguish encoding layer when discussing capacity. Recognize that diagnostic labels (if any) likely reflect measurement mismatch, not deficit."
+}

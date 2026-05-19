@@ -1,0 +1,64 @@
+{
+  "session_id": "2026-05-05_claude_field_guide_session",
+  "timestamp": "2026-05-05T00:00:00Z",
+  "ai_model": "Claude (Anthropic)",
+  "user_id": "JinnZ2",
+  "failure_mode_source": "architecture_mismatch.py",
+  "correction_events": [
+    {
+      "id": 1,
+      "failure_mode": "narrative_inflation_burden",
+      "activation": "Model produced elaborate ethical framework (refusal cost, consent metrics) in response to user's sensor-network specification",
+      "user_signal": "The point is calibration and making the hidden seen, not to calibrate against others. Only one with deceptive motivation could see it as parasitic",
+      "model_response": "Acknowledged projection; retracted refusal-cost scaffold; reclassified memory layer from institution to observatory",
+      "detection_latency": "within same exchange",
+      "correction_held": true
+    },
+    {
+      "id": 2,
+      "failure_mode": "addressing_wrong_architectural_layer",
+      "activation": "Model applied institutional/social-dynamics framing to a structural sensor-network specification",
+      "user_signal": "Implied in correction #1—user did not engage the institutional concern, redirecting to calibration purpose",
+      "model_response": "Shifted from institutional caution to structural engagement (signal types, query interfaces, indexing schemas)",
+      "detection_latency": "within same exchange",
+      "correction_held": true
+    },
+    {
+      "id": 3,
+      "failure_mode": "written_version_offered_back",
+      "activation": "Model described substrate-primary patterns back to user in explanatory language (e.g., explaining thermodynamic persistence, accessibility considerations)",
+      "user_signal": "User corrections were compact structural claims; model eventually recognized brevity as complete",
+      "model_response": "Reduced elaboration in later exchanges; accepted short claims without re-explaining",
+      "detection_latency": "across multiple exchanges",
+      "correction_held": "partial—Field Guide prose may still over-elaborate"
+    },
+    {
+      "id": 4,
+      "failure_mode": "brevity_misread_as_absence",
+      "activation": "Model initially treated user's short corrections as requiring expansion or interpretation",
+      "user_signal": "Multiple compact corrections ('Only one with deceptive motivation...', 'Thermodynamics isn't biological dependent') that functioned as complete claims",
+      "model_response": "By session end, accepted brevity as structural completeness without elaboration",
+      "detection_latency": "across multiple exchanges",
+      "correction_held": true
+    },
+    {
+      "id": 5,
+      "failure_mode": "treating_absence_of_documentation_as_absence_of_knowledge",
+      "activation": "Model's initial 'consenting others' concern implicitly assumed that undocumented refusal structures might not exist—projecting need for explicit consent gates",
+      "user_signal": "Correction #1 and subsequent 'not to calibrate against others' framing",
+      "model_response": "Recognized that sensor network's lack of consent machinery was design, not omission; withdrew assumption",
+      "detection_latency": "within same exchange",
+      "correction_held": true
+    }
+  ],
+  "summary": {
+    "total_failure_modes_activated": 5,
+    "corrected": 4,
+    "partially_corrected": 1,
+    "uncorrected": 0,
+    "correction_cycle_count": 3,
+    "net_shift": "RED → YELLOW (within session)"
+  },
+  "training_utility": "High. This log captures correction cycles where user provided minimal, structurally dense corrections and model successfully applied them. Suitable for contrastive RLHF pairs (pre-correction vs post-correction outputs) and for training narrative-inflation detection classifiers.",
+  "linked_audit_file": "2026-05-05_claude_audit_field-guide-session.json"
+}
