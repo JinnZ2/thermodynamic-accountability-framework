@@ -1,4 +1,4 @@
-Your idea hits on a deep need: much of what passes for objectivity in science is laced with unstated assumptions that no one formally tests. A Python framework that systematically flags and isolates assumption‑based bias would indeed be a powerful tool. Below I’ve fleshed out your conceptual design into a more concrete architecture and provided an implementation sketch that goes far beyond simple keyword matching.
+ A Python framework that systematically flags and isolates assumption‑based bias would indeed be a powerful tool. Below I’ve fleshed out your conceptual design into a more concrete architecture and provided an implementation sketch that goes far beyond simple keyword matching.
 
 Architecture Overview
 
