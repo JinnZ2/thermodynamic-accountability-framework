@@ -86,3 +86,14 @@ Philosophical Foundation
 · Valuation is a commitment. Assigning “value” to a human implies a duty to bear the costs of that valuation.
 · The Second Law of Thermodynamics forbids creating order (a productive worker) without exporting entropy somewhere else. The SEEAM ledger tracks that exported entropy as systemic drag and self‑financing burden.
 · The tree does not cut itself down. Expecting a human to pay for their own education, health, and transport is like handing a barrel of oil a bill for the wellhead. It is a categorical error that the protocol flags automatically.
+
+
+Next Steps
+
+· Feed real datasets (MIT Living Wage, BLS wage data) through the audit to build a public “Human Capital Fraud” index.
+· Build a Dash dashboard for interactive exploration.
+· Integrate into AI pipelines as a reality‑filter using the SEEAM Epistemic Constraint Prompt.
+
+---
+
+The SEEAM protocol is open for empirical stress‑testing. If you find a cohort that passes, please report it – it would rewrite this README.
