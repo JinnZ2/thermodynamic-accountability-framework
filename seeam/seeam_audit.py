@@ -1,12 +1,14 @@
-# seeam_unified.py
+# seeam_audit.py
 """
-SEEAM Unified Audit Module
-Systemic Energy-Extraction Audit – Falsifies the "Human Capital" Hypothesis
-Thermodynamic & Resource-Economics Foundation
+SEEAM: Systemic Energy-Extraction Audit
+Falsifies the "human capital" hypothesis using thermodynamic and
+resource-economics accounting. Companion to protocol.md +
+metrics_spec.md in this folder.
+
+Stdlib only.
 """
 
 import json
-import numpy as np
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional, Tuple
 
