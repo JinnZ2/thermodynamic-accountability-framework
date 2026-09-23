@@ -474,6 +474,29 @@ GATE_MAP = [
      "UNMEASURED"),
 ]
 
+# What transport competence is made of, and where each part is measured.
+# Operator framing: "outside the windshield has more to do with transport
+# than staying between the lines"  [OBSERVED]
+COMPETENCE_MEASURAND = [
+    # component, CDL test, hiring screen, automation benchmark, status
+    ("lane / vehicle control", "YES (road + backing)", "indirect (MVR)",
+     "YES -- core metric", "measured everywhere"),
+    ("mechanical aptitude", "partial -- pre-trip inspection as "
+     "procedure", "no", "no (machine self-diagnostics only)",
+     "procedure measured, diagnosis not"),
+    ("weather reading / adaptation", "no practical test", "no",
+     "envelope limit, not a skill score", "UNMEASURED"),
+    ("split-second environmental decisions", "incidental on road test",
+     "no", "disengagement counts, not decision quality", "UNMEASURED"),
+    ("state regulation (fatigue, rest on need)", "no", "no", "n/a",
+     "UNMEASURED"),
+]
+# DERIVED: the part every instrument measures (lines) is the part the
+# machine is best at; the parts G0 interruptions DEMAND (weather, events,
+# mechanical) are the parts no instrument scores. In the complementarity
+# design the human's job is exactly the unmeasured column -- so hiring,
+# training and pay are keyed to the wrong part of the job.
+
 G0_NOTES = [
     "Sleep in a MOVING cab: operator first-hand -- no trouble falling "
     "asleep when she TRUSTED the partner and they drove SAFE and "
@@ -511,6 +534,12 @@ def addendum2():
             print("    window %-9s inertia %-4s = %3d min -> "
                   "P(uninterrupted) = %.2f"
                   % (block, inertia, w, p_uninterrupted(lam, w)))
+    print("\n  COMPETENCE MEASURAND (where each part is scored)")
+    for c, cdl, scr, auto, st in COMPETENCE_MEASURAND:
+        print("    %-40s CDL:%s | screen:%s | automation:%s -> %s"
+              % (c, cdl, scr, auto, st))
+    print("    DERIVED: instruments score the lines; G0 interruptions "
+          "demand what nobody scores.")
     print("\n  G0 SLEEP-QUALITY FACTORS")
     for f, m, st in SLEEP_QUALITY_FACTORS:
         print("    %-17s %s  [%s]" % (f, m, st))

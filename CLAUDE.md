@@ -592,7 +592,11 @@ thermodynamic-accountability-framework/
 │                                 #   the wheel" (rest act vs hazard),
 │                                 #   G0-G4 human+machine gate map
 │                                 #   with Poisson G0 window arithmetic
-│                                 #   on PLACEHOLDER rates, X1-X2
+│                                 #   on PLACEHOLDER rates,
+│                                 #   COMPETENCE_MEASURAND (5 parts of
+│                                 #   transport competence x where
+│                                 #   CDL / hiring / automation score
+│                                 #   them; 3 of 5 UNMEASURED), X1-X2
 │                                 #   exploration gaps. Stdlib only.
 │
 ├── calibration/                   # Environment-fragility diagnostic (CC0)
@@ -3130,6 +3134,10 @@ session's notes only.
   in output. CLEANUP: moved mid-file `import math` to the top;
   added docstrings to interrupt_rate / g0_window_needed. Content
   otherwise verbatim. Stdlib only; chat_paste_check passes.
+  Follow-up: added COMPETENCE_MEASURAND to Addendum 2 (lane
+  control measured everywhere; weather reading, split-second
+  environmental decisions, state regulation UNMEASURED by CDL,
+  hiring screen and automation benchmark alike).
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations
