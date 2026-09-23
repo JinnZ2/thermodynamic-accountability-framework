@@ -579,7 +579,21 @@ thermodynamic-accountability-framework/
 ├── labor_thermodynamics/          # Workforce attribution audit (markdown specs)
 │   ├── README.md                 # Five compounding measurement failures
 │   ├── failure_modes.md          # Detailed L1-L5 mechanism specs
-│   └── measurement_problem.md    # Metrology critique
+│   ├── measurement_problem.md    # Metrology critique
+│   └── driver_hours_evidence_register.py  # Evidence register:
+│                                 #   what is OBSERVED / SECONDARY /
+│                                 #   UNREAD / UNMEASURED about long
+│                                 #   driving days, fatigue, tenure.
+│                                 #   11 sources with sampling-frame
+│                                 #   flags (ON_ROAD, ADMISSION,
+│                                 #   VENDOR, N_OF_1, ARCHIVE,
+│                                 #   TERM_DRIFT), 11 questions QA-QK,
+│                                 #   TERM_NOTES on "fell asleep at
+│                                 #   the wheel" (rest act vs hazard),
+│                                 #   G0-G4 human+machine gate map
+│                                 #   with Poisson G0 window arithmetic
+│                                 #   on PLACEHOLDER rates, X1-X2
+│                                 #   exploration gaps. Stdlib only.
 │
 ├── calibration/                   # Environment-fragility diagnostic (CC0)
 │   ├── README.md                 # Repo overview
@@ -3107,6 +3121,15 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `labor_thermodynamics/driver_hours_evidence_register.py`
+  (2026-09-23): register of what the record can and cannot answer
+  about driver hours, fatigue, and tenure. Gaps are the product:
+  5 of 10 core questions UNMEASURED. Placed beside
+  operator_regulation_audit.py (same metrology-only ledger style).
+  G0 arithmetic runs on PLACEHOLDER event rates, labelled as such
+  in output. CLEANUP: moved mid-file `import math` to the top;
+  added docstrings to interrupt_rate / g0_window_needed. Content
+  otherwise verbatim. Stdlib only; chat_paste_check passes.
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations
