@@ -596,7 +596,10 @@ thermodynamic-accountability-framework/
 │                                 #   COMPETENCE_MEASURAND (5 parts of
 │                                 #   transport competence x where
 │                                 #   CDL / hiring / automation score
-│                                 #   them; 3 of 5 UNMEASURED), X1-X2
+│                                 #   them; 3 of 5 UNMEASURED),
+│                                 #   TIMESCALE_MISMATCH (reaction /
+│                                 #   anticipation / qualification
+│                                 #   horizon, human vs machine), X1-X2
 │                                 #   exploration gaps. Stdlib only.
 │
 ├── calibration/                   # Environment-fragility diagnostic (CC0)
@@ -3138,6 +3141,12 @@ session's notes only.
   control measured everywhere; weather reading, split-second
   environmental decisions, state regulation UNMEASURED by CDL,
   hiring screen and automation benchmark alike).
+  Follow-up: added TIMESCALE_MISMATCH (3 scales, DERIVED):
+  reaction ms vs ~1 s + 15-30 min inertia -> handoff problem;
+  anticipation ms-reactive vs minutes-ahead -> correct early
+  slowdown read as anomaly; qualification horizon short episodes
+  vs weeks -> predicted-human-action sims cannot contain the long
+  horizon. Each row links to the gate / question it bears on.
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations

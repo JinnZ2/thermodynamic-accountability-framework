@@ -497,6 +497,31 @@ COMPETENCE_MEASURAND = [
 # design the human's job is exactly the unmeasured column -- so hiring,
 # training and pay are keyed to the wrong part of the job.
 
+# Human and machine operate on different clocks at three scales.
+# Status DERIVED; the human reaction figure (~1 s) is a common value,
+# NOT VERIFIED here; inertia range shares REST_BLOCK's NOT VERIFIED flag.
+TIMESCALE_MISMATCH = [
+    # scale, machine, human, consequence, links
+    ("reaction",
+     "milliseconds",
+     "~1 s awake; 15-30 min groggy after waking (sleep inertia)",
+     "handoff design problem",
+     "G0 (REST_BLOCK inertia_min, handoff_lead_min)"),
+    ("anticipation",
+     "reacts in milliseconds to what is visible now",
+     "plans MINUTES ahead: gear and speed set before the grade",
+     "machine sees a correct early slowdown with no hazard in view "
+     "and reads it as an ANOMALY",
+     "COMPETENCE_MEASURAND (anticipation unscored; disengagement "
+     "counts score the wrong sign)"),
+    ("qualification horizon",
+     "evaluations run over short episodes",
+     "skill shows over WEEKS of conditions",
+     "a sim of 'predicted human actions' is built from the short "
+     "horizon, so it cannot contain the long one",
+     "G3 / QE (tenure curve), QF (fatigue type)"),
+]
+
 G0_NOTES = [
     "Sleep in a MOVING cab: operator first-hand -- no trouble falling "
     "asleep when she TRUSTED the partner and they drove SAFE and "
@@ -540,6 +565,14 @@ def addendum2():
               % (c, cdl, scr, auto, st))
     print("    DERIVED: instruments score the lines; G0 interruptions "
           "demand what nobody scores.")
+    print("\n  TIMESCALE MISMATCH  [DERIVED]")
+    for i, (scale, mach, hum, cons, links) in enumerate(
+            TIMESCALE_MISMATCH, 1):
+        print("    %d %s" % (i, scale))
+        print("       machine: %s" % mach)
+        print("       human  : %s" % hum)
+        print("       -> %s" % cons)
+        print("       links  : %s" % links)
     print("\n  G0 SLEEP-QUALITY FACTORS")
     for f, m, st in SLEEP_QUALITY_FACTORS:
         print("    %-17s %s  [%s]" % (f, m, st))
