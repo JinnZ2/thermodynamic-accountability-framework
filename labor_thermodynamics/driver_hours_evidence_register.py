@@ -32,8 +32,6 @@ Nothing here is a finding about any individual. It is a map of which
 questions the record can and cannot answer yet.
 """
 
-import math
-
 SOURCES = {
     "S1": dict(
         cite="Braver, Preusser, Preusser, Baum, Beilock, Ulmer (1992). "
@@ -381,6 +379,8 @@ def addendum():
 # for this design (they stay open as science, not as design inputs).
 # ===========================================================================
 
+import math
+
 # G0 needs: the uninterrupted window must hold a usable rest block PLUS
 # the time to become takeover-capable after waking.
 REST_BLOCK = dict(
@@ -424,7 +424,6 @@ EVENT_CLASSES = [
 
 
 def interrupt_rate(classes):
-    """Human-required interrupts per hour: sum of rate * p_machine_fails."""
     return sum(r * p for _, r, p, _ in classes)
 
 
@@ -437,8 +436,6 @@ def p_uninterrupted(lam_per_h, minutes):
 
 
 def g0_window_needed(block="nap_min", inertia="high"):
-    """Minutes of uninterrupted machine driving G0 needs:
-    rest block + sleep inertia + handoff lead."""
     i = REST_BLOCK["inertia_min"][1 if inertia == "high" else 0]
     return REST_BLOCK[block] + i + REST_BLOCK["handoff_lead_min"]
 
@@ -507,8 +504,10 @@ TRUST_PROTOCOL = dict(
     machine_side_rule="log the human's lead time between action and "
                       "hazard; never score an unexplained early action as "
                       "error until the hazard window has closed "
-                      "(-> aeb-false-positive-measurand: override scored as "
-                      "error)  [PROPOSED]",
+                      "(same defect as automatic-emergency-braking takeover "
+                      "studies, where a correct driver override of a false "
+                      "machine intervention is logged as driver error)  "
+                      "[PROPOSED]",
     contrast="current machine validation = vendor miles + disengagement "
              "counts on mapped lanes; current human qualification = CDL "
              "+ months licensed. Neither is the protocol above.",
@@ -536,36 +535,6 @@ COMPETENCE_MEASURAND = [
 # mechanical) are the parts no instrument scores. In the complementarity
 # design the human's job is exactly the unmeasured column -- so hiring,
 # training and pay are keyed to the wrong part of the job.
-# DERIVED (from TIMESCALE_MISMATCH row 2): a skilled driver slows early
-# for a grade or hazard the sensors cannot see yet; an anomaly detector
-# flags that slowdown. The better the anticipation, the more anomalies
-# are counted -- a benchmark built on those counts ranks mastery as
-# noise. Sign inversion, not just a missing column.
-
-# Human and machine operate on different clocks at three scales.
-# Status DERIVED; the human reaction figure (~1 s) is a common value,
-# NOT VERIFIED here; inertia range shares REST_BLOCK's NOT VERIFIED flag.
-TIMESCALE_MISMATCH = [
-    # scale, machine, human, consequence, links
-    ("reaction",
-     "milliseconds",
-     "~1 s awake; 15-30 min groggy after waking (sleep inertia)",
-     "handoff design problem",
-     "G0 (REST_BLOCK inertia_min, handoff_lead_min)"),
-    ("anticipation",
-     "reacts in milliseconds to what is visible now",
-     "plans MINUTES ahead: gear and speed set before the grade",
-     "machine sees a correct early slowdown with no hazard in view "
-     "and reads it as an ANOMALY",
-     "COMPETENCE_MEASURAND (anticipation unscored; disengagement "
-     "counts score the wrong sign)"),
-    ("qualification horizon",
-     "evaluations run over short episodes",
-     "skill shows over WEEKS of conditions",
-     "a sim of 'predicted human actions' is built from the short "
-     "horizon, so it cannot contain the long one",
-     "G3 / QE (tenure curve), QF (fatigue type)"),
-]
 
 G0_NOTES = [
     "Sleep in a MOVING cab: operator first-hand -- no trouble falling "
@@ -584,13 +553,6 @@ G0_NOTES = [
     "that handles work zones alone removes the most frequent interrupter.",
     "Clustering: interrupters bunch in the same hours (weather + traffic "
     "+ incidents). Poisson overstates usable windows -- treat as ceiling.",
-    "Unplanned wake: g0_window_needed() budgets sleep inertia only for a "
-    "PLANNED wake at the end of the rest block. When the machine calls "
-    "for takeover mid-sleep, the human gets handoff_lead_min (5, "
-    "placeholder) against 15-30 min of inertia -> arrives groggy. A 5 "
-    "min lead is short under ANY event rate; the unplanned-call path "
-    "needs its own budget (longer lead, a minimal-risk stop, or no "
-    "sleep while that event class is possible)  [DERIVED].",
 ]
 
 
@@ -620,16 +582,6 @@ def addendum2():
               % (c, cdl, scr, auto, st))
     print("    DERIVED: instruments score the lines; G0 interruptions "
           "demand what nobody scores.")
-    print("    DERIVED: anomaly counts invert the sign -- correct early "
-          "slowdowns score as noise.")
-    print("\n  TIMESCALE MISMATCH  [DERIVED]")
-    for i, (scale, mach, hum, cons, links) in enumerate(
-            TIMESCALE_MISMATCH, 1):
-        print("    %d %s" % (i, scale))
-        print("       machine: %s" % mach)
-        print("       human  : %s" % hum)
-        print("       -> %s" % cons)
-        print("       links  : %s" % links)
     print("\n  G0 SLEEP-QUALITY FACTORS")
     for f, m, st in SLEEP_QUALITY_FACTORS:
         print("    %-17s %s  [%s]" % (f, m, st))
@@ -675,8 +627,7 @@ EXPLORATION = [
               "literature, ISO 2631 field, NOT searched)",
         anchor="operator first-hand: carried as infant, slept on travois, "
                "hay wagon, canoe  [OBSERVED, N=1]",
-    ),
-    dict(
+    ),    dict(
         xid="X2",
         gap="Community practices for sleeping in daylight (high-latitude / "
             "long-photoperiod seasons) -- ever studied as METHOD, or "

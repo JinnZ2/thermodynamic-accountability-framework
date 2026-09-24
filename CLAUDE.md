@@ -599,7 +599,8 @@ thermodynamic-accountability-framework/
 │                                 #   them; 3 of 5 UNMEASURED),
 │                                 #   TRUST_PROTOCOL (bidirectional
 │                                 #   qualification before sleeping),
-│                                 #   TIMESCALE_MISMATCH (reaction /
+│                                 #   timescales carried inside
+│                                 #   TRUST_PROTOCOL (reaction /
 │                                 #   anticipation / qualification
 │                                 #   horizon, human vs machine), X1-X2
 │                                 #   exploration gaps. Stdlib only.
@@ -3178,6 +3179,20 @@ session's notes only.
   QUALIFICATION PROTOCOL. Resolves the machine_side_rule reference in
   in_progress/serpentine_grade_esp_notes.md. Merged, not replaced, so
   the file hash differs from the operator's copy.
+  Follow-up (2026-09-24): file REPLACED verbatim with the operator's
+  copy, sha256 fbb2dab8e9b780688cd61e7b15158d61f042a6f0166320ef6fb6f07624a3dedd
+  (690 lines; hash verified before commit; supersedes an interim
+  314d45791e... copy that was never committed). machine_side_rule now
+  carries an inline definition (AEB takeover studies: a correct driver
+  override of a false machine intervention is logged as driver error)
+  in place of the working-notes name "aeb-false-positive-measurand".
+  Relative to 19533e1 the operator copy DROPS, held for the operator's
+  per-item decision and NOT re-added: (1) TIMESCALE_MISMATCH table +
+  its print block; (2) G0_NOTES unplanned-wake note; (3) anomaly-sign
+  DERIVED comment + print line; (4) docstrings on interrupt_rate /
+  g0_window_needed; (5) `import math` back mid-file. All recoverable
+  from 19533e1. TRUST_PROTOCOL.direction still says "TIMESCALE
+  MISMATCH (below)" with no table below; carried as is.
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations
