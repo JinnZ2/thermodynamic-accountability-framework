@@ -65,6 +65,9 @@ COLLAPSE_COMPRESSION_MAX_PCT = 81
 # Coral reef tipping point CROSSED -- mass bleaching outpacing recovery.
 CORAL_TIPPING_POINT_CROSSED_2025 = True
 PLANETARY_BOUNDARIES_BREACHED_OF_9 = 7      # incl. ocean acidification (new 2025)
+# Confirmed by Planetary Health Check 2026, Summary Report, PBScience/PIK
+# (released 2026-09-21): 7 of 9, all 7 at highest recorded transgression.
+# Per-CV table: earth-systems-physics/planetary_health_check_2026.py.
 
 # Cascade thresholds (RCP 8.5 high-emissions trajectory):
 DISRUPTION_TROPICAL_OCEAN_BY_YEAR = 2030
