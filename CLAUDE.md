@@ -2835,6 +2835,21 @@ thermodynamic-accountability-framework/
 │   │                             #   metrology/ -- removed in this
 │   │                             #   commit since clean versions
 │   │                             #   already exist.
+│   ├── serpentine_grade_esp_notes.md  # Notes (2026-09-24): ESP
+│   │                             #   rollover trigger on serpentine
+│   │                             #   9-13% descents. Sensor on tractor
+│   │                             #   cab vs at-risk trailer (FAULT A),
+│   │                             #   grade/bank contamination of the
+│   │                             #   lateral channel, envelope map
+│   │                             #   (flat single turn rated;
+│   │                             #   serpentine x downgrade unrated),
+│   │                             #   driver-correction window, scoring
+│   │                             #   -> slowdown -> pass -> buggy chain,
+│   │                             #   two-lane closure + trapped-rig
+│   │                             #   cost, regional V1-V5 stack,
+│   │                             #   PROPOSED DESCENT_RECORD. Companion
+│   │                             #   to labor_thermodynamics/driver_
+│   │                             #   hours_evidence_register.py.
 │   └── build_priority_notes.md   # Roadmap: substrate_baseline_registry
 │                                 #   first, then measurement_corruption_
 │                                 #   matrix, regime_shift_detector,
@@ -3151,6 +3166,9 @@ session's notes only.
   unplanned wake has no inertia budget (5 min placeholder lead vs
   15-30 min inertia); (b) COMPETENCE_MEASURAND: anomaly counts
   invert sign, scoring correct early slowdowns as noise.
+  Follow-up: added `in_progress/serpentine_grade_esp_notes.md`
+  (operator notes, verbatim in a code fence; header links FAULT B
+  to the register's anomaly-sign note and closure costs to G4/QH).
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations
