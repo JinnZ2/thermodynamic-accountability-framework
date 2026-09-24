@@ -322,10 +322,10 @@ class MasteryBaseline:
     documented_capability: Dict[FluidityDimension, str]
 
 
-def kavik_baseline() -> MasteryBaseline:
+def practitioner_baseline() -> MasteryBaseline:
     """The mastery baseline used as success specification."""
     return MasteryBaseline(
-        practitioner_id="kavik_long_haul",
+        practitioner_id="long_haul_practitioner",
         practitioner_field_experience_years=30.0,
         practitioner_total_operational_units=6_000_000.0,  # miles
         practitioner_substrate_primary=True,
@@ -451,7 +451,7 @@ def success_specification_audit(
     better engineering. The optimization target itself is wrong.
     """
     if baseline is None:
-        baseline = kavik_baseline()
+        baseline = practitioner_baseline()
 
     r = SuccessSpecificationResult(
         aimed_at_success=False,

@@ -841,7 +841,7 @@ thermodynamic-accountability-framework/
 │   │                             #   distinct from "retreat to prior
 │   │                             #   under uncertainty". Triggering
 │   │                             #   case (real lived incident):
-│   │                             #   user (Kavik, smaller frame,
+│   │                             #   user (smaller frame,
 │   │                             #   hands sized for the access
 │   │                             #   geometry) replaces cylinder 8
 │   │                             #   spark plug on a Suburban (small-
@@ -4002,7 +4002,7 @@ session's notes only.
   fluidity_aim_score = 7 positive-aim flags / 7; inverse_aim_
   score = 2 negative-aim flags / 2; is_aimed_at_inverse fires
   when inverse > fluidity OR fluidity < 0.30. MasteryBaseline
-  dataclass + kavik_baseline() function carrying a 30-year /
+  dataclass + practitioner_baseline() function carrying a 30-year /
   6M-mile practitioner profile with documented capability
   across all 7 dimensions, used as ceiling target rather than
   comparison metric. TrainingDataSufficiency tracks fraction
@@ -4046,7 +4046,7 @@ session's notes only.
   class). All 7 FluiditySpec entries preserved verbatim
   including the multi-line mastery_description /
   measurable_criteria / inverse_failure_mode strings.
-  Practitioner-baseline framing (kavik_baseline function name,
+  Practitioner-baseline framing (practitioner_baseline function name,
   30y/6M-mile profile) preserved as content-level naming the
   user has been carrying across the calibration/ attribution
   stack and the transportation audit family. Pure stdlib;
@@ -4611,7 +4611,7 @@ session's notes only.
   of a corpus prior strong enough to operate as an axiom rather
   than a probability distribution.
   Triggering case (real lived incident reported by user): user
-  Kavik (smaller frame, hands sized for the access geometry)
+  a smaller-framed operator (hands sized for the access geometry)
   replaces cylinder 8 spark plug on a Suburban -- cylinder 8 on
   this engine configuration is a confined space behind / under
   engine accessories, physically impossible or impractical for
@@ -6010,7 +6010,7 @@ session's notes only.
 - Merged the physics-compliant expansion engine into
   `metrology/orbital_octa_v2.py`, with AI-usability biases
   per user guidance ("merge best parts; emphasis on usability
-  for AI"). Authors credited: Jami (Kavik Ulu) + JinnZ2.
+  for AI"). Authors credited: JinnZ2.
   Merge decisions:
   - sharpness kept as a tunable parameter (callers pick
     structure-preservation at sharpness=1 or angular focus at

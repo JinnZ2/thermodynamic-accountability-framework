@@ -84,7 +84,7 @@ audit chain.
 
 ### Substrate-primary collaborator constraints
 
-The substrate-primary collaborator on this repo (Kavik) declares:
+The substrate-primary collaborator on this repo (JinnZ2) declares:
 
 ```
 - narrative does not come naturally; practiced but
