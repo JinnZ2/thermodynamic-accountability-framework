@@ -3147,6 +3147,10 @@ session's notes only.
   slowdown read as anomaly; qualification horizon short episodes
   vs weeks -> predicted-human-action sims cannot contain the long
   horizon. Each row links to the gate / question it bears on.
+  Follow-up: two DERIVED consequences added -- (a) G0_NOTES:
+  unplanned wake has no inertia budget (5 min placeholder lead vs
+  15-30 min inertia); (b) COMPETENCE_MEASURAND: anomaly counts
+  invert sign, scoring correct early slowdowns as noise.
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations

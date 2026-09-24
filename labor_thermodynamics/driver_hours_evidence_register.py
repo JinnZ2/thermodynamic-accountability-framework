@@ -496,6 +496,11 @@ COMPETENCE_MEASURAND = [
 # mechanical) are the parts no instrument scores. In the complementarity
 # design the human's job is exactly the unmeasured column -- so hiring,
 # training and pay are keyed to the wrong part of the job.
+# DERIVED (from TIMESCALE_MISMATCH row 2): a skilled driver slows early
+# for a grade or hazard the sensors cannot see yet; an anomaly detector
+# flags that slowdown. The better the anticipation, the more anomalies
+# are counted -- a benchmark built on those counts ranks mastery as
+# noise. Sign inversion, not just a missing column.
 
 # Human and machine operate on different clocks at three scales.
 # Status DERIVED; the human reaction figure (~1 s) is a common value,
@@ -539,6 +544,13 @@ G0_NOTES = [
     "that handles work zones alone removes the most frequent interrupter.",
     "Clustering: interrupters bunch in the same hours (weather + traffic "
     "+ incidents). Poisson overstates usable windows -- treat as ceiling.",
+    "Unplanned wake: g0_window_needed() budgets sleep inertia only for a "
+    "PLANNED wake at the end of the rest block. When the machine calls "
+    "for takeover mid-sleep, the human gets handoff_lead_min (5, "
+    "placeholder) against 15-30 min of inertia -> arrives groggy. A 5 "
+    "min lead is short under ANY event rate; the unplanned-call path "
+    "needs its own budget (longer lead, a minimal-risk stop, or no "
+    "sleep while that event class is possible)  [DERIVED].",
 ]
 
 
@@ -565,6 +577,8 @@ def addendum2():
               % (c, cdl, scr, auto, st))
     print("    DERIVED: instruments score the lines; G0 interruptions "
           "demand what nobody scores.")
+    print("    DERIVED: anomaly counts invert the sign -- correct early "
+          "slowdowns score as noise.")
     print("\n  TIMESCALE MISMATCH  [DERIVED]")
     for i, (scale, mach, hum, cons, links) in enumerate(
             TIMESCALE_MISMATCH, 1):
