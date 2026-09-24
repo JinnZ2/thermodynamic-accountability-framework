@@ -474,6 +474,46 @@ GATE_MAP = [
      "UNMEASURED"),
 ]
 
+# Trust qualification before the human sleeps while another driver drives.
+# Operator practice as trainer: watched each trainee's driving carefully
+# for WEEKS before team driving with them  [OBSERVED]. Same protocol
+# proposed for a machine partner  [PROPOSED, operator].
+TRUST_PROTOCOL = dict(
+    unit="observed driving by the candidate (human trainee or machine), "
+         "with the qualifier awake and watching",
+    duration="weeks in the operator's practice -- the working variable is "
+             "likely CONDITION COVERAGE (weather, grades, night, traffic, "
+             "stops), not hours; weeks is how long coverage takes  [DERIVED]",
+    watched_for="UNRECORDED -- the operator's criteria are the skill; "
+                "candidates from this register: approach speed/gear before "
+                "hazards, smoothness, reading outside the windshield  "
+                "[PROPOSED, to be replaced by the operator's own list]",
+    pass_rule="qualifier would sleep while candidate drives -- the "
+              "decision itself is the measurement",
+    symmetry="same protocol for human and machine: the qualification is "
+             "keyed to observed behaviour, not to what the driver is",
+    direction="BIDIRECTIONAL [PROPOSED, operator]: the machine must "
+              "qualify the human as carefully -- simulation of predicted "
+              "human actions does not substitute, because of TIMESCALE "
+              "MISMATCH (below)",
+    timescales="(1) reaction: machine ms, human ~1 s + sleep inertia "
+               "15-30 min after waking -> handoff design; (2) anticipation: "
+               "human plans MINUTES ahead (gear/speed before the grade), "
+               "machine reacts in ms -> the machine can read an early, "
+               "correct human action as an ANOMALY (slowing with no visible "
+               "hazard); (3) qualification horizon: human skill shows over "
+               "WEEKS of condition coverage, machine evals run over short "
+               "episodes  [DERIVED]",
+    machine_side_rule="log the human's lead time between action and "
+                      "hazard; never score an unexplained early action as "
+                      "error until the hazard window has closed "
+                      "(-> aeb-false-positive-measurand: override scored as "
+                      "error)  [PROPOSED]",
+    contrast="current machine validation = vendor miles + disengagement "
+             "counts on mapped lanes; current human qualification = CDL "
+             "+ months licensed. Neither is the protocol above.",
+)
+
 # What transport competence is made of, and where each part is measured.
 # Operator framing: "outside the windshield has more to do with transport
 # than staying between the lines"  [OBSERVED]
@@ -571,6 +611,9 @@ def addendum2():
             print("    window %-9s inertia %-4s = %3d min -> "
                   "P(uninterrupted) = %.2f"
                   % (block, inertia, w, p_uninterrupted(lam, w)))
+    print("\n  TRUST QUALIFICATION PROTOCOL")
+    for k, v in TRUST_PROTOCOL.items():
+        print("    %-11s %s" % (k, v))
     print("\n  COMPETENCE MEASURAND (where each part is scored)")
     for c, cdl, scr, auto, st in COMPETENCE_MEASURAND:
         print("    %-40s CDL:%s | screen:%s | automation:%s -> %s"

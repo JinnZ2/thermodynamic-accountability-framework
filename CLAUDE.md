@@ -597,6 +597,8 @@ thermodynamic-accountability-framework/
 │                                 #   transport competence x where
 │                                 #   CDL / hiring / automation score
 │                                 #   them; 3 of 5 UNMEASURED),
+│                                 #   TRUST_PROTOCOL (bidirectional
+│                                 #   qualification before sleeping),
 │                                 #   TIMESCALE_MISMATCH (reaction /
 │                                 #   anticipation / qualification
 │                                 #   horizon, human vs machine), X1-X2
@@ -3169,6 +3171,13 @@ session's notes only.
   Follow-up: added `in_progress/serpentine_grade_esp_notes.md`
   (operator notes, verbatim in a code fence; header links FAULT B
   to the register's anomaly-sign note and closure costs to G4/QH).
+  Follow-up: added TRUST_PROTOCOL (qualification before sleeping
+  while another driver drives; bidirectional human<->machine;
+  timescales; machine_side_rule) from the operator's newer register
+  copy, verbatim, before COMPETENCE_MEASURAND; printed under TRUST
+  QUALIFICATION PROTOCOL. Resolves the machine_side_rule reference in
+  in_progress/serpentine_grade_esp_notes.md. Merged, not replaced, so
+  the file hash differs from the operator's copy.
 - Added `metrology/oil_extraction_thermodynamic_cascade_audit.py`:
   domain-specific audit module exposing the metrology failures in
   current oil-extraction EROI accounting. Standard EROI calculations
