@@ -1,6 +1,6 @@
 # Entropy Governance System — Core Architecture & Diagnostic v2.0
 
-**Author:** Kavik  
+**Author:** JinnZ2  
 **Framework Family:** Thermodynamic Accountability Framework (TAF) / Adaptive Resilience Mesh (ARM)  
 **Date:** February 2026  
 **Status:** Pre-pilot specification

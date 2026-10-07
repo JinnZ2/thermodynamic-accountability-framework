@@ -1,7 +1,7 @@
 # cross_domain_synthesis
 
 **Repository:** `calibration-audit`
-**Author:** Kavik (JinnZ2)
+**Author:** JinnZ2 (JinnZ2)
 **License:** CC0
 **Status:** synthesis of 5 domain audits + 4 core infrastructure modules + 3 convergence modules
 

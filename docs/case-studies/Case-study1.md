@@ -7,7 +7,7 @@ Methodological Demolition, Meta-Comedy Map, and AI Accountability Analysis
 
 Thermodynamic Accountability Framework — Addendum
 February 16, 2026
-Kavik
+JinnZ2
 
 1. Context and Origin
 

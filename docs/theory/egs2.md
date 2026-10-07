@@ -1,6 +1,6 @@
 # Entropy Governance System — Research Directions & Theoretical Extensions
 
-**Author:** Kavik  
+**Author:** JinnZ2  
 **Framework Family:** Thermodynamic Accountability Framework (TAF) / Adaptive Resilience Mesh (ARM)  
 **Date:** February 2026  
 **Status:** Theoretical — awaiting pilot calibration  

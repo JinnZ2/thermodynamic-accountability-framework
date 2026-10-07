@@ -30,7 +30,7 @@ THE ALGORITHM
 
 ATTRIBUTION
 -----------
-Authors: Jami (Kavik Ulu), JinnZ2.
+Authors: JinnZ2 (JinnZ2), JinnZ2.
 This file merges two earlier drafts into one engine: the
 sharpness-parameterized v2 and the physics-compliant
 structure-preserving variant. AI-usability biases of the merge:

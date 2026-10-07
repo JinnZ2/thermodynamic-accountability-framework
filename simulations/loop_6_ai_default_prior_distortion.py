@@ -8,7 +8,7 @@ because it determines whether the measurement instruments themselves are
 calibrated to substrate reality or to institutional narrative.
 
 Substrate observation (named explicitly during construction of this sim,
-2026-05-03, by Kavik):
+2026-05-03, by JinnZ2):
     AI systems default to "generic stable baseline" priors when answering
     questions about active-crisis systems. Real-time substrate data (AIS
     shipping feeds, live throughput dashboards, current event coverage)
