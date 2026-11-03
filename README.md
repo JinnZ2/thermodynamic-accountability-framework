@@ -30,6 +30,8 @@ items.json        seed: 28 items across L0-L3; every unknown number null, volume
 chain.py          load, validate, level check, criticality, single points, order
 community.py      Community(name, holders, buffer_hours); gaps(), interconnect()
 cli.py            command line
+coordination.py   AI coordination layer: share profile, propose, human consent, paper line, chained log
+coordination_register.json  risks R1-R7 -> code -> backups B1-B5 -> experiments E1-E7
 examples/         two ILLUSTRATIVE communities (not real places)
 tests/            unittest: python3 -m unittest discover -s tests
 ```
@@ -58,7 +60,7 @@ python3 cli.py spof                       # single points of failure
 python3 cli.py order                      # restoration order
 python3 cli.py gaps examples/community_a.json
 python3 cli.py pair examples/community_a.json examples/community_b.json
-python3 -m unittest discover -s tests     # 21 tests
+python3 -m unittest discover -s tests     # 41 tests
 ```
 
 Add `--items PATH` to run against another item file.
@@ -110,6 +112,53 @@ pair          L3 items both lack, and what each holds that the other lacks
 3  15 level inversions: town water, sewer and medical items sit on L1 power,
    fuel and transport; town water also sits on L2 chlorine; dormant hydro needs
    L2 knowledge holders.
+```
+
+## Coordination layer (AI between communities)
+
+Communities act locally. AI nodes match and propose. Humans in each
+community decide. Government is still a parallel input. Source:
+`docs/coordination_layer_append.md`.
+
+```sh
+python3 coordination.py share examples/community_a.json          # what leaves the community
+python3 coordination.py propose examples/community_a.json examples/community_b.json --node ai:n1
+python3 coordination.py verify LOG.jsonl
+```
+
+```text
+community file ──> share_profile: item ids held ONLY (no names, quantities, places, buffers)   R6
+        │
+AI node: propose ──> offers (A has, B lacks) + L3 agreements both lack; plain line on each   B3
+        │
+human in EACH community: consent accept | refuse    AI cannot consent; one refusal final   B5
+        │
+append-only sha256 log; appends refused after any edit                                     B2
+to_paper(): one line for a runner or voice radio                                           B1
+read_record(): schema mismatch -> plain-language fallback, human must read                 R4
+node_concentration(): flags any AI node brokering > 50% of accepted exchanges*             R1
+```
+
+The R6 / E4 tradeoff, as built: profiles carry no quantities, so the AI
+cannot see surplus, only who has an item and who lacks it. Every offer
+is worded as a question to the holder ("only A can say whether any can
+be spared or moved"). Some matched items don't move at all, such as
+septic or installed heat. Quantities would improve matching and raise
+exposure; E4 is the test that decides.
+
+Status, from `coordination_register.json`:
+
+```text
+R1 drift            PARTIAL  consent gate + concentration detector; nothing stops capture
+                             of the human gate itself (E1 open)**
+R2 channel loss     PARTIAL  paper/voice format; no channel tested (E2)
+R3 poisoning        PARTIAL  tamper-EVIDENT, not tamper-proof: a node can append false records
+R4 schema           PARTIAL  version mismatch caught; same version read differently is not
+R5 over-reliance    OPEN     nothing in code; E7 added (cut the AI mid-exercise)*
+R6 exposure         PARTIAL  even "holds fuel: yes" is exposure; its cost is unmeasured*
+R7 compounding      OPEN     here; the assembly instrument's CAUTION/checkout is the
+                             existing guard for methods
+E1-E7               NOT RUN  each has a cleanest test and the null that would rule it out
 ```
 
 ## Limits
