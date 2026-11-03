@@ -1,0 +1,17 @@
+{
+  "name": "example_community_B",
+  "_provenance": "ILLUSTRATIVE ONLY (PROPOSED, thin). Not a real place. Replace holders with names/roles from a local survey.",
+  "holders": {
+    "water_potable": "elevated tower + two hand-pump wells",
+    "sanitation": "gravity septic on most lots",
+    "gen_diesel": "treatment-plant standby set",
+    "gen_biogas": "plant digester + dual-fuel genset",
+    "transport": "heritage rail crew",
+    "water_chem_chlorine": "plant stock",
+    "comms_offgrid": "fire hall radios"
+  },
+  "buffer_hours": {
+    "treatment_plant": null,
+    "households_electric_heat": null
+  }
+}
