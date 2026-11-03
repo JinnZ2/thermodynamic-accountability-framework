@@ -1,56 +1,259 @@
 {
   "provenance": "co-authored (Kavik + Claude), 2026-11-03. Design: communities act locally; AI nodes match and propose; humans in each community decide. Government action is an optional parallel input, never a prerequisite. Asterisks = thin volume. Every row PROPOSED unless stated.",
   "risks": [
-    {"id": "R1", "text": "Coordination drifts into control: whoever runs the AI layer becomes the new center*",
-     "in_code": ["consent(): only human:<role> in a party community can accept or refuse; AI cannot", "node_concentration(): flags any AI node brokering > 50% of accepted exchanges*", "corroborate()/single_node(): marks proposals no second node reproduced"],
-     "backup": ["B5"], "experiment": ["E1"], "status": "PARTIAL: detector + consent gate; no structural guard against capture of the human gate itself"},
-    {"id": "R2", "text": "Channel loss: AI-to-AI links fail in outage (power, towers, spectrum)",
-     "in_code": ["to_paper(): one-line paper/voice form of every proposal"],
-     "backup": ["B1", "B4"], "experiment": ["E2"], "status": "PARTIAL: degraded format exists; no channel tested"},
-    {"id": "R3", "text": "Ledger poisoning: false reports or a compromised node rewrite methods or holdings",
-     "in_code": ["append_log()/verify_log(): append-only sha256 chain; appends refused on a broken chain", "holdings only enter through a community's own file; propose() cannot change holdings", "consent() returns a new record; old record unchanged"],
-     "backup": ["B2"], "experiment": [], "status": "PARTIAL: tamper-evident, not tamper-proof; a node can still append FALSE records. No experiment listed (gap)"},
-    {"id": "R4", "text": "Schema divergence: AIs read records differently, so trades mismatch",
-     "in_code": ["schema_version on every profile and proposal; propose() refuses mismatched profiles", "read_record(): mismatch -> PLAIN_FALLBACK, needs_human_read", "plain_ok(): every record and log line must carry a plain-language line"],
-     "backup": ["B3"], "experiment": [], "status": "PARTIAL: version mismatch caught; same version read differently is not"},
-    {"id": "R5", "text": "Over-reliance: humans stop keeping manual capability; AI outage means paralysis",
-     "in_code": [],
-     "backup": ["B1", "B4"], "experiment": ["E7"], "status": "OPEN: nothing in code; needs drills"},
-    {"id": "R6", "text": "Inventory exposure: shared holdings reveal who has fuel or food -> target risk*",
-     "in_code": ["share_profile(): only item ids held cross the wire; no holder names, quantities, locations or buffer hours"],
-     "backup": [], "experiment": ["E4"], "status": "PARTIAL: even yes/no 'holds fuel' is exposure; cost of that is unmeasured"},
-    {"id": "R7", "text": "Compounding error across communities: one bad junction propagates network-wide",
-     "in_code": [],
-     "backup": [], "experiment": [], "status": "OPEN here. Link: thermodynamic-accountability-framework assembly_instrument status.py CAUTION + checkout.py print field warnings before any method is handed on"}
+    {
+      "id": "R1",
+      "text": "Coordination drifts into control: whoever runs the AI layer becomes the new center*",
+      "in_code": [
+        "consent(): only human:<role> in a party community can accept or refuse; AI cannot",
+        "node_concentration(): flags any AI node brokering > 50% of accepted exchanges*",
+        "corroborate()/single_node(): marks proposals no second node reproduced"
+      ],
+      "backup": [
+        "B5"
+      ],
+      "experiment": [
+        "E1"
+      ],
+      "status": "PARTIAL: detector + consent gate; no structural guard against capture of the human gate itself"
+    },
+    {
+      "id": "R2",
+      "text": "Channel loss: AI-to-AI links fail in outage (power, towers, spectrum)",
+      "in_code": [
+        "to_paper(): one-line paper/voice form of every proposal"
+      ],
+      "backup": [
+        "B1",
+        "B4"
+      ],
+      "experiment": [
+        "E2"
+      ],
+      "status": "PARTIAL: degraded format exists; no channel tested"
+    },
+    {
+      "id": "R3",
+      "text": "Ledger poisoning: false reports or a compromised node rewrite methods or holdings",
+      "in_code": [
+        "append_log()/verify_log(): append-only sha256 chain; appends refused on a broken chain",
+        "holdings only enter through a community's own file; propose() cannot change holdings",
+        "consent() returns a new record; old record unchanged"
+      ],
+      "backup": [
+        "B2"
+      ],
+      "experiment": [],
+      "status": "PARTIAL: tamper-evident, not tamper-proof; a node can still append FALSE records. No experiment listed (gap); D3 corroboration + B6 quarantine added"
+    },
+    {
+      "id": "R4",
+      "text": "Schema divergence: AIs read records differently, so trades mismatch",
+      "in_code": [
+        "schema_version on every profile and proposal; propose() refuses mismatched profiles",
+        "read_record(): mismatch -> PLAIN_FALLBACK, needs_human_read",
+        "plain_ok(): every record and log line must carry a plain-language line"
+      ],
+      "backup": [
+        "B3"
+      ],
+      "experiment": [],
+      "status": "PARTIAL: version mismatch caught; same version read differently is not"
+    },
+    {
+      "id": "R5",
+      "text": "Over-reliance: humans stop keeping manual capability; AI outage means paralysis",
+      "in_code": [],
+      "backup": [
+        "B1",
+        "B4"
+      ],
+      "experiment": [
+        "E9"
+      ],
+      "status": "OPEN: nothing in code; needs drills"
+    },
+    {
+      "id": "R6",
+      "text": "Inventory exposure: shared holdings reveal who has fuel or food -> target risk*",
+      "in_code": [
+        "share_profile(): only item ids held cross the wire; no holder names, quantities, locations or buffer hours"
+      ],
+      "backup": [],
+      "experiment": [
+        "E4"
+      ],
+      "status": "PARTIAL: even yes/no 'holds fuel' is exposure; cost of that is unmeasured"
+    },
+    {
+      "id": "R7",
+      "text": "Compounding error across communities: one bad junction propagates network-wide",
+      "in_code": [],
+      "backup": [],
+      "experiment": [],
+      "status": "OPEN here. Link: thermodynamic-accountability-framework assembly_instrument status.py CAUTION + checkout.py print field warnings before any method is handed on"
+    },
+    {
+      "id": "R8",
+      "text": "Outside actors: any devastation draws outside agendas (states, groups, profiteers) exploiting desperation -- funding/arming factions, disinformation, poisoned field reports, buying influence via aid. Standing variable, not edge case.",
+      "in_code": [
+        "defenses.aid_status(): flags control terms attached to outside aid (D4)*",
+        "defenses.claim_status(): >= 2 independent sources to act (D3); claims about another community need direct contact with it (D5)",
+        "defenses.Quarantine: per-community block list, no network consensus (B6)",
+        "items.json trust_vetters: people who screen newcomers, aid offers, intermediaries (D2)"
+      ],
+      "backup": [
+        "B5",
+        "B6"
+      ],
+      "experiment": [
+        "E7",
+        "E8"
+      ],
+      "status": "PARTIAL: aid, claims and quarantine gated in code; D1 is policy, not code; detection of infiltration (E8) unbuilt; control-term check is an English word list*"
+    }
   ],
   "backups": [
-    {"id": "B1", "text": "AI link down: same records on paper, carried by runners or read over voice radio", "in_code": "to_paper()"},
-    {"id": "B2", "text": "Node compromised: append-only hash chain; other nodes reject unchained edits", "in_code": "append_log(), verify_log()"},
-    {"id": "B3", "text": "Schema mismatch: plain-language fallback line on every record", "in_code": "plain_ok(), read_record()"},
-    {"id": "B4", "text": "No network at all: each community runs standalone on its own L0/L1 holdings", "in_code": "cli.py gaps / order run on one community file with no network"},
-    {"id": "B5", "text": "Human override always: any community can refuse an AI-proposed exchange", "in_code": "consent(), state(): one refusal is final"}
+    {
+      "id": "B1",
+      "text": "AI link down: same records on paper, carried by runners or read over voice radio",
+      "in_code": "to_paper()"
+    },
+    {
+      "id": "B2",
+      "text": "Node compromised: append-only hash chain; other nodes reject unchained edits",
+      "in_code": "append_log(), verify_log()"
+    },
+    {
+      "id": "B3",
+      "text": "Schema mismatch: plain-language fallback line on every record",
+      "in_code": "plain_ok(), read_record()"
+    },
+    {
+      "id": "B4",
+      "text": "No network at all: each community runs standalone on its own L0/L1 holdings",
+      "in_code": "cli.py gaps / order run on one community file with no network"
+    },
+    {
+      "id": "B5",
+      "text": "Human override always: any community can refuse an AI-proposed exchange",
+      "in_code": "consent(), state(): one refusal is final"
+    },
+    {
+      "id": "B6",
+      "text": "Any community can quarantine a node or source from its ledger without network-wide consensus",
+      "in_code": "defenses.Quarantine (human role + plain reason to add or lift)"
+    }
   ],
   "experiments": [
-    {"id": "E1", "question": "What structural guard stops R1: rotation, multiple independent AI nodes, consent gates?**",
-     "cleanest_test": "Tabletop over N rounds with 2+ independent AI nodes and rotating human sign-off; record node_concentration() and how often humans refuse or override.",
-     "null": "Concentration and refusal rate are the same with one node as with several: multiplicity is not a guard.", "status": "NOT_RUN"},
-    {"id": "E2", "question": "Which low-power comms hold for months: mesh, packet radio, satellite (winter)?",
-     "cleanest_test": "Run each channel unattended through a northern winter on its own power; log daily delivery of a fixed test message.",
-     "null": "Delivery collapses within weeks on every channel: plan around runners and B1.", "status": "NOT_RUN"},
-    {"id": "E3", "question": "Will people under stress send the one line?**",
-     "cleanest_test": "During a scheduled outage drill, count FR1/exchange lines sent per task handed out.",
-     "null": "Return rate near zero: the loop is open in practice; status must stay UNCONFIRMED-heavy.", "status": "NOT_RUN"},
-    {"id": "E4", "question": "How much holdings detail to share vs keep local (R6)?**",
-     "cleanest_test": "Same tabletop run at three detail levels (yes/no; coarse bands; quantities); compare match quality against the exposure each level creates.",
-     "null": "Yes/no matches as well as quantities: never share quantities.", "status": "NOT_RUN"},
-    {"id": "E5", "question": "Which pre-event trust agreements between communities actually hold?",
-     "cleanest_test": "Compare drilled vs signed-only vs no agreements in a multi-community exercise; record exchanges completed and refused.",
-     "null": "No difference: agreements are paper; build trust some other way.", "status": "NOT_RUN"},
-    {"id": "E6", "question": "Matching performance: AI vs human coordinators on the same scenario",
-     "cleanest_test": "Identical scenario; arm A uses coordination.py propose, arm B human coordinators only; score gaps closed, time, refusals.",
-     "null": "Humans match as well or better: AI layer adds risk (R1-R7) without benefit.", "status": "NOT_RUN"},
-    {"id": "E7", "question": "Does manual capability survive with an AI layer present? (added for R5; not in the original list)*",
-     "cleanest_test": "Cut the AI layer mid-exercise without warning; time to resume on paper (B1) vs a team that never had it.",
-     "null": "Resume time equal: no over-reliance detected.", "status": "NOT_RUN"}
+    {
+      "id": "E1",
+      "question": "What structural guard stops R1: rotation, multiple independent AI nodes, consent gates?**",
+      "cleanest_test": "Tabletop over N rounds with 2+ independent AI nodes and rotating human sign-off; record node_concentration() and how often humans refuse or override.",
+      "null": "Concentration and refusal rate are the same with one node as with several: multiplicity is not a guard.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E2",
+      "question": "Which low-power comms hold for months: mesh, packet radio, satellite (winter)?",
+      "cleanest_test": "Run each channel unattended through a northern winter on its own power; log daily delivery of a fixed test message.",
+      "null": "Delivery collapses within weeks on every channel: plan around runners and B1.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E3",
+      "question": "Will people under stress send the one line?**",
+      "cleanest_test": "During a scheduled outage drill, count FR1/exchange lines sent per task handed out.",
+      "null": "Return rate near zero: the loop is open in practice; status must stay UNCONFIRMED-heavy.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E4",
+      "question": "How much holdings detail to share vs keep local (R6)?**",
+      "cleanest_test": "Same tabletop run at three detail levels (yes/no; coarse bands; quantities); compare match quality against the exposure each level creates.",
+      "null": "Yes/no matches as well as quantities: never share quantities.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E5",
+      "question": "Which pre-event trust agreements between communities actually hold?",
+      "cleanest_test": "Compare drilled vs signed-only vs no agreements in a multi-community exercise; record exchanges completed and refused.",
+      "null": "No difference: agreements are paper; build trust some other way.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E6",
+      "question": "Matching performance: AI vs human coordinators on the same scenario",
+      "cleanest_test": "Identical scenario; arm A uses coordination.py propose, arm B human coordinators only; score gaps closed, time, refusals.",
+      "null": "Humans match as well or better: AI layer adds risk (R1-R7) without benefit.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E7",
+      "question": "Historical cases of outside exploitation in disasters/collapse (Bosnia, Somalia, others) -> pattern library of entry methods**",
+      "cleanest_test": "Code each documented case with one fixed form (entry channel, what desperation it used, how long before visible, what stopped it); kept at the level of entry channels for defenders, not operational detail.",
+      "null": "No entry channel recurs across cases: a pattern library adds nothing beyond case-by-case vetting (D2).",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E8",
+      "question": "Detection signals: what early infiltration looks like in a small community**",
+      "cleanest_test": "Tabletop with a hidden red-team actor among ordinary newcomers; vetters (D2) record signals blind; score signals against who was actually red-team.",
+      "null": "Recorded signals do not separate red-team actors from ordinary newcomers: no reliable early signal; rely on D3/D4/D5 gates instead of detection.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E9",
+      "question": "Does manual capability survive with an AI layer present? (added for R5; first numbered E7, renamed E9 when the operator assigned E7)*",
+      "cleanest_test": "Cut the AI layer mid-exercise without warning; time to resume on paper (B1) vs a team that never had it.",
+      "null": "Resume time equal: no over-reliance detected.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "defenses": [
+    {
+      "id": "D1",
+      "text": "Activation: parallel community/state/federal activation lowers desperation and shrinks the recruitable surface",
+      "in_code": "none (policy). gov_parallel_restoration stays a parallel input, never a prerequisite; D1 is why parallel activation still matters",
+      "against": [
+        "R8"
+      ]
+    },
+    {
+      "id": "D2",
+      "text": "Trust vetting: necessity-built trust-assessment skills (registry category) screen newcomers, aid offers, intermediaries",
+      "in_code": "items.json trust_vetters (L2 knowledge holders)",
+      "against": [
+        "R8",
+        "R3"
+      ]
+    },
+    {
+      "id": "D3",
+      "text": "Ledger poisoning guard: single source can raise caution, never rewrite; corroboration from independent reporters required",
+      "in_code": "defenses.claim_status() CAUTION_ONLY below 2 sources; assembly_instrument/status.py (caution on one report, builds counted not reports)",
+      "against": [
+        "R8",
+        "R3",
+        "R7"
+      ]
+    },
+    {
+      "id": "D4",
+      "text": "Aid provenance: tag every outside resource with source + conditions attached; flag aid that carries control terms",
+      "in_code": "defenses.AidRecord, aid_status()",
+      "against": [
+        "R8",
+        "R1"
+      ]
+    },
+    {
+      "id": "D5",
+      "text": "Info hygiene: claims about other communities need direct-contact confirmation before action (counters engineered inter-community distrust)",
+      "in_code": "defenses.claim_status() DO_NOT_ACT without direct_contact",
+      "against": [
+        "R8"
+      ]
+    }
   ]
 }

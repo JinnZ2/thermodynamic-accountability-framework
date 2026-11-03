@@ -26,12 +26,13 @@ Source reasoning: `docs/black_start_workforce_dependency_gap.md`.
 
 ```text
 schema.py         Item dataclass + field checks
-items.json        seed: 28 items across L0-L3; every unknown number null, volume thin
+items.json        seed: 29 items across L0-L3; every unknown number null, volume thin
 chain.py          load, validate, level check, criticality, single points, order
 community.py      Community(name, holders, buffer_hours); gaps(), interconnect()
 cli.py            command line
 coordination.py   AI coordination layer: share profile, propose, human consent, paper line, chained log
-coordination_register.json  risks R1-R7 -> code -> backups B1-B5 -> experiments E1-E7
+coordination_register.json  risks R1-R8 -> code -> defenses D1-D5 -> backups B1-B6 -> experiments E1-E9
+defenses.py       R8 outside actors: aid control terms, claim corroboration, direct contact, local quarantine
 examples/         two ILLUSTRATIVE communities (not real places)
 tests/            unittest: python3 -m unittest discover -s tests
 ```
@@ -60,7 +61,7 @@ python3 cli.py spof                       # single points of failure
 python3 cli.py order                      # restoration order
 python3 cli.py gaps examples/community_a.json
 python3 cli.py pair examples/community_a.json examples/community_b.json
-python3 -m unittest discover -s tests     # 41 tests
+python3 -m unittest discover -s tests     # 53 tests
 ```
 
 Add `--items PATH` to run against another item file.
@@ -107,8 +108,8 @@ pair          L3 items both lack, and what each holds that the other lacks
    Workers need water, town water needs generation, generation needs workers.
    Broken only by household_buffer (L0): deployability rests on the household's
    OWN fallback, not on town services. DERIVED from the source doc's definition.
-2  Single points of failure: household_buffer (19 dependents), people_deployable
-   (18), spare_relays (2). The top two are people, not equipment.
+2  Single points of failure: household_buffer (20 dependents), people_deployable
+   (19), spare_relays (2). The top two are people, not equipment.
 3  15 level inversions: town water, sewer and medical items sit on L1 power,
    fuel and transport; town water also sits on L2 chlorine; dormant hydro needs
    L2 knowledge holders.
@@ -154,11 +155,64 @@ R1 drift            PARTIAL  consent gate + concentration detector; nothing stop
 R2 channel loss     PARTIAL  paper/voice format; no channel tested (E2)
 R3 poisoning        PARTIAL  tamper-EVIDENT, not tamper-proof: a node can append false records
 R4 schema           PARTIAL  version mismatch caught; same version read differently is not
-R5 over-reliance    OPEN     nothing in code; E7 added (cut the AI mid-exercise)*
+R5 over-reliance    OPEN     nothing in code; E9 added (cut the AI mid-exercise)*
 R6 exposure         PARTIAL  even "holds fuel: yes" is exposure; its cost is unmeasured*
 R7 compounding      OPEN     here; the assembly instrument's CAUTION/checkout is the
                              existing guard for methods
-E1-E7               NOT RUN  each has a cleanest test and the null that would rule it out
+R8 outside actors   PARTIAL  aid, claims, quarantine gated in code (defenses.py);
+                             D1 is policy; infiltration detection (E8) unbuilt
+E1-E9               NOT RUN  each has a cleanest test and the null that would rule it out
+```
+
+ID note: the experiment first added here for R5 was numbered E7. When the
+operator assigned E7 and E8 in the R8 append, it was renamed **E9**. It had
+never been published.
+
+## Outside actors (R8)
+
+Any devastation draws outside agendas: states, groups and profiteers
+exploiting desperation. Their tools are funding or arming factions,
+disinformation, poisoned field reports, and buying influence through aid.
+This is a standing variable, not an edge case. Source:
+`docs/coordination_layer_append.md`.
+
+```sh
+python3 defenses.py aid AID.json                       # control terms in outside aid
+python3 defenses.py claim CLAIM.json --community A [--quarantine Q.json]
+```
+
+```text
+D1 activation      parallel community/state/federal activation lowers desperation
+                   -> smaller recruitable surface. Policy, not code.
+D2 trust vetting   items.json trust_vetters (L2): people who screen newcomers, aid
+                   offers and intermediaries before access to holdings or ledgers
+D3 corroboration   claim_status(): 1 independent source -> CAUTION_ONLY (may warn,
+                   never drive action); >= 2 -> ACTIONABLE (a person still decides)
+D4 aid provenance  AidRecord: source category, verbatim conditions, plain line;
+                   aid_status() flags control terms (exclusivity, single-channel
+                   distribution, access to holdings/records, embedded personnel,
+                   authority claims, debt/lien, loyalty) -> human must read every term
+D5 direct contact  a claim ABOUT another community -> DO_NOT_ACT until confirmed
+                   with that community itself (counters engineered distrust)
+B6 quarantine      Quarantine: one community blocks a node or source from its own
+                   ledger; human role + plain reason; no network vote
+E7 pattern library historical exploitation cases -> entry channels**     NOT RUN
+E8 early signals   red-team tabletop; can vetters tell?**                 NOT RUN
+```
+
+**R6 and R8 meet in aid terms.** A demand like "provide a full inventory of
+fuel holdings" is flagged under access to holdings or records. It is a
+channel for extracting the very data the shared profile withholds.
+
+**Limits:**
+- **The control-term check is an English word list.*** It misses
+  paraphrase and flags some benign text, and every aid offer goes to a
+  person regardless.
+- **Corroboration counts source IDs.** Two IDs run by one actor still
+  count as two. Independence of sources is the open part of D3 (E8).**
+- **Quarantine is local by design.** A community that quarantines a good
+  source loses that source; no one else can overrule it. This is
+  intentional (B6).
 ```
 
 ## Limits

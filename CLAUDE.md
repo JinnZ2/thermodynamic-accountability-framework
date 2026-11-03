@@ -3161,6 +3161,21 @@ session's notes only.
   NOT_DISTRIBUTED; never writes entries), checkout.py (cautions first,
   logs handout), validate.py R6 (--ledger), schema `caution` field.
   tests/test_feedback.py 25 tests; validate --selftest 25 checks.
+- Added `community_black_start/` (2026-11-03, co-authored; imported
+  with history via git subtree from a standalone local repo, placed
+  beside assembly_instrument/ so cross-references resolve). Black-start
+  dependency chain for a wide-area, months-long outage with no outside
+  help, community-first: 29 items L0-L3 (all numbers null, volume thin),
+  chain.py (validate with cycle reporting, level check, criticality,
+  single points, restoration order), community.py (gaps, interconnect),
+  coordination.py (AI matches and proposes, humans in each community
+  decide; ids-only share profile; plain line on every record; hash-
+  chained log), defenses.py (R8 outside actors: aid control-term flags,
+  claim corroboration, direct-contact rule, local quarantine),
+  coordination_register.json (R1-R8, D1-D5, B1-B6, E1-E9 all NOT RUN).
+  Government action is a parallel input that nothing may depend on.
+  53 unittest tests: cd community_black_start && python3 -m unittest
+  discover -s tests.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:

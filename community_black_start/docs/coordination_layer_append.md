@@ -36,3 +36,42 @@ B5 human override always: any community can refuse an AI-proposed exchange
 
 Asterisks = thin volume.
 ```
+
+## Append 2 (R8 outside actors), recorded verbatim, 2026-11-03
+
+Instruction with it: "Wherever is best for AI". Recorded decision: this
+repo moved into thermodynamic-accountability-framework as
+`community_black_start/` (history kept), beside `assembly_instrument/`.
+
+```text
+APPEND — community-to-community AI coordination layer (co-authored, 2026-11-03)
+
+RISK
+R8 outside actors: any devastation draws outside agendas (states, groups,
+   profiteers) exploiting desperation — funding/arming factions,
+   disinformation, poisoned field reports, buying influence via aid.
+   Standing variable, not edge case.
+
+DEFENSES (map to existing pieces)
+D1 activation: parallel community/state/federal activation lowers desperation
+   → shrinks recruitable surface
+D2 trust vetting: necessity-built trust-assessment skills (registry category)
+   screen newcomers, aid offers, intermediaries
+D3 ledger poisoning guard: single source can raise caution, never rewrite;
+   corroboration from independent reporters required (see feedback loop task)
+D4 aid provenance: tag every outside resource with source + conditions attached;
+   flag aid that carries control terms
+D5 info hygiene: claims about other communities need direct-contact confirmation
+   before action (counters engineered inter-community distrust)
+
+EXPERIMENTATION / DOCUMENTATION
+E7 historical cases of outside exploitation in disasters/collapse (Bosnia, Somalia,
+   others) → pattern library of entry methods **
+E8 detection signals: what early infiltration looks like in a small community **
+
+BACKUP
+B6 any community can quarantine a node or source from its ledger without
+   network-wide consensus
+
+Asterisks = thin volume.
+```
