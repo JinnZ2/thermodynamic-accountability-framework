@@ -3146,6 +3146,13 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `assembly_instrument/` (2026-11-03, co-authored): cross-domain
+  assembly instrument keyed on FUNCTION, not material. schema.json
+  (draft-07 + x-rules), entry_template.md (1:1 mirror), validate.py
+  (stdlib, py>=3.5; R1-R5 work-order rules + C1-C4 consistency; exit 1
+  on any failure; --selftest 22 checks), seeds F-LIGHT-01 (4 branches)
+  and F-SHELTER-01 (6 branches). No junction TESTED; literature sources
+  cited from model knowledge and marked not checked this session.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:
