@@ -3146,6 +3146,9 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- README.md rewritten 2026-11-03 as a node map (purpose, DCEA rules, full tree
+  with run-status tags, run commands, conventions, worked cases, gaps); prior
+  README kept verbatim at docs/readme_archive/README_before_2026-11-03.md.
 - Added `docs/DCEA_v0.1.md` and `docs/worker_side_ledger_road_driver.md`
   (2026-11-03), verbatim, sha256-pinned in `docs/DCEA_checks.md`; added
   `core/dcea.py` (spec section 6 calculator, Python 3.9 repair, pending_count,
