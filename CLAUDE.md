@@ -3146,6 +3146,13 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `docs/DCEA_v0.1.md` and `docs/worker_side_ledger_road_driver.md`
+  (2026-11-03), verbatim, sha256-pinned in `docs/DCEA_checks.md`; added
+  `core/dcea.py` (spec section 6 calculator, Python 3.9 repair, pending_count,
+  duplicate_names) with a selftest that recomputes the ledger. Recompute: daily
+  $86.49-131.91 from raw inputs vs stated $86-133 (rounded rows); annual
+  $22,403-34,231 vs stated $22,300-34,600; share 38.2%-58.4%. Floor only:
+  filters PENDING. Findings in DCEA_checks.md; the delivered docs are unedited.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:
