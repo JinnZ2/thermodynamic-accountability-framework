@@ -3146,6 +3146,16 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `metrology/drop_electrification_corrosion/` (2026-11-03):
+  operator WORK ORDER (verbatim, received truncated mid-Task-2) for
+  scaling Ni et al. Nature 2026 lab drop-charge corrosion against
+  outdoor panel data. Task 1 methods_extract.md BLOCKED (paper hosts
+  denied by session egress; 0 values entered, fields NOT ACCESSED).
+  Task 3 panel_datasets.md: 15 datasets, all fields (snippet); no
+  polymer-coated-Cu dataset with sheltered controls found. Task 2
+  exposure_index.py: station -> hourly rain -> Marshall-Palmer drop
+  flux -> STUB charge weight (NotParameterized) -> vector profile;
+  28-check offline selftest; NOAA fetch NOT_TESTABLE here. Stdlib only.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:
