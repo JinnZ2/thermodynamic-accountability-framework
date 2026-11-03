@@ -16,6 +16,14 @@ entry_template.md            paper/markdown mirror of the schema, 1:1
 seeds/lighting.json          F-LIGHT-01   interior lighting without batteries   4 branches
 seeds/shelter_envelope.json  F-SHELTER-01 shelter envelope without dimensional lumber  6 branches
 validate.py                  gate: PASS/FAIL per branch + failing field; exit 1 on any failure
+                             --ledger adds R6: field CAUTION must appear in the entry
+feedback_schema.json         FieldReport: junction_id + outcome required, rest optional, no personal ids
+refs.py                      junction address F-LIGHT-01.1.J4 + 8-hex version of the method text
+compact.py                   FieldReport <-> one SMS/radio line; personal-identifier guard
+ledger.py                    append-only JSONL, sha256 chained; verify; merge (union by hash)
+status.py                    per-junction field status from the ledger, triage-ordered
+checkout.py                  prints cautions first, then the entry; logs the handout
+tests/test_feedback.py       25 tests: python3 -m unittest discover -s tests
 ```
 
 ## ORDER OF USE (part of the instrument)
@@ -109,3 +117,82 @@ F-SHELTER-01  wall branches and span branches are separated: earth, stone and st
   reader".**
 - The verification levels are an ordering rule, not calibrated
   against build-failure data (PROPOSED***).
+
+## Report back (closes the loop)
+
+Without a way back, errors never correct. One line, outcome word
+required, everything else optional:
+
+```text
+FR1|F-LIGHT-01.1.J4||UNSAFE|lamp in closed cabin, headache by morning
+    address         outcome  what happened
+```
+
+```text
+fields   FR1|address|version|outcome|what happened|as built vs specified|temp|humidity|
+         climate|soil/water|scale|time to outcome|relation|date|region
+outcome  W worked | P partial | F failed | U UNSAFE      (whole words also accepted)
+scale    b bench | s small | f full        relation  h hands-on | o observed | 2 secondhand
+```
+
+`python3 compact.py template` prints the numbered field guide.
+`checkout.py` prints every step address and version at the bottom
+of the handout.
+
+**Never include:** names, phone numbers, call signs, addresses or
+exact coordinates. `compact.py` rejects anything that looks like one.
+The check is a heuristic; it may miss things.*
+
+### Flow
+
+```text
+checkout.py ──> handout (cautions on top) ──> build ──> FR1 line (SMS / radio / paper)
+     │ logs "checkout"                                          │
+     v                                                          v
+  ledger.jsonl  <── ledger.py add ──────────────────────────────┘
+     │   append-only, sha256 chained; ledger.py merge A B OUT unions devices by hash
+     v
+  status.py ──> per junction:
+                CAUTION                UNSAFE anywhere, or failed on an irreversible step
+                ENVIRONMENT_DEPENDENT  worked AND failed both reported; grouped by
+                                       environment, never averaged
+                ELIGIBLE_FOR_TESTED    >= 3 independent builds (distinct date + region,
+                                       hands-on, small/full scale, current version)
+                REPORTED               reports, not enough builds
+                UNCONFIRMED            handed out, nothing back: silence is not success
+                NOT_DISTRIBUTED        never handed out
+     │
+     v
+  validate.py --ledger ──> R6 fails the entry until a person adds a plain
+                           `caution` line to every irreversible step in CAUTION
+```
+
+### How the asymmetry is built
+
+- **Warnings travel faster than confirmations.**
+  - One report can raise CAUTION.
+  - A report with a blank version, or against older text, still warns.
+  - Only current-version, hands-on builds count toward ELIGIBLE.
+- **Nothing in the feedback loop writes to an entry.**
+  - ELIGIBLE_FOR_TESTED is a prompt. A person changes the tag to TESTED,
+    with a source.
+  - CAUTION is cleared by a person editing the entry. Editing the method
+    text changes its version.
+- **Builds are counted, not reports.** Five reports from one build on
+  one day in one region count as one build.
+- **Duplicates merge.** A line forwarded twice has the same hash, and
+  merge keeps one copy.
+
+### Limits (thin assumptions)
+
+- **The threshold is unchecked.** The default of 3 independent builds is
+  a starting rule, not checked against build-failure data.***
+- **The independence key is weak.** A build is identified by date +
+  region. Two people building on the same day in the same region count
+  as one build; one person reporting two days counts as two.**
+- **Bench tests are not builds.** UNSAFE on a reversible step still
+  raises caution.**
+- **Positional fields can shift.** A missed empty field moves everything
+  after it. An enum landing in the wrong slot is rejected, but a shifted
+  free-text field is not caught. The warning sits in fields 1-4; stop
+  there if unsure.*

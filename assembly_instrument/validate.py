@@ -18,6 +18,8 @@
 #   R3 irreversible: true with empty or jargon-only hazard line
 #   R4 chain_length above threshold without matching verification_required
 #   R5 branch tagged TESTED anywhere with source: null
+#   R6 (with --ledger) irreversible junction whose field status is CAUTION
+#      but the entry carries no plain-language `caution` line for it
 #   C1 chain_length != number of junctions
 #   C2 verification_required level != rule (at any length)
 #   C3 entry safety flags (irreversibility, compounding_error,
@@ -34,6 +36,8 @@ import json
 import os
 import re
 import sys
+
+from refs import junction_ref
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_SCHEMA = os.path.join(HERE, "schema.json")
@@ -215,7 +219,7 @@ def implied_flags(entry, threshold):
     return {"irreversibility": irrev, "compounding_error": compound, "reader_state": legible_all}
 
 
-def validate_entry(entry, schema):
+def validate_entry(entry, schema, cautions=None):
     """-> (entry_fails, {branch_name: [fails]})"""
     threshold = load_rules(schema)["threshold"]
     serrs = []
@@ -234,6 +238,14 @@ def validate_entry(entry, schema):
         fails = list(per_branch.get(i, []))
         if isinstance(b, dict):
             fails += check_branch(b, threshold)
+            for j in b.get("junctions") or []:
+                if not (isinstance(j, dict) and j.get("irreversible") is True and cautions):
+                    continue
+                ref = junction_ref(entry, i, j)
+                if ref in cautions and not legible(j.get("caution"))[0]:
+                    fails.append(("junctions[%s].caution" % j.get("id"),
+                                  "R6 field status CAUTION on irreversible step %s; entry must carry a "
+                                  "plain caution line (%s)" % (ref, "; ".join(cautions[ref])[:120])))
         results[name] = fails
     ss = entry.get("safety_scope")
     if isinstance(ss, dict):
@@ -348,6 +360,23 @@ def selftest(schema):
     run("C4 missing function", lambda e: e.pop("function"), "C4")
     run("C4 status not co-authored", lambda e: e.update(status="final"), "C4")
 
+    # R6: ledger CAUTION on an irreversible junction must appear in the entry
+    e = _good_entry()
+    ref = junction_ref(e, 0, e["branches"][0]["junctions"][1])
+    caut = {ref: ["UNSAFE: room filled with smoke [N-MN, 2026-12-01]"]}
+    ef, res = validate_entry(e, schema, caut)
+    msgs = [w for fs in res.values() for _, w in fs]
+    checks.append(("R6 CAUTION on irreversible step missing from entry", any(m.startswith("R6") for m in msgs), msgs))
+    e["branches"][0]["junctions"][1]["caution"] = ("A field report says this step filled a room with smoke. "
+                                                    "Check the air supply before anyone sleeps near it.")
+    ef, res = validate_entry(e, schema, caut)
+    msgs = [w for fs in res.values() for _, w in fs]
+    checks.append(("R6 passes once entry carries plain caution", not msgs, msgs))
+    e["branches"][0]["junctions"][1]["caution"] = "CO asphyxiation hazard"
+    ef, res = validate_entry(e, schema, caut)
+    msgs = [w for fs in res.values() for _, w in fs]
+    checks.append(("R6 jargon-only caution still fails", any(m.startswith("R6") for m in msgs), msgs))
+
     # seeds must pass
     for name in ("seeds/lighting.json", "seeds/shelter_envelope.json"):
         p = os.path.join(HERE, name)
@@ -377,6 +406,14 @@ def main(argv):
         i = argv.index("--schema")
         schema_path = argv[i + 1]
         argv = argv[:i] + argv[i + 2:]
+    ledger_path = None
+    if "--ledger" in argv:
+        i = argv.index("--ledger")
+        if i + 1 >= len(argv):
+            sys.stderr.write("--ledger needs a path\n")
+            return 2
+        ledger_path = argv[i + 1]
+        argv = argv[:i] + argv[i + 2:]
     try:
         with open(schema_path) as f:
             schema = json.load(f)
@@ -386,7 +423,7 @@ def main(argv):
     if argv[:1] == ["--selftest"]:
         return selftest(schema)
     if not argv or argv[0] in ("-h", "--help"):
-        sys.stderr.write("usage: validate.py ENTRY.json [ENTRY.json ...] | --selftest [--schema PATH]\n")
+        sys.stderr.write("usage: validate.py ENTRY.json [ENTRY.json ...] [--ledger LEDGER] | --selftest [--schema PATH]\n")
         return 2
     bad = False
     for p in argv:
@@ -396,7 +433,17 @@ def main(argv):
         except (IOError, ValueError) as ex:
             sys.stderr.write("cannot read %s: %s\n" % (p, ex))
             return 2
-        ef, res = validate_entry(entry, schema)
+        cautions = None
+        if ledger_path:
+            import ledger as _ledger
+            import status as _status
+            recs = _ledger.read(ledger_path)
+            lp = _ledger.verify(recs)
+            if lp:
+                sys.stderr.write("ledger broken: %s\n" % lp[0])
+                return 1
+            cautions = dict((k, v["caution"]) for k, v in _status.caution_refs([entry], recs).items())
+        ef, res = validate_entry(entry, schema, cautions)
         bad = report(p, ef, res) or bad
     return 1 if bad else 0
 

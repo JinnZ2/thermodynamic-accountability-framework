@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "assembly_instrument/feedback_schema.json",
+  "title": "FieldReport: one build result returned against one junction",
+  "description": "Status: co-authored (Kavik + Claude), 2026-11-03. CC0. Only junction_id and outcome are required; everything else is optional so a report fits one SMS or radio line (compact.py). NO personal identifiers: no names, phone numbers, call signs, addresses or exact coordinates. coarse_region is a region a reader could not use to find a household.",
+  "type": "object",
+  "required": ["junction_id", "outcome"],
+  "additionalProperties": false,
+  "properties": {
+    "junction_id": {"type": "string", "minLength": 1, "description": "refs.py address <function_id>.<branch#>.<junction id>, e.g. F-LIGHT-01.1.J4"},
+    "junction_version": {"type": ["string", "null"], "description": "refs.py junction_version of the text built from. Blank = unknown: still raises caution, never counts as a build."},
+    "outcome": {"type": "string", "enum": ["worked", "partial", "failed", "UNSAFE"]},
+    "failure_point": {"type": ["string", "null"], "description": "Plain text: where and how it went wrong."},
+    "as_built_vs_specified": {"type": ["string", "null"], "description": "Substitutions made, e.g. 'tallow for seal oil; cattail down wick'."},
+    "environment": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "temp": {"type": ["string", "null"], "description": "With units, e.g. '-18C'."},
+        "humidity": {"type": ["string", "null"]},
+        "climate": {"type": ["string", "null"]},
+        "soil_water": {"type": ["string", "null"], "description": "Soil or water condition relevant to the build."}
+      }
+    },
+    "scale": {"type": ["string", "null"], "enum": ["bench", "small", "full", null]},
+    "time_to_outcome": {"type": ["string", "null"], "description": "With units, e.g. '3h', '2wk'."},
+    "reporter_relation": {"type": ["string", "null"], "enum": ["hands-on", "observed", "secondhand", null]},
+    "date": {"type": ["string", "null"], "description": "YYYY-MM-DD of the build outcome."},
+    "coarse_region": {"type": ["string", "null"], "description": "Region only (e.g. 'N-MN', 'Arrowhead'). Never an address."}
+  }
+}

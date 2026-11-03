@@ -122,7 +122,8 @@
         "provenance": {"$ref": "#/definitions/provenance"},
         "source": {"type": ["string", "null"]},
         "irreversible": {"type": "boolean"},
-        "hazard": {"type": ["string", "null"], "description": "Required, plain language, when irreversible is true. No method vocabulary."}
+        "hazard": {"type": ["string", "null"], "description": "Required, plain language, when irreversible is true. No method vocabulary."},
+        "caution": {"type": ["string", "null"], "description": "Plain-language field caution. validate.py --ledger requires it (R6) when the ledger puts this irreversible junction in CAUTION. Added by a person; status.py never writes it."}
       }
     }
   }

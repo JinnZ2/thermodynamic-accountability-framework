@@ -3153,6 +3153,14 @@ session's notes only.
   on any failure; --selftest 22 checks), seeds F-LIGHT-01 (4 branches)
   and F-SHELTER-01 (6 branches). No junction TESTED; literature sources
   cited from model knowledge and marked not checked this session.
+  Follow-up (Task 4, field feedback loop): feedback_schema.json,
+  refs.py (junction address + content version), compact.py (one-line
+  SMS/radio FR1 format, PII guard), ledger.py (append-only sha256-chained
+  JSONL, merge by body hash into a new file), status.py (CAUTION /
+  ENVIRONMENT_DEPENDENT / ELIGIBLE_FOR_TESTED / REPORTED / UNCONFIRMED /
+  NOT_DISTRIBUTED; never writes entries), checkout.py (cautions first,
+  logs handout), validate.py R6 (--ledger), schema `caution` field.
+  tests/test_feedback.py 25 tests; validate --selftest 25 checks.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:
