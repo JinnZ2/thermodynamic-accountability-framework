@@ -1,0 +1,30 @@
+{
+  "status": "co-authored",
+  "column_tags": {
+    "lat": "OBSERVED* (per coord_source)",
+    "lon": "OBSERVED* (per coord_source)",
+    "terrain_class": "per terrain_source",
+    "station_elev_m": "OBSERVED (isd-history)",
+    "distance_km": "DERIVED",
+    "elev_delta_m": "DERIVED",
+    "hours_observed": "OBSERVED",
+    "wet_hours_total": "OBSERVED",
+    "rain_total_mm": "OBSERVED",
+    "wet_hours_per_year": "DERIVED",
+    "rain_mm_per_year": "DERIVED",
+    "frac_rain_from_multihour": "DERIVED",
+    "index_weighted": "DERIVED x STUB weight",
+    "slide_drops_per_year": "DERIVED x named params (PROPOSED geometry)",
+    "uncertainty_band_frac": "PROPOSED***",
+    "band_class": "PROPOSED***",
+    "fit_weight": "PROPOSED***",
+    "damage_rate": "OBSERVED (per damage_source)"
+  },
+  "check": {
+    "rule": "rho(damage, index) by band class; min_n=5 margin=0.20",
+    "tag": "DERIVED test of a PROPOSED index",
+    "metrics": {},
+    "verdict": "NOT_TESTABLE",
+    "reason": "no site has both a damage rate and a computed index"
+  }
+}

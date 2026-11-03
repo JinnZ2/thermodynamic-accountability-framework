@@ -1,5 +1,7 @@
 # methods_extract.md -- Task 1
 
+Status: co-authored.
+
 Paper: Ni et al., "Spontaneously charged water drops induce corrosion",
 Nature 2026, DOI 10.1038/s41586-026-10941-6.
 
@@ -18,6 +20,7 @@ Attempted 2026-11-03, all refused by this session's egress policy
 (proxy CONNECT 403 / DNS outside allowlist):
 www.nature.com, doi.org, api.crossref.org, www.ebi.ac.uk (Europe PMC),
 export.arxiv.org, www.uni-bonn.de. Preprint existence: unknown.
+Re-probed after work-order receipt 2 (same day): still denied.
 To unblock: allow www.nature.com and static-content.springer.com (SI PDF).
 
 ## Fields
@@ -45,6 +48,13 @@ drop charge + instrument                NOT ACCESSED   -   (work order states 0.
 grounding / charge-neutralized control  NOT ACCESSED   -
 lab-to-outdoor equivalence statement    NOT ACCESSED   -
 ```
+
+## Tags
+
+Every "(work order states ...)" value: OBSERVED* -- one second-hand
+statement, unverified against the paper. Every press value below:
+OBSERVED*** -- search-summarizer paraphrase of press coverage, page not
+opened, outlets in conflict. Fill tests and nulls: gaps.md section T1.
 
 ## Secondary coverage seen (NOT entered as values)
 

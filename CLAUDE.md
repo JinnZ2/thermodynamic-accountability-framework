@@ -3156,6 +3156,15 @@ session's notes only.
   exposure_index.py: station -> hourly rain -> Marshall-Palmer drop
   flux -> STUB charge weight (NotParameterized) -> vector profile;
   28-check offline selftest; NOAA fetch NOT_TESTABLE here. Stdlib only.
+  Follow-up (same day): order re-received complete (receipt 2,
+  verbatim in WORK_ORDER.md). Pipeline rebuilt to it: wet-hour filter,
+  index = SUM_wet rain x weight(RH, T) (stub), runoff-geometry drop count
+  (named params, no defaults), site stamps (distance, elevation delta,
+  terrain) -> PROPOSED*** uncertainty band + fit_weight, index_by_site.csv,
+  built-in gradient check (NOT_TESTABLE: no site has damage + index).
+  36-check selftest. Added sites.csv, gaps.md. README impact-count
+  reading SUPERSEDED (kept): impact vs runoff counts differ x20-160, not
+  the "~5 orders" stated in chat.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:

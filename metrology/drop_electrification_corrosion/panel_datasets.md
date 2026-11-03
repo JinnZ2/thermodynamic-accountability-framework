@@ -1,5 +1,7 @@
 # panel_datasets.md -- Task 3
 
+Status: co-authored.
+
 Outdoor exposure datasets, sorted by SHELTERED CONTROLS
 (YES > PARTIAL > UNCLEAR > NO).
 
@@ -11,6 +13,11 @@ session's egress policy, so the other primary hosts were not tried
 (rosap.ntl.bts.gov, ntrs.nasa.gov, opus4.kobv.de, core.ac.uk). URLs are
 the documents the snippets point to. NOT FOUND means not found in the
 snippets, not absent from the source.
+
+Tag for every table cell: OBSERVED** (search snippet, primary page not
+opened). Cells marked CONFLICT or inferred in the notes: OBSERVED***.
+Flags F2/F3 below are DERIVED** (an absence across snippets, not a
+proven absence). Fill tests and nulls: gaps.md section T3.
 
 ## Flags (standing)
 
