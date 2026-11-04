@@ -3174,7 +3174,7 @@ session's notes only.
   claim corroboration, direct-contact rule, local quarantine),
   coordination_register.json (R1-R8, D1-D5, B1-B6, E1-E9 all NOT RUN).
   Government action is a parallel input that nothing may depend on.
-  89 unittest tests: cd community_black_start && python3 -m unittest
+  96 unittest tests: cd community_black_start && python3 -m unittest
   discover -s tests.
   Follow-up (2026-11-04): decision T1 in the register records that
   TESTED (3 builds) vs D3 ACTIONABLE (2 sources) differ on purpose
@@ -3193,6 +3193,13 @@ session's notes only.
   bulletins.py (D8), grievance.py (D9), proportionality.py (D11, built
   from the D11 line because code item 5 arrived empty). Register adds
   R9, D6-D11, E11 (NOT RUN). 89 tests.
+  Follow-up (append 3 remainder): proportionality affected_count;
+  defenses.DEFENSE_INDEX pinned to register; 5 L1 role seed items
+  (keyholders_fuel/food/medical, bulletin_writer, grievance_handler);
+  E11 replaced (insider cases a-d), pass rule T3 committed in b0e32d5
+  before tests/test_e11.py existed; synthetic run PASS (a D7, b D8 at
+  7 days, c concentration_report, d D11; 1 of 6 honest blocked, as
+  registered). E12-E14 and B7/B8 added; README limits extended. 96 tests.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:

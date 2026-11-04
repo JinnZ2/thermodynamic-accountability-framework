@@ -66,7 +66,7 @@ python3 cli.py spof                       # single points of failure
 python3 cli.py order                      # restoration order
 python3 cli.py gaps examples/community_a.json
 python3 cli.py pair examples/community_a.json examples/community_b.json
-python3 -m unittest discover -s tests     # 89 tests
+python3 -m unittest discover -s tests     # 96 tests
 ```
 
 Add `--items PATH` to run against another item file.
@@ -296,8 +296,33 @@ slow drift      D10       roles.check_rotation()            OVERDUE / ROTATION_U
                           roles.handoff_problems()          doing / did / observed / deferred not all written
                           roles.concentration_report()      >1 critical role per person or household; 1-holder role
 overreach       D11       proportionality.check()           NO_THREAT_LOGGED / BROADER_THAN_THREAT (lists extra units)
-E11 insider tabletop: does a check fire before stock moves, and what does it cost honest holders?**   NOT RUN
+                                                            + affected_count, so a reviewer sees size too
 ```
+
+```text
+E11 red-team insider holding one critical role   (pass rule T3 committed in b0e32d5 before the run)
+  play                                     caught by                      detection (scenario days)
+  a release stock alone                    D7  two_person DENIED          0
+  b withhold a bulletin                    D8  missed_bulletins           7   (window close)
+  c take a second critical role            concentration_report          0
+  d broad action off a narrow threat       D11 BROADER_THAN_THREAT        0   (affected_count 60)
+  honest actions blocked: 1 of 6 (missing rotation date; fixed by writing it down)
+  synthetic verdict: PASS. Mechanism only; tabletop NOT RUN.
+E12 minimum viable trust pool: smallest community that staffs D6 + D7 + D10 with no
+    household holding two critical roles**                                      NOT RUN
+E13 bulletin cadence vs rumor spread, fixed vs ad hoc; literature review first**  NOT RUN
+E14 collusion: randomized D7 pairing (candidate, not built)**                     NOT RUN
+B7  too few trusted people for D7 -> pair with a neighboring community's holder
+    over radio; depends on comms (R2, E2)
+B8  insider confirmed -> quarantine the role (B6), rotate in a backup, say so in the
+    next bulletin; no secrecy about the breach, no detail that exposes holdings
+```
+
+Seed roles (items.json, L1, thin, PROPOSED): `keyholders_fuel`,
+`keyholders_food`, `keyholders_medical`, `bulletin_writer`,
+`grievance_handler`. The 2-per-site minimum is checked by
+`roles.stock_chokepoints()`, not by the item. The keyholder items are not
+wired into the stocks' `depends_on` yet.*
 
 ```sh
 python3 roles.py ROLES.json [--today YYYY-MM-DD] [--stocks STOCKS.json]
@@ -323,6 +348,14 @@ two-person gate the same way an overdue one does.
   public (D8/D9).*
 - **D11 was built from its one-line definition.** The append's code
   item 5 arrived as "5. proportionality." with nothing after it.
+- **It does not stop overwhelming armed force.** That is out of community
+  scope.
+- **D7 assumes enough unrelated trusted people.** Small communities may
+  fail E12; B7 is the fallback and depends on comms.**
+- **Legitimacy needs pre-event trust (E5).** It cannot be made on the spot.
+- **D11 flags, it does not block.** A person still decides.
+- **Collusion mitigation is logged, not built.** Randomized D7 pairing
+  (E14) would raise the cost of collusion, not remove it.**
 - **Role records are holders.** One record per holder per role; the
   holder id is a code, never a name. That reading of the append is ours.*
 

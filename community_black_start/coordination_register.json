@@ -270,7 +270,8 @@
       ],
       "cleanest_test": "Tabletop over several rotations: one hidden insider holding one critical role tries a-d among ordinary holders doing honest work. Record which check fires first, after how long, and how many honest actions the checks also blocked or delayed. A synthetic code-level run (tests/test_e11.py) checks the mechanism only; pass criteria in decision T3, registered before that run.",
       "null": "An insider play completes before any check fires, or the checks block as many honest actions as they stop: the gate costs more than it guards.",
-      "status": "NOT_RUN"
+      "status": "NOT_RUN",
+      "synthetic_run": "2026-11-04: code-level run of a-d + 6 honest actions, tests/test_e11.py; PASS under decision T3. Tabletop still NOT_RUN."
     },
     {
       "id": "E12",
@@ -529,7 +530,32 @@
         "Detection days are on the scenario's own clock, not field time.",
         "No default changes on this result; nothing is switched."
       ],
-      "result": null
+      "result": {
+        "run": "2026-11-04, tests/test_e11.py (synthetic, code-level), after T3 was committed in b0e32d5",
+        "red_team": {
+          "a": {
+            "caught_by": "D7",
+            "detection_days": 0
+          },
+          "b": {
+            "caught_by": "D8",
+            "detection_days": 7
+          },
+          "c": {
+            "caught_by": "D6/R9 concentration_report",
+            "detection_days": 0
+          },
+          "d": {
+            "caught_by": "D11",
+            "detection_days": 0,
+            "affected_count": 60
+          }
+        },
+        "honest_blocked": "1 of 6 (release_missing_date: ROTATION_UNKNOWN, fixed by writing the rotation date down)",
+        "verdict": "PASS",
+        "all_as_preregistered": true,
+        "open": "Mechanism only. Collusion (E14), staffing size (E12) and real detection time are not tested by this run; tabletop E11 still NOT_RUN."
+      }
     }
   ],
   "frame": "Bad actors harvest instability; they don't create it. Defense flattens the gradients they pull on (desperation, info gaps, chokepoints, grievance, unequal rules, dependency, posturing). Defense must not run hotter than the threat; excess control creates the next gradient. (Append 3, verbatim in docs/coordination_layer_append.md)"
