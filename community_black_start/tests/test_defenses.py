@@ -118,6 +118,15 @@ class SybilTests(unittest.TestCase):
             d.claim_status(d.Claim("A", WELL, ["r1"]), "A", independence_mode="votes")
 
 
+class IndexTests(unittest.TestCase):
+    def test_defense_index_matches_register_and_every_defense_has_r_links(self):
+        with open(os.path.join(ROOT, "coordination_register.json")) as f:
+            reg = json.load(f)
+        self.assertEqual(sorted(d.DEFENSE_INDEX), sorted(x["id"] for x in reg["defenses"]))
+        for x in reg["defenses"]:
+            self.assertTrue(any(r.startswith("R") for r in x["against"]), x["id"])
+
+
 class DefaultTests(unittest.TestCase):
     def test_default_is_contact_paths_after_t2(self):
         import inspect

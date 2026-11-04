@@ -10,7 +10,9 @@
 # "5. proportionality." with nothing after it. PROPOSED, thin.**
 #
 #   Threat(id, plain, scope)               scope = units the threat touches
-#   EnforcementAction(id, plain, threat_id, scope)
+#   EnforcementAction(id, plain, threat_id, scope, affected_count)
+#     affected_count: how many people the action reaches (null = not counted).
+#     Echoed in every result so a reviewer sees size, not just category.
 #   check(action, threats)
 #     no threat_id / unknown threat ....... NO_THREAT_LOGGED
 #     action scope not inside threat scope  BROADER_THAN_THREAT  (lists the extra units)
@@ -50,9 +52,18 @@ class EnforcementAction:
     plain: str
     threat_id: Optional[str] = None
     scope: List[str] = field(default_factory=list)
+    affected_count: Optional[int] = None
 
 
 def check(action, threats):
+    res = _check(action, threats)
+    res["affected_count"] = action.affected_count
+    if action.affected_count is None:
+        res["size_note"] = "affected_count not recorded; a reviewer cannot see how many people this reaches"
+    return res
+
+
+def _check(action, threats):
     by_id = dict((t.id, t) for t in threats)
     if not plain_ok(action.plain):
         return {"id": action.id, "state": "INCOMPLETE", "why": "plain-language line required"}

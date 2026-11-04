@@ -511,6 +511,96 @@
       "status": "PROPOSED",
       "parallel_input": true,
       "note": "Optional parallel input, never a prerequisite. chain.py fails any item that depends on it."
+    },
+    {
+      "id": "keyholders_fuel",
+      "name": "Fuel stock keyholders",
+      "level": 1,
+      "function": "At least 2 keyholders per fuel site, from different households (D6); releases need two of them (D7)",
+      "hours_to_fail_without_grid": null,
+      "non_grid_substitute": null,
+      "local_holder": null,
+      "depends_on": [
+        "people_deployable"
+      ],
+      "trigger": "action: any release of fuel stock needs two keyholders present",
+      "lead_time_days": null,
+      "volume": "thin",
+      "status": "PROPOSED",
+      "parallel_input": false,
+      "note": "Holder count is checked by roles.stock_chokepoints(), not by this item. Not wired into the stock's depends_on yet; that link is the operator's call.*"
+    },
+    {
+      "id": "keyholders_food",
+      "name": "Food stock keyholders",
+      "level": 1,
+      "function": "At least 2 keyholders per food site, from different households (D6); releases need two of them (D7)",
+      "hours_to_fail_without_grid": null,
+      "non_grid_substitute": null,
+      "local_holder": null,
+      "depends_on": [
+        "people_deployable"
+      ],
+      "trigger": "action: any release of food stock needs two keyholders present",
+      "lead_time_days": null,
+      "volume": "thin",
+      "status": "PROPOSED",
+      "parallel_input": false,
+      "note": "Holder count is checked by roles.stock_chokepoints(), not by this item. Not wired into the stock's depends_on yet; that link is the operator's call.* No food stock item is seeded yet."
+    },
+    {
+      "id": "keyholders_medical",
+      "name": "Medical stock keyholders",
+      "level": 1,
+      "function": "At least 2 keyholders per medical site (insulin, oxygen, dialysis supplies), from different households (D6); releases need two of them (D7)",
+      "hours_to_fail_without_grid": null,
+      "non_grid_substitute": null,
+      "local_holder": null,
+      "depends_on": [
+        "people_deployable"
+      ],
+      "trigger": "action: any release of medical stock needs two keyholders present",
+      "lead_time_days": null,
+      "volume": "thin",
+      "status": "PROPOSED",
+      "parallel_input": false,
+      "note": "Holder count is checked by roles.stock_chokepoints(), not by this item. Not wired into the stock's depends_on yet; that link is the operator's call.*"
+    },
+    {
+      "id": "bulletin_writer",
+      "name": "Bulletin writer",
+      "level": 1,
+      "function": "Writes the scheduled plain-language status (restored, next step, what each household can do) on a fixed cadence (D8); rotates (D10)",
+      "hours_to_fail_without_grid": null,
+      "non_grid_substitute": null,
+      "local_holder": null,
+      "depends_on": [
+        "people_deployable"
+      ],
+      "trigger": "threshold: a missed or incomplete bulletin is a public flag",
+      "lead_time_days": null,
+      "volume": "thin",
+      "status": "PROPOSED",
+      "parallel_input": false,
+      "note": "Cadence not set; E13.*"
+    },
+    {
+      "id": "grievance_handler",
+      "name": "Grievance handler",
+      "level": 1,
+      "function": "Logs every grievance with a response deadline, answers or escalates in public, publishes outcomes without identifiers (D9); rotates (D10)",
+      "hours_to_fail_without_grid": null,
+      "non_grid_substitute": null,
+      "local_holder": null,
+      "depends_on": [
+        "people_deployable"
+      ],
+      "trigger": "threshold: an open grievance past its deadline escalates",
+      "lead_time_days": null,
+      "volume": "thin",
+      "status": "PROPOSED",
+      "parallel_input": false,
+      "note": "Deadline length not set.*"
     }
   ]
 }

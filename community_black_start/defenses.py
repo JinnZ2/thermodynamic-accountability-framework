@@ -52,6 +52,23 @@ CONTROL_TERM_PATTERNS = [
 ]
 
 
+# Where each defense lives. Pinned against coordination_register.json by
+# tests/test_defenses.py, so a defense added to one and not the other fails.
+DEFENSE_INDEX = {
+    "D1": "policy (no code): parallel activation; gov_parallel_restoration stays a parallel input",
+    "D2": "items.json trust_vetters",
+    "D3": "defenses.claim_status()",
+    "D4": "defenses.AidRecord / aid_status()",
+    "D5": "defenses.claim_status() direct_contact",
+    "D6": "roles.stock_chokepoints(); coordination.node_concentration()",
+    "D7": "two_person.authorize()",
+    "D8": "bulletins.missed_bulletins()",
+    "D9": "grievance.overdue() / publish()",
+    "D10": "roles.check_rotation() / handoff_problems()",
+    "D11": "proportionality.check()",
+}
+
+
 def plain_ok(text):
     return len(re.findall(r"[A-Za-z]+", text or "")) >= 6
 

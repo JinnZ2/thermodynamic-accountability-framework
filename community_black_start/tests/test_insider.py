@@ -151,8 +151,22 @@ class GrievanceTests(unittest.TestCase):
 class ProportionalityTests(unittest.TestCase):
     T = [pr.Threat("T1", "Fuel missing from the north depot twice this week.", ["site:north"])]
 
-    def a(self, scope, tid="T1"):
-        return pr.EnforcementAction("A1", "Lock the depot and add a second keyholder.", tid, scope)
+    def a(self, scope, tid="T1", n=None):
+        return pr.EnforcementAction("A1", "Lock the depot and add a second keyholder.", tid, scope, n)
+
+    def test_affected_count_in_every_result(self):
+        for scope, tid in ((["site:north"], "T1"), ([pr.ALL], "T1"), (["site:north"], None)):
+            r = pr.check(self.a(scope, tid, 140), self.T)
+            self.assertEqual(r["affected_count"], 140, r["state"])
+        r = pr.check(self.a(["site:north"]), self.T)
+        self.assertIsNone(r["affected_count"])
+        self.assertIn("not recorded", r["size_note"])
+
+    def test_individual_threat_group_scope(self):
+        t = [pr.Threat("T2", "Source r7 sent three false fuel reports this week.", ["source:r7"])]
+        r = pr.check(pr.EnforcementAction("A2", "Bar the whole north road from the fuel depot.",
+                                          "T2", ["road:north"], 60), t)
+        self.assertEqual((r["state"], r["affected_count"]), ("BROADER_THAN_THREAT", 60))
 
     def test_in_proportion(self):
         self.assertEqual(pr.check(self.a(["site:north"]), self.T)["state"], "IN_PROPORTION")
@@ -174,7 +188,8 @@ class RegisterTests(unittest.TestCase):
         with open(os.path.join(ROOT, "coordination_register.json")) as f:
             reg = json.load(f)
         r9 = [r for r in reg["risks"] if r["id"] == "R9"][0]
-        self.assertIn("E11", r9["experiment"])
+        self.assertTrue({"E11", "E12", "E13", "E14"} <= set(r9["experiment"]))
+        self.assertTrue({"B7", "B8"} <= set(r9["backup"]))
         ids = [x["id"] for x in reg["defenses"]]
         self.assertEqual(ids[-6:], ["D6", "D7", "D8", "D9", "D10", "D11"])
         for x in reg["defenses"][-6:]:

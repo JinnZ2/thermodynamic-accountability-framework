@@ -26,7 +26,7 @@ Source reasoning: `docs/black_start_workforce_dependency_gap.md`.
 
 ```text
 schema.py         Item dataclass + field checks
-items.json        seed: 29 items across L0-L3; every unknown number null, volume thin
+items.json        seed: 34 items across L0-L3; every unknown number null, volume thin
 chain.py          load, validate, level check, criticality, single points, order
 community.py      Community(name, holders, buffer_hours); gaps(), interconnect()
 cli.py            command line
@@ -113,8 +113,8 @@ pair          L3 items both lack, and what each holds that the other lacks
    Workers need water, town water needs generation, generation needs workers.
    Broken only by household_buffer (L0): deployability rests on the household's
    OWN fallback, not on town services. DERIVED from the source doc's definition.
-2  Single points of failure: household_buffer (20 dependents), people_deployable
-   (19), spare_relays (2). The top two are people, not equipment.
+2  Single points of failure: household_buffer (25 dependents), people_deployable
+   (24), spare_relays (2). The top two are people, not equipment.
 3  15 level inversions: town water, sewer and medical items sit on L1 power,
    fuel and transport; town water also sits on L2 chlorine; dormant hydro needs
    L2 knowledge holders.

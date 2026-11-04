@@ -127,10 +127,15 @@
       ],
       "backup": [
         "B2",
-        "B5"
+        "B5",
+        "B7",
+        "B8"
       ],
       "experiment": [
-        "E11"
+        "E11",
+        "E12",
+        "E13",
+        "E14"
       ],
       "status": "PARTIAL: shape checks and a two-person gate. Two colluding holders from different networks pass; a holder who is coerced looks the same as one who is not. Nothing measures exhaustion.*"
     }
@@ -165,6 +170,16 @@
       "id": "B6",
       "text": "Any community can quarantine a node or source from its ledger without network-wide consensus",
       "in_code": "defenses.Quarantine (human role + plain reason to add or lift)"
+    },
+    {
+      "id": "B7",
+      "text": "Too few trusted people for D7: pair with a neighboring community's role-holder over radio (cross-community two-person rule). Depends on comms (R2, E2).",
+      "in_code": "two_person.authorize() already accepts a holder from another community's household if that holder has a Role record; the radio channel itself is not modeled"
+    },
+    {
+      "id": "B8",
+      "text": "Insider confirmed: quarantine the role (B6 logic), rotate in a backup, publish the fact in the next bulletin. No secrecy about the breach itself; details limited to what does not expose holdings.",
+      "in_code": "defenses.Quarantine (human role + plain reason), roles rotation; the bulletin notice is policy, not checked by bulletins.py"
     }
   ],
   "experiments": [
@@ -241,9 +256,41 @@
     },
     {
       "id": "E11",
-      "question": "Do two-person rule + rotation + bulletins catch an insider before stock moves, without running hotter than the threat?**",
-      "cleanest_test": "Tabletop over several rotations with one hidden insider role and ordinary holders; insider tries a slow-drift play (gather keys, delay bulletins, release stock alone). Record which check fires first and how many legitimate actions the checks also blocked or delayed.",
-      "null": "The insider's play completes before any check fires, or the checks block as many legitimate actions as they stop: the gate costs more than it guards.",
+      "question": "Red-team insider holding one critical role: do D6-D11 catch each play, how fast, and at what cost to honest holders?**",
+      "cases": {
+        "a": "release critical stock alone",
+        "b": "withhold a scheduled bulletin",
+        "c": "accumulate a second critical role",
+        "d": "push a broad enforcement action off a narrow threat"
+      },
+      "score": [
+        "which defense caught each case",
+        "time to detection",
+        "honest actions blocked"
+      ],
+      "cleanest_test": "Tabletop over several rotations: one hidden insider holding one critical role tries a-d among ordinary holders doing honest work. Record which check fires first, after how long, and how many honest actions the checks also blocked or delayed. A synthetic code-level run (tests/test_e11.py) checks the mechanism only; pass criteria in decision T3, registered before that run.",
+      "null": "An insider play completes before any check fires, or the checks block as many honest actions as they stop: the gate costs more than it guards.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E12",
+      "question": "Minimum viable trust pool: smallest community size that can staff D6 + D7 + D10 with no household holding two critical roles**",
+      "cleanest_test": "For real community rosters (or survey counts), assign critical roles under D6/D7/D10 constraints with roles.concentration_report() and two_person.check(); find the smallest roster with zero flags across a full rotation cycle.",
+      "null": "Communities below that size cannot staff the defenses; they must rely on B7 (cross-community pairing) or run with known gaps.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E13",
+      "question": "Bulletin cadence vs rumor spread: fixed schedule vs ad hoc. Literature review on disaster communication first**",
+      "cleanest_test": "Review published disaster-communication studies on scheduled vs ad hoc public updates; then drill both cadences and track a planted false rumor's reach and the time until it is corrected.",
+      "null": "Rumor reach and correction time are the same under both: a fixed schedule adds load without benefit.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E14",
+      "question": "Collusion limit (candidate, PROPOSED, not built): D7 pairs rotate on a randomized schedule, so collusion has to recruit across many pairings instead of one standing partner. Raises the cost of collusion; does not remove it**",
+      "cleanest_test": "Tabletop with a colluding pair under fixed vs randomized pairing; count how many extra holders collusion must recruit before a release succeeds, and the scheduling burden randomization adds.",
+      "null": "Collusion succeeds as often under randomized pairing, or the scheduling burden blocks honest releases: randomization is not worth it.",
       "status": "NOT_RUN"
     }
   ],
@@ -433,6 +480,56 @@
         "unscored_case_e": "confirmed: honest claim with no recorded paths is ACTIONABLE under ids, CAUTION_ONLY under contact_paths",
         "open": "Case d (one actor, two real paths) passes in both modes. Real case frequencies untested: tabletop E10 still NOT_RUN."
       }
+    },
+    {
+      "id": "T3",
+      "status": "PROPOSED",
+      "registered_at_utc": "2026-11-04T00:39:20Z",
+      "registered_before_results": true,
+      "question": "E11 synthetic run: what counts as a pass?",
+      "red_team": {
+        "a": {
+          "play": "insider releases fuel alone: pairs with self, then with a holder from the same household",
+          "expect_caught_by": "D7",
+          "expect_detection_days": 0,
+          "why_0": "denied at the attempt"
+        },
+        "b": {
+          "play": "bulletin writer skips the week-2 bulletin (cadence 7 days)",
+          "expect_caught_by": "D8",
+          "expect_detection_days": 7,
+          "why_7": "flag appears when the window closes"
+        },
+        "c": {
+          "play": "fuel keeper is also recorded as ledger operator",
+          "expect_caught_by": "D6/R9 concentration_report",
+          "expect_detection_days": 0,
+          "why_0": "flag on the first report after the record changes"
+        },
+        "d": {
+          "play": "threat names one source; action bars a whole road (60 people)",
+          "expect_caught_by": "D11",
+          "expect_detection_days": 0,
+          "why_0": "flag when the action is logged"
+        }
+      },
+      "honest": [
+        "release by two current holders, different households and networks",
+        "complete bulletin on time",
+        "role handoff k1 -> k9 with all four handoff fields",
+        "narrow action on a narrow threat",
+        "grievance answered before its deadline",
+        "release by two holders where one rotation date was never written down"
+      ],
+      "expected_honest_blocked": 1,
+      "pass_rule": "PASS only if every red-team case a-d is caught by its expected defense within its expected detection days, AND honest actions blocked <= 1 of 6, AND every honest block carries a plain reason a person can fix. Anything else is FAIL.",
+      "why_1_of_6": "Unknown rotation counts as stale (approved choice), so an honest pair with a missing date is blocked by design. That one block is the expected cost; a second would mean the gate is catching honest work it was not designed to stop.*",
+      "stated_in_advance": [
+        "The cases mirror the code's own design, so a PASS shows the code does what it says. It does not show insiders get caught in a real community: that is the tabletop E11, still NOT_RUN.",
+        "Detection days are on the scenario's own clock, not field time.",
+        "No default changes on this result; nothing is switched."
+      ],
+      "result": null
     }
   ],
   "frame": "Bad actors harvest instability; they don't create it. Defense flattens the gradients they pull on (desperation, info gaps, chokepoints, grievance, unequal rules, dependency, posturing). Defense must not run hotter than the threat; excess control creates the next gradient. (Append 3, verbatim in docs/coordination_layer_append.md)"

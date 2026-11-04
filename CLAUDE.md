@@ -3165,7 +3165,7 @@ session's notes only.
   with history via git subtree from a standalone local repo, placed
   beside assembly_instrument/ so cross-references resolve). Black-start
   dependency chain for a wide-area, months-long outage with no outside
-  help, community-first: 29 items L0-L3 (all numbers null, volume thin),
+  help, community-first: 34 items L0-L3 (all numbers null, volume thin),
   chain.py (validate with cycle reporting, level check, criticality,
   single points, restoration order), community.py (gaps, interconnect),
   coordination.py (AI matches and proposes, humans in each community
