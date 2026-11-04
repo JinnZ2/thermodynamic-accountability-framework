@@ -13,12 +13,16 @@
 #                          aid_status(): CONTROL_TERMS_FLAGGED -> human review     D4
 #   claim ──> claim_status(claim, local_community, quarantine)
 #               about another community, no direct contact -> DO_NOT_ACT          D5
-#               < 2 independent sources -> CAUTION_ONLY (may warn, never act)      D3
+#               < ACT_MIN_SOURCES independent sources -> CAUTION_ONLY (may warn)    D3
 #               else -> ACTIONABLE (still needs human consent to act)
+#               independence_mode="ids" (default) counts distinct source ids;
+#               independence_mode="contact_paths" counts distinct confirmed contact
+#               paths instead (candidate Sybil fix, PROPOSED, untested: E10)*
 #   Quarantine (per community, no network consensus) ──> filter(records)           B6
 #
 #   python3 defenses.py aid AID.json
 #   python3 defenses.py claim CLAIM.json --community NAME [--quarantine Q.json]
+#                       [--independence ids|contact_paths]
 
 import json
 import re
@@ -138,31 +142,75 @@ class Quarantine:
 # ---------------------------------------------------------------
 # D3 + D5 claims
 # ---------------------------------------------------------------
+# Threshold ladder (decision T1 in coordination_register.json; PROPOSED):
+#   1 source / report      -> may WARN          (D3 CAUTION_ONLY; assembly CAUTION)
+#   ACT_MIN_SOURCES = 2    -> may PROPOSE ACTION here, a person still decides (D3)
+#   3 independent builds   -> may CERTIFY a method TESTED for the whole network
+#                             (assembly_instrument/status.py DEFAULT_N)
+# Different gates on purpose, not drift: acting is local, consented, and
+# perishable (waiting on a third source costs hours); certifying is durable
+# and travels to every community (R7 compounding). tests pin the ordering.
+ACT_MIN_SOURCES = 2
+INDEPENDENCE_MODES = ("ids", "contact_paths")
+
+
 @dataclass
 class Claim:
     about_community: str               # who the claim is about
     plain: str                         # the claim, in plain words
     sources: List[str] = field(default_factory=list)       # independent reporter / node ids
     direct_contact: Optional[str] = None   # how it was confirmed WITH the community it is about
+    # source id -> the path this community used to confirm with that reporter
+    # directly ("in person at the fire hall", "radio ch 3 to the north farm").
+    # Same mechanism as D5, pointed at the reporter instead of the subject.
+    contact_paths: Dict[str, str] = field(default_factory=dict)
 
 
-def claim_status(c, local_community, quarantine=None):
+def _norm_path(p):
+    return " ".join(str(p or "").lower().split())
+
+
+def independence(sources, contact_paths=None):
+    """Both counts, always. distinct_contact_paths groups ids that were
+    confirmed through the same path: one actor running two ids behind one
+    radio or one doorstep collapses to one."""
+    ids = sorted(set(sources))
+    cp = contact_paths or {}
+    by_path = {}
+    for s in ids:
+        p = _norm_path(cp.get(s))
+        if p:
+            by_path.setdefault(p, []).append(s)
+    return {"distinct_ids": len(ids),
+            "distinct_contact_paths": len(by_path),
+            "unconfirmed_ids": [s for s in ids if not _norm_path(cp.get(s))],
+            "shared_paths": dict((p, v) for p, v in sorted(by_path.items()) if len(v) > 1)}
+
+
+def claim_status(c, local_community, quarantine=None, independence_mode="ids"):
     """DO_NOT_ACT | CAUTION_ONLY | ACTIONABLE. ACTIONABLE still needs human
     consent to act; it only means the claim has cleared the evidence bar."""
+    if independence_mode not in INDEPENDENCE_MODES:
+        raise ValueError("independence_mode must be one of %s" % (INDEPENDENCE_MODES,))
     if not plain_ok(c.plain):
         return {"state": "INCOMPLETE", "why": "plain-language claim required"}
     srcs = sorted(set(s for s in c.sources if not (quarantine and quarantine.blocks(s))))
     dropped = sorted(set(c.sources) - set(srcs))
+    ind = independence(srcs, c.contact_paths)
+    base = {"sources": srcs, "quarantined_sources": dropped,
+            "independence_mode": independence_mode, "independence": ind}
     about_other = c.about_community != local_community
     if about_other and not (c.direct_contact or "").strip():
-        return {"state": "DO_NOT_ACT", "sources": srcs, "quarantined_sources": dropped,
-                "why": "claim about %s with no direct contact with %s; confirm with them first"
-                       % (c.about_community, c.about_community)}
-    if len(srcs) < 2:
-        return {"state": "CAUTION_ONLY", "sources": srcs, "quarantined_sources": dropped,
-                "why": "%d independent source(s); may raise caution, may not drive action" % len(srcs)}
-    return {"state": "ACTIONABLE", "sources": srcs, "quarantined_sources": dropped,
-            "why": "%d independent sources%s" % (len(srcs), "; confirmed by direct contact" if about_other else "")}
+        return dict(base, state="DO_NOT_ACT",
+                    why="claim about %s with no direct contact with %s; confirm with them first"
+                        % (c.about_community, c.about_community))
+    n = ind["distinct_ids"] if independence_mode == "ids" else ind["distinct_contact_paths"]
+    unit = "source id(s)" if independence_mode == "ids" else "distinct contact path(s)"
+    if n < ACT_MIN_SOURCES:
+        return dict(base, state="CAUTION_ONLY",
+                    why="%d independent %s; may raise caution, may not drive action" % (n, unit))
+    return dict(base, state="ACTIONABLE",
+                why="%d independent %s%s" % (n, unit, "; confirmed by direct contact" if about_other else ""))
 
 
 def main(argv):
@@ -181,12 +229,13 @@ def main(argv):
             if opt("--quarantine"):
                 with open(opt("--quarantine"), encoding="utf-8") as f:
                     q = Quarantine.from_dict(json.load(f))
-            print(json.dumps(claim_status(c, opt("--community"), q), indent=2))
+            mode = opt("--independence") or "ids"
+            print(json.dumps(claim_status(c, opt("--community"), q, mode), indent=2))
             return 0
     except (OSError, ValueError, TypeError) as e:
         sys.stderr.write("REJECTED: %s\n" % e)
         return 1
-    sys.stderr.write("usage: defenses.py aid AID.json | claim CLAIM.json --community NAME [--quarantine Q.json]\n")
+    sys.stderr.write("usage: defenses.py aid AID.json | claim CLAIM.json --community NAME [--quarantine Q.json] [--independence ids|contact_paths]\n")
     return 2
 
 

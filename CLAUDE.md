@@ -3174,8 +3174,14 @@ session's notes only.
   claim corroboration, direct-contact rule, local quarantine),
   coordination_register.json (R1-R8, D1-D5, B1-B6, E1-E9 all NOT RUN).
   Government action is a parallel input that nothing may depend on.
-  53 unittest tests: cd community_black_start && python3 -m unittest
+  62 unittest tests: cd community_black_start && python3 -m unittest
   discover -s tests.
+  Follow-up (2026-11-04): decision T1 in the register records that
+  TESTED (3 builds) vs D3 ACTIONABLE (2 sources) differ on purpose
+  (certify network-wide vs act locally); ThresholdTests pins 1 < 2 < 3.
+  D3 Sybil gap: opt-in independence_mode="contact_paths" counts distinct
+  confirmed contact paths (D5 mechanism aimed at the reporter); default
+  stays "ids" until E10 (NOT RUN) decides.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:

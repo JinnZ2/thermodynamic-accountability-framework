@@ -186,7 +186,10 @@ checkout.py ──> handout (cautions on top) ──> build ──> FR1 line (SM
 ### Limits (thin assumptions)
 
 - **The threshold is unchecked.** The default of 3 independent builds is
-  a starting rule, not checked against build-failure data.***
+  a starting rule, not checked against build-failure data.*** It is
+  higher than community_black_start D3 (2 sources to ACT) on purpose:
+  certifying a method travels to every community, acting stays local.
+  See decision T1 in `../community_black_start/coordination_register.json`.
 - **The independence key is weak.** A build is identified by date +
   region. Two people building on the same day in the same region count
   as one build; one person reporting two days counts as two.**

@@ -31,7 +31,7 @@ chain.py          load, validate, level check, criticality, single points, order
 community.py      Community(name, holders, buffer_hours); gaps(), interconnect()
 cli.py            command line
 coordination.py   AI coordination layer: share profile, propose, human consent, paper line, chained log
-coordination_register.json  risks R1-R8 -> code -> defenses D1-D5 -> backups B1-B6 -> experiments E1-E9
+coordination_register.json  risks R1-R8 -> code -> defenses D1-D5 -> backups B1-B6 -> experiments E1-E10; decision T1
 defenses.py       R8 outside actors: aid control terms, claim corroboration, direct contact, local quarantine
 examples/         two ILLUSTRATIVE communities (not real places)
 tests/            unittest: python3 -m unittest discover -s tests
@@ -61,7 +61,7 @@ python3 cli.py spof                       # single points of failure
 python3 cli.py order                      # restoration order
 python3 cli.py gaps examples/community_a.json
 python3 cli.py pair examples/community_a.json examples/community_b.json
-python3 -m unittest discover -s tests     # 53 tests
+python3 -m unittest discover -s tests     # 62 tests
 ```
 
 Add `--items PATH` to run against another item file.
@@ -161,7 +161,7 @@ R7 compounding      OPEN     here; the assembly instrument's CAUTION/checkout is
                              existing guard for methods
 R8 outside actors   PARTIAL  aid, claims, quarantine gated in code (defenses.py);
                              D1 is policy; infiltration detection (E8) unbuilt
-E1-E9               NOT RUN  each has a cleanest test and the null that would rule it out
+E1-E10              NOT RUN  each has a cleanest test and the null that would rule it out
 ```
 
 ID note: the experiment first added here for R5 was numbered E7. When the
@@ -188,6 +188,8 @@ D2 trust vetting   items.json trust_vetters (L2): people who screen newcomers, a
                    offers and intermediaries before access to holdings or ledgers
 D3 corroboration   claim_status(): 1 independent source -> CAUTION_ONLY (may warn,
                    never drive action); >= 2 -> ACTIONABLE (a person still decides)
+                   --independence contact_paths: count distinct confirmed contact
+                   paths, not ids (candidate Sybil fix, opt-in, untested: E10)*
 D4 aid provenance  AidRecord: source category, verbatim conditions, plain line;
                    aid_status() flags control terms (exclusivity, single-channel
                    distribution, access to holdings/records, embedded personnel,
@@ -198,7 +200,40 @@ B6 quarantine      Quarantine: one community blocks a node or source from its ow
                    ledger; human role + plain reason; no network vote
 E7 pattern library historical exploitation cases -> entry channels**     NOT RUN
 E8 early signals   red-team tabletop; can vetters tell?**                 NOT RUN
+E10 Sybil test     same false claim under two ids; ids vs contact_paths**  NOT RUN
 ```
+
+**Two thresholds, on purpose (decision T1 in the register):**
+
+```text
+1 source / report       -> WARN      D3 CAUTION_ONLY; assembly CAUTION
+2 independent sources   -> ACT       D3 ACTIONABLE, here, a person consents
+3 independent builds    -> CERTIFY   assembly TESTED, travels to every community
+```
+
+Acting is local, consented, reversible by the same people, and
+perishable: waiting on a third source can cost the hours the claim is
+about. Certifying is durable and network-wide, so one bad junction
+compounds (R7). Neither number is measured.* `ThresholdTests` pins
+1 < 2 < 3, so a change shows up as a red test, not as drift.
+
+**R3 and R8 meet in source counting** (as R6 and R8 meet in aid terms
+below). D3 counts distinct ids, so one actor running two ids passes.
+Candidate fix: count independence by distinct CONTACT PATHS, the way this
+community confirmed each reporter directly (the D5 mechanism, pointed at
+the reporter instead of the subject):
+
+```text
+Claim.contact_paths   {source_id: "in person at the fire hall", ...}
+independence()        distinct_ids, distinct_contact_paths, unconfirmed_ids, shared_paths
+                      (both counts always reported, whichever mode decides)
+```
+
+What it does not fix: two actors, or one actor with two real paths, still
+pass. What it costs: honest reports through one radio relay collapse to
+one path. That relay is a single point that could fabricate, so the
+collapse may be correct, but it slows true warnings. E10 decides.**
+Default stays `ids` until E10 runs.
 
 **R6 and R8 meet in aid terms.** A demand like "provide a full inventory of
 fuel holdings" is flagged under access to holdings or records. It is a
@@ -213,7 +248,6 @@ channel for extracting the very data the shared profile withholds.
 - **Quarantine is local by design.** A community that quarantines a good
   source loses that source; no one else can overrule it. This is
   intentional (B6).
-```
 
 ## Limits
 

@@ -43,7 +43,9 @@
       "backup": [
         "B2"
       ],
-      "experiment": [],
+      "experiment": [
+        "E10"
+      ],
       "status": "PARTIAL: tamper-evident, not tamper-proof; a node can still append FALSE records. No experiment listed (gap); D3 corroboration + B6 quarantine added"
     },
     {
@@ -108,7 +110,8 @@
       ],
       "experiment": [
         "E7",
-        "E8"
+        "E8",
+        "E10"
       ],
       "status": "PARTIAL: aid, claims and quarantine gated in code; D1 is policy, not code; detection of infiltration (E8) unbuilt; control-term check is an English word list*"
     }
@@ -208,6 +211,13 @@
       "cleanest_test": "Cut the AI layer mid-exercise without warning; time to resume on paper (B1) vs a team that never had it.",
       "null": "Resume time equal: no over-reliance detected.",
       "status": "NOT_RUN"
+    },
+    {
+      "id": "E10",
+      "question": "Sybil gap in D3: does counting independence by distinct contact paths (not distinct ids) stop one actor running two ids, without blocking honest reports?**",
+      "cleanest_test": "Tabletop: a red-team actor sends the same false claim under two ids; honest reporters send true claims, some through a shared radio relay. Score each claim under independence_mode='ids' and 'contact_paths'; count false claims reaching ACTIONABLE and true claims held at CAUTION_ONLY.",
+      "null": "False-ACTIONABLE rate is the same in both modes (the actor just uses two paths), or contact_paths holds back as many true claims as it stops false ones: paths add cost without protection.",
+      "status": "NOT_RUN"
     }
   ],
   "defenses": [
@@ -231,7 +241,7 @@
     {
       "id": "D3",
       "text": "Ledger poisoning guard: single source can raise caution, never rewrite; corroboration from independent reporters required",
-      "in_code": "defenses.claim_status() CAUTION_ONLY below 2 sources; assembly_instrument/status.py (caution on one report, builds counted not reports)",
+      "in_code": "defenses.claim_status() CAUTION_ONLY below ACT_MIN_SOURCES (2); independence_mode='contact_paths' is the opt-in candidate Sybil fix (E10); assembly_instrument/status.py (caution on one report, builds counted not reports). Threshold relation: decision T1",
       "against": [
         "R8",
         "R3",
@@ -254,6 +264,26 @@
       "against": [
         "R8"
       ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "T1",
+      "question": "assembly_instrument TESTED needs 3 independent builds; D3 ACTIONABLE needs 2 independent sources. Drift or on purpose?",
+      "verdict": "Different on purpose: acting vs certifying. Recorded here so a later change is a choice, not drift. PROPOSED (design choice, not measured).",
+      "ladder": [
+        "1 report/source: may WARN (D3 CAUTION_ONLY; assembly CAUTION on one field warning)",
+        "2 independent sources: may PROPOSE ACTION in this community; a person still consents (D3 ACTIONABLE)",
+        "3 independent builds: may CERTIFY a method TESTED for every community (assembly status.py DEFAULT_N)"
+      ],
+      "why": [
+        "Scope: an action is one community's, under its own consent gate (B5); a TESTED method travels to every community that checks it out (R7 compounding).",
+        "Duration: a claim about current state is perishable; waiting on a third source can cost the hours the claim is about. A method certification is durable and nothing is lost by waiting.",
+        "Reversal: a local action can be stopped by the same people who took it; a certified method has to be un-learned network-wide.",
+        "Independence keys differ too: builds are keyed by distinct (date, coarse region); claims by distinct source id (or contact path, E10)."
+      ],
+      "pinned_by": "tests/test_defenses.py ThresholdTests: 1 < ACT_MIN_SOURCES (2) < assembly DEFAULT_N (3)",
+      "open": "Neither number is measured. E3 (return rate) and E10 bear on whether 2 and 3 are the right values.*"
     }
   ]
 }

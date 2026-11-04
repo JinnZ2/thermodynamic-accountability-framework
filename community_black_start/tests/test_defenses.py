@@ -67,6 +67,84 @@ class ClaimTests(unittest.TestCase):
         self.assertEqual(s["quarantined_sources"], ["r2"])
 
 
+WELL = "The well on the north road is contaminated, do not drink."
+
+
+class SybilTests(unittest.TestCase):
+    """Candidate fix for the D3 Sybil gap (E10, PROPOSED): count independence
+    by distinct contact paths, not distinct ids."""
+
+    def test_two_ids_one_path_pass_ids_fail_paths(self):
+        c = d.Claim("A", WELL, ["r1", "r2"],
+                    contact_paths={"r1": "radio ch 3 north farm", "r2": "Radio  CH 3 north farm"})
+        self.assertEqual(d.claim_status(c, "A")["state"], "ACTIONABLE")          # the gap, still open by default
+        s = d.claim_status(c, "A", independence_mode="contact_paths")
+        self.assertEqual(s["state"], "CAUTION_ONLY")
+        self.assertEqual(s["independence"]["shared_paths"], {"radio ch 3 north farm": ["r1", "r2"]})
+
+    def test_distinct_paths_actionable(self):
+        c = d.Claim("A", WELL, ["r1", "r2"],
+                    contact_paths={"r1": "in person at the fire hall", "r2": "radio ch 3 north farm"})
+        self.assertEqual(d.claim_status(c, "A", independence_mode="contact_paths")["state"], "ACTIONABLE")
+
+    def test_unconfirmed_id_does_not_count(self):
+        c = d.Claim("A", WELL, ["r1", "r2"], contact_paths={"r1": "in person at the fire hall"})
+        s = d.claim_status(c, "A", independence_mode="contact_paths")
+        self.assertEqual(s["state"], "CAUTION_ONLY")
+        self.assertEqual(s["independence"]["unconfirmed_ids"], ["r2"])
+
+    def test_quarantined_path_not_counted(self):
+        q = d.Quarantine("A")
+        q.add("r2", "human:council", "sent three false reports about the bridge last week")
+        c = d.Claim("A", WELL, ["r1", "r2"],
+                    contact_paths={"r1": "in person at the fire hall", "r2": "radio ch 3 north farm"})
+        s = d.claim_status(c, "A", q, "contact_paths")
+        self.assertEqual(s["state"], "CAUTION_ONLY")
+        self.assertEqual(s["independence"]["distinct_contact_paths"], 1)
+
+    def test_both_counts_always_reported(self):
+        c = d.Claim("A", WELL, ["r1", "r2", "r3"], contact_paths={"r1": "x", "r2": "x"})
+        ind = d.claim_status(c, "A")["independence"]
+        self.assertEqual((ind["distinct_ids"], ind["distinct_contact_paths"]), (3, 1))
+
+    def test_d5_still_first(self):
+        c = d.Claim("B", "Community B is hoarding fuel and plans to cut our road.", ["r1", "r2"],
+                    contact_paths={"r1": "a", "r2": "b"})
+        self.assertEqual(d.claim_status(c, "A", independence_mode="contact_paths")["state"], "DO_NOT_ACT")
+
+    def test_bad_mode_rejected(self):
+        with self.assertRaises(ValueError):
+            d.claim_status(d.Claim("A", WELL, ["r1"]), "A", independence_mode="votes")
+
+
+class ThresholdTests(unittest.TestCase):
+    """Decision T1: warn at 1 < act at 2 < certify at 3. Pinned so drift
+    shows up as a red test, not a silent change."""
+
+    def test_ladder_order(self):
+        asm = os.path.join(os.path.dirname(ROOT), "assembly_instrument")
+        if not os.path.isfile(os.path.join(asm, "status.py")):
+            self.skipTest("assembly_instrument not beside community_black_start")
+        sys.path.insert(0, asm)
+        try:
+            import status  # noqa
+        finally:
+            sys.path.remove(asm)
+        self.assertEqual(d.ACT_MIN_SOURCES, 2)
+        self.assertEqual(status.DEFAULT_N, 3)
+        self.assertLess(1, d.ACT_MIN_SOURCES)
+        self.assertLess(d.ACT_MIN_SOURCES, status.DEFAULT_N)
+
+    def test_register_records_decision(self):
+        with open(os.path.join(ROOT, "coordination_register.json")) as f:
+            reg = json.load(f)
+        t1 = dict((x["id"], x) for x in reg["decisions"])["T1"]
+        self.assertIn("on purpose", t1["verdict"])
+        e = dict((x["id"], x) for x in reg["experiments"])
+        self.assertEqual(e["E10"]["status"], "NOT_RUN")
+        self.assertIn("E10", [r for r in reg["risks"] if r["id"] == "R8"][0]["experiment"])
+
+
 class QuarantineTests(unittest.TestCase):
     def test_local_human_only_and_needs_reason(self):
         q = d.Quarantine("A")
