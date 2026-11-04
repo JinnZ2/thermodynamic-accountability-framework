@@ -123,7 +123,8 @@ class DefaultTests(unittest.TestCase):
         import inspect
         self.assertEqual(inspect.signature(d.claim_status).parameters["independence_mode"].default,
                          "contact_paths")
-        t2 = dict((x["id"], x) for x in json.load(open(os.path.join(ROOT, "coordination_register.json")))["decisions"])["T2"]
+        with open(os.path.join(ROOT, "coordination_register.json")) as f:
+            t2 = dict((x["id"], x) for x in json.load(f)["decisions"])["T2"]
         self.assertTrue(t2["result"]["rule_fired"])
 
 
@@ -186,7 +187,7 @@ class RegistryTests(unittest.TestCase):
             reg = json.load(f)
         ids = [r["id"] for r in reg["risks"]]
         self.assertIn("R8", ids)
-        self.assertEqual([x["id"] for x in reg["defenses"]], ["D1", "D2", "D3", "D4", "D5"])
+        self.assertEqual([x["id"] for x in reg["defenses"]], ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11"])
         self.assertIn("B6", [b["id"] for b in reg["backups"]])
         e = dict((x["id"], x) for x in reg["experiments"])
         self.assertIn("historical", e["E7"]["question"].lower())

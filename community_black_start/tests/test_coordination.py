@@ -163,7 +163,7 @@ class RegisterTests(unittest.TestCase):
     def test_every_risk_mapped_and_every_experiment_has_a_null(self):
         with open(os.path.join(ROOT, "coordination_register.json")) as f:
             reg = json.load(f)
-        self.assertEqual([r["id"] for r in reg["risks"]], ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"])
+        self.assertEqual([r["id"] for r in reg["risks"]], ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"])
         b_ids = {b["id"] for b in reg["backups"]}
         e_ids = {e["id"] for e in reg["experiments"]}
         for r in reg["risks"]:

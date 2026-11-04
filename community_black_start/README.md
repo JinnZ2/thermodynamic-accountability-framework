@@ -31,8 +31,13 @@ chain.py          load, validate, level check, criticality, single points, order
 community.py      Community(name, holders, buffer_hours); gaps(), interconnect()
 cli.py            command line
 coordination.py   AI coordination layer: share profile, propose, human consent, paper line, chained log
-coordination_register.json  risks R1-R8 -> code -> defenses D1-D5 -> backups B1-B6 -> experiments E1-E10; decision T1
+coordination_register.json  risks R1-R9 -> code -> defenses D1-D11 -> backups B1-B6 -> experiments E1-E11; decisions T1, T2
 defenses.py       R8 outside actors: aid control terms, claim corroboration, direct contact, local quarantine
+roles.py          R9: rotation, handoff, role concentration, stock chokepoints        D6 D10
+two_person.py     R9: two holders, two households, two networks, both current         D7
+bulletins.py      R9: scheduled public status; missed or incomplete = flag            D8
+grievance.py      R9: deadlines, visible escalation, outcomes without identifiers     D9
+proportionality.py R9: enforcement scope vs logged threat scope                       D11
 examples/         two ILLUSTRATIVE communities (not real places)
 tests/            unittest: python3 -m unittest discover -s tests
 ```
@@ -61,7 +66,7 @@ python3 cli.py spof                       # single points of failure
 python3 cli.py order                      # restoration order
 python3 cli.py gaps examples/community_a.json
 python3 cli.py pair examples/community_a.json examples/community_b.json
-python3 -m unittest discover -s tests     # 71 tests
+python3 -m unittest discover -s tests     # 89 tests
 ```
 
 Add `--items PATH` to run against another item file.
@@ -269,6 +274,57 @@ channel for extracting the very data the shared profile withholds.
 - (2026-11-04) The default is now contact_paths (decision T2). The
   source-ID limit above still applies under `--independence ids`, and
   case d (one actor, two real paths) passes in both modes.
+
+## Insider threat (R9)
+
+Bad actors harvest instability; they don't create it. The defense flattens
+the gradients they pull on: desperation, info gaps, chokepoints, grievance,
+unequal rules, dependency, posturing. It must not run hotter than the
+threat, because excess control becomes the next gradient. Source: append 3
+in `docs/coordination_layer_append.md`.
+
+```text
+gradient        defense   code                              flags
+chokepoint      D6        roles.stock_chokepoints()         <2 sites, <2 keyholders, one holder on every site
+                          coordination.node_concentration() one AI node brokering most exchanges
+lone action     D7        two_person.authorize()            same holder / household / dependency network,
+                                                            either rotation overdue or unknown -> DENIED;
+                                                            GRANTED and DENIED both hash-chained
+info gap        D8        bulletins.missed_bulletins()      due window with no complete bulletin
+grievance       D9        grievance.overdue() / publish()   open past deadline -> ESCALATE; identifiers held back
+slow drift      D10       roles.check_rotation()            OVERDUE / ROTATION_UNKNOWN / NO_SCHEDULE
+                          roles.handoff_problems()          doing / did / observed / deferred not all written
+                          roles.concentration_report()      >1 critical role per person or household; 1-holder role
+overreach       D11       proportionality.check()           NO_THREAT_LOGGED / BROADER_THAN_THREAT (lists extra units)
+E11 insider tabletop: does a check fire before stock moves, and what does it cost honest holders?**   NOT RUN
+```
+
+```sh
+python3 roles.py ROLES.json [--today YYYY-MM-DD] [--stocks STOCKS.json]
+python3 bulletins.py LOG.json --start YYYY-MM-DD --cadence 7 [--today YYYY-MM-DD]
+python3 grievance.py LOG.json [--today YYYY-MM-DD]
+python3 proportionality.py THREATS.json ACTIONS.json
+```
+
+Unknown is never current: a role with no `last_rotated` date fails the
+two-person gate the same way an overdue one does.
+
+**Limits:**
+- **Two colluding holders pass D7** if they sit in different households
+  and networks and are current on rotation. The rule raises the cost of a
+  lone insider; it does not detect collusion.*
+- **Dependency networks are declared, not measured.** A household left
+  out of the `networks` map counts as its own network.*
+- **The identifier check is a pattern list** (email, phone, street
+  address). It misses a name in plain words; a person reads every outcome
+  before posting.*
+- **Proportionality sees only what was logged.** A threat logged wider
+  than it is passes a wide action, which is why the threat record is
+  public (D8/D9).*
+- **D11 was built from its one-line definition.** The append's code
+  item 5 arrived as "5. proportionality." with nothing after it.
+- **Role records are holders.** One record per holder per role; the
+  holder id is a code, never a name. That reading of the append is ours.*
 
 ## Limits
 

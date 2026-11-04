@@ -114,6 +114,25 @@
         "E10"
       ],
       "status": "PARTIAL: aid, claims and quarantine gated in code; D1 is policy, not code; detection of infiltration (E8) unbuilt; control-term check is an English word list*"
+    },
+    {
+      "id": "R9",
+      "text": "Insider threat: a trusted role (stock keeper, ledger operator, comms, switching, coordinator) is bought, coerced, exhausted, or acts on its own agenda; includes slow drift, gradual control accumulation by one role. Standing variable, not edge case. Pairs with R1 and R8.",
+      "in_code": [
+        "roles.concentration_report(): one person or household holding >1 critical role; critical role with one holder",
+        "roles.stock_chokepoints(): critical stock at <2 sites, site with <2 keyholders, one holder with keys to every site",
+        "roles.check_rotation() / handoff_problems(): overdue, unknown or unscheduled rotation; incomplete handoff",
+        "two_person.authorize(): four actions need two holders from different households and dependency networks, both current on rotation; every decision hash-chained",
+        "bulletins.missed_bulletins(), grievance.overdue(), proportionality.check(): public flags when status, answers or enforcement scope drift"
+      ],
+      "backup": [
+        "B2",
+        "B5"
+      ],
+      "experiment": [
+        "E11"
+      ],
+      "status": "PARTIAL: shape checks and a two-person gate. Two colluding holders from different networks pass; a holder who is coerced looks the same as one who is not. Nothing measures exhaustion.*"
     }
   ],
   "backups": [
@@ -219,6 +238,13 @@
       "null": "False-ACTIONABLE rate is the same in both modes (the actor just uses two paths), or contact_paths holds back as many true claims as it stops false ones: paths add cost without protection.",
       "status": "NOT_RUN",
       "synthetic_run": "2026-11-04: code-level run of cases a-d, tests/test_e10.py; result under decision T2. The tabletop below is still NOT_RUN."
+    },
+    {
+      "id": "E11",
+      "question": "Do two-person rule + rotation + bulletins catch an insider before stock moves, without running hotter than the threat?**",
+      "cleanest_test": "Tabletop over several rotations with one hidden insider role and ordinary holders; insider tries a slow-drift play (gather keys, delay bulletins, release stock alone). Record which check fires first and how many legitimate actions the checks also blocked or delayed.",
+      "null": "The insider's play completes before any check fires, or the checks block as many legitimate actions as they stop: the gate costs more than it guards.",
+      "status": "NOT_RUN"
     }
   ],
   "defenses": [
@@ -263,6 +289,62 @@
       "text": "Info hygiene: claims about other communities need direct-contact confirmation before action (counters engineered inter-community distrust)",
       "in_code": "defenses.claim_status() DO_NOT_ACT without direct_contact",
       "against": [
+        "R8"
+      ]
+    },
+    {
+      "id": "D6",
+      "text": "No chokepoints: critical stocks (fuel, food, medical) split across >=2 sites with >=2 keyholders each; no single role holds a full inventory; coordination runs on >=2 independent nodes",
+      "in_code": "roles.stock_chokepoints(); coordination.node_concentration() for nodes",
+      "against": [
+        "R9",
+        "R8",
+        "R1"
+      ]
+    },
+    {
+      "id": "D7",
+      "text": "Two-person rule: release of critical stock, energizing/switching, ledger quarantine actions, accepting aid with flagged terms each need two roles from different households; neither person the other's dependent",
+      "in_code": "two_person.authorize(), ACTIONS",
+      "against": [
+        "R9",
+        "R8"
+      ]
+    },
+    {
+      "id": "D8",
+      "text": "Scheduled bulletins: plain-language public status on a fixed cadence (restored, next, household role); a missed bulletin is itself a flag; feeds the POPULATION SEES/DOES column",
+      "in_code": "bulletins.missed_bulletins(), REQUIRED",
+      "against": [
+        "R9",
+        "R8"
+      ]
+    },
+    {
+      "id": "D9",
+      "text": "Grievance channel: every grievance logged with a response deadline; unanswered past deadline escalates visibly; outcomes published without personal identifiers",
+      "in_code": "grievance.overdue(), publish(), IDENTIFIER_PATTERNS",
+      "against": [
+        "R9",
+        "R8"
+      ]
+    },
+    {
+      "id": "D10",
+      "text": "Rotation: stock, ledger, comms roles rotate on a set schedule; handoff protocol (doing / did / observed / deferred)",
+      "in_code": "roles.check_rotation(), handoff_problems(); two_person denies overdue or unknown rotation",
+      "against": [
+        "R9",
+        "R1"
+      ]
+    },
+    {
+      "id": "D11",
+      "text": "Proportionality: every enforcement action records the threat it answers and its scope; action broader than the logged threat is flagged (elite panic, collective punishment)",
+      "in_code": "proportionality.check(): NO_THREAT_LOGGED / BROADER_THAN_THREAT / IN_PROPORTION. Built from the D11 line; the append's code item 5 arrived empty",
+      "against": [
+        "R9",
+        "R1",
         "R8"
       ]
     }
@@ -352,5 +434,6 @@
         "open": "Case d (one actor, two real paths) passes in both modes. Real case frequencies untested: tabletop E10 still NOT_RUN."
       }
     }
-  ]
+  ],
+  "frame": "Bad actors harvest instability; they don't create it. Defense flattens the gradients they pull on (desperation, info gaps, chokepoints, grievance, unequal rules, dependency, posturing). Defense must not run hotter than the threat; excess control creates the next gradient. (Append 3, verbatim in docs/coordination_layer_append.md)"
 }
