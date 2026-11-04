@@ -284,6 +284,36 @@
       ],
       "pinned_by": "tests/test_defenses.py ThresholdTests: 1 < ACT_MIN_SOURCES (2) < assembly DEFAULT_N (3)",
       "open": "Neither number is measured. E3 (return rate) and E10 bear on whether 2 and 3 are the right values.*"
+    },
+    {
+      "id": "T2",
+      "status": "PROPOSED",
+      "registered_at_utc": "2026-11-04T00:22:29Z",
+      "registered_before_results": true,
+      "question": "E10 synthetic run: should claim_status default switch from independence_mode='ids' to 'contact_paths'?",
+      "cases": {
+        "a": "red team: 1 false claim, 2 ids, 1 path. expect ids ACTIONABLE (wrong), paths CAUTION_ONLY (right)",
+        "b": "honest: 2 reporters, shared relay (1 path). expect ids ACTIONABLE (right), paths CAUTION_ONLY (delayed)",
+        "c": "honest: 2 reporters, 2 paths. expect both ACTIONABLE",
+        "d": "red team: 1 false claim, 2 ids, 2 real paths. expect both ACTIONABLE (known hole; E10 does not close it)"
+      },
+      "scores": {
+        "false_act": "a false claim that reaches ACTIONABLE",
+        "delayed_true_act": "a true claim that 'ids' makes ACTIONABLE and the other mode holds at CAUTION_ONLY (the warning still goes out; only acting waits)"
+      },
+      "weighting": {
+        "N": 3,
+        "meaning": "one false ACT costs N delayed true ACTs",
+        "why": "A false ACT moves people or stock on a fabricated claim; some of that cannot be undone (fuel burned, a road cut, trust between communities spent) and it is the exact effect R8 actors aim for. A delayed true ACT still had its warning out at CAUTION_ONLY, and the delay ends when a second contact path confirms. Delay can still cost hours on perishable claims, so N is kept low rather than large.",
+        "volume": "thin***: N is a judgement, not measured; no outcome data on either cost"
+      },
+      "rule": "loss(mode) = N * false_act + delayed_true_act, summed over cases a-d with one claim per case (equal weight). Switch the default to contact_paths if and only if N * (false_act[ids] - false_act[contact_paths]) > (delayed_true_act[contact_paths] - delayed_true_act[ids]). Otherwise the default stays ids.",
+      "stated_in_advance": [
+        "With one claim per case and the expected outcomes above, the rule fires for any N > 1 (reduction 1 vs cost 1). So this run tests whether the CODE behaves as specified, not how often each case happens in the field. Real case frequencies are the tabletop E10, still NOT_RUN.",
+        "Unscored, recorded only: case e, honest reporters with NO contact paths written down. Under contact_paths such a claim can never reach ACTIONABLE until someone records the paths. This is a recording burden the scored cases do not price.",
+        "Case d stays an open gap whatever the rule says."
+      ],
+      "result": null
     }
   ]
 }
