@@ -61,7 +61,7 @@ python3 cli.py spof                       # single points of failure
 python3 cli.py order                      # restoration order
 python3 cli.py gaps examples/community_a.json
 python3 cli.py pair examples/community_a.json examples/community_b.json
-python3 -m unittest discover -s tests     # 62 tests
+python3 -m unittest discover -s tests     # 71 tests
 ```
 
 Add `--items PATH` to run against another item file.
@@ -188,8 +188,8 @@ D2 trust vetting   items.json trust_vetters (L2): people who screen newcomers, a
                    offers and intermediaries before access to holdings or ledgers
 D3 corroboration   claim_status(): 1 independent source -> CAUTION_ONLY (may warn,
                    never drive action); >= 2 -> ACTIONABLE (a person still decides)
-                   --independence contact_paths: count distinct confirmed contact
-                   paths, not ids (candidate Sybil fix, opt-in, untested: E10)*
+                   default counts distinct confirmed CONTACT PATHS, not ids
+                   (decision T2, E10 synthetic run); --independence ids for the old count*
 D4 aid provenance  AidRecord: source category, verbatim conditions, plain line;
                    aid_status() flags control terms (exclusivity, single-channel
                    distribution, access to holdings/records, embedded personnel,
@@ -232,8 +232,24 @@ independence()        distinct_ids, distinct_contact_paths, unconfirmed_ids, sha
 What it does not fix: two actors, or one actor with two real paths, still
 pass. What it costs: honest reports through one radio relay collapse to
 one path. That relay is a single point that could fabricate, so the
-collapse may be correct, but it slows true warnings. E10 decides.**
-Default stays `ids` until E10 runs.
+collapse may be correct, but it slows acting on true warnings. E10 decides.**
+E10 synthetic run (decision T2, rule committed before the run in 76cee5f):
+
+```text
+case                                   ids              contact_paths
+a  red team, 2 ids, 1 path      false  ACTIONABLE  x    CAUTION_ONLY
+b  honest, shared relay         true   ACTIONABLE       CAUTION_ONLY  (delayed)
+c  honest, 2 paths              true   ACTIONABLE       ACTIONABLE
+d  red team, 2 ids, 2 paths     false  ACTIONABLE  x    ACTIONABLE  x  (open gap)
+score  false ACT / delayed true ACT     2 / 0            1 / 1
+rule   N=3***: 3 x (2-1) = 3 > (1-0) = 1   -> fired; default is now contact_paths
+```
+
+With one claim per case the rule fires for any N > 1, so the run checks
+that the code does what was specified, not how often each case happens.
+The tabletop E10 is still NOT RUN. Case d stays open. A claim with no
+contact paths recorded can no longer reach ACTIONABLE under the default
+(unscored case e): recording paths is now part of the cost.
 
 **R6 and R8 meet in aid terms.** A demand like "provide a full inventory of
 fuel holdings" is flagged under access to holdings or records. It is a
@@ -248,6 +264,11 @@ channel for extracting the very data the shared profile withholds.
 - **Quarantine is local by design.** A community that quarantines a good
   source loses that source; no one else can overrule it. This is
   intentional (B6).
+- **contact_paths mode delays acting on true warnings through a shared relay;
+  it does not delay the warnings themselves.**
+- (2026-11-04) The default is now contact_paths (decision T2). The
+  source-ID limit above still applies under `--independence ids`, and
+  case d (one actor, two real paths) passes in both modes.
 
 ## Limits
 

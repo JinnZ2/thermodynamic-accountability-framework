@@ -217,7 +217,8 @@
       "question": "Sybil gap in D3: does counting independence by distinct contact paths (not distinct ids) stop one actor running two ids, without blocking honest reports?**",
       "cleanest_test": "Tabletop: a red-team actor sends the same false claim under two ids; honest reporters send true claims, some through a shared radio relay. Score each claim under independence_mode='ids' and 'contact_paths'; count false claims reaching ACTIONABLE and true claims held at CAUTION_ONLY.",
       "null": "False-ACTIONABLE rate is the same in both modes (the actor just uses two paths), or contact_paths holds back as many true claims as it stops false ones: paths add cost without protection.",
-      "status": "NOT_RUN"
+      "status": "NOT_RUN",
+      "synthetic_run": "2026-11-04: code-level run of cases a-d, tests/test_e10.py; result under decision T2. The tabletop below is still NOT_RUN."
     }
   ],
   "defenses": [
@@ -241,7 +242,7 @@
     {
       "id": "D3",
       "text": "Ledger poisoning guard: single source can raise caution, never rewrite; corroboration from independent reporters required",
-      "in_code": "defenses.claim_status() CAUTION_ONLY below ACT_MIN_SOURCES (2); independence_mode='contact_paths' is the opt-in candidate Sybil fix (E10); assembly_instrument/status.py (caution on one report, builds counted not reports). Threshold relation: decision T1",
+      "in_code": "defenses.claim_status() CAUTION_ONLY below ACT_MIN_SOURCES (2); independence_mode='contact_paths' is the default since decision T2 (E10 synthetic run); 'ids' still selectable; assembly_instrument/status.py (caution on one report, builds counted not reports). Threshold relation: decision T1",
       "against": [
         "R8",
         "R3",
@@ -313,7 +314,43 @@
         "Unscored, recorded only: case e, honest reporters with NO contact paths written down. Under contact_paths such a claim can never reach ACTIONABLE until someone records the paths. This is a recording burden the scored cases do not price.",
         "Case d stays an open gap whatever the rule says."
       ],
-      "result": null
+      "result": {
+        "run": "2026-11-04, tests/test_e10.py (synthetic, code-level), after T2 was committed in 76cee5f",
+        "states": {
+          "a": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "CAUTION_ONLY"
+          },
+          "b": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "CAUTION_ONLY"
+          },
+          "c": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "ACTIONABLE"
+          },
+          "d": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "ACTIONABLE"
+          }
+        },
+        "score": {
+          "ids": {
+            "false_act": 2,
+            "delayed_true_act": 0
+          },
+          "contact_paths": {
+            "false_act": 1,
+            "delayed_true_act": 1
+          }
+        },
+        "all_states_as_preregistered": true,
+        "rule": "3 * (2 - 1) = 3 > (1 - 0) = 1",
+        "rule_fired": true,
+        "action": "default independence_mode switched ids -> contact_paths in defenses.claim_status and the CLI. ids mode kept and selectable.",
+        "unscored_case_e": "confirmed: honest claim with no recorded paths is ACTIONABLE under ids, CAUTION_ONLY under contact_paths",
+        "open": "Case d (one actor, two real paths) passes in both modes. Real case frequencies untested: tabletop E10 still NOT_RUN."
+      }
     }
   ]
 }

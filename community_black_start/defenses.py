@@ -15,9 +15,9 @@
 #               about another community, no direct contact -> DO_NOT_ACT          D5
 #               < ACT_MIN_SOURCES independent sources -> CAUTION_ONLY (may warn)    D3
 #               else -> ACTIONABLE (still needs human consent to act)
-#               independence_mode="ids" (default) counts distinct source ids;
-#               independence_mode="contact_paths" counts distinct confirmed contact
-#               paths instead (candidate Sybil fix, PROPOSED, untested: E10)*
+#               independence_mode="contact_paths" (default since T2/E10 synthetic,
+#               2026-11-04) counts distinct confirmed contact paths;
+#               independence_mode="ids" counts distinct source ids (old default)*
 #   Quarantine (per community, no network consensus) ──> filter(records)           B6
 #
 #   python3 defenses.py aid AID.json
@@ -187,7 +187,7 @@ def independence(sources, contact_paths=None):
             "shared_paths": dict((p, v) for p, v in sorted(by_path.items()) if len(v) > 1)}
 
 
-def claim_status(c, local_community, quarantine=None, independence_mode="ids"):
+def claim_status(c, local_community, quarantine=None, independence_mode="contact_paths"):
     """DO_NOT_ACT | CAUTION_ONLY | ACTIONABLE. ACTIONABLE still needs human
     consent to act; it only means the claim has cleared the evidence bar."""
     if independence_mode not in INDEPENDENCE_MODES:
@@ -229,7 +229,7 @@ def main(argv):
             if opt("--quarantine"):
                 with open(opt("--quarantine"), encoding="utf-8") as f:
                     q = Quarantine.from_dict(json.load(f))
-            mode = opt("--independence") or "ids"
+            mode = opt("--independence") or "contact_paths"
             print(json.dumps(claim_status(c, opt("--community"), q, mode), indent=2))
             return 0
     except (OSError, ValueError, TypeError) as e:

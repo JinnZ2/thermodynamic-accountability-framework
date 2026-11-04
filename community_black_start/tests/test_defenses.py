@@ -48,7 +48,8 @@ class ClaimTests(unittest.TestCase):
         c = d.Claim("B", "Community B is hoarding fuel and plans to cut our road.", ["r1", "r2", "r3"])
         self.assertEqual(d.claim_status(c, "A")["state"], "DO_NOT_ACT")
         c.direct_contact = "radio call with B council, 2026-12-02"
-        self.assertEqual(d.claim_status(c, "A")["state"], "ACTIONABLE")
+        self.assertEqual(d.claim_status(c, "A", independence_mode="ids")["state"], "ACTIONABLE")
+        self.assertEqual(d.claim_status(c, "A")["state"], "CAUTION_ONLY")   # default: no paths recorded
 
     def test_single_source_caution_only(self):
         c = d.Claim("A", "The well on the north road is contaminated, do not drink.", ["r1"])
@@ -62,7 +63,7 @@ class ClaimTests(unittest.TestCase):
         q = d.Quarantine("A")
         q.add("r2", "human:council", "sent three false reports about the bridge last week")
         c = d.Claim("A", "The well on the north road is contaminated, do not drink.", ["r1", "r2"])
-        s = d.claim_status(c, "A", q)
+        s = d.claim_status(c, "A", q, "ids")
         self.assertEqual(s["state"], "CAUTION_ONLY")
         self.assertEqual(s["quarantined_sources"], ["r2"])
 
@@ -77,7 +78,7 @@ class SybilTests(unittest.TestCase):
     def test_two_ids_one_path_pass_ids_fail_paths(self):
         c = d.Claim("A", WELL, ["r1", "r2"],
                     contact_paths={"r1": "radio ch 3 north farm", "r2": "Radio  CH 3 north farm"})
-        self.assertEqual(d.claim_status(c, "A")["state"], "ACTIONABLE")          # the gap, still open by default
+        self.assertEqual(d.claim_status(c, "A", independence_mode="ids")["state"], "ACTIONABLE")   # the gap, ids mode
         s = d.claim_status(c, "A", independence_mode="contact_paths")
         self.assertEqual(s["state"], "CAUTION_ONLY")
         self.assertEqual(s["independence"]["shared_paths"], {"radio ch 3 north farm": ["r1", "r2"]})
@@ -115,6 +116,15 @@ class SybilTests(unittest.TestCase):
     def test_bad_mode_rejected(self):
         with self.assertRaises(ValueError):
             d.claim_status(d.Claim("A", WELL, ["r1"]), "A", independence_mode="votes")
+
+
+class DefaultTests(unittest.TestCase):
+    def test_default_is_contact_paths_after_t2(self):
+        import inspect
+        self.assertEqual(inspect.signature(d.claim_status).parameters["independence_mode"].default,
+                         "contact_paths")
+        t2 = dict((x["id"], x) for x in json.load(open(os.path.join(ROOT, "coordination_register.json")))["decisions"])["T2"]
+        self.assertTrue(t2["result"]["rule_fired"])
 
 
 class ThresholdTests(unittest.TestCase):
