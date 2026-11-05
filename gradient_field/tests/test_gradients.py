@@ -119,14 +119,13 @@ class ShippedFiles(unittest.TestCase):
         self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 9)])
 
     def test_flags_pinned(self):
-        self.assertEqual(codes(self.gs, self.xs),
-                         [("EVIDENCE_PENDING", "I1"), ("EVIDENCE_PENDING", "I5"), ("EVIDENCE_PENDING", "I7"),
-                          ("INTERACTION_UNEVIDENCED", "I1")])
+        self.assertEqual(codes(self.gs, self.xs), [])   # J13 entered (PR #64)
 
-    def test_j13_pending_not_evidence(self):
-        for x in self.xs:
-            self.assertNotIn("J13", x["evidence_refs"])
-        self.assertNotIn("J13", field.known_refs())
+    def test_j13_evidence(self):
+        self.assertIn("J13", field.known_refs())
+        got = dict((x["id"], x["evidence_refs"]) for x in self.xs if "J13" in x["evidence_refs"])
+        self.assertEqual(got, {"I1": ["J13"], "I5": ["J13"], "I7": ["J11", "J13"]})
+        self.assertTrue(all(not x["pending_refs"] for x in self.xs))
 
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]

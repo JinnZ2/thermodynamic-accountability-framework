@@ -30,21 +30,20 @@ G6  honesty / disclosure
 
 ```text
 id  gradients        type       status     evidence      pending
-I1  G1,G5 (G10 abs)  OPPOSE     OBSERVED   --            J13
+I1  G1,G5 (G10 abs)  OPPOSE     OBSERVED   J13           --
 I2  G1 vs protocol,  OPPOSE     OBSERVED   J12           --
     G9,G8 amplify
 I3  G3,G4            MASK       PROPOSED   J10c, T2      --
 I4  G11,G6           OPPOSE     PROPOSED   --            --     (applies to this repo's co-author model)
-I5  G7,G5            GATE       PROPOSED   --            J13
+I5  G7,G5            GATE       PROPOSED   J13           --
 I6  G2,G4            REINFORCE  PROPOSED   --            --
-I7  G10              GATE       PROPOSED   J11           J13    test E18
+I7  G10              GATE       PROPOSED   J11, J13      --     test E18
 I8  G3,G1 (human)    REINFORCE  PROPOSED   --            --
 ```
 
 Recorder decisions (co-author to confirm):
-- J13 is not in judgment_registry, so it sits in pending_refs. I1 is
-  OBSERVED with no resolvable evidence and raises INTERACTION_UNEVIDENCED
-  until J13 is entered.
+- J13 (judgment_registry, PR #64) is evidence for I1, I5, I7; the
+  shipped files raise no flags.
 - I2: "protocol" is not a gradient; recorded as other_party. Status set
   OBSERVED from J12 (the append gave none).
 - I7 type GATE (G10 decides whether the conflict shows).

@@ -3188,9 +3188,9 @@ session's notes only.
   E18-E20 NOT RUN. field.py validates (gradient ids exist, evidence_refs
   resolve to judgment_registry / signal_calibration ids) and flags
   INTERACTION_UNEVIDENCED, GRADIENT_UNUSED, CLASS_TRANSFER_UNRECORDED,
-  EVIDENCE_PENDING. matrix.py grid --class human|model|both. J13 not in
-  the registry: held in pending_refs, so I1 (OBSERVED) raises
-  INTERACTION_UNEVIDENCED. 17 tests.
+  EVIDENCE_PENDING. matrix.py grid --class human|model|both. Rebased
+  after #64: J13 moved from pending_refs into evidence for I1, I5, I7;
+  no flags on the shipped files. 17 tests.
 - judgment_registry label ablation + J12 (2026-11-05, co-authored), on
   branch claude/registry-acts-labels (PR #60). Label.ablation (rewrite,
   hidden premises with evidence_ref, survives YES/NO/PARTIAL/PENDING/
