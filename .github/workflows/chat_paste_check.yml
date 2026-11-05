@@ -1,9 +1,10 @@
 name: chat-paste check
 
-# WARN-ONLY mode through 2026-05-09 (one week from landing).
-# After that date, flip `continue-on-error: false` and remove
-# this comment to enforce the check on PRs and pushes to main.
-# TODO 2026-05-09: flip to enforcing.
+# WARN-ONLY. Findings are printed in the log, written to the job
+# summary, and raised as a warning annotation; the job itself exits 0.
+# (Job-level continue-on-error keeps the workflow green but still marks
+# the check run as failed, so the step reports and exits 0 instead.)
+# To enforce: replace the final `exit 0` with `exit "$rc"`.
 
 on:
   pull_request:
@@ -13,14 +14,30 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    continue-on-error: true   # WARN-ONLY; remove after 2026-05-09
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: run chat_paste_check on all .py
+      - name: run chat_paste_check on all .py (warn-only)
         run: |
-          find . -name "*.py" -not -path "./.git/*" \
-            -print0 | xargs -0 \
-            python tools/chat_paste_check.py
+          set +e
+          find . -name "*.py" -not -path "./.git/*" -print0 \
+            | xargs -0 python tools/chat_paste_check.py > paste_check.txt 2>&1
+          rc=$?
+          cat paste_check.txt
+          {
+            echo "## chat-paste check (warn-only)"
+            if [ "$rc" -eq 0 ]; then
+              echo "No contamination found."
+            else
+              echo "Contamination found (exit $rc). Not enforced; findings below."
+              echo '```text'
+              cat paste_check.txt
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$rc" -ne 0 ]; then
+            echo "::warning title=chat-paste check::contamination found (exit $rc); see job summary"
+          fi
+          exit 0

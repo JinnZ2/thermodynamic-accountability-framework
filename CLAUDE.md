@@ -3151,6 +3151,19 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Paste-check workflow + in_progress cleanup (2026-11-05, co-authored),
+  branch claude/paste-check-warn-only off main after PR #59. Workflow:
+  the step reports findings (log, job summary, warning annotation) and
+  exits 0, so warn-only no longer marks the check failed; enforce by
+  changing the final `exit 0` to `exit "$rc"`. in_progress/
+  eroi_real_time_audit.py and banking_thermodynamic_audit.py cleaned
+  like earlier pastes (straight quotes, fences and bold dunders removed,
+  em-dash dividers -> `=`, 3 em-dashes in text -> `--`, indentation
+  restored); non-whitespace content otherwise byte-identical (checked);
+  both compile, import and run. Repo-wide paste check now exit 0.
+  Register: M11 / M13 / M25 residual follow-ups queued (status.py
+  origins; 280-char cap with [truncated]; steward + second via
+  two_person.authorize).
 - M11 / M13 / M25 (2026-11-05, co-authored), branch
   claude/misuse-m11-m13-m25 off main after PR #58. M11 (D-M13):
   mergeprov.py (identical copy in misuse_guard, judgment_registry,

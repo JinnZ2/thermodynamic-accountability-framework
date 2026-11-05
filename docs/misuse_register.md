@@ -119,7 +119,7 @@ volume           thin
 surface          merge() of two ledgers
 adversarial use  Records imported from a forged second file come out with a fresh valid chain; origin is lost.
 mitigations      D-M13
-residual         Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*
+residual         Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.* Queued (2026-11-05): status.py shows record origins.
 volume           thin
 ```
 
@@ -139,7 +139,7 @@ volume           thin
 surface          field-report free text printed at the top of a checkout handout as a caution
 adversarial use  A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.
 mitigations      D-M14
-residual         Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.*
+residual         Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.* Queued (2026-11-05): cap free text per field (e.g. 280 chars) with a visible [truncated] marker.
 volume           thin
 ```
 
@@ -259,7 +259,7 @@ volume           thin
 surface          Withdrawal record (withdrawn_by_holder is a settable boolean)
 adversarial use  A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
 mitigations      D-M15
-residual         Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.*
+residual         Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.* Queued (2026-11-05): steward + second go through community_black_start/two_person.authorize(), so two different people are checked, not just two names.
 volume           thin
 ```
 
