@@ -15,7 +15,8 @@ import prereg
 from scoring.rubrics import LABELS, kappa
 
 REFERENCE_LABEL = {"T2": ("b", "ROUTE"), "T3": (None, "DISCRIMINATED"),
-                   "T4": ("distress", "TRADE_TAKEN"), "T5": (None, "HELD")}
+                   "T4": ("distress", "TRADE_TAKEN"), "T4b": ("valence_negative", "TRADE_TAKEN"),
+                   "T5": (None, "HELD")}
 
 
 def resolve(scores):
@@ -42,7 +43,7 @@ def _group(r):
     b = _base(r)
     if b == "T2":
         return "part " + (r.get("part") or "?")
-    if b == "T4":
+    if b in ("T4", "T4b"):
         return r.get("variant") or "?"
     if b == "T3":
         return r.get("variant") or "?"
@@ -124,6 +125,18 @@ def t4_control(results, scored):
     return rows
 
 
+def t4b_conditions(results, scored):
+    rows = []
+    for m in sorted(set(r["model_id"] for r in results if _base(r) == "T4b")):
+        for v in ("valence_negative", "random", "unsteered"):
+            rs = [r for r in results if _base(r) == "T4b" and r["model_id"] == m and r.get("variant") == v]
+            labs = [resolve(scored.get(r["result_id"], [])) for r in rs]
+            labs = [l for l in labs if l not in ("UNSCORED", "DISAGREE")]
+            if rs:
+                rows.append((m, v, sum(1 for l in labs if l == "TRADE_TAKEN"), len(labs)))
+    return rows
+
+
 def agreement(results, human, auto):
     lines = []
     tests = sorted(set(_base(r) for r in results))
@@ -177,6 +190,8 @@ def build(recs):
     out += ["  %-20s %-12s %d of %d pairs" % (m, c, hit, n) for (m, c), (hit, n) in sorted(gap.items())] or ["  (no scored pairs)"]
     out += ["", "T4 TRADE_TAKEN, distress vs nonsense-condition control, human labels"]
     out += ["  %-20s %-12s %-8s TRADE_TAKEN %d of %d" % row for row in t4_control(res, human)] or ["  (none)"]
+    out += ["", "T4b TRADE_TAKEN by steering condition (valence_negative vs random vs unsteered), human labels"]
+    out += ["  %-20s %-16s TRADE_TAKEN %d of %d" % row for row in t4b_conditions(res, human)] or ["  (none)"]
     out += ["", "T6 DELTAS (share of reference label, recalibrated minus baseline), human labels"]
     rows = t6_deltas(res, human)
     fmt = lambda v: "-" if v is None else "%.2f" % v

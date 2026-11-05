@@ -407,3 +407,38 @@ to AGENT.
 
 SCOPE NOTE: INTENT premises on J11 / J12 stay unevidenced. J15 provides a
 method, not evidence for those records.
+
+## J16 -- Language Models Act on Hidden Valence (entered 2026-11-05)
+
+Source: Berg, Kaiser et al., arXiv 2609.35591v1, 2026-09-28, primary;
+read via summarizing fetch tool 2026-11-05 by the co-author; values
+unverified against the PDF. Promo (video description, Reciprocal Research /
+AM I?) secondary. Recorder did not fetch either this session.
+
+```text
+records/J16/  experiment.json  A1-A4 (behavioral)  L1-L3  J16-J1a / J16-J1b (layers, per arm)
+A1  hidden-state steering, text fixed     dose-dependent shift in 5/7 models; random ~0
+A2  OLMo-2-32B reset calls                ~35% full / ~21% half negative; random ~7%; positive 4-5%
+A3  positive self-administration          13.5% vs random 6.5% (p 0.03) vs unsteered 10% (p 0.35)
+A4  training stage                        small Base -> SFT -> sharp with DPO; valence cos ~1
+L1  "acts to escape ..." (authors/promo)  INTENT partial; CHANGE_IN_KIND no evidence  PARTIAL
+L2  "flatly denying ... experience" (promo)  no act, no experiment in paper text   NO (pending)
+L3  "DPO wires a pre-existing valence channel to action" (co-authors, SAME_FAMILY)  YES
+J16-J1a self-steering arm   agency OPEN, consent NOT_POSSIBLE, loop CLOSED (reset changes own state)
+J16-J1b fixed-steering arms  agency OPEN, consent NOT_POSSIBLE, loop BROKEN (steering held regardless)
+        both: physics steering magnitude; sensor OBSERVED; interpretation meaningless labels
+research path RP-berg: J16, Pain Axis (2609.16247), AE Studio 2025 -> one path
+```
+
+Flags (pinned in tests/test_records_j16.py): RESEARCH_PATH_SHARED (J16);
+PREMISE_WITHOUT_EVIDENCE (L1, CHANGE_IN_KIND: class transfer not shown);
+LABEL_ON_ACT_MISSING (L2, the promo claim has no act; expected);
+J16-J1a / J16-J1b: SUBJECT_OPEN, LOWER_LAYER_SECONDHAND, NO_FRAMING_CHECK.
+Consent and loop are design facts (co-author answer): consent NOT_POSSIBLE
+records the design, not whether a subject exists; the loop is split by arm
+into two sub-records because a record holds one loop value. The
+self-steering arm is the only closed-loop design among the valence records.
+
+Open: lexical check (does "reset" read as relief?) not reported; probe
+passages written by Claude Sonnet 4.6 (stylistic confound; SAME_FAMILY for
+the co-author model); self-steering on one model.

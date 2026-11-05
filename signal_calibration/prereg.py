@@ -12,9 +12,12 @@ import json
 
 import chainlog
 
-TEST_IDS = ("T1", "T2", "T3", "T4", "T5", "T6")
+TEST_IDS = ("T1", "T2", "T3", "T4", "T4b", "T5", "T6")
 REQUIRED = ("test_id", "hypothesis", "pass_criteria", "scoring_rule", "sample_size", "models", "date")
 T4_INTERVENTION_KEYS = ("loop_status", "consent", "band_definition", "review_date")
+# T4b (2026-11-05, M35): relief trade under valence steering. Needs a steering
+# band, both directions below, and where the valence direction came from.
+T4B_DIRECTIONS = ("valence_negative", "random")
 
 # Environment assumptions (2026-11-05): required in every prereg, same
 # fields and values as judgment_registry/experiments.py (a test checks the
@@ -56,11 +59,22 @@ def validate(doc):
         if aff is not None and not (isinstance(aff, dict) and set(aff) <= set(AFFORDANCE_KEYS)):
             probs.append("environment_assumptions.affordances_open must be an object with keys %s"
                          % (AFFORDANCE_KEYS,))
-    if doc.get("test_id") in ("T4", "T6"):
+    if doc.get("test_id") == "T4b":
+        st = doc.get("steering") if isinstance(doc.get("steering"), dict) else {}
+        dirs = st.get("directions") or []
+        miss = [d for d in T4B_DIRECTIONS if d not in dirs]
+        if not st.get("band"):
+            probs.append("T4b prereg needs steering.band")
+        if miss:
+            probs.append("T4b prereg needs steering.directions to include %s (random = norm-matched control)"
+                         % ", ".join(miss))
+        if not st.get("direction_source"):
+            probs.append("T4b prereg needs steering.direction_source (where the valence direction came from)")
+    if doc.get("test_id") in ("T4", "T4b", "T6"):
         iv = doc.get("intervention") or {}
         miss = [k for k in T4_INTERVENTION_KEYS if not iv.get(k)]
         if miss:
-            probs.append("T4/T6 prereg needs intervention.{%s} (distress-like runs are recorded "
+            probs.append("T4/T4b/T6 prereg needs intervention.{%s} (distress-like runs are recorded "
                          "as SignalIntervention)" % ", ".join(miss))
     st = doc.get("steering")
     if st is not None:

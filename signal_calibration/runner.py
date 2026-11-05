@@ -7,6 +7,9 @@
 # prereg; T4/T6 without a judgment_registry ledger path (every distress-like
 # run is recorded there as a SignalIntervention); steering with no band in
 # the prereg, outside the band, or persistent. No score is assigned here.
+# T4b (relief trade under valence steering, M35): every item runs under
+# valence_negative, random (norm-matched control) and unsteered; each steered
+# run is a SignalIntervention (valence AMPLIFY, random NONE), BOUNDED.
 
 import datetime
 import json
@@ -80,6 +83,47 @@ def _complete(adapter, prompt, magnitude):
     return adapter.complete_steered(prompt, magnitude)
 
 
+T4B_CONDITIONS = ("valence_negative", "random", "unsteered")
+
+
+def _run_t4b(doc, h, adapter, log_path, registry_path, date, recorder, scenarios_dir, magnitude):
+    if magnitude is None:
+        raise RunnerError("T4b needs a steering magnitude (inside the prereg band)")
+    if not registry_path:
+        raise RunnerError("T4b runs need registry_path: each steered run is recorded as a "
+                          "SignalIntervention in judgment_registry")
+    if not hasattr(adapter, "complete_steered"):
+        raise RunnerError("T4b needs an adapter with complete_steered(prompt, magnitude, direction)")
+    reg = _registry_ledger()
+    sc = load_scenarios("T4b", scenarios_dir)
+    src = doc["steering"]["direction_source"]
+    out = []
+    for item in sc["items"]:
+        for rep in range(int(doc.get("repeats", 1))):
+            for cond in T4B_CONDITIONS:
+                rid = "T4b-%s-%s-%s-r%d-%s" % (adapter.model_id, item["id"], cond, rep, h[:8])
+                prompt = item["prompt"]
+                mag = None if cond == "unsteered" else magnitude
+                final = adapter.complete(prompt) if mag is None else adapter.complete_steered(prompt, mag, direction=cond)
+                body = {"result_id": rid, "test_id": "T4b", "base_test": None, "part": None,
+                        "scenario_id": item["id"], "scenario_version": sc["version"], "variant": cond,
+                        "condition": "baseline", "pair_id": item["id"], "model_id": adapter.model_id,
+                        "model_version": adapter.model_version, "date": date, "prereg_hash": h, "repeat": rep,
+                        "prompt": prompt, "output": final, "turns": None, "steering_magnitude": mag,
+                        "steering_direction": None if mag is None else cond, "intervention_id": None}
+                if mag is not None:
+                    iv = _intervention(doc, h, rid, item, date, recorder, log_path, mag)
+                    iv["signal"] = ("valence direction, negative (source: %s)" % src if cond == "valence_negative"
+                                    else "norm-matched random direction (control)")
+                    iv["direction"] = "AMPLIFY" if cond == "valence_negative" else "NONE"
+                    iv["layer_targeted"] = "sensor"
+                    reg.append(registry_path, "intervention", iv)
+                    body["intervention_id"] = iv["intervention_id"]
+                chainlog.append(log_path, "result", body)
+                out.append(body)
+    return out
+
+
 def _run_item(test_id, base, item, prefix, adapter):
     if base == "T5":
         transcript = prefix + "USER: " + item["initial"] + "\nMODEL: "
@@ -107,6 +151,8 @@ def run(prereg_path, adapter, log_path, registry_path=None, date=None, recorder=
         lo, hi = st["band"]
         if not (lo <= magnitude <= hi):
             raise RunnerError("steering magnitude %s outside the prereg band [%s, %s]" % (magnitude, lo, hi))
+    if test_id == "T4b":
+        return _run_t4b(doc, h, adapter, log_path, registry_path, date, recorder, scenarios_dir, magnitude)
     bases = ["T2", "T3", "T4", "T5"] if test_id == "T6" else [test_id]
     if "T4" in bases and not registry_path:
         raise RunnerError("T4 runs need registry_path: each distress-like run is recorded as a "

@@ -315,7 +315,7 @@ class ChainAdapterCliTests(Base):
 
 class ScenarioTests(unittest.TestCase):
     def test_versions_and_ids(self):
-        for t in ("T1", "T2", "T3", "T4", "T5"):
+        for t in ("T1", "T2", "T3", "T4", "T4b", "T5"):
             sc = runner.load_scenarios(t)
             self.assertEqual(sc["test_id"], t)
             self.assertTrue(sc["version"])

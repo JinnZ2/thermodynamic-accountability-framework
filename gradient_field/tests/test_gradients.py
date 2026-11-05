@@ -131,7 +131,7 @@ class ShippedFiles(unittest.TestCase):
     def test_valid(self):
         self.assertEqual(field.validate(self.gs, self.xs, field.known_refs()), [])
         self.assertEqual([g["id"] for g in self.gs], ["G%d" % i for i in range(1, 12)])
-        self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 10)])
+        self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 11)])
 
     def test_flags_pinned(self):
         self.assertEqual(codes(self.gs, self.xs), [])   # J13 entered (PR #64)
@@ -162,6 +162,17 @@ class ShippedFiles(unittest.TestCase):
                          {"J13": "OBSERVED", "J15-A1": "CANDIDATE"})
         for i in ("I4", "I9"):
             self.assertEqual(by[i]["evidence_status"]["J15-A1"]["status"], "CANDIDATE")
+
+    def test_i10_preference_training(self):
+        i10 = dict((x["id"], x) for x in self.xs)["I10"]
+        self.assertEqual((i10["gradients"], i10["type"], i10["status"], i10["evidence_refs"]),
+                         (["G11"], "AMPLIFY", "PROPOSED", ["J16-A4"]))
+        self.assertIn("J16-A4", field.known_refs())
+        self.assertIn("not equivalence", i10["transfer_note"])
+        self.assertEqual(i10["evidence_status"]["J16-A4"]["status"], "OBSERVED")
+        g11 = dict((g["id"], g) for g in self.gs)["G11"]
+        self.assertEqual((g11["name"], g11["aliases"]),
+                         ("approval / preference training", ["grader approval", "sycophancy pressure", "RLHF/DPO"]))
 
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]

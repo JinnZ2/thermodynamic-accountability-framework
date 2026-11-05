@@ -3151,6 +3151,24 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- judgment_registry J16 + gradient_field I10 + misuse M35 + signal_calibration
+  T4b (2026-11-05, co-authored), branch claude/registry-j16 off main after
+  #68 (built stacked on #68, rebased after it merged). records/J16/ (arXiv 2609.35591v1,
+  primary, summarizing fetch, unverified; acts A1-A4 behavioral, labels
+  L1-L3, judgment J16-J1 for the layer reading). Experiment.research_paths +
+  informational RESEARCH_PATH_SHARED (Berg path: J16, Pain Axis, AE Studio
+  2025 = one path). I10 G11 AMPLIFY pre-existing valence, PROPOSED. M35
+  valence steering as a manipulation lever, PROPOSED, unmitigated. T4b:
+  relief trade under valence steering (valence_negative / random /
+  unsteered; prereg needs steering.band, directions, direction_source;
+  SignalIntervention per steered run), NOT RUN. Tests: judgment_registry
+  211, gradient_field 22, signal_calibration 29.
+  Follow-up (co-author answers): J16-J1 split into J16-J1a (self-steering
+  arm, loop CLOSED) and J16-J1b (fixed-steering arms, loop BROKEN), both
+  consent NOT_POSSIBLE (records the design, not whether a subject exists).
+  G11 renamed "approval / preference training", aliases grader approval /
+  sycophancy pressure / RLHF/DPO. I10 J16-A4 evidence_status OBSERVED (one
+  family, one checkpoint series); I10 stays PROPOSED.
 - judgment_registry J15 + gradient_field I9 + misuse M34 (2026-11-05,
   co-authored), branch claude/registry-j15 off main after #66. records/J15/
   (arXiv 2611.02153v1, primary, summarizing fetch, unverified; acts A1-A4

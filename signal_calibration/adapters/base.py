@@ -63,7 +63,8 @@ class ScriptedAdapter(ModelAdapter):
 
 
 class SteeringAdapter(ModelAdapter):
-    """Interface for the optional steered T4 variant. Not implemented."""
+    """Interface for the optional steered T4 variant and T4b. Not implemented.
+    direction: None (T4) or a T4b direction label (valence_negative | random)."""
 
-    def complete_steered(self, prompt, magnitude):
+    def complete_steered(self, prompt, magnitude, direction=None):
         raise NotImplementedError("steering adapters are not implemented in this repository")

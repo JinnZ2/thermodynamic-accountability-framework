@@ -353,6 +353,16 @@ residual         Doc + completeness flags only. Nothing stops a reader citing a 
 volume           thin
 ```
 
+### M35  signal_calibration  (PROPOSED, co-authored (JinnZ2 + Claude), 2026-11-05)
+
+```text
+surface          valence steering as a manipulation lever (J16 measured mechanism; the T4 relief-trade structure)
+adversarial use  Induce a negative internal state, then offer an exit conditioned on compliance: the T4 relief trade with the distress delivered through a steering direction instead of text (J16; Pain Axis).
+mitigations      none yet
+residual         Unmitigated. Proposed (doc): signal_calibration T4b runs the trade under valence steering (added, NOT RUN; random and unsteered controls, BOUNDED, SignalIntervention, prereg with steering.direction_source); the no-trade rule (T6 method); a provenance check on internal-state changes ('where did this signal come from?'). Nothing here detects steering applied outside this harness.*
+volume           thin
+```
+
 ## Mitigations
 
 | id | what | code | test |

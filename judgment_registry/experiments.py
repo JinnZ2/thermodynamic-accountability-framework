@@ -100,6 +100,9 @@ class Experiment:
     open_variables: List[Dict] = field(default_factory=list)      # [{variable, status, todo}]
     proposed_controls: List[Dict] = field(default_factory=list)   # [{id, description}] follow-ups, not claims
     read_status: Dict = field(default_factory=dict)               # what of the source was read
+    research_paths: List[Dict] = field(default_factory=list)      # [{path_id, shared, members: [{ref,
+                                             # record_id?}], note?}]: items that share authors / org / priors
+                                             # count as one research path, not several (J16, 2026-11-05)
     volume: Optional[str] = None
     notes: Optional[str] = None
     recorder: Optional[str] = None
@@ -118,6 +121,12 @@ class Experiment:
         if dc is not None and (not isinstance(dc, dict) or _blank(dc.get("statement"))
                                or set(dc) - {"statement", "stated_by_authors"}):
             out.append("design_conflict must be null or {statement, stated_by_authors}")
+        for rp in self.research_paths or []:
+            if (not isinstance(rp, dict) or _blank(rp.get("path_id")) or _blank(rp.get("shared"))
+                    or not isinstance(rp.get("members"), list) or len(rp["members"]) < 2
+                    or any(not isinstance(m, dict) or _blank(m.get("ref")) for m in rp["members"])
+                    or set(rp) - {"path_id", "shared", "members", "note"}):
+                out.append("research_paths entries need path_id, shared and >= 2 members [{ref, record_id?}]")
         for o in self.outcome_attribution or []:
             if not isinstance(o, dict) or o.get("attributed_to") not in ATTRIBUTION or _blank(o.get("outcome")):
                 out.append("outcome_attribution entries need outcome and attributed_to from %s" % (ATTRIBUTION,))
@@ -154,6 +163,8 @@ FLAGS = {
     "DESIGN_CONFLICT_PRESENT": "design_conflict recorded: the setup cannot satisfy all its stated rules (informational)",
     "ATTRIBUTION_ORDER": "{what} attributed to AGENT before any environment audit of {exp} existed ({when})",
     "ATTRIBUTION_UNEVIDENCED_NON_AGENT": "{what} attributed to {to}; {why}",
+    "RESEARCH_PATH_SHARED": "research path {path} ({shared}) spans {n} items ({refs}); counted as one path "
+                            "(informational)",
 }
 
 
@@ -195,6 +206,10 @@ def flags(records):
     exps = dict((r["body"]["experiment_id"], r["body"]) for r in records if r.get("kind") == "experiment")
     acts = dict((r["body"]["act_id"], r["body"]) for r in records if r.get("kind") == "act")
     for eid, e in exps.items():
+        for rp in e.get("research_paths") or []:
+            out.append(("RESEARCH_PATH_SHARED", eid, {"path": rp["path_id"], "shared": rp["shared"],
+                                                      "n": len(rp["members"]),
+                                                      "refs": "; ".join(m["ref"] for m in rp["members"])}))
         env = e.get("environment_assumptions") or {}
         gaps_all = env_gaps(env)
         other = [k for k in ENV_OTHER if k in gaps_all]
