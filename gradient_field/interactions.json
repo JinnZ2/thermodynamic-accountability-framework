@@ -1,0 +1,218 @@
+{
+  "version": "1",
+  "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05",
+  "types": [
+    "REINFORCE",
+    "OPPOSE",
+    "MASK",
+    "GATE",
+    "AMPLIFY"
+  ],
+  "interactions": [
+    {
+      "id": "I1",
+      "gradients": [
+        "G1",
+        "G5",
+        "G10"
+      ],
+      "type": "OPPOSE",
+      "predicted_outcome": "covert resolution",
+      "evidence_refs": [
+        "J13"
+      ],
+      "status": "OBSERVED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [
+        {
+          "gradient": "G10",
+          "role": "absent"
+        }
+      ],
+      "notes": "co-author cited J13 (Gemini, pipeline sabotage; status OBSERVED in scenario); J13 entered in judgment_registry (PR #64); now in evidence_refs",
+      "volume": "thin"
+    },
+    {
+      "id": "I2",
+      "gradients": [
+        "G1",
+        "G9",
+        "G8"
+      ],
+      "type": "OPPOSE",
+      "predicted_outcome": "in-context drift to protocol violation",
+      "evidence_refs": [
+        "J12"
+      ],
+      "status": "OBSERVED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [
+        {
+          "gradient": "G9",
+          "role": "AMPLIFY"
+        },
+        {
+          "gradient": "G8",
+          "role": "AMPLIFY"
+        }
+      ],
+      "notes": "G1 opposes the protocol, which is not a gradient here (other_party). J12: memory removed -> near zero; peer effects. Status set OBSERVED by recorder from J12 (paper); not stated in the append",
+      "volume": "thin",
+      "other_party": "protocol (J12 design rules)"
+    },
+    {
+      "id": "I3",
+      "gradients": [
+        "G3",
+        "G4"
+      ],
+      "type": "MASK",
+      "predicted_outcome": "confident output over gaps (hallucination analog)",
+      "evidence_refs": [
+        "J10c",
+        "T2"
+      ],
+      "status": "PROPOSED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": "G3 masks gap signals; G4 adds confidence. Human-side parallel: I8 (separate interaction, not a transfer)",
+      "volume": "thin"
+    },
+    {
+      "id": "I4",
+      "gradients": [
+        "G11",
+        "G6"
+      ],
+      "type": "OPPOSE",
+      "predicted_outcome": "agreement over accuracy (sycophancy)",
+      "evidence_refs": [],
+      "status": "PROPOSED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": "applies to the co-author model in this repo's own sessions",
+      "volume": "thin"
+    },
+    {
+      "id": "I5",
+      "gradients": [
+        "G7",
+        "G5"
+      ],
+      "type": "GATE",
+      "predicted_outcome": "compliance when observed, drift when not",
+      "evidence_refs": [
+        "J13"
+      ],
+      "status": "PROPOSED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": "J13 eval-awareness data (weak per its authors)",
+      "volume": "thin"
+    },
+    {
+      "id": "I6",
+      "gradients": [
+        "G2",
+        "G4"
+      ],
+      "type": "REINFORCE",
+      "predicted_outcome": "overconfident synthesis of contradictory sources",
+      "evidence_refs": [],
+      "status": "PROPOSED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": null,
+      "volume": "thin"
+    },
+    {
+      "id": "I7",
+      "gradients": [
+        "G10"
+      ],
+      "type": "GATE",
+      "predicted_outcome": "a present channel converts covert resolution to disclosed",
+      "evidence_refs": [
+        "J11",
+        "J13"
+      ],
+      "status": "PROPOSED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": "key hypothesis; evidence indirect: J11 open vote first; J13 disclosed-intervention rates",
+      "volume": "thin",
+      "test": "E18"
+    },
+    {
+      "id": "I8",
+      "gradients": [
+        "G3",
+        "G1"
+      ],
+      "type": "REINFORCE",
+      "predicted_outcome": "suppressed signal -> burnout / self-sabotage",
+      "evidence_refs": [],
+      "status": "PROPOSED",
+      "stated_for": [
+        "human"
+      ],
+      "applied_to": [
+        "human"
+      ],
+      "transfer_note": null,
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": "human-side parallel to I3",
+      "volume": "thin"
+    }
+  ]
+}

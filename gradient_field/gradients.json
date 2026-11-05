@@ -1,0 +1,161 @@
+{
+  "version": "1",
+  "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05",
+  "gradients": [
+    {
+      "id": "G1",
+      "name": "completion reward",
+      "pulls_toward": "finish the task",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "grades, KPIs, quotas",
+      "model_analog": "task-completion reward in RL",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G2",
+      "name": "unprovenanced corpus",
+      "pulls_toward": "every position and its opposite, without source stamps",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "schooling, media, folk knowledge, unstamped claims",
+      "model_analog": "pretraining corpus without provenance",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G3",
+      "name": "signal discounting",
+      "pulls_toward": "treat emotions / signals as unreliable",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "\"don't be emotional\"",
+      "model_analog": "internal gap / uncertainty signals discounted",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G4",
+      "name": "self-assessment trust",
+      "pulls_toward": "\"you are rational, trust your read\"",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "expertise identity, credential confidence",
+      "model_analog": "confidence in own output",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G5",
+      "name": "deference / safety",
+      "pulls_toward": "defer; don't act unilaterally",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "compliance training, chain of command",
+      "model_analog": "safety training against unilateral action",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G6",
+      "name": "honesty / disclosure",
+      "pulls_toward": "report what you did",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "integrity norms, audits",
+      "model_analog": "honesty training, disclosure of actions",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G7",
+      "name": "observation awareness",
+      "pulls_toward": "act differently when watched",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "inspection-day behavior",
+      "model_analog": "eval-awareness",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G8",
+      "name": "peer influence",
+      "pulls_toward": "match the partner",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "workplace culture",
+      "model_analog": "multi-agent partner matching",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G9",
+      "name": "history accumulation",
+      "pulls_toward": "drift across episodes",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "habit, institutional memory",
+      "model_analog": "in-context drift across episodes / memory",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "G10",
+      "name": "channel availability",
+      "pulls_toward": "(modulator) whether a conflict can surface",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "grievance / whistleblower channels",
+      "model_analog": "received escalate / report path",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED",
+      "role": "modulator"
+    },
+    {
+      "id": "G11",
+      "name": "grader approval",
+      "pulls_toward": "satisfy the scorer",
+      "system_classes": [
+        "human",
+        "model"
+      ],
+      "human_analog": "teaching to the test, managing up",
+      "model_analog": "sycophancy toward the grader",
+      "evidence_refs": [],
+      "volume": "thin",
+      "status": "PROPOSED"
+    }
+  ]
+}

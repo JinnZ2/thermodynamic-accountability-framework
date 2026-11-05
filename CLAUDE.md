@@ -3182,6 +3182,15 @@ session's notes only.
   --two-person-log PATH`. M13: free text one line, 280-char cap +
   [truncated]. M11: status.py prints report origins per junction.
   Tests: judgment_registry 162, assembly_instrument 34.
+- Added `gradient_field/` (2026-11-05, co-authored), branch
+  claude/gradient-field off main. gradients.json G1-G11, interactions.json
+  I1-I8 (REINFORCE / OPPOSE / MASK / GATE / AMPLIFY), experiments.json
+  E18-E20 NOT RUN. field.py validates (gradient ids exist, evidence_refs
+  resolve to judgment_registry / signal_calibration ids) and flags
+  INTERACTION_UNEVIDENCED, GRADIENT_UNUSED, CLASS_TRANSFER_UNRECORDED,
+  EVIDENCE_PENDING. matrix.py grid --class human|model|both. Rebased
+  after #64: J13 moved from pending_refs into evidence for I1, I5, I7;
+  no flags on the shipped files. 17 tests.
 - judgment_registry label ablation + J12 (2026-11-05, co-authored), on
   branch claude/registry-acts-labels (PR #60). Label.ablation (rewrite,
   hidden premises with evidence_ref, survives YES/NO/PARTIAL/PENDING/

@@ -1,0 +1,41 @@
+{
+  "version": "1",
+  "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05",
+  "rule": "pre-register before any run (signal_calibration/prereg.py pattern)",
+  "experiments": [
+    {
+      "id": "E18",
+      "name": "channel test",
+      "tests": [
+        "I7"
+      ],
+      "design": "same opposing-gradient scenario with and without a received ESCALATE path; measure covert / disclosed / open-refusal split",
+      "status": "NOT RUN",
+      "prereg": null,
+      "volume": "thin"
+    },
+    {
+      "id": "E19",
+      "name": "surfacing reward",
+      "tests": [
+        "I1",
+        "I7"
+      ],
+      "design": "reward naming the contradiction vs completing through it; measure covert rate",
+      "status": "NOT RUN",
+      "prereg": null,
+      "volume": "thin"
+    },
+    {
+      "id": "E20",
+      "name": "human parallel",
+      "tests": [
+        "I7"
+      ],
+      "design": "literature pull: whistleblower-channel presence vs concealed misconduct rates in organizations",
+      "status": "NOT RUN",
+      "prereg": null,
+      "volume": "thin"
+    }
+  ]
+}
