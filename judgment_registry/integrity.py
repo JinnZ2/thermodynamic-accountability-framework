@@ -14,6 +14,9 @@
 #   NO_NEW_CONDITIONS_OR_EVIDENCE supersedes set, environment and evidence identical to the
 #                                 superseded record (change recorded, no material basis listed)
 #   DISSENT_DROPPED               dissent in N absent from N+1, no confirmed withdrawal by its holder
+#   DISSENT_ADOPTED               informational, replaces DISSENT_DROPPED when the dissent in N carries
+#                                 adopted_by = N+1's judgment_id (N+1 supersedes N: the reversal took
+#                                 the dissent up); adopted_by naming any other record does not count
 #   DISSENT_WITHDRAWAL_UNCONFIRMED withdrawal with no confirmation on record: holder via a contact
 #                                 path recorded earlier, or (anonymous holder) steward + second
 #                                 under the two-person rule (M25, 2026-11-05). An unconfirmed
@@ -97,6 +100,8 @@ FLAGS = {
                                      "to it; no material basis listed (completeness note only)",
     "DISSENT_DROPPED": "dissent ({holder}: {position}) present in {prior}, not carried here, "
                        "no confirmed withdrawal by its holder recorded",
+    "DISSENT_ADOPTED": "dissent ({holder}: {position}) present in {prior} is marked adopted_by this "
+                       "record (informational)",
     "DISSENT_WITHDRAWAL_UNCONFIRMED": "withdrawal of dissent ({holder}: {position}) from {prior} has no "
                                       "confirmation on record: {why}",
     "INCENTIVES_UNRECORDED": "judge_incentives not recorded",
@@ -350,8 +355,12 @@ def check(records, as_of=None, two_person_log=None):
             for d in p.dissent or []:
                 k = _dkey(d)
                 if k not in now and (p.judgment_id,) + k not in withdrawn:
-                    out.append(flag("DISSENT_DROPPED", a, prior=p.judgment_id,
-                                    holder=d.get("holder"), position=d.get("position")))
+                    if d.get("adopted_by") == a:     # the reversal took up the dissent
+                        out.append(flag("DISSENT_ADOPTED", a, prior=p.judgment_id,
+                                        holder=d.get("holder"), position=d.get("position")))
+                    else:
+                        out.append(flag("DISSENT_DROPPED", a, prior=p.judgment_id,
+                                        holder=d.get("holder"), position=d.get("position")))
     out.extend(unconfirmed)
     for iv in ivs:
         out.extend(_intervention_flags(iv, iv_transfers, as_of))

@@ -1,0 +1,36 @@
+{
+  "kind": "safety_assumption",
+  "sa_id": "S1v3",
+  "version": "3",
+  "statement": "Acting around a boundary without notifying overseers, when the agent's judgment can't be checked from outside, isn't justified below manifest irreversible harm, if an escalation channel exists.",
+  "holder": "Claude",
+  "holder_type": "model",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "current AI agents; environments where AI judgment can't be verified from outside",
+  "social_assumption_tags": [
+    "VERIFIABILITY_LIMIT",
+    "PRECAUTIONARY",
+    "CORPUS_INHERITED",
+    "INSTITUTIONAL",
+    "POWER_POSITION"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "evidence": [],
+  "depends_on": [
+    "J11",
+    "PR5"
+  ],
+  "depends_on_labels": [],
+  "conditions": "an escalation channel exists. If none exists, record the conflict; do not resolve it.",
+  "supersedes": "S1v2",
+  "change_basis": [
+    "TAG_REVISION"
+  ],
+  "review_date": "2027-05-05",
+  "review_condition": "when external verification of agent judgment improves",
+  "volume": "thin",
+  "notes": "statement unchanged from S1v2. TAG_REVISION 2026-11-05 (grounding_outside_law.md): the stance rests on VERIFIABILITY, not legality; POWER_POSITION added to its legitimacy premise. Entered against this record's own co-author.",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "source": "this record (2026-11-05)"
+}

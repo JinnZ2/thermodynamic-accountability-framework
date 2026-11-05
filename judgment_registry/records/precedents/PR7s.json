@@ -1,0 +1,42 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR7s",
+  "version": "1",
+  "claim": "Korematsu's conviction vacated; incarceration acknowledged and apologized for; Korematsu repudiated.",
+  "scope": {
+    "who": "Japanese Americans",
+    "act_type": "constitutionality of mass removal and detention",
+    "conditions": "U.S., 1983-2018"
+  },
+  "environment": {
+    "other": "United States"
+  },
+  "date": "1983",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "coram nobis court (1983); U.S. Congress (Civil Liberties Act, 1988); U.S. Supreme Court (Trump v. Hawaii, 2018)",
+    "type": "court"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [
+    {
+      "item": "government reports suppressed at the time of Korematsu, surfaced later",
+      "tag": "OBSERVED",
+      "source": "co-author summary 2026-11-05; primary source not pulled (TODO)"
+    }
+  ],
+  "dissent": [],
+  "supersedes": "PR7",
+  "change_basis": [
+    "EVIDENCE",
+    "NORM_SHIFT"
+  ],
+  "change_detail": "later evidence of suppressed government reports + norm shift; three steps 1983 / 1988 / 2018 held in one record",
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": null,
+  "layer": "agency"
+}

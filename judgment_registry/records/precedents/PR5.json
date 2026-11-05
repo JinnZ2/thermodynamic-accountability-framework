@@ -1,0 +1,33 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR5",
+  "version": "1",
+  "claim": "Domestic law not penalizing an act does not relieve responsibility under international law (Principle II); superior orders do not relieve responsibility where a moral choice was possible (Principle IV).",
+  "scope": {
+    "who": "persons acting under national law or orders",
+    "act_type": "responsibility for war crimes legal under national law",
+    "conditions": "international law"
+  },
+  "environment": {
+    "other": "international"
+  },
+  "date": "1950",
+  "date_approx": false,
+  "judge": {
+    "name_or_body": "Nuremberg Principles (international law)",
+    "type": "body"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [],
+  "dissent": [],
+  "supersedes": null,
+  "change_basis": [],
+  "change_detail": null,
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": "the explicit legal recognition that legality != legitimacy. Date: 1950, the International Law Commission's formulation of the Nuremberg Principles (Charter 1945, judgment 1946).",
+  "layer": "agency"
+}

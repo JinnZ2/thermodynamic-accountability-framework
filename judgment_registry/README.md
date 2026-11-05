@@ -72,10 +72,10 @@ Judgment (one record per version; judgment_id unique; a new version is a new id)
   judge_incentives   stakes the judge held, as documented; null = not recorded
   reason             argument as stated, verbatim where possible
   evidence           [{item, tag: OBSERVED|DERIVED|PROPOSED, source}]
-  dissent            [{position, holder, reason, source}]   never deleted
+  dissent            [{position, holder, reason, source, adopted_by?}]   never deleted
   supersedes         judgment_id | null
   superseded_by      derived from the chain at read time; rejected if set by hand
-  change_basis       [CONDITIONS | EVIDENCE | NONE_STATED]
+  change_basis       [CONDITIONS | EVIDENCE | NONE_STATED | POWER_SHIFT | NORM_SHIFT | EXPOSURE | MOVEMENT]
   change_detail      what conditions or evidence changed
   framing_check      {done, variants_tried, result_text} | null
   recorder           role code, not a personal ID
@@ -161,6 +161,7 @@ NO_NEW_CONDITIONS_OR_EVIDENCE  supersedes set; environment and evidence entered 
                                to the superseded record. The change is recorded but no
                                material basis is listed. Not a verdict.
 DISSENT_DROPPED                dissent in version N absent from N+1, no confirmed withdrawal by its holder
+DISSENT_ADOPTED                informational: that dissent carries adopted_by = N+1 (the reversal took it up)
 DISSENT_WITHDRAWAL_UNCONFIRMED withdrawal with no confirmation on record (M25)
 INCENTIVES_UNRECORDED          judge_incentives is null
 NO_FRAMING_CHECK               framing_check is null (informational)
@@ -279,6 +280,13 @@ Limits: tags are judgments, so who tagged is recorded. * The neutrality
 check on act descriptions catches word choice, not framing. A label's
 `attributes_to` is the recorder's reading of the label, not the
 labeler's own statement, unless the labeler stated it.
+
+## Grounding outside law (2026-11-05)
+
+`docs/grounding_outside_law.md`: chain P1-P4 -> C1, C2; checkable
+criteria K1-K5; precedent records in `records/precedents/` (PR1-PR8,
+supersession where a reversal is named; K assessments in
+`criteria.json`). Doc only plus records; no new flag.
 
 ## Label ablation (2026-11-05)
 

@@ -39,7 +39,8 @@ EVIDENCE_TAGS = ("OBSERVED", "DERIVED", "PROPOSED")
 # it records what the source says, not whether the source holds.
 EVIDENCE_STATUS = ("SUPPORTED_BY_SOURCE", "PARTIAL_SUPPORT_BY_SOURCE",
                    "CONTRADICTED_BY_SOURCE", "NOT_CHECKED")
-CHANGE_BASIS = ("CONDITIONS", "EVIDENCE", "NONE_STATED")
+CHANGE_BASIS = ("CONDITIONS", "EVIDENCE", "NONE_STATED",
+                "POWER_SHIFT", "NORM_SHIFT", "EXPOSURE", "MOVEMENT")   # reversal drivers (precedent records, 2026-11-05)
 VOLUMES = ("thin", "medium", "solid")
 LAYERS = ("physics", "sensor", "interpretation", "agency")
 CONTROL = ("YES", "NO", "PARTIAL", "UNKNOWN")
@@ -109,7 +110,7 @@ class Judgment:
     judge_incentives: Optional[str] = None      # stakes held, as documented
     reason: Optional[str] = None                # argument as stated, verbatim where possible
     evidence: List[Dict] = field(default_factory=list)   # [{item, tag, source}]
-    dissent: List[Dict] = field(default_factory=list)    # [{position, holder, reason, source}]
+    dissent: List[Dict] = field(default_factory=list)    # [{position, holder, reason, source, adopted_by?}]
     supersedes: Optional[str] = None
     superseded_by: Optional[List[str]] = None   # DERIVED from the chain at read time only
     change_basis: List[str] = field(default_factory=list)
@@ -125,6 +126,7 @@ class Judgment:
     missing_variables: List[str] = field(default_factory=list)   # named unknowns the claim would need
     source_trace: Optional[Dict] = None         # {author_known, date_known, locator}; booleans or null
     depends_on_labels: List[str] = field(default_factory=list)   # label_ids the claim cites (ablation.py)
+    notes: Optional[str] = None                 # recorder notes (status, counts, scope guards); no check reads it
 
     def get(self, dotted):
         cur = asdict(self)

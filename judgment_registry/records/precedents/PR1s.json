@@ -1,0 +1,45 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR1s",
+  "version": "1",
+  "claim": "Slavery and involuntary servitude abolished (13th Amendment).",
+  "scope": {
+    "who": "enslaved persons (U.S.)",
+    "act_type": "legal status as property; cross-state enforcement of owners' claims",
+    "conditions": "U.S., from 1865"
+  },
+  "environment": {
+    "other": "United States"
+  },
+  "date": "1865",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "U.S. Congress and ratifying states (13th Amendment)",
+    "type": "body"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [],
+  "dissent": [],
+  "supersedes": "PR1",
+  "change_basis": [
+    "POWER_SHIFT"
+  ],
+  "change_detail": "power shift (Civil War); evidence of humanity was manifest throughout; abolitionist dissent on record for decades prior",
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": null,
+  "layer": "agency",
+  "layer_basis": {
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: abolitionist testimony (decades before 1865)",
+      "response": null,
+      "observed": true,
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
+}

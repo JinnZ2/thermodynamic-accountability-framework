@@ -314,3 +314,34 @@ J13-L2   --                                        none (premise linked to the p
 J13-L3   --                                        none (ablation entered; premise self-sourced
                                                    from S1v2; PARTIAL)
 ```
+
+## Precedent records PR1-PR8 (entered 2026-11-05)
+
+Support for `docs/grounding_outside_law.md`. Judgment records with
+supersession where a reversal is named (PR1s, PR2s, PR4s, PR7s, PR8s);
+PR3, PR5, PR6 have none. Source: co-author summary of the historical
+record; primary sources not pulled this session; figures approximate.
+Precedents chosen by the co-authors, 2026-11-05.
+
+Schema: change_basis adds POWER_SHIFT, NORM_SHIFT, EXPOSURE, MOVEMENT;
+Judgment gains an optional `notes` field (no check reads it); a dissent
+entry may carry `adopted_by` (co-author decision 2026-11-05).
+K1-K5 in `precedents/criteria.json` as raw answers YES / NO / PARTIAL /
+UNKNOWN (correction 2026-11-05: the pass/fail version had mixed
+polarity). PR5 date 1950 (ILC formulation). PR8s terminating body from
+co-author memory, approximate, TODO verify. All records layer = agency;
+sensor basis = contemporaneous harm documentation for PR1, PR4, PR8 and
+their reversals.
+
+```text
+flag                            records
+DISSENT_ADOPTED                 PR1s PR2s PR4s PR7s (x3) PR8s (informational)
+NO_NEW_CONDITIONS_OR_EVIDENCE   PR1s PR8s
+SKIPPED_LAYER                   PR2 PR2s PR3 PR5 PR6 PR7 PR7s
+LOWER_LAYER_SECONDHAND          PR1 PR1s PR4 PR4s PR8 PR8s
+INTERPRETATION_UNRECORDED, SUBJECT_STATUS_UNSTATED, CONSENT_UNSTATED,
+LOOP_UNSTATED, INCENTIVES_UNRECORDED, NO_FRAMING_CHECK   all 13
+```
+
+S1v3 supersedes S1v2: statement unchanged, POWER_POSITION added
+(change_basis TAG_REVISION, new in SA_CHANGE_BASIS).

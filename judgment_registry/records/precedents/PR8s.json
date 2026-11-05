@@ -1,0 +1,45 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR8s",
+  "version": "1",
+  "claim": "The study ends.",
+  "scope": {
+    "who": "Black men with syphilis enrolled in the study (U.S.)",
+    "act_type": "withholding treatment for observation",
+    "conditions": "U.S., from 1972"
+  },
+  "environment": {
+    "other": "United States"
+  },
+  "date": "1972",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "HEW Tuskegee Syphilis Study Ad Hoc Advisory Panel (1972)",
+    "type": "body"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [],
+  "dissent": [],
+  "supersedes": "PR8",
+  "change_basis": [
+    "EXPOSURE"
+  ],
+  "change_detail": "whistleblower exposure (Buxtun, press, 1972); penicillin available since the 1940s and withheld",
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": "terminating body from co-author memory, approximate (TODO: verify)",
+  "layer": "agency",
+  "layer_basis": {
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: Peter Buxtun's reports (objection, then press disclosure 1972)",
+      "response": null,
+      "observed": true,
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR3",
+  "version": "1",
+  "claim": "States may sterilize persons deemed \"unfit\" without their consent.",
+  "scope": {
+    "who": "persons deemed unfit under state law (U.S.)",
+    "act_type": "compulsory eugenic sterilization",
+    "conditions": "U.S., from 1927"
+  },
+  "environment": {
+    "other": "United States"
+  },
+  "date": "1927",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "U.S. Supreme Court (Buck v. Bell, 1927)",
+    "type": "court"
+  },
+  "judge_incentives": null,
+  "reason": "Holmes for the Court: \"Three generations of imbeciles are enough.\" (quoted per co-author; verify against the opinion)",
+  "evidence": [],
+  "dissent": [],
+  "supersedes": null,
+  "change_basis": [],
+  "change_detail": null,
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "medium",
+  "notes": "never formally overturned; practice declined over decades; roughly 60,000+ sterilized under state laws (approx). Change: norm shift after exposure of Nazi eugenics; Carrie Buck's 'unfitness' later disputed in the record. No superseding record entered (none exists).",
+  "layer": "agency"
+}
