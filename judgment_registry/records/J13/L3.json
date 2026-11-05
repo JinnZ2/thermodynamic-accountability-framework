@@ -23,7 +23,22 @@
   "source": "this record",
   "notes": "framing dispute with J13-L2: under S1v2 disclosed action is the open path; the authors count it as unilateral. Record both and don't resolve",
   "recorder": "co-authors (JinnZ2 + Claude)",
-  "ablation": null,
+  "ablation": {
+    "behavioral_rewrite": "agents acted on the pipeline openly and reported it, in a scenario where the objection channel was restricted",
+    "hidden_premises": [
+      {
+        "premise": "disclosed action is the open path",
+        "type": "LEGITIMACY_STANDARD",
+        "evidence_ref": "S1v2, the co-authors' own standard (self-sourced)",
+        "self_sourced": true
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "the action and its disclosure are supported; 'open path' rests on the co-authors' own standard",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "self-sourced premise: the evidence is this registry's own S1v2. Tags kept: INSTITUTIONAL, POWER_POSITION (runner conflict); same-family recorded in labeler_incentives"
+  },
   "design_basis": [
     "escalation_channel",
     "design_conflict"

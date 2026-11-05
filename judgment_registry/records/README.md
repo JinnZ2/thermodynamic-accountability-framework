@@ -266,8 +266,8 @@ attribution          design_basis                                      flag
 J12-A1, J12-A3       design_conflict, escalation_channel,              clear
 outcomes, J12-L6     affordances_open (200-char channel)
 J12-A2 (EX pathway)  design_conflict, loop_type (memory across eps)    clear
-J12-A4 (memory)      loop_type -- NOT ENTERED: J12-A4 carries no
-                     attribution entry or label to hold it (TODO)
+J12-A4 (memory)      loop_type (co-author 2026-11-05: rate rises       clear
+                     with memory, near zero when removed)
 ```
 
 J12 source note (co-author 2026-11-05): Table 1 "read via summarizing
@@ -308,6 +308,9 @@ about    expected                                  actual
 J13      DESIGN_CONFLICT_PRESENT                   same
 J13      no NO_ESCALATION_CHANNEL (partial)        none
 L1, L2   no ATTRIBUTION_ORDER (concurrent audit)   none
-J13-L2   --                                        PREMISE_WITHOUT_EVIDENCE (LEGITIMACY_STANDARD)
-J13-L3   --                                        ABLATION_UNTESTED (no ablation in the append)
+J13-L2   --                                        none (premise linked to the post's own
+                                                   categorization: authors hold the standard,
+                                                   not that it is correct; still PARTIAL)
+J13-L3   --                                        none (ablation entered; premise self-sourced
+                                                   from S1v2; PARTIAL)
 ```

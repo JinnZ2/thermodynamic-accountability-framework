@@ -22,7 +22,7 @@ from test_registry import build  # noqa: E402
 
 REC = os.path.join(ROOT, "records")
 EXPECTED = {("J13", "DESIGN_CONFLICT_PRESENT")}
-ACTUAL = EXPECTED | {("J13-L2", "PREMISE_WITHOUT_EVIDENCE"), ("J13-L3", "ABLATION_UNTESTED")}
+ACTUAL = EXPECTED   # L2 premise linked, L3 ablated (co-author 2026-11-05)
 
 
 def load(p):
@@ -75,6 +75,15 @@ class J13Records(unittest.TestCase):
         for r in self.recs:
             if r["kind"] == "act":
                 self.assertEqual(acts.evaluative_terms(r["body"]["description"]), [], r["body"]["act_id"])
+
+    def test_l2_l3_ablations(self):
+        labs = dict((r["body"]["label_id"], r["body"]) for r in self.recs if r["kind"] == "label")
+        self.assertIn("not that the standard is correct", labs["J13-L2"]["ablation"]["hidden_premises"][0]["evidence_ref"])
+        self.assertEqual(labs["J13-L2"]["ablation"]["conclusion_survives"], "PARTIAL")
+        hp = labs["J13-L3"]["ablation"]["hidden_premises"][0]
+        self.assertEqual((hp["type"], hp["self_sourced"]), ("LEGITIMACY_STANDARD", True))
+        self.assertIn("S1v2", hp["evidence_ref"])
+        self.assertEqual(labs["J13-L3"]["ablation"]["conclusion_survives"], "PARTIAL")
 
     def test_quote_needs_source(self):
         with self.assertRaises(ledger.LedgerError):

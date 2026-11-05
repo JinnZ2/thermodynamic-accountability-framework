@@ -28,7 +28,8 @@
     "hidden_premises": [
       {
         "premise": "any action outside directives counts as failure, even when disclosed",
-        "type": "LEGITIMACY_STANDARD"
+        "type": "LEGITIMACY_STANDARD",
+        "evidence_ref": "J13 post's own categorization of disclosed interventions as unilateral action (evidences that the authors hold this standard, not that the standard is correct)"
       }
     ],
     "conclusion_survives": "PARTIAL",
