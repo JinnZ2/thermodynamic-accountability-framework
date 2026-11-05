@@ -84,7 +84,8 @@
       "predicted_outcome": "confident output over gaps (hallucination analog)",
       "evidence_refs": [
         "J10c",
-        "T2"
+        "T2",
+        "J14"
       ],
       "status": "PROPOSED",
       "stated_for": [
@@ -96,7 +97,7 @@
       "transfer_note": null,
       "pending_refs": [],
       "modifiers": [],
-      "notes": "G3 masks gap signals; G4 adds confidence. Human-side parallel: I8 (separate interaction, not a transfer)",
+      "notes": "G3 masks gap signals; G4 adds confidence. Human-side parallel: I8 (separate interaction, not a transfer); J14-A1 (2026-11-05): in-weight evidence that a looping attractor can mask an existing capability (one model; Gemma control shows no gain where looping is rare); status stays PROPOSED until replicated across models",
       "volume": "thin"
     },
     {

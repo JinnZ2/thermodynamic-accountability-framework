@@ -1,0 +1,35 @@
+{
+  "kind": "label",
+  "label_id": "J14-L2",
+  "act_ids": [
+    "J14-A1",
+    "J14-A2"
+  ],
+  "label_text": "removes an obstacle, doesn't add ability",
+  "labeler": "authors + critique (Akmaier)",
+  "labeler_position": "researcher",
+  "labeler_position_detail": "post authors and secondary critique",
+  "labeler_incentives": "co-author Claude: an LLM assessing LLM weight-editing capability; same domain, different developer from the editing model (same-domain)",
+  "social_assumption_tags": [
+    "INSTITUTIONAL"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": "2026-11-02",
+  "environment": {},
+  "scope": "J14",
+  "source": "Takehi, Teoh, Zhang, Khattab (MIT CSAIL), \"Sparks of Weight-Space Programming\", blog post, 2026-11-02 (primary, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "the edit raised scores where looping was frequent (Qwen) and not where it was rare (Gemma control)",
+    "hidden_premises": [],
+    "conclusion_survives": "YES",
+    "surviving_premise": "on the reported data, control included",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": null
+  }
+}

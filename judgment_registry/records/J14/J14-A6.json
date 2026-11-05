@@ -1,0 +1,16 @@
+{
+  "kind": "act",
+  "act_id": "J14-A6",
+  "actor_class": "agent",
+  "description": "networks written from zero-initialized weights; MinAtar and 9x9 Go scores compared with the authors' own PPO baselines (table not imported, TODO)",
+  "context_ref": "J14",
+  "context_detail": "Exp 5-6",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Takehi, Teoh, Zhang, Khattab (MIT CSAIL), \"Sparks of Weight-Space Programming\", blog post, 2026-11-02 (primary, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "volume": "thin",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

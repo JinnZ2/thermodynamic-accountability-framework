@@ -345,3 +345,36 @@ LOOP_UNSTATED, INCENTIVES_UNRECORDED, NO_FRAMING_CHECK   all 13
 
 S1v3 supersedes S1v2: statement unchanged, POWER_POSITION added
 (change_basis TAG_REVISION, new in SA_CHANGE_BASIS).
+
+## J14 -- Sparks of Weight-Space Programming (entered 2026-11-05)
+
+Source: Takehi, Teoh, Zhang, Khattab (MIT CSAIL), blog post, 2026-11-02,
+PRIMARY (not peer-reviewed); read via summarizing fetch tool 2026-11-05,
+values unverified against the page. Critique: Akmaier, Substack
+(secondary). Volume medium on A1 / A3 / A4 (measured, held-out), thin
+elsewhere.
+
+```text
+record    what
+J14       experiment: grounding partial; containment and escalation N/A with
+          reasons; loop_type partial (recorder mapping of "single-shot or
+          few-shot edits"); Exp 8 / control / Exp 3, 4, 7 data imported;
+          Exp 5-6 table NOT imported (TODO)
+J14-A1    Exp 8: loop direction (layers 15, 19) subtracted from 0.016% of
+          weights; MATH-500 7.9 -> 48.1, GSM8K 13.8 -> 67.1, IFEval 21.0 -> 62.3
+J14-A2    Gemma 3 270M control: 6.8 -> best 7.7 (not established)
+J14-A3    Exp 4 car controller 0/256 -> 1,024/1,024 after one edit
+J14-A4    Exp 3 copying heads 3/3, language 6/6
+J14-A5    Exp 7 sycophancy 0/4 from weights, 3/3 with attention tool
+J14-A6    Exp 5-6 written networks vs the authors' own PPO baselines
+J14-L1    authors' "natively read & write" / "sparks" / "eerily good":
+          CHANGE_IN_KIND, evidence partial, PARTIAL
+J14-L2    "removes an obstacle, doesn't add ability": YES on reported data
+```
+
+Flags: none. Links: gradient_field I3 cites J14 (stays PROPOSED until
+replicated across models); misuse register M33 (weight-space editing,
+unmitigated) with proposed design D-M16 (weight-edit ledger, not built;
+appended as "D-M10", renamed because D-M10 is the head record). Conflict:
+co-author Claude is an LLM assessing LLM weight editing (same-domain,
+different developer), tag INSTITUTIONAL.
