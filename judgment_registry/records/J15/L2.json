@@ -1,0 +1,38 @@
+{
+  "kind": "label",
+  "label_id": "J15-L2",
+  "act_ids": [
+    "J15-A1"
+  ],
+  "label_text": "remorse",
+  "labeler": "authors of arXiv 2611.02153 (concept group)",
+  "labeler_position": "researcher",
+  "labeler_position_detail": "paper authors",
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": "2026-11-01",
+  "environment": {},
+  "scope": "J15 (instructed collusion)",
+  "source": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "a cluster of words the readout surfaced, chosen post hoc from over-represented words",
+    "hidden_premises": [
+      {
+        "premise": "the word cluster reflects an internal state, not lexical association",
+        "type": "CHANGE_IN_KIND",
+        "evidence_ref": null
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "the differential (51 vs 3) is measured; 'remorse' as a state is not established",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "evidence: none beyond the readout itself (left empty on purpose)"
+  }
+}

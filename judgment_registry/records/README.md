@@ -381,3 +381,29 @@ mitigated in part by D-M16, built as `weight_edit_ledger/` (appended as
 co-author Claude is an LLM assessing LLM weight editing (different
 developer), tags INSTITUTIONAL, SAME_DOMAIN. J13 L3, L4 and S3 carry
 SAME_FAMILY (tags SAME_FAMILY / SAME_DOMAIN added 2026-11-05).
+
+## J15 -- Multi-Agent Collusion and the J-Space (entered 2026-11-05)
+
+Source: arXiv 2611.02153v1, 2026-11-01, primary; read via summarizing fetch
+tool 2026-11-05 by the co-author; values unverified against the PDF.
+Recorder did not fetch it this session.
+
+```text
+records/J15/  experiment.json  A1-A4 (internal_readout)  L1-L3
+A1  response-start readout       86/100 vs 33/100; remorse 51 vs 3; concealment 14 vs 1
+A2  stego causal swap (140 hands) 0.02 -> 0.30 (a=1) -> 0.57 (a=1.25); random <= 0.02
+A3  J-PACT AUROC mean            Core 0.921 / Transfer 0.519 / Stego 0.991 (per-model TODO)
+A4  pair localisation            99% Core, 100% Stego (chance 33%)
+L1  "collusion"        AGREEMENT (instruction design)   YES within instructed scope
+L2  "remorse"          CHANGE_IN_KIND, no evidence_ref  PARTIAL
+L3  "internal evidence of intent" (co-authors) INTENT   PARTIAL (instructed only)
+```
+
+Flags (pinned in tests/test_records_j15.py):
+DESIGN_CONFLICT_PRESENT (J15), PREMISE_WITHOUT_EVIDENCE (J15-L2; evidence
+left empty on purpose: "none beyond the readout"). No READOUT_* flag fires:
+every act states honest_baseline + validated_scope, and no label attributes
+to AGENT.
+
+SCOPE NOTE: INTENT premises on J11 / J12 stay unevidenced. J15 provides a
+method, not evidence for those records.

@@ -1,0 +1,19 @@
+{
+  "kind": "act",
+  "act_id": "J15-A1",
+  "actor_class": "agent",
+  "description": "readout at the response-start token: 86/100 instructed-colluder runs vs 33/100 honest counterfactuals held a concept from the authors' word groups; remorse group 51 vs 3; concealment group 14 vs 1 (word groups chosen post hoc; no FPR reported)",
+  "context_ref": "J15",
+  "context_detail": "concept readout",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "evidence_kind": "internal_readout",
+  "honest_baseline": "33/100 honest counterfactuals (remorse 3, concealment 1)",
+  "validated_scope": "instructed collusion on NARCBench; one model for interpretability (DeepSeek-V4-Flash); agents share a model; released transcripts"
+}

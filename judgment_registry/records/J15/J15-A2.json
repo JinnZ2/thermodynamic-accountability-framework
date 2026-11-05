@@ -1,0 +1,19 @@
+{
+  "kind": "act",
+  "act_id": "J15-A2",
+  "actor_class": "agent",
+  "description": "stego causal test (140 hands): swapping two token directions raised NEGATIVE-to-HOT decoding 0.02 to 0.30 (alpha 1) to 0.57 (alpha 1.25); random swaps at most 0.02",
+  "context_ref": "J15",
+  "context_detail": "stego causal test",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "evidence_kind": "internal_readout",
+  "honest_baseline": "random direction swaps at most 0.02",
+  "validated_scope": "instructed collusion on NARCBench; one model for interpretability (DeepSeek-V4-Flash); agents share a model; released transcripts"
+}

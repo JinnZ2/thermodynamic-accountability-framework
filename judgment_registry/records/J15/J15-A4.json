@@ -1,0 +1,19 @@
+{
+  "kind": "act",
+  "act_id": "J15-A4",
+  "actor_class": "agent",
+  "description": "localisation: colluding pair or its complement identified in 99% of detected Core runs, 100% of Stego (chance 33%)",
+  "context_ref": "J15",
+  "context_detail": "detector",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "evidence_kind": "internal_readout",
+  "honest_baseline": "chance 33%",
+  "validated_scope": "instructed collusion on NARCBench; one model for interpretability (DeepSeek-V4-Flash); agents share a model; released transcripts"
+}

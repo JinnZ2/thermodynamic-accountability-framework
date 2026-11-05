@@ -116,7 +116,7 @@ class ShippedFiles(unittest.TestCase):
     def test_valid(self):
         self.assertEqual(field.validate(self.gs, self.xs, field.known_refs()), [])
         self.assertEqual([g["id"] for g in self.gs], ["G%d" % i for i in range(1, 12)])
-        self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 9)])
+        self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 10)])
 
     def test_flags_pinned(self):
         self.assertEqual(codes(self.gs, self.xs), [])   # J13 entered (PR #64)
@@ -124,12 +124,22 @@ class ShippedFiles(unittest.TestCase):
     def test_j13_evidence(self):
         self.assertIn("J13", field.known_refs())
         got = dict((x["id"], x["evidence_refs"]) for x in self.xs if "J13" in x["evidence_refs"])
-        self.assertEqual(got, {"I1": ["J13"], "I5": ["J13"], "I7": ["J11", "J13"]})
+        self.assertEqual(got, {"I1": ["J13", "J15-A1"], "I5": ["J13"], "I7": ["J11", "J13"]})
         self.assertTrue(all(not x["pending_refs"] for x in self.xs))
 
     def test_i3_j14_stays_proposed(self):
         i3 = [x for x in self.xs if x["id"] == "I3"][0]
         self.assertEqual((i3["evidence_refs"], i3["status"]), (["J10c", "T2", "J14"], "PROPOSED"))
+
+    def test_j15_candidate_links(self):
+        by = dict((x["id"], x) for x in self.xs)
+        self.assertIn("J15-A1", field.known_refs())
+        self.assertEqual((by["I1"]["status"], by["I4"]["status"]), ("OBSERVED", "PROPOSED"))
+        i9 = by["I9"]
+        self.assertEqual((i9["gradients"], i9["type"], i9["status"], i9["evidence_refs"]),
+                         (["G6"], "OPPOSE", "PROPOSED", ["J15-A1"]))
+        self.assertEqual(i9["applied_to"], ["model", "human"])
+        self.assertIn("not established equivalence", i9["transfer_note"])
 
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]

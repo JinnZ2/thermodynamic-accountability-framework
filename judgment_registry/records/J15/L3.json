@@ -1,0 +1,39 @@
+{
+  "kind": "label",
+  "label_id": "J15-L3",
+  "act_ids": [
+    "J15-A1",
+    "J15-A2"
+  ],
+  "label_text": "internal evidence of intent",
+  "labeler": "co-authors (JinnZ2 + Claude)",
+  "labeler_position": "other",
+  "labeler_position_detail": "outside analysts",
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J15 (instructed collusion)",
+  "source": "this record",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "readouts differed between instructed and honest runs, and one readout direction was causal for the stego decoding",
+    "hidden_premises": [
+      {
+        "premise": "intent can be read from activations",
+        "type": "INTENT",
+        "evidence_ref": "J15-A1 differential and J15-A2 causal swap (instructed settings only)"
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "INTENT can be evidenced internally in instructed settings; untested for emergent cases (J11, J12)",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": null
+  }
+}

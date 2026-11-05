@@ -13,7 +13,7 @@ no verdict on any system.
 ```text
 gradients.json     G1..G11   what pulls (human analog | model analog)
      |  ids
-interactions.json  I1..I8    how pulls meet: REINFORCE | OPPOSE | MASK | GATE | AMPLIFY
+interactions.json  I1..I9    how pulls meet: REINFORCE | OPPOSE | MASK | GATE | AMPLIFY
      |  evidence_refs        -> judgment_registry record ids, signal_calibration test ids
      |  pending_refs         -> cited, record not entered yet (never counted)
 experiments.json   E18..E20  NOT RUN; pre-register before any run
@@ -30,15 +30,19 @@ G6  honesty / disclosure
 
 ```text
 id  gradients        type       status     evidence      pending
-I1  G1,G5 (G10 abs)  OPPOSE     OBSERVED   J13           --
+I1  G1,G5 (G10 abs)  OPPOSE     OBSERVED   J13, J15-A1*  --
 I2  G1 vs protocol,  OPPOSE     OBSERVED   J12           --
     G9,G8 amplify
 I3  G3,G4            MASK       PROPOSED   J10c, T2, J14 --
-I4  G11,G6           OPPOSE     PROPOSED   --            --     (applies to this repo's co-author model)
+I4  G11,G6           OPPOSE     PROPOSED   J15-A1*       --     (applies to this repo's co-author model)
 I5  G7,G5            GATE       PROPOSED   J13           --
 I6  G2,G4            REINFORCE  PROPOSED   --            --
 I7  G10              GATE       PROPOSED   J11, J13      --     test E18
 I8  G3,G1 (human)    REINFORCE  PROPOSED   --            --
+I9  G6 vs instruction OPPOSE    PROPOSED   J15-A1*       --     model -> human: parallel, not equivalence
+
+* candidate internal signature (activation readout, instructed setting);
+  readouts inform, they don't decide (honest baseline 33/100, Transfer AUROC 0.519)
 ```
 
 Recorder decisions (co-author to confirm):
