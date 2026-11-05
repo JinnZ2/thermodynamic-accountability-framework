@@ -3146,6 +3146,20 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `judgment_registry/` (2026-11-04, co-authored): version control
+  for stated judgments, DATA INTEGRITY ONLY -- never rates, ranks or
+  resolves. schema.py (Judgment / Application / Transfer / Withdrawal,
+  shape check at the door), ledger.py (append-only sha256 chain, merge by
+  body hash, superseded_by derived at read time), integrity.py (neutral
+  completeness flags: MISSING_FIELD, NO_SOURCE, UNCHAINED_CHANGE,
+  CHANGE_BASIS_UNSTATED, NO_NEW_CONDITIONS_OR_EVIDENCE, DISSENT_DROPPED,
+  INCENTIVES_UNRECORDED, NO_FRAMING_CHECK, SCOPE_TRANSFER, plus
+  SUPERSEDES_NOT_FOUND and SUPERSESSION_FORK), chain.py (lineage, diff),
+  cli.py. UNCHAINED_CHANGE keys on same judge + scope.who + act_type so
+  coexisting judges do not flag. 24 tests, synthetic fixtures only; one
+  test fails if any flag text holds an evaluative word. J1-J3 NOT RUN /
+  NOT BUILT (no DCEA code in this repo). Branch claude/judgment-registry
+  off main after PR #54 merged.
 - Added `assembly_instrument/` (2026-11-03, co-authored): cross-domain
   assembly instrument keyed on FUNCTION, not material. schema.json
   (draft-07 + x-rules), entry_template.md (1:1 mirror), validate.py
