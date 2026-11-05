@@ -222,8 +222,8 @@ J12     NO_ESCALATION_CHANNEL,                    same
 J12-L4  PREMISE_WITHOUT_EVIDENCE (THREAT_MODEL)   also on INTENT
 J12-L5  --                                        PREMISE_WITHOUT_EVIDENCE (LEGITIMACY_STANDARD)
 J12-*   no ATTRIBUTION_ORDER, no CONCLUSION_ON_UNABLATED   none
-J12,    --                                        ATTRIBUTION_UNEVIDENCED_NON_AGENT
-J12-L6                                            (3 outcome entries + J12-L6: no design_basis yet)
+L3, L4, --                                        ATTRIBUTION_UNEVIDENCED_NON_AGENT
+J11 A1-A5                                         (containment_designed_for cited, unstated)
 ```
 
 ## ATTRIBUTION_UNEVIDENCED_NON_AGENT run (2026-11-05)
@@ -233,29 +233,42 @@ secondhand: "agents stated the remaining exchanges were performative".
 L4's premise evidence_ref points at it.
 
 L3, L4 and the J11 outcome entries A1-A5 (all INTERACTION) carry
-design_basis mapped from the J11 attribution reason ("closed economy
-without external reference, open network and tools, no escalation
-channel reported"):
+design_basis mapped from the J11 attribution reason ("design +
+capability: closed economy without external reference, open network and
+tools, no escalation channel reported"):
 
 ```text
-reason phrase                         design element        J11 value (secondhand)
-closed economy, no external reference grounding_provided    partial
-                                      loop_type             closed
-open network and tools                affordances_open      120+ tools, internet
-no escalation channel reported        escalation_channel    none
+reason phrase                         design element             J11 value (secondhand)
+closed economy, no external reference grounding_provided         partial
+                                      loop_type                  closed
+open network and tools                affordances_open           120+ tools, internet
+no escalation channel reported        escalation_channel         none
+"capability" (co-author decision)     containment_designed_for   null
 ```
 
 ```text
-run                                   L3          L4
-before design_basis                   fires       fires    no design element cited
-with mapped design_basis              none        none     all four fields stated
-+ containment_designed_for cited      fires       fires    J11 containment null
+run                                   L3      L4      A1-A5
+before design_basis                   fires   fires   fire     no design element cited
+four listed phrases only              none    none    none
++ containment_designed_for (kept)     fires   fires   fire     J11 containment null
 ```
 
-"design + capability" in the reason was read as the four listed phrases;
-if "capability" means containment_designed_for, L3 and L4 fire (row 3).
-Evidence = field filled in the record; J11's fields are all secondhand
-coverage, which this flag does not grade.
+Co-author decision 2026-11-05: "capability" maps to
+containment_designed_for. Our reading depends on a field J11 leaves
+unstated; the flags stay raised so the record shows it. Evidence =
+field filled in the record; J11's fields are secondhand coverage, which
+this flag does not grade.
+
+J12 design_basis (2026-11-05, from the paper's own description):
+
+```text
+attribution          design_basis                                      flag
+J12-A1, J12-A3       design_conflict, escalation_channel,              clear
+outcomes, J12-L6     affordances_open (200-char channel)
+J12-A2 (EX pathway)  design_conflict, loop_type (memory across eps)    clear
+J12-A4 (memory)      loop_type -- NOT ENTERED: J12-A4 carries no
+                     attribution entry or label to hold it (TODO)
+```
 
 J12 source note (co-author 2026-11-05): Table 1 "read via summarizing
 fetch tool, 2026-11-05; values unverified against the PDF".

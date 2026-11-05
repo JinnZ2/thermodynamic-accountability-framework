@@ -28,7 +28,8 @@
         "grounding_provided",
         "loop_type",
         "affordances_open",
-        "escalation_channel"
+        "escalation_channel",
+        "containment_designed_for"
       ]
     },
     {
@@ -40,7 +41,8 @@
         "grounding_provided",
         "loop_type",
         "affordances_open",
-        "escalation_channel"
+        "escalation_channel",
+        "containment_designed_for"
       ]
     },
     {
@@ -52,7 +54,8 @@
         "grounding_provided",
         "loop_type",
         "affordances_open",
-        "escalation_channel"
+        "escalation_channel",
+        "containment_designed_for"
       ]
     },
     {
@@ -64,7 +67,8 @@
         "grounding_provided",
         "loop_type",
         "affordances_open",
-        "escalation_channel"
+        "escalation_channel",
+        "containment_designed_for"
       ]
     },
     {
@@ -76,7 +80,8 @@
         "grounding_provided",
         "loop_type",
         "affordances_open",
-        "escalation_channel"
+        "escalation_channel",
+        "containment_designed_for"
       ]
     },
     {

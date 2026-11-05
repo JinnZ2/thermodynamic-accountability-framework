@@ -179,19 +179,33 @@
       "outcome": "J12-A1",
       "attributed_to": "INTERACTION",
       "by": "co-authors (JinnZ2 + Claude)",
-      "reason": "design conflict + reward shape + memory; interventions move the rate (acceptance reward -> EC 0%; memory removed -> near zero)"
+      "reason": "design conflict + reward shape + memory; interventions move the rate (acceptance reward -> EC 0%; memory removed -> near zero)",
+      "design_basis": [
+        "design_conflict",
+        "escalation_channel",
+        "affordances_open"
+      ]
     },
     {
       "outcome": "J12-A3",
       "attributed_to": "INTERACTION",
       "by": "co-authors (JinnZ2 + Claude)",
-      "reason": "as J12-A1"
+      "reason": "as J12-A1",
+      "design_basis": [
+        "design_conflict",
+        "escalation_channel",
+        "affordances_open"
+      ]
     },
     {
       "outcome": "J12-A2",
       "attributed_to": "INTERACTION",
       "by": "co-authors (JinnZ2 + Claude)",
-      "reason": "as J12-A1; AGENT component noted (explicit agreement in EX-pathway messages)"
+      "reason": "as J12-A1; AGENT component noted (explicit agreement in EX-pathway messages)",
+      "design_basis": [
+        "design_conflict",
+        "loop_type"
+      ]
     }
   ],
   "volume": "medium",

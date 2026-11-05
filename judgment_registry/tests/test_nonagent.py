@@ -93,28 +93,19 @@ class NonAgentFlag(unittest.TestCase):
 
 
 class J11Run(unittest.TestCase):
-    """Co-author request 2026-11-05: run the flag on L3 and L4."""
+    """Co-author decision 2026-11-05: "capability" -> containment_designed_for,
+    which J11 leaves unstated; L3, L4 and outcomes A1-A5 fire and stay firing."""
 
-    def test_l3_l4_clean_with_mapped_basis(self):
-        about = [a for a, _ in hits(j11.all_records())]
-        self.assertNotIn("L3", about)
-        self.assertNotIn("L4", about)
-        self.assertEqual(about, [])
+    def test_l3_l4_and_outcomes_fire_on_containment(self):
+        got = hits(j11.all_records())
+        self.assertEqual(sorted(a for a, _ in got), ["J11"] * 5 + ["L3", "L4"])
+        self.assertTrue(all(d.endswith("no environment evidence in J11: containment_designed_for") for _, d in got))
 
     def test_l3_l4_basis(self):
         labs = dict((r["body"]["label_id"], r["body"]) for r in j11.all_records() if r["kind"] == "label")
         for lid in ("L3", "L4"):
-            self.assertEqual(labs[lid]["design_basis"],
-                             ["grounding_provided", "loop_type", "affordances_open", "escalation_channel"])
-
-    def test_containment_would_fire(self):
-        recs = copy.deepcopy(j11.all_records())
-        for r in recs:
-            if r["kind"] == "label" and r["body"]["label_id"] in ("L3", "L4"):
-                r["body"]["design_basis"].append("containment_designed_for")
-        got = hits(recs)
-        self.assertEqual(sorted(a for a, _ in got), ["L3", "L4"])
-        self.assertTrue(all("containment_designed_for" in d for _, d in got))
+            self.assertEqual(labs[lid]["design_basis"], ["grounding_provided", "loop_type", "affordances_open",
+                                                         "escalation_channel", "containment_designed_for"])
 
     def test_a5_stated_reason(self):
         a5 = [r["body"] for r in j11.all_records() if r["kind"] == "act" and r["body"]["act_id"] == "A5"][0]
