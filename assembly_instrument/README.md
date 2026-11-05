@@ -226,7 +226,7 @@ M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coord
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
      mitigated  D-M13
-     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*
+     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.* Queued (2026-11-05): status.py shows record origins.
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
@@ -236,7 +236,7 @@ M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, 
 M13  field-report free text printed at the top of a checkout handout as a caution
      use        A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.
      mitigated  D-M14
-     residual   Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.*
+     residual   Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.* Queued (2026-11-05): cap free text per field (e.g. 280 chars) with a visible [truncated] marker.
      status     PROPOSED (independent pass)
 M14  junction version hash (refs.py) excludes source and caution
      use        Source or caution text can change without the version changing, so a citation can be swapped silently.

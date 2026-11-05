@@ -353,7 +353,7 @@ M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coord
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
      mitigated  D-M13
-     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*
+     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.* Queued (2026-11-05): status.py shows record origins.
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
@@ -368,7 +368,7 @@ M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, blac
 M25  Withdrawal record (withdrawn_by_holder is a settable boolean)
      use        A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
      mitigated  D-M15
-     residual   Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.*
+     residual   Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.* Queued (2026-11-05): steward + second go through community_black_start/two_person.authorize(), so two different people are checked, not just two names.
      status     PROPOSED (independent pass)
 M26  integrity flags and supersession forks
      use        Thin records about an opponent's judgments generate flags that are cited to discredit them; fork spam fragments a lineage.
