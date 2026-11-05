@@ -44,9 +44,13 @@ class Precedents(unittest.TestCase):
         self.assertEqual(on_disk, sorted(IDS))
 
     def test_flags_pinned(self):
-        self.assertEqual(dict(self.count), {"INCENTIVES_UNRECORDED": 13, "NO_FRAMING_CHECK": 13, "LAYER_UNSTATED": 13,
-                                            "DISSENT_DROPPED": 7, "NO_NEW_CONDITIONS_OR_EVIDENCE": 2,
-                                            "MISSING_FIELD": 1})
+        self.assertEqual(dict(self.count), {"INCENTIVES_UNRECORDED": 13, "NO_FRAMING_CHECK": 13,
+                                            "INTERPRETATION_UNRECORDED": 13, "SUBJECT_STATUS_UNSTATED": 13,
+                                            "CONSENT_UNSTATED": 13, "LOOP_UNSTATED": 13,
+                                            "DISSENT_ADOPTED": 7, "SKIPPED_LAYER": 7, "LOWER_LAYER_SECONDHAND": 6,
+                                            "NO_NEW_CONDITIONS_OR_EVIDENCE": 2})
+        skipped = sorted(f["about"] for f in self.flags if f["flag"] == "SKIPPED_LAYER")
+        self.assertEqual(skipped, ["PR2", "PR2s", "PR3", "PR5", "PR6", "PR7", "PR7s"])
         nn = sorted(f["about"] for f in self.flags if f["flag"] == "NO_NEW_CONDITIONS_OR_EVIDENCE")
         self.assertEqual(nn, ["PR1s", "PR8s"])
 
@@ -62,6 +66,13 @@ class Precedents(unittest.TestCase):
         self.assertEqual(cb, {"PR1s": ["POWER_SHIFT"], "PR2s": ["MOVEMENT", "EVIDENCE"], "PR4s": ["POWER_SHIFT"],
                               "PR7s": ["EVIDENCE", "NORM_SHIFT"], "PR8s": ["EXPOSURE"]})
 
+    def test_layer_and_dates(self):
+        b = dict((r["body"]["judgment_id"], r["body"]) for r in self.recs)
+        self.assertTrue(all(x["layer"] == "agency" for x in b.values()))
+        self.assertEqual(b["PR5"]["date"], "1950")
+        self.assertIn("Ad Hoc Advisory Panel", b["PR8s"]["judge"]["name_or_body"])
+        self.assertIn("TODO: verify", b["PR8s"]["notes"])
+
     def test_pr4_scope_guard(self):
         pr4 = [r["body"] for r in self.recs if r["body"]["judgment_id"] == "PR4"][0]
         self.assertIn("NON-CONSENSUAL", pr4["scope"]["act_type"])
@@ -72,12 +83,14 @@ class Criteria(unittest.TestCase):
     def test_shape(self):
         with open(os.path.join(PRE, "criteria.json"), encoding="utf-8") as f:
             c = json.load(f)
-        self.assertEqual(sorted(c["criteria"]), ["K1", "K2", "K3", "K4", "K5"])
+        self.assertEqual(sorted(c["questions"]), ["K1", "K2", "K3", "K4", "K5"])
+        self.assertEqual(sorted(c["values"]), ["NO", "PARTIAL", "UNKNOWN", "YES"])
         self.assertEqual(sorted(c["assessments"]), ["PR%d" % i for i in range(1, 9)])
         for pid, row in c["assessments"].items():
             self.assertEqual(sorted(row), ["K1", "K2", "K3", "K4", "K5"], pid)
             self.assertTrue(all(v in c["values"] for v in row.values()), pid)
-        self.assertEqual(c["assessments"]["PR1"]["K5"], "DISSENT_PRESENT_SUPPRESSED")
+        self.assertEqual(c["assessments"]["PR1"], {"K1": "NO", "K2": "NO", "K3": "YES", "K4": "NO", "K5": "YES"})
+        self.assertEqual(c["assessments"]["PR8"]["K3"], "YES")   # polarity: harm visible (to insiders)
         self.assertTrue(c["assessed_by"].startswith("co-authors"))
 
 

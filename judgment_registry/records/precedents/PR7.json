@@ -25,19 +25,22 @@
       "position": "the removal is unconstitutional",
       "holder": "Justice Murphy (dissent)",
       "reason": "on record at the time (co-author summary)",
-      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)"
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "adopted_by": "PR7s"
     },
     {
       "position": "the removal is unconstitutional",
       "holder": "Justice Jackson (dissent)",
       "reason": "on record at the time (co-author summary)",
-      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)"
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "adopted_by": "PR7s"
     },
     {
       "position": "the removal is unconstitutional",
       "holder": "Justice Roberts (dissent)",
       "reason": "on record at the time (co-author summary)",
-      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)"
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "adopted_by": "PR7s"
     }
   ],
   "supersedes": null,
@@ -47,5 +50,6 @@
   "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "solid",
-  "notes": null
+  "notes": null,
+  "layer": "agency"
 }

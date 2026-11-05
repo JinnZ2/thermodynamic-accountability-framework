@@ -14,7 +14,7 @@
   "date": "1972",
   "date_approx": true,
   "judge": {
-    "name_or_body": "study terminated after exposure (terminating body not named in the summary; TODO)",
+    "name_or_body": "HEW Tuskegee Syphilis Study Ad Hoc Advisory Panel (1972)",
     "type": "body"
   },
   "judge_incentives": null,
@@ -30,5 +30,16 @@
   "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "solid",
-  "notes": null
+  "notes": "terminating body from co-author memory, approximate (TODO: verify)",
+  "layer": "agency",
+  "layer_basis": {
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: Peter Buxtun's reports (objection, then press disclosure 1972)",
+      "response": null,
+      "observed": true,
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
 }

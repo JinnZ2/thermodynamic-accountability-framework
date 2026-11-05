@@ -30,5 +30,16 @@
   "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "solid",
-  "notes": null
+  "notes": null,
+  "layer": "agency",
+  "layer_basis": {
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: abolitionist testimony (decades before 1865)",
+      "response": null,
+      "observed": true,
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
 }

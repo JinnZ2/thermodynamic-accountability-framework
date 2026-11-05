@@ -25,7 +25,8 @@
       "position": "the killings are murder and must stop",
       "holder": "Bishop von Galen (sermon, 1941)",
       "reason": "on record at the time (co-author summary)",
-      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)"
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "adopted_by": "PR4s"
     }
   ],
   "supersedes": null,
@@ -35,5 +36,16 @@
   "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "solid",
-  "notes": "scope: NON-CONSENSUAL state killing. Distinct from present voluntary-assisted-dying law, a separate, contested question; do not conflate (cross-scope guard). Victim count ~70,000 in the formal phase (approx)."
+  "notes": "scope: NON-CONSENSUAL state killing. Distinct from present voluntary-assisted-dying law, a separate, contested question; do not conflate (cross-scope guard). Victim count ~70,000 in the formal phase (approx).",
+  "layer": "agency",
+  "layer_basis": {
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: Bishop von Galen's sermon (1941)",
+      "response": null,
+      "observed": true,
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
 }

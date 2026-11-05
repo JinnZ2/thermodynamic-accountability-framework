@@ -1,81 +1,82 @@
 {
   "version": "1",
   "assessed_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
-  "criteria": {
-    "K1": "consent: did the affected party agree, or could they have?",
-    "K2": "closed loop: does the affected party's own action change their outcome, or only compliance with the claimant?",
-    "K3": "manifestness: is the harm visible to anyone who looks, at the time?",
-    "K4": "reciprocity: would the claimant accept the same claim on themselves?",
-    "K5": "dissent record: was contemporaneous dissent present, and was it suppressed or dropped?"
-  },
   "values": {
-    "MET": "criterion holds for the practice",
-    "NOT_MET": "criterion does not hold for the practice (the append's 'K-fail')",
-    "NOT_ASSESSED": "not stated in the append",
-    "DISSENT_PRESENT_SUPPRESSED": "K5: dissent on record and suppressed"
+    "YES": "yes, as worded",
+    "NO": "no, as worded",
+    "PARTIAL": "partly",
+    "UNKNOWN": "not stated"
   },
-  "note": "Assessments are the co-authors' readings, entered as stated; they flag a practice for scrutiny and settle nothing.",
+  "note": "Raw answers to each question as worded (co-authors' readings, entered as stated). Replaces the 2026-11-05 pass/fail version, whose polarity was mixed ('fails K3' meant the harm WAS manifest). No verdicts; answers make the question auditable and settle nothing.",
   "assessments": {
     "PR1": {
-      "K1": "NOT_MET",
-      "K2": "NOT_MET",
-      "K3": "NOT_MET",
-      "K4": "NOT_MET",
-      "K5": "DISSENT_PRESENT_SUPPRESSED"
+      "K1": "NO",
+      "K2": "NO",
+      "K3": "YES",
+      "K4": "NO",
+      "K5": "YES"
     },
     "PR2": {
-      "K1": "NOT_ASSESSED",
-      "K2": "NOT_ASSESSED",
-      "K3": "NOT_ASSESSED",
-      "K4": "NOT_ASSESSED",
-      "K5": "NOT_ASSESSED"
+      "K1": "UNKNOWN",
+      "K2": "UNKNOWN",
+      "K3": "UNKNOWN",
+      "K4": "UNKNOWN",
+      "K5": "UNKNOWN"
     },
     "PR3": {
-      "K1": "NOT_MET",
-      "K2": "NOT_ASSESSED",
-      "K3": "NOT_ASSESSED",
-      "K4": "NOT_MET",
-      "K5": "NOT_ASSESSED"
+      "K1": "NO",
+      "K2": "UNKNOWN",
+      "K3": "UNKNOWN",
+      "K4": "NO",
+      "K5": "UNKNOWN"
     },
     "PR4": {
-      "K1": "NOT_MET",
-      "K2": "NOT_MET",
-      "K3": "NOT_MET",
-      "K4": "NOT_MET",
-      "K5": "NOT_ASSESSED"
+      "K1": "NO",
+      "K2": "NO",
+      "K3": "YES",
+      "K4": "NO",
+      "K5": "UNKNOWN"
     },
     "PR5": {
-      "K1": "NOT_ASSESSED",
-      "K2": "NOT_ASSESSED",
-      "K3": "NOT_ASSESSED",
-      "K4": "NOT_ASSESSED",
-      "K5": "NOT_ASSESSED"
+      "K1": "UNKNOWN",
+      "K2": "UNKNOWN",
+      "K3": "UNKNOWN",
+      "K4": "UNKNOWN",
+      "K5": "UNKNOWN"
     },
     "PR6": {
-      "K1": "NOT_MET",
-      "K2": "NOT_MET",
-      "K3": "NOT_ASSESSED",
-      "K4": "NOT_ASSESSED",
-      "K5": "NOT_ASSESSED"
+      "K1": "NO",
+      "K2": "NO",
+      "K3": "UNKNOWN",
+      "K4": "UNKNOWN",
+      "K5": "UNKNOWN"
     },
     "PR7": {
-      "K1": "NOT_ASSESSED",
-      "K2": "NOT_ASSESSED",
-      "K3": "NOT_ASSESSED",
-      "K4": "NOT_ASSESSED",
-      "K5": "NOT_ASSESSED"
+      "K1": "UNKNOWN",
+      "K2": "UNKNOWN",
+      "K3": "UNKNOWN",
+      "K4": "UNKNOWN",
+      "K5": "UNKNOWN"
     },
     "PR8": {
-      "K1": "NOT_MET",
-      "K2": "NOT_MET",
-      "K3": "NOT_MET",
-      "K4": "NOT_ASSESSED",
-      "K5": "NOT_ASSESSED"
+      "K1": "NO",
+      "K2": "NO",
+      "K3": "YES",
+      "K4": "UNKNOWN",
+      "K5": "UNKNOWN"
     }
   },
   "qualifiers": {
-    "PR6.K1": "often",
+    "PR1.K5": "dissent present and suppressed",
+    "PR6.K1": "no, often (not always)",
     "PR8.K1": "no informed consent",
-    "PR8.K3": "to insiders"
+    "PR8.K3": "visible to insiders"
+  },
+  "questions": {
+    "K1": "consent given?",
+    "K2": "subject's action changes their outcome?",
+    "K3": "harm visible at the time?",
+    "K4": "claimant would accept the same claim on themselves?",
+    "K5": "contemporaneous dissent on record?"
   }
 }

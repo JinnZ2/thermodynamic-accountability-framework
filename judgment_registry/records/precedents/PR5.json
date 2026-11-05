@@ -11,8 +11,8 @@
   "environment": {
     "other": "international"
   },
-  "date": null,
-  "date_approx": true,
+  "date": "1950",
+  "date_approx": false,
   "judge": {
     "name_or_body": "Nuremberg Principles (international law)",
     "type": "body"
@@ -28,5 +28,6 @@
   "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "solid",
-  "notes": "the explicit legal recognition that legality != legitimacy. Date not supplied (TODO)."
+  "notes": "the explicit legal recognition that legality != legitimacy. Date: 1950, the International Law Commission's formulation of the Nuremberg Principles (Charter 1945, judgment 1946).",
+  "layer": "agency"
 }

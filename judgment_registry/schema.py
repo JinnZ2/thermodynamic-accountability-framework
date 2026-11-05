@@ -110,7 +110,7 @@ class Judgment:
     judge_incentives: Optional[str] = None      # stakes held, as documented
     reason: Optional[str] = None                # argument as stated, verbatim where possible
     evidence: List[Dict] = field(default_factory=list)   # [{item, tag, source}]
-    dissent: List[Dict] = field(default_factory=list)    # [{position, holder, reason, source}]
+    dissent: List[Dict] = field(default_factory=list)    # [{position, holder, reason, source, adopted_by?}]
     supersedes: Optional[str] = None
     superseded_by: Optional[List[str]] = None   # DERIVED from the chain at read time only
     change_basis: List[str] = field(default_factory=list)

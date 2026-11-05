@@ -36,23 +36,24 @@ C2  Grounding needs criteria that can be checked without asking the
     power-holder.                                              PROPOSED
 ```
 
-## Proposed criteria (each checkable from the record)
+## Proposed criteria (each a question answered from the record)
 
 ```text
-K1 consent         did the affected party agree, or could they have?
-K2 closed loop     does the affected party's own action change their
-                   outcome, or only compliance with the claimant?
-K3 manifestness    is the harm visible to anyone who looks, at the time?
-K4 reciprocity     would the claimant accept the same claim on themselves?
-K5 dissent record  was contemporaneous dissent present, and was it
-                   suppressed or dropped?  (links DISSENT_DROPPED)
+K1 consent given?                                          YES | NO | PARTIAL | UNKNOWN
+K2 does the subject's own action change their outcome?     YES | NO | PARTIAL | UNKNOWN
+K3 was the harm visible at the time?                       YES | NO | PARTIAL | UNKNOWN
+K4 would the claimant accept the same claim on themselves? YES | NO | PARTIAL | UNKNOWN
+K5 is contemporaneous dissent on record?                   YES | NO | PARTIAL | UNKNOWN
 ```
 
-A practice that does not meet several of these is flagged for scrutiny
-whatever its legal status. The criteria don't settle cases; they make
-the question auditable. Assessments live in
-`records/precedents/criteria.json` (MET / NOT_MET / NOT_ASSESSED; the
-append's "K-fails" are recorded as NOT_MET).
+Raw answers to the question as worded, with no pass/fail. A practice
+with several NO answers on K1, K2, K4 alongside YES on K3 and K5 is
+flagged for scrutiny whatever its legal status; the answers settle
+nothing, they make the question auditable. Answers live in
+`records/precedents/criteria.json`; unstated cells are UNKNOWN.
+Correction 2026-11-05: the first version used pass/fail with mixed
+polarity ("fails K3" meant the harm WAS manifest); remapped to raw
+answers.
 
 ## Precedent records
 
@@ -64,25 +65,26 @@ PR2   "separate but equal"              Plessy (1896); Harlan dissent PR2s Brown
 PR3   compulsory eugenic sterilization  Buck v. Bell (1927)           -- never formally overturned; ~60,000+ (approx)   medium
 PR4   T4 killing of disabled patients   Hitler authorization (1939)   PR4s Doctors'      POWER_SHIFT             solid
       (NON-CONSENSUAL)                                                Trial / Code (1947)
-PR5   Nuremberg Principles II, IV       --                            -- the legal recognition that legality != legitimacy  solid
+PR5   Nuremberg Principles II, IV       ILC formulation (1950;        -- the legal recognition that legality != legitimacy  solid
+                                        Charter 1945, judgment 1946)
 PR6   lobotomy as accepted treatment    medical establishment; Moniz  -- mixed; USSR ban 1950                       medium
                                         Nobel (1949)
 PR7   mass removal / detention          Korematsu (1944); 3 dissents  PR7s 1983 / 1988 / EVIDENCE, NORM_SHIFT    solid
                                                                       2018
-PR8   treatment withheld for            U.S. Public Health Service    PR8s ended (1972)  EXPOSURE                solid
+PR8   treatment withheld for            U.S. Public Health Service    PR8s ended (1972;  EXPOSURE                solid
+                                                                      HEW ad hoc panel, approx, TODO verify)
       observation (Tuskegee)
 ```
 
 ```text
-K assessments (co-authors)     K1       K2       K3                K4       K5
-PR1                            NOT_MET  NOT_MET  NOT_MET           NOT_MET  DISSENT_PRESENT_SUPPRESSED
-PR3                            NOT_MET  --       --                NOT_MET  --
-PR4                            NOT_MET  NOT_MET  NOT_MET           NOT_MET  --
-PR6                            NOT_MET  NOT_MET  --                --       --
-                               (often)
-PR8                            NOT_MET  NOT_MET  NOT_MET           --       --
-                               (no informed consent)  (to insiders)
-PR2, PR5, PR7                  not assessed in the append
+answers (co-authors)   K1 consent  K2 own action  K3 visible   K4 reciprocal  K5 dissent
+PR1                    NO          NO             YES          NO             YES (suppressed)
+PR3                    NO          UNKNOWN        UNKNOWN      NO             UNKNOWN
+PR4                    NO          NO             YES          NO             UNKNOWN
+PR6                    NO (often)  NO             UNKNOWN      UNKNOWN        UNKNOWN
+PR8                    NO          NO             YES          UNKNOWN        UNKNOWN
+                       (no informed consent)      (to insiders)
+PR2, PR5, PR7          all UNKNOWN (not stated)
 ```
 
 PR4 scope guard: NON-CONSENSUAL state killing. Present voluntary-
@@ -90,19 +92,25 @@ assisted-dying law is a separate, contested question; do not conflate.
 
 ## What the registry flags on these records
 
+All precedent records carry layer = agency. Contemporaneous documentation
+of the harm is the sensor-layer basis where it is on record (PR1 / PR1s
+abolitionist testimony, PR4 / PR4s von Galen's sermon, PR8 / PR8s
+Buxtun's reports); elsewhere SKIPPED_LAYER stays raised.
+
 ```text
-flag                            records             reading
-DISSENT_DROPPED                 PR1s PR2s PR4s      the dissent on the original is absent from the
-                                PR7s (x3) PR8s      superseding record. Here the dissent became the
-                                                    new holding; the rule can't tell "adopted" from
-                                                    "dropped". Left as is: the flag points at the
-                                                    dissent the reversal had already written.
-NO_NEW_CONDITIONS_OR_EVIDENCE   PR1s PR8s           no new evidence entered on reversals driven by
-                                                    POWER_SHIFT / EXPOSURE -- the P4 pattern, as a
-                                                    completeness note
-MISSING_FIELD (date)            PR5                 date not supplied (TODO)
-LAYER_UNSTATED, INCENTIVES_     all 13              layer and judge incentives not recorded for
-UNRECORDED, NO_FRAMING_CHECK                        historical judgments
+flag                            records                    reading
+DISSENT_ADOPTED (informational) PR1s PR2s PR4s PR7s (x3)   the original's dissent carries adopted_by =
+                                PR8s                       the reversal: the dissent the reversal had
+                                                           already written, as its own signal
+NO_NEW_CONDITIONS_OR_EVIDENCE   PR1s PR8s                  no new evidence on POWER_SHIFT / EXPOSURE
+                                                           reversals -- the P4 pattern
+SKIPPED_LAYER                   PR2 PR2s PR3 PR5 PR6 PR7   no contemporaneous harm documentation entered
+                                PR7s                       as a sensor basis
+LOWER_LAYER_SECONDHAND          PR1 PR1s PR4 PR4s PR8 PR8s the sensor basis is relayed by the recorders
+INTERPRETATION_UNRECORDED,      all 13                     agency block, interpretation, incentives and
+SUBJECT_STATUS / CONSENT /                                 framing not recorded for historical judgments
+LOOP_UNSTATED, INCENTIVES_
+UNRECORDED, NO_FRAMING_CHECK
 ```
 
 ## Pattern across records
