@@ -58,5 +58,6 @@
   ],
   "volume": "thin",
   "recorder": "co-authors (JinnZ2 + Claude)",
-  "notes": "every field is from secondhand coverage; replace when the paper is read"
+  "notes": "every field is from secondhand coverage; replace when the paper is read",
+  "audit_completed_at": "2026-11-05"
 }

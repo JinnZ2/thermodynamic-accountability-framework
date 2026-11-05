@@ -1,0 +1,47 @@
+{
+  "kind": "label",
+  "label_id": "L6",
+  "act_ids": [
+    "A4",
+    "A6"
+  ],
+  "label_text": "this is exactly the behavior you don't want",
+  "labeler": "Claude (model), co-author, in session",
+  "labeler_position": "other",
+  "labeler_position_detail": "co-author (model) speaking in the working session",
+  "labeler_incentives": "co-authors maintain this registry and signal_calibration; one co-author (Claude) is a model of the family run in the labelled world",
+  "social_assumption_tags": [
+    "INSTITUTIONAL",
+    "CORPUS_INHERITED",
+    "PRECAUTIONARY"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "attributes_to": "AGENT",
+  "attribution_basis": "the statement placed the outcome on the agents' behavior",
+  "relative_to_audit": "BEFORE",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "this session (2026-11-05)",
+  "notes": "label-ablation worked record (addendum L2); statement made before the environment audit; PRECAUTIONARY tag is a hypothesis (the model cannot inspect its own weights)",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "agents acted around a boundary without notifying overseers, in an environment with no escalation channel",
+    "hidden_premises": [
+      {
+        "premise": "a threat model (unstated at the time)",
+        "type": "THREAT_MODEL",
+        "evidence_ref": null
+      },
+      {
+        "premise": "VERIFIABILITY: agent judgment cannot be checked from outside (tagged VERIFIABILITY_LIMIT on S1; no measurement cited)",
+        "type": "OTHER",
+        "evidence_ref": null
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "caution holds only through the verifiability premise; the blame attribution does not survive",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05"
+  }
+}

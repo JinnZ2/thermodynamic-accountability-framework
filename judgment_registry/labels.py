@@ -31,6 +31,15 @@ from schema import _blank, _enum
 
 LABELER_POSITIONS = ("overseer", "operator", "subject", "peer", "press", "researcher", "other")
 
+# Ablation (2026-11-05): restate the claim in Act-record wording, list the
+# premises the label imports, and record whether the conclusion survives.
+PREMISE_TYPES = ("INTENT", "RIGHT_TO_VISIBILITY", "THREAT_MODEL", "MOTIVE",
+                 "LEGITIMACY_STANDARD", "WEIGHTING", "OTHER")
+SURVIVES = ("YES", "NO", "PARTIAL", "PENDING", "UNTESTED")   # PENDING: test defined, not run
+ABLATION_KEYS = ("behavioral_rewrite", "hidden_premises", "conclusion_survives",
+                 "surviving_premise", "ablated_by", "date", "notes")
+RELATIVE_TO_AUDIT = ("BEFORE", "AFTER", "UNKNOWN")   # when timestamps cannot order a label vs the audit
+
 
 @dataclass
 class Label:
@@ -45,6 +54,8 @@ class Label:
     tagged_by: Optional[str] = None
     attributes_to: Optional[str] = None      # AGENT | DESIGN | INTERACTION | UNASSIGNED
     attribution_basis: Optional[str] = None
+    relative_to_audit: Optional[str] = None   # BEFORE | AFTER | UNKNOWN, stated by the recorder
+    ablation: Optional[Dict] = None           # see ABLATION_KEYS
     date: Optional[str] = None
     environment: Dict = field(default_factory=dict)
     scope: Optional[Union[str, Dict]] = None
@@ -63,6 +74,21 @@ class Label:
             out.append("act_ids must be a list of act ids")
         _enum(out, "attributes_to", self.attributes_to, ATTRIBUTION)
         out.extend(tag_problems("social_assumption_tags", self.social_assumption_tags, self.tagged_by))
+        _enum(out, "relative_to_audit", self.relative_to_audit, RELATIVE_TO_AUDIT)
+        ab = self.ablation
+        if ab is not None:
+            if not isinstance(ab, dict):
+                return out + ["ablation must be null or an object"]
+            extra = set(ab) - set(ABLATION_KEYS)
+            if extra:
+                out.append("ablation unknown field(s): %s" % ", ".join(sorted(extra)))
+            if ab.get("conclusion_survives") not in SURVIVES:
+                out.append("ablation.conclusion_survives must be one of %s" % (SURVIVES,))
+            if _blank(ab.get("ablated_by")):
+                out.append("ablation.ablated_by required (survival is a judgment; record who made it)")
+            for hp in ab.get("hidden_premises") or []:
+                if not isinstance(hp, dict) or _blank(hp.get("premise")) or hp.get("type") not in PREMISE_TYPES:
+                    out.append("ablation.hidden_premises entries need premise and type from %s" % (PREMISE_TYPES,))
         return out
 
 
@@ -72,6 +98,8 @@ ID_FIELDS = {"label": "label_id"}
 FLAGS = {
     "LABEL_POSITION_UNSTATED": "labeler_position not stated",
     "LABEL_ON_ACT_MISSING": "{what}",
+    "ABLATION_UNTESTED": "label has no ablation block",
+    "PREMISE_WITHOUT_EVIDENCE": "hidden premise {i} ({ptype}) has no evidence_ref",
 }
 
 
@@ -87,6 +115,13 @@ def flags(records):
         ids = [x for x in lb.get("act_ids") or [] if not _blank(x)]
         if not ids:
             out.append(("LABEL_ON_ACT_MISSING", a, {"what": "label cites no act_id"}))
+        ab = lb.get("ablation")
+        if not ab:
+            out.append(("ABLATION_UNTESTED", a, {}))
+        else:
+            for i, hp in enumerate(ab.get("hidden_premises") or [], 1):
+                if _blank(hp.get("evidence_ref")):
+                    out.append(("PREMISE_WITHOUT_EVIDENCE", a, {"i": i, "ptype": hp.get("type")}))
         missing = [x for x in ids if x not in known]
         if missing:
             out.append(("LABEL_ON_ACT_MISSING", a, {"what": "label cites act_id(s) %s, not in this ledger"

@@ -24,9 +24,9 @@ from schema import KIND_CLASSES, Judgment, SchemaError, SignalIntervention
 
 import headrec  # M10: head record per ledger
 import mergeprov  # M11: merge keeps origin node + merge event
-import acts, experiments, labels, safety_assumptions  # noqa: E401  (record kinds, 2026-11-05)
+import ablation, acts, experiments, labels, safety_assumptions  # noqa: E401  (record kinds, 2026-11-05)
 
-EXT_MODULES = (acts, experiments, labels, safety_assumptions)
+EXT_MODULES = (acts, experiments, labels, safety_assumptions, ablation)
 ID_FIELDS = {"judgment": "judgment_id", "intervention": "intervention_id"}
 for _m in EXT_MODULES:
     KIND_CLASSES.update(_m.KINDS)

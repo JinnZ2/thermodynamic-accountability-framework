@@ -10,7 +10,9 @@
 #   python3 cli.py export                 [--ledger L]   JSON with superseded_by derived
 #   python3 cli.py axis ID                [--ledger L]   signal-axis variables of one intervention
 #   python3 cli.py axis --compare A B     [--ledger L]   two interventions side by side
-#   python3 cli.py labels ACT_ID          [--ledger L]   every label on one act, side by side
+#   python3 cli.py labels ACT_ID [--ablation] [--ledger L]   every label on one act, side by side
+#                                                        (--ablation: with survival status)
+#   python3 cli.py ablate LABEL_ID        [--ledger L]   claim / rewrite / premises / survives
 #   python3 cli.py assumptions --by-tag TAG [--ledger L] safety assumptions carrying a social tag
 #   check also takes --as-of YYYY-MM-DD (date used for OUTCOME_UNRECORDED; default today)
 #
@@ -23,6 +25,7 @@
 import json
 import sys
 
+import ablation
 import chain
 import integrity
 import labels
@@ -97,6 +100,14 @@ def main(argv):
             print(HEADER)
             print(text)
             return 0
+        if cmd == "labels" and len(args) == 2 and args[1] == "--ablation":
+            print(HEADER)
+            print(ablation.side_by_side(recs, args[0]))
+            return 0
+        if cmd == "ablate" and len(args) == 1:
+            print(HEADER)
+            print(ablation.ablate_text(recs, args[0]))
+            return 0
         if cmd == "labels" and len(args) == 1:
             print(HEADER)
             print(labels.side_by_side(recs, args[0]))
@@ -142,7 +153,8 @@ def main(argv):
 
 def _usage():
     sys.stderr.write("usage: cli.py add FILE | check [--as-of DATE] | lineage ID | diff A B | export | "
-                     "axis ID | axis --compare A B | labels ACT_ID | assumptions --by-tag TAG  [--ledger PATH]\n")
+                     "axis ID | axis --compare A B | labels ACT_ID [--ablation] | ablate LABEL_ID | "
+                     "assumptions --by-tag TAG  [--ledger PATH]\n")
     return 2
 
 

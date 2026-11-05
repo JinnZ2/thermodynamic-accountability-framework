@@ -27,6 +27,7 @@ SOCIAL_ASSUMPTION_TAGS = {
     "EMPIRICAL": "backed by a cited measurement",
     "PROFESSIONAL_PRACTICE": "rests on an established professional / safety-engineering framework, not a measurement",
 }
+SA_CHANGE_BASIS = CHANGE_BASIS + ("LABEL_ABLATION",)   # a rewrite produced by label ablation
 HOLDER_TYPES = ("person", "org", "model", "tradition", "other")   # other: mixed holders (e.g. co-authors)
 
 
@@ -57,6 +58,7 @@ class SafetyAssumption:
     tagged_by: Optional[str] = None
     evidence: List[Dict] = field(default_factory=list)   # [{item, tag, source}]
     depends_on: List[str] = field(default_factory=list)  # sa_ids / experiment_ids
+    depends_on_labels: List[str] = field(default_factory=list)   # label_ids the statement cites
     conditions: Optional[str] = None         # when the statement is meant to apply
     supersedes: Optional[str] = None
     change_basis: List[str] = field(default_factory=list)
@@ -82,8 +84,10 @@ class SafetyAssumption:
             if not isinstance(e, dict) or e.get("tag") not in EVIDENCE_TAGS:
                 out.append("evidence entries need a tag from %s" % (EVIDENCE_TAGS,))
         for b in self.change_basis or []:
-            if b not in CHANGE_BASIS:
-                out.append("change_basis entries must be from %s" % (CHANGE_BASIS,))
+            if b not in SA_CHANGE_BASIS:
+                out.append("change_basis entries must be from %s" % (SA_CHANGE_BASIS,))
+        if not isinstance(self.depends_on_labels, list):
+            out.append("depends_on_labels must be a list of label_ids")
         if not isinstance(self.depends_on, list):
             out.append("depends_on must be a list")
         return out

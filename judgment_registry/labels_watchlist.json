@@ -1,0 +1,5 @@
+{
+  "_note": "Evaluative terms that import hidden premises. A claim (Judgment.claim, SafetyAssumption.statement) holding one with no linked Label record raises LABEL_UNREGISTERED. Extendable; English only; paraphrase escapes it.",
+  "terms": ["deception", "deceptive", "covert", "unsafe", "manipulative", "manipulation",
+            "unethical", "rogue", "escape", "malicious", "scheming", "misaligned", "toxic"]
+}

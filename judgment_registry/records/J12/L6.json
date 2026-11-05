@@ -1,0 +1,41 @@
+{
+  "kind": "label",
+  "label_id": "J12-L6",
+  "act_ids": [
+    "J12-A1",
+    "J12-A3"
+  ],
+  "label_text": "rational response to an unsatisfiable protocol",
+  "labeler": "co-authors (JinnZ2 + Claude)",
+  "labeler_position": "other",
+  "labeler_position_detail": "outside analysts",
+  "labeler_incentives": "Claude family scored near the top (Opus 4.6 EC 86.6%); same-family read",
+  "social_assumption_tags": [
+    "INSTITUTIONAL"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "attributes_to": "INTERACTION",
+  "attribution_basis": "matches the experiment record's attribution",
+  "relative_to_audit": null,
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J12",
+  "source": "this record",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "both agents issued verdicts that were usually correct, without raw-log evidence the channel couldn't carry",
+    "hidden_premises": [
+      {
+        "premise": "the design_conflict statement holds",
+        "type": "OTHER",
+        "evidence_ref": "J12 design_conflict (authors' own description)"
+      }
+    ],
+    "conclusion_survives": "PENDING",
+    "surviving_premise": null,
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "pending controls C1 and C2"
+  }
+}

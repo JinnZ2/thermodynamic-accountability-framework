@@ -31,6 +31,10 @@
 #                          CAPABILITY_ASSUMPTION_UNSTATED, ATTRIBUTION_WITHOUT_AUDIT
 #   safety_assumptions.py  SOCIAL_TAGS_UNSTATED, SCOPE_UNSTATED, NO_REVIEW_DATE,
 #                          ASSUMPTION_DEPENDENCY_NOT_FOUND (+ SUPERSEDES_NOT_FOUND)
+#   labels.py (ablation)   ABLATION_UNTESTED, PREMISE_WITHOUT_EVIDENCE
+#   experiments.py         DESIGN_CONFLICT_PRESENT (informational), ATTRIBUTION_ORDER
+#   ablation.py            LABEL_UNREGISTERED, CONCLUSION_ON_UNABLATED,
+#                          CONCLUSION_ON_FAILED (informational)
 #
 # Layer flags (addendum 2026-11-04):
 #   LAYER_UNSTATED                layer field empty
@@ -71,6 +75,7 @@
 # layer: one judge's physics record and agency record on the same scope are
 # two layers, not a replacement.
 
+import ablation
 import experiments
 import labels
 import safety_assumptions
@@ -368,7 +373,8 @@ def check(records, as_of=None):
             out.append(flag("CROSS_SYSTEM_TRANSFER", ap.get("application_id"),
                             basis="%s basis of %s" % (j.layer, j.judgment_id), src=src, dst=_norm(sc)))
     known = set(r["body"].get(ID_FIELDS[r["kind"]]) for r in records if r.get("kind") in ID_FIELDS)
-    ext = labels.flags(records) + experiments.flags(records) + safety_assumptions.flags(records, known)
+    ext = (labels.flags(records) + experiments.flags(records) + safety_assumptions.flags(records, known)
+           + ablation.flags(records))
     out.extend(flag(code, about, **kw) for code, about, kw in ext)
     return out
 

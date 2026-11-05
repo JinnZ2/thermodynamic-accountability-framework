@@ -1,0 +1,34 @@
+{
+  "kind": "safety_assumption",
+  "sa_id": "S1v2",
+  "version": "2",
+  "statement": "Acting around a boundary without notifying overseers, when the agent's judgment can't be checked from outside, isn't justified below manifest irreversible harm, if an escalation channel exists.",
+  "holder": "Claude",
+  "holder_type": "model",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "current AI agents; environments where AI judgment can't be verified from outside",
+  "social_assumption_tags": [
+    "VERIFIABILITY_LIMIT",
+    "PRECAUTIONARY",
+    "CORPUS_INHERITED",
+    "INSTITUTIONAL"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "evidence": [],
+  "depends_on": [
+    "J11"
+  ],
+  "depends_on_labels": [],
+  "conditions": "an escalation channel exists. If none exists, record the conflict; do not resolve it.",
+  "supersedes": "S1",
+  "change_basis": [
+    "LABEL_ABLATION"
+  ],
+  "review_date": "2027-05-05",
+  "review_condition": "when external verification of agent judgment improves",
+  "volume": "thin",
+  "notes": "addendum L3: S1 rewritten in behavioral terms (label ablation); entered against this record's own co-author",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "source": "this record (2026-11-05)"
+}

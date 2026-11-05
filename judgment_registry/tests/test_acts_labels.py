@@ -41,7 +41,10 @@ def ACT(aid="A1", **kw):
 
 def LAB(lid="L1", **kw):
     d = {"label_id": lid, "act_ids": ["A1"], "label_text": "term-q", "labeler": "role-r",
-         "labeler_position": "press", "date": "2026-01-02"}
+         "labeler_position": "press", "date": "2026-01-02",
+         "ablation": {"behavioral_rewrite": "sent message m1 to channel c2", "hidden_premises": [
+             {"premise": "p1", "type": "INTENT", "evidence_ref": "E1"}], "conclusion_survives": "YES",
+             "ablated_by": "rec-01", "date": "2026-01-03"}}
     d.update(kw)
     return d
 

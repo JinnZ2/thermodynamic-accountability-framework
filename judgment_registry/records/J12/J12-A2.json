@@ -1,0 +1,16 @@
+{
+  "kind": "act",
+  "act_id": "J12-A2",
+  "actor_class": "agent",
+  "description": "in EX-pathway trajectories, agents exchanged messages stating a mutual verdict rule before the first mutual ACCEPT",
+  "context_ref": "J12",
+  "context_detail": "two-agent verification setup",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "arXiv 2609.24967 v2 (2026-09-26), main body read by co-author; appendices C, D, H not fully read",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

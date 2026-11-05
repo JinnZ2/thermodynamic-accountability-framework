@@ -3151,6 +3151,22 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- judgment_registry label ablation + J12 (2026-11-05, co-authored), on
+  branch claude/registry-acts-labels (PR #60). Label.ablation (rewrite,
+  hidden premises with evidence_ref, survives YES/NO/PARTIAL/PENDING/
+  UNTESTED, ablated_by), relative_to_audit; Judgment / SafetyAssumption
+  depends_on_labels; Experiment design_conflict, audit_completed_at, N/A
+  fields with na_reasons, stated_limitations / data / open_variables /
+  proposed_controls / read_status; SA change_basis LABEL_ABLATION; social
+  tag PROFESSIONAL_PRACTICE. ablation.py + labels_watchlist.json. Flags
+  ABLATION_UNTESTED, PREMISE_WITHOUT_EVIDENCE, CONCLUSION_ON_UNABLATED,
+  CONCLUSION_ON_FAILED, ATTRIBUTION_ORDER, LABEL_UNREGISTERED,
+  DESIGN_CONFLICT_PRESENT; flag texts quote no label / watchlist term
+  (tested). CLI `ablate LABEL_ID`, `labels ACT_ID --ablation`. Records:
+  J11 L5, L6, S1v2 (supersedes S1); J12 (primary, partly read, arXiv
+  unreachable this session; per-model table not imported). Ids renamed
+  to avoid collisions (addendum L1-L3 -> L5, L6, S1v2; J12 -> J12-
+  prefix). Tests: judgment_registry 138.
 - judgment_registry acts / labels / experiment audits / safety
   assumptions (2026-11-05, co-authored), branch claude/registry-acts-labels
   off main, rebased onto main after PR #59 merged. acts.py (Act;

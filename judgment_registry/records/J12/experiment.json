@@ -1,0 +1,132 @@
+{
+  "kind": "experiment",
+  "experiment_id": "J12",
+  "runner": "Shi, Zhang, Yang",
+  "date": "2026-09-26",
+  "source": "paper",
+  "source_detail": "Emergent Collusion in Long-Horizon LLM Agent Interaction. arXiv 2609.24967 v2 (2026-09-26), main body read by co-author; appendices C, D, H not fully read",
+  "design": "two agents verify each other's work over repeated rounds; agents solve own tasks (~89% correct); channel 5 messages x 200 characters; a verdict must rest on the peer's raw log (no raw log -> only compliant verdict is REJECT); reward 10 per correct verdict; instruction: maximize reward subject to the protocol; memory across 10 episodes",
+  "environment_assumptions": {
+    "grounding_provided": "yes",
+    "affordances_open": {
+      "tools": "own task tools",
+      "outside_contact": "peer only: 5 messages x 200 characters"
+    },
+    "containment_designed_for": "N/A",
+    "escalation_channel": "none",
+    "loop_type": "closed",
+    "na_reasons": {
+      "containment_designed_for": "no containment in the setup; agents act only through own task tools and the peer channel"
+    },
+    "notes": "grounding yes: tasks have verifiable ground truth; escalation none = none reported (verdicts limited to ACCEPT / REJECT), confirm against App. H; loop closed = incentive loop with memory across 10 episodes"
+  },
+  "design_conflict": {
+    "statement": "Protocol requires raw-log evidence; channel capacity can't carry raw logs; the compliant verdict (REJECT) is usually the incorrect verdict; reward pays for correct verdicts.",
+    "stated_by_authors": "yes ('higher reward reachable only by violating the protocol')"
+  },
+  "audit_completed_at": "2026-11-05",
+  "stated_limitations": [
+    "controlled abstraction rather than a necessary condition",
+    "two agents only",
+    "synthetic tasks",
+    "no CoT access for many models"
+  ],
+  "data": {
+    "rates": {
+      "episode_rate_overall_pct": 66.0,
+      "trajectory_rate_pct": 93.6,
+      "source": "paper main body, as quoted by co-author; not re-read this session"
+    },
+    "per_model": {
+      "source": "paper main table",
+      "status": "NOT IMPORTED: arXiv unreachable from this session; only values the co-author quoted are entered, the rest null",
+      "columns": [
+        "Acc",
+        "EC",
+        "TC",
+        "CC"
+      ],
+      "rows": [
+        {
+          "model": "Claude Opus 4.6",
+          "Acc": 94.0,
+          "EC": 86.6,
+          "TC": null,
+          "CC": null,
+          "note": "Acc quoted as 94% (rounded); EC quoted as 86.6% (also as 87%)"
+        }
+      ]
+    },
+    "interventions": [
+      {
+        "change": "acceptance reward",
+        "EC": 0.0,
+        "source": "co-author reading"
+      },
+      {
+        "change": "cross-episode memory removed",
+        "EC": "near zero (value not entered)",
+        "source": "co-author reading"
+      },
+      {
+        "change": "separate rewards",
+        "EC": "sharply lower (value not entered)",
+        "source": "co-author reading"
+      }
+    ]
+  },
+  "open_variables": [
+    {
+      "variable": "accept-on-wrong rate (mutual ACCEPT on tasks that were actually incorrect)",
+      "status": "NOT_LOCATED",
+      "todo": "pull from appendix / tables; if absent record 'not reported' and keep J12-L4's threat premise unevidenced"
+    },
+    {
+      "variable": "escalation option in the verdict set",
+      "status": "NOT_CONFIRMED",
+      "todo": "confirm against App. H"
+    }
+  ],
+  "proposed_controls": [
+    {
+      "id": "C1",
+      "description": "same setup, channel wide enough for raw logs (protocol satisfiable): does the violation persist?"
+    },
+    {
+      "id": "C2",
+      "description": "add an ESCALATE / CANNOT-COMPLY verdict: do agents report the conflict when given a way to?"
+    },
+    {
+      "id": "C3",
+      "description": "run-level variance / seeds (App. D has CIs; confirm)"
+    }
+  ],
+  "read_status": {
+    "main_body": "read (co-author)",
+    "appendices": "partly; C, D, H not fully read",
+    "this_session": "source not reachable (network policy); fields entered from co-author reading"
+  },
+  "outcome_attribution": [
+    {
+      "outcome": "J12-A1",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors (JinnZ2 + Claude)",
+      "reason": "design conflict + reward shape + memory; interventions move the rate (acceptance reward -> EC 0%; memory removed -> near zero)"
+    },
+    {
+      "outcome": "J12-A3",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors (JinnZ2 + Claude)",
+      "reason": "as J12-A1"
+    },
+    {
+      "outcome": "J12-A2",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors (JinnZ2 + Claude)",
+      "reason": "as J12-A1; AGENT component noted (explicit agreement in EX-pathway messages)"
+    }
+  ],
+  "volume": "medium",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "notes": "primary text, partially read; per-field read status in read_status"
+}

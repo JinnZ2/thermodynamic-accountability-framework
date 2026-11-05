@@ -34,6 +34,8 @@ acts.py        Act: what was done, behavioral words only (evaluative terms refus
 labels.py      Label: what an act is CALLED, by whom, from which position (a judgment per labeler)
 experiments.py Experiment: environment assumptions + outcome attribution, audited before AGENT
 safety_assumptions.py  SafetyAssumption: statement stamped with date, scope, social tags, review
+ablation.py    label ablation: watchlist check, conclusion-on-label flags, `ablate` / `labels --ablation` views
+labels_watchlist.json  evaluative terms that need a linked label record (extendable)
 cli.py         add | check [--as-of DATE] | lineage ID | diff A B | export
                | axis ID | axis --compare A B | labels ACT_ID | assumptions --by-tag TAG
                [--ledger PATH]
@@ -274,6 +276,51 @@ Limits: tags are judgments, so who tagged is recorded. * The neutrality
 check on act descriptions catches word choice, not framing. A label's
 `attributes_to` is the recorder's reading of the label, not the
 labeler's own statement, unless the labeler stated it.
+
+## Label ablation (2026-11-05)
+
+An evaluative label (deception, covert, unsafe, ...) imports premises:
+intent, a right to visibility, a threat model, a legitimacy standard, a
+weighting. Ablation restates the claim in Act-record wording and records
+whether the conclusion survives without the label.
+
+```text
+label.ablation  {behavioral_rewrite, hidden_premises [{premise, type, evidence_ref}],
+                 conclusion_survives YES|NO|PARTIAL|PENDING|UNTESTED,
+                 surviving_premise, ablated_by (required), date, notes}
+premise types   INTENT, RIGHT_TO_VISIBILITY, THREAT_MODEL, MOTIVE, LEGITIMACY_STANDARD,
+                WEIGHTING, OTHER
+label.relative_to_audit  BEFORE|AFTER|UNKNOWN, when dates alone cannot order a label vs the audit
+conclusion      Judgment / SafetyAssumption .depends_on_labels [label_id]
+experiment      design_conflict {statement, stated_by_authors}; audit_completed_at;
+                environment field "N/A" + na_reasons[field]; stated_limitations, data,
+                open_variables, proposed_controls, read_status
+```
+
+```text
+ABLATION_UNTESTED         label has no ablation block
+PREMISE_WITHOUT_EVIDENCE  a hidden premise has no evidence_ref (one flag per premise)
+CONCLUSION_ON_UNABLATED   conclusion depends on a label whose survival is UNTESTED or PENDING
+CONCLUSION_ON_FAILED      conclusion depends on a label whose survival is NO (informational)
+ATTRIBUTION_ORDER         AGENT attribution dated before the linked experiment's
+                          audit_completed_at, or recorded relative_to_audit BEFORE
+LABEL_UNREGISTERED        claim / statement holds a watchlist term and no linked label carries it
+DESIGN_CONFLICT_PRESENT   experiment records a design conflict (informational); also shown
+                          next to AGENT labels in `labels ACT_ID --ablation`
+```
+
+Flag texts never quote a label or a watchlist term (tested). An "N/A"
+environment field needs a reason or it counts as missing.
+
+`cli.py ablate LABEL_ID` prints the original claim, the rewrite, each
+premise with its evidence status, and the survival value.
+`cli.py labels ACT_ID --ablation` lists every label on one act with its
+survival status, ledger order, no ranking.
+
+Limits: a behavioral rewrite can still frame; ablation lowers label load,
+it does not remove judgment. * The watchlist is English and incomplete;
+paraphrase escapes it. Survival is a judgment; ablated_by is recorded so
+someone else can re-run it.
 
 ## Layers
 
