@@ -1,6 +1,6 @@
 {
   "name": "example_community_B",
-  "_provenance": "ILLUSTRATIVE ONLY (PROPOSED, thin). Not a real place. Replace holders with names/roles from a local survey.",
+  "_provenance": "ILLUSTRATIVE ONLY (PROPOSED, thin). Not a real place. Replace holders with roles from a local survey; real records stay in local_data/ (gitignored), never names.",
   "holders": {
     "water_potable": "elevated tower + two hand-pump wells",
     "sanitation": "gravity septic on most lots",

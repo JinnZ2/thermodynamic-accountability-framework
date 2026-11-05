@@ -90,7 +90,7 @@ class CompactTests(unittest.TestCase):
             compact.decode("FR1|x||maybe")
 
     def test_rejects_personal_identifiers(self):
-        for bad in ("call 218 555 0199", "me@example.com", "91.0000, -181.0000", "12 Pine Street"):
+        for bad in ("call 555 555 0199", "me@example.com", "91.0000, -181.0000", "12 Pine Street"):  # misuse-scan: planted (PII-guard test inputs)
             self.assertTrue(compact.check_report(rep("x", "failed", failure_point=bad)), bad)
         self.assertFalse(compact.check_report(rep("x", "failed", failure_point="wall cracked at -20C")))
 

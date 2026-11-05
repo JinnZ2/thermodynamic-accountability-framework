@@ -137,7 +137,7 @@ class GrievanceTests(unittest.TestCase):
 
     def test_identifiers_held_back(self):
         g = gv.Grievance("G1", "access", "2026-12-01", "2026-12-08", "closed",
-                         "Resolved with the owner at 14 Mill Road, call 218 555 0101.")
+                         "Resolved with the owner at 14 Mill Road, call 555 555 0101.")  # misuse-scan: planted
         self.assertTrue(any("street address" in p for p in g.problems()))
         self.assertTrue(any("phone number" in p for p in g.problems()))
         self.assertEqual(gv.publish([g]), [])

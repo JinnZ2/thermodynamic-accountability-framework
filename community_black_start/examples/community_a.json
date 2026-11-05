@@ -1,6 +1,6 @@
 {
   "name": "example_community_A",
-  "_provenance": "ILLUSTRATIVE ONLY (PROPOSED, thin). Not a real place. Replace holders with names/roles from a local survey.",
+  "_provenance": "ILLUSTRATIVE ONLY (PROPOSED, thin). Not a real place. Replace holders with roles from a local survey; real records stay in local_data/ (gitignored), never names.",
   "holders": {
     "heat_space": "most households on wood heat",
     "fuel_stock": "farm co-op bulk tanks",

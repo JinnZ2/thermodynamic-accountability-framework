@@ -3143,6 +3143,27 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Misuse register + Step 0 audit (2026-11-05, co-authored), branch
+  claude/misuse-register. Step 0: full-history pattern scan (473 commits,
+  every blob) + full read of docs/case-studies/ and in_progress/; fixes
+  applied forward only, no history rewrite (A1, B1-B5, C1-C4: planted
+  coordinate out of range; homestead, landscape site, testimony places
+  and years, freight corridors, author context coarsened; two 2026-05-04
+  profile logs moved to gitignored local_data/ with a format stub;
+  evidence_resistant_priors keeps the finding without body / vehicle /
+  job detail; practitioner_baseline = decades / millions of miles;
+  provenance lines now "co-authored (JinnZ2 + Claude)"). Register:
+  docs/misuse_register.json (+ generated .md), M1-M9 first pass (DERIVED),
+  M10-M32 independent subagent pass (PROPOSED, mostly unmitigated).
+  Mitigations D-M1..D-M9: misuse_guard/localdata.py (real data only from
+  gitignored local_data/ or outside the repo), misuse_guard/scan.py
+  (fixture pattern scan; "misuse-scan: planted" marks guard-test inputs),
+  community_black_start/export.py (booleans + counts only), holders.py
+  (KnowledgeHolder, no identity fields), triggers.py (published ranges,
+  all null), bulletins.py scope check, judgment_registry header line on
+  every CLI output + anonymous dissent default, signal_calibration report
+  carries no prompt/output text, generated misuse section in each module
+  README. E17 (minimum cell size) NOT RUN. misuse_guard tests 18.
 - Added `signal_calibration/` (2026-11-04, co-authored): test battery for
   functional edge-signal handling in models. Hypothesis PROPOSED, thin.
   Integrity-only: records results, states no verdict. chainlog.py

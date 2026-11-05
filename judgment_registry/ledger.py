@@ -88,6 +88,9 @@ def build(kind, body):
         probs = obj.shape_problems()
         if probs:
             raise LedgerError("; ".join(probs))
+        for d in obj.dissent or []:          # D-M7: dissent is a position; holder defaults to anonymous
+            if isinstance(d, dict) and not str(d.get("holder") or "").strip():
+                d["holder"] = "anonymous"
         return obj.to_dict()
     if cls is SignalIntervention:
         probs = obj.shape_problems()

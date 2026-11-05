@@ -6,8 +6,11 @@
 # Feeds the POPULATION SEES / DOES column (docs/black_start_workforce_dependency_gap.md).
 #
 #   schedule(start, cadence_days) ──> due dates
-#   bulletin {restored, next_step, household_role, date}
+#   bulletin {restored, next_step, household_role, date[, note]}
 #       any required field empty -> not published (does not count)
+#       D-M5 scope: a bulletin is public status, not an inventory. A field
+#       naming holdings, sites, quantities or weak points, any key outside
+#       the five allowed, or a quantity with a unit in a value -> rejected.
 #   missed_bulletins(start, cadence, bulletins, today) -> due windows with no
 #       published bulletin. A missed bulletin is itself a flag.
 #
@@ -19,11 +22,33 @@
 
 import datetime as _dt
 import json
+import re
 import sys
 
 from roles import parse_date
 
 REQUIRED = ("restored", "next_step", "household_role", "date")
+ALLOWED = REQUIRED + ("note",)
+FORBIDDEN_KEY_PARTS = ("holding", "stock", "inventory", "cache", "site", "location", "address", "where",
+                       "quantity", "qty", "amount", "count", "level", "weak", "vulnerab", "gap",
+                       "holder", "keyholder", "name")
+QUANTITY = re.compile(r"\b\d+(\.\d+)?\s*(gal|gallons?|l|liters?|litres?|kg|lbs?|pounds?|tons?|cords?|"
+                      r"days?|hours?|hrs?|units?|cases?|pallets?|bottles?|doses?|tanks?|%)\b", re.I)
+
+
+def scope_problems(b):
+    out = []
+    for k in (b or {}):
+        kl = str(k).lower()
+        if any(p in kl for p in FORBIDDEN_KEY_PARTS):
+            out.append("field %r names holdings, a site, a quantity or a weak point" % k)
+        elif k not in ALLOWED:
+            out.append("field %r is not part of a public bulletin" % k)
+    for k in ALLOWED:
+        v = (b or {}).get(k)
+        if k != "date" and isinstance(v, str) and QUANTITY.search(v):
+            out.append("field %r states a quantity; bulletins carry status, not amounts" % k)
+    return out
 
 
 def missing_fields(b):
@@ -31,7 +56,8 @@ def missing_fields(b):
 
 
 def is_published(b):
-    return not missing_fields(b) and parse_date(b.get("date")) is not None
+    return (not missing_fields(b) and not scope_problems(b)
+            and parse_date(b.get("date")) is not None)
 
 
 def due_dates(start, cadence_days, today):
@@ -50,8 +76,13 @@ def missed_bulletins(start, cadence_days, bulletins, today=None):
     today = today or _dt.date.today()
     dues, step = due_dates(start, cadence_days, today)
     dates = sorted(parse_date(b["date"]) for b in bulletins if is_published(b))
-    rejected = [{"date": (b or {}).get("date"), "missing": missing_fields(b)}
-                for b in bulletins if not is_published(b)]
+    rejected = []
+    for b in bulletins:
+        if not is_published(b):
+            r = {"date": (b or {}).get("date"), "missing": missing_fields(b)}
+            if scope_problems(b):
+                r["scope"] = scope_problems(b)
+            rejected.append(r)
     gaps = []
     for d in dues:
         end = d + step

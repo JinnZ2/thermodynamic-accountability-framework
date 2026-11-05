@@ -199,3 +199,61 @@ checkout.py ──> handout (cautions on top) ──> build ──> FR1 line (SM
   after it. An enum landing in the wrong slot is rejected, but a shifted
   free-text field is not caught. The warning sits in fields 1-4; stop
   there if unsure.*
+
+<!-- misuse-section:begin (generated; edit docs/misuse_register.json) -->
+## How this could be used against its purpose
+
+Pattern level only. Full register: [`docs/misuse_register.md`](../docs/misuse_register.md).
+
+```text
+M7  field feedback ledger and FR1 compact reports (links R3, Sybil gap)
+     use        Poisoned or fabricated reports, or fake corroboration, push a junction to a status it has not earned.
+     mitigated  D-M9
+     residual   Merge accepts any well-formed body; independence of reporters is not proven by the ledger.*
+     status     DERIVED (first pass)
+M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)
+     use        The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: anchor head hash + record count outside the file on a schedule (paper, radio log, a neighbour) and compare.*
+     status     PROPOSED (independent pass)
+M11  merge() of two ledgers
+     use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.*
+     status     PROPOSED (independent pass)
+M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
+     use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: mark these as unverified labels in every output; out-of-band confirmation for any record that gates an action.*
+     status     PROPOSED (independent pass)
+M13  field-report free text printed at the top of a checkout handout as a caution
+     use        A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.*
+     status     PROPOSED (independent pass)
+M14  junction version hash (refs.py) excludes source and caution
+     use        Source or caution text can change without the version changing, so a citation can be swapped silently.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: include source and caution in the hash; log source edits as provenance events.*
+     status     PROPOSED (independent pass)
+M15  merged feedback ledger and checkout log (entry, date, coarse region, environment)
+     use        Read as a map of where people are building shelter or light and what they lack.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: fixed coarse-region list, optional date, keep checkout logs local and out of merges.*
+     status     PROPOSED (independent pass)
+M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)
+     use        Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: pre-agreed item codes on air; local place / call-sign blocklist; state that radio is public.*
+     status     PROPOSED (independent pass)
+M17  validate.py PASS
+     use        A structural PASS is borrowed to make an entry look safety-reviewed.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: print 'structure only, not a safety review' with every PASS.*
+     status     PROPOSED (independent pass)
+```
+
+| mitigation | what |
+|---|---|
+| D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
+<!-- misuse-section:end -->

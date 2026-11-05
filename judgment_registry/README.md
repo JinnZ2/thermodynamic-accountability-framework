@@ -305,6 +305,61 @@ enters sourced records.
 - OUTCOME_UNRECORDED depends on the as-of date; a check run on another day
   can give a different list.
 
+<!-- misuse-section:begin (generated; edit docs/misuse_register.json) -->
+## How this could be used against its purpose
+
+Pattern level only. Full register: [`docs/misuse_register.md`](../docs/misuse_register.md).
+
+```text
+M8  registered judgments and dissent lists
+     use        'Registered' is presented as 'valid' (legitimacy laundering); the dissent list becomes a list of people to target.
+     mitigated  D-M6, D-M7, D-M9
+     residual   A header can be cropped from a screenshot; anonymous dissent cannot be verified as withdrawn by its holder.*
+     status     DERIVED (first pass)
+M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)
+     use        The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: anchor head hash + record count outside the file on a schedule (paper, radio log, a neighbour) and compare.*
+     status     PROPOSED (independent pass)
+M11  merge() of two ledgers
+     use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.*
+     status     PROPOSED (independent pass)
+M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
+     use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: mark these as unverified labels in every output; out-of-band confirmation for any record that gates an action.*
+     status     PROPOSED (independent pass)
+M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)
+     use        Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: pre-agreed item codes on air; local place / call-sign blocklist; state that radio is public.*
+     status     PROPOSED (independent pass)
+M25  Withdrawal record (withdrawn_by_holder is a settable boolean)
+     use        A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.*
+     status     PROPOSED (independent pass)
+M26  integrity flags and supersession forks
+     use        Thin records about an opponent's judgments generate flags that are cited to discredit them; fork spam fragments a lineage.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: show the recorder on each flag and group flags by recorder.*
+     status     PROPOSED (independent pass)
+M27  n-of-1 RECALIBRATE template records (calibration_log, channel mapping)
+     use        Personal calibration or health data sits in plain JSONL and can be merged or exported whole.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: separate local file marked do-not-merge / do-not-export (D-M1 path).*
+     status     PROPOSED (independent pass)
+```
+
+| mitigation | what |
+|---|---|
+| D-M6 | Registry is not validation: every judgment_registry CLI output starts with 'Registered = documented, not correct.' |
+| D-M7 | Dissent as position: dissent.holder may be 'anonymous'; a dissent entered with no holder is stored as anonymous. |
+| D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
+<!-- misuse-section:end -->
+
 ## License
 
 CC0 1.0 Universal.
