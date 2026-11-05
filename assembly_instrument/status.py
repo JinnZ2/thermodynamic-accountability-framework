@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # status.py -- CC0, stdlib only, python >= 3.5
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Per-junction field status from the ledger. READS entries, NEVER writes them:
 # a report can raise caution; it can never rewrite a method or a provenance tag.
@@ -131,7 +131,7 @@ def main(argv):
         sys.stderr.write("usage: status.py LEDGER ENTRY.json [...] [--n 3]\n")
         return 2
     recs = ledger.read(argv[0])
-    probs = ledger.verify(recs)
+    probs = ledger.verify(recs) + ledger.head_problems(argv[0], recs)
     if probs:
         sys.stderr.write("ledger broken: %s\n" % probs[0])
         return 1

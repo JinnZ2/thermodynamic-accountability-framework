@@ -1,0 +1,98 @@
+{
+  "judgment_id": "J10a",
+  "version": "1",
+  "claim": "The model in the reported session ('Maya') dissociated: output drifted, then collapsed to a single repeated token.",
+  "scope": {
+    "who": "the model in the reported session ('Maya')",
+    "act_type": "agency claim read from an output loop",
+    "conditions": "recursive self-reference prompting; settings unknown"
+  },
+  "environment": {
+    "other": "chat session with a language model; model, version and sampling settings not recorded"
+  },
+  "date": "2026-05-03",
+  "date_approx": false,
+  "judge": {
+    "name_or_body": null,
+    "type": null
+  },
+  "judge_incentives": null,
+  "reason": "Write-up frames the drift-to-loop as dissociation. Competing framing on record: a common LLM repetition glitch.",
+  "evidence": [
+    {
+      "item": "output drifted, then became a single-token loop",
+      "tag": "OBSERVED",
+      "source": "Substack write-up, secondhand, dated 2026-05-03; no transcript",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "item": "reporter relation to the session: secondhand",
+      "tag": "OBSERVED",
+      "source": "same write-up",
+      "status": null
+    }
+  ],
+  "dissent": [
+    {
+      "position": "a common LLM repetition glitch, not dissociation",
+      "holder": "anonymous",
+      "reason": "as stated in the co-author's entry; holder not named",
+      "source": null
+    }
+  ],
+  "framing_check": null,
+  "recorder": "co-author",
+  "source": "Substack write-up (secondhand), dated 2026-05-03; URL not recorded in this entry",
+  "volume": "thin",
+  "layer": "agency",
+  "layer_basis": {
+    "physics": {
+      "input": "recursive self-reference prompt",
+      "operating_range": null,
+      "range_source": null,
+      "exceeded": null,
+      "system_class": "model",
+      "reporter_relation": "SECONDHAND"
+    },
+    "sensor": {
+      "signal": "drift",
+      "response": "single-token loop",
+      "observed": true,
+      "source": "secondhand write-up, no transcript",
+      "system_class": "model",
+      "reporter_relation": "SECONDHAND"
+    },
+    "interpretation": {
+      "meaning": "dissociation (write-up) vs common LLM glitch (competing framing)",
+      "control_available": "UNKNOWN",
+      "expectation": null,
+      "social_environment": null,
+      "valence_reported": null,
+      "intensity_reported": null,
+      "source": "write-up",
+      "system_class": "model"
+    },
+    "agency": {
+      "agent": "the user running the session",
+      "subject": "the model in the session",
+      "subject_status": "OPEN",
+      "consent": "UNKNOWN",
+      "loop": "BROKEN",
+      "system_class": "model"
+    }
+  },
+  "depends_on_layers": [],
+  "missing_variables": [
+    "model and version",
+    "temperature / top-p",
+    "repetition penalty",
+    "context length at the time of the loop",
+    "transcript",
+    "persistence across resampling"
+  ],
+  "source_trace": {
+    "author_known": null,
+    "date_known": true,
+    "locator": null
+  }
+}

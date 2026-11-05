@@ -20,7 +20,7 @@ empirical and cascade modules. Sister to:
   continues despite known incapacity)
 
 Sources for the empirical observations below: substrate-primary
-direct observation from the user (northern Wisconsin forests,
+direct observation (a northern forest region, operator observation;
 deer population artificial-management requirement, insect travel
 distance) plus published soil-recovery literature.
 
@@ -45,7 +45,7 @@ what_needs_to_happen_now = {
 # ============================================================
 
 what_we_know_right_now = {
-    "northern_wisconsin_forests": (
+    "northern_forest_region": (
         "still recovering from 1890s logging; 130+ years and not recovered"
     ),
     "soil_recovery_rate": (

@@ -23,7 +23,7 @@ STARTING POINT
     │              wind_direction, wind_speed,
     │              snow_depth, fire_activity,
     │              hydrological_lag]
-    ├─ period: 50 years
+    ├─ period: multi-decade
     ├─ data_source: direct observation + radio
     ├─ transmission_mode: ground truth
     └─ commensuability: baseline for all others

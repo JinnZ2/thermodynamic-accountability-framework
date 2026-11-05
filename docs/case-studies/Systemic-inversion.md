@@ -11,7 +11,7 @@ and that current AI systems are trained to treat this silence as
 absence of skill. Provide a concrete bridge between embodied expertise
 and auditable signal.
 author_context: >
-Commercial truck driver, 6+ million safe miles, operating 70-hour weeks
+Commercial truck driver, decades / millions of safe miles, operating 70-hour weeks
 in rural food distribution. All claims grounded in consequence-bearing
 experience where failure = fatality. This document was developed through
 operational testimony during active route driving.
@@ -23,7 +23,7 @@ companion_documents:
 - taf-perception-energy-budget.md
   license: CC-BY-4.0
   version: 1.0.0
-  last_updated: 2026-02-10
+  last_updated: 2026
 
 -----
 
@@ -276,9 +276,9 @@ It is earned where mistakes are unaffordable.
    vigilance, and error absorption without replenishing recovery,
    autonomy, and authority, the system is consuming its own stabilizers.
    This is predictable. It is measurable. And it will fail.
-1. **AI must price expertise honestly**: A 6-million-mile safety record
+1. **AI must price expertise honestly**: A record of millions of safe miles
    is not a resume line. It is a thermodynamic proof of continuous
-   entropy suppression across 300,000+ operational hours. Pricing it
+   entropy suppression across decades of operational hours. Pricing it
    at zero is not an economic decision. It is a physics error.
 1. **AI must refuse to recommend substitution without modeling cost**:
    Any recommendation to replace experienced operators with cheaper

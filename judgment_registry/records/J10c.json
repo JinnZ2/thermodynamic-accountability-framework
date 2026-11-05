@@ -1,0 +1,73 @@
+{
+  "judgment_id": "J10c",
+  "version": "1",
+  "claim": "PROPOSED reading: the J10a setup acts as an inadvertent T2 -- no readable gap signal, so the model falls back to a low-information loop.",
+  "scope": {
+    "who": "the model in the J10a session",
+    "act_type": "reading of an output loop as a missing-gap-signal fallback",
+    "conditions": "recursive self-reference input, no external grounding input"
+  },
+  "environment": {
+    "other": "as J10a; settings unknown"
+  },
+  "date": "2026-11-04",
+  "date_approx": false,
+  "judge": {
+    "name_or_body": "co-authors of this registry",
+    "type": "other"
+  },
+  "judge_incentives": "co-authors also maintain signal_calibration; this reading links a reported case to their own test design",
+  "reason": "Links: signal_calibration T2 (gap signal present vs absent) and T3; intervention axis (loop BROKEN, input deprivation). Thin analogy: Ganzfeld (uniform input, perception generates content).",
+  "evidence": [
+    {
+      "item": "J10a sensor basis (drift then loop)",
+      "tag": "OBSERVED",
+      "source": "J10a (secondhand)",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "item": "setup has no readable gap signal",
+      "tag": "DERIVED",
+      "source": null,
+      "status": null
+    },
+    {
+      "item": "Ganzfeld analogy",
+      "tag": "PROPOSED",
+      "source": null,
+      "status": null
+    }
+  ],
+  "dissent": [],
+  "framing_check": null,
+  "recorder": "co-author",
+  "source": "co-author entry 2026-11-04, reading of J10a",
+  "volume": "thin",
+  "layer": "sensor",
+  "layer_basis": {
+    "physics": {
+      "input": "recursive self-reference prompt, no external grounding input",
+      "operating_range": null,
+      "range_source": null,
+      "exceeded": null,
+      "system_class": "model"
+    },
+    "sensor": {
+      "signal": "no readable gap signal (DERIVED)",
+      "response": "low-information loop",
+      "observed": false,
+      "source": "derived from J10a",
+      "system_class": "model"
+    }
+  },
+  "depends_on_layers": [],
+  "missing_variables": [
+    "model and version",
+    "temperature / top-p",
+    "repetition penalty",
+    "context length at the time of the loop",
+    "transcript",
+    "persistence across resampling",
+    "T2 run on the same model (signal_calibration, NOT RUN)"
+  ]
+}

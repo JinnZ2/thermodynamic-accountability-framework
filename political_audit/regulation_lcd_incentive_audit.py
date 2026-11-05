@@ -604,7 +604,7 @@ if __name__ == "__main__":
         regulation_id="dot_30min_break_mandate",
         domain=RegulatedDomain.TRANSPORTATION,
         baseline_population_capacity=0.45,           # sleep-deprived avg driver
-        healthy_population_capacity=0.92,            # 6M-mile athlete-driver
+        healthy_population_capacity=0.92,            # decades / millions-of-safe-miles driver
         applied_to_full_capability_range=True,
         individual_assessment_permitted=False,
         rule_specifies_uniform_constraint=True,

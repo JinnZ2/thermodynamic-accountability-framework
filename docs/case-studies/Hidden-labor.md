@@ -62,13 +62,13 @@ If it is physics — it must be measured.
 
 ⸻
 
-3. Case Anchor: I-94 Spring Thaw Corridor
+3. Case Anchor: Upper Midwest Interstate, Winter Thaw
 
 Field Data:
 	•	Z-axis minimum: −1.796G
 	•	Fore-aft shear: −1.346G
 	•	Peak event reported: ~6G
-	•	No return to static baseline across 64 minutes
+	•	No return to static baseline across the ~1 h run
 	•	Continuous multi-axis loading
 
 Implication:
@@ -208,9 +208,9 @@ Physics first.
 Narrative second.
 
 
-Environment: I-94, spring thaw, northern WI
+Environment: interstate, upper Midwest, winter (thaw conditions)
 Vehicle: Loaded tractor trailer
-Duration: 64 minutes
+Duration: ~1 h run
 Sampling: Tri-axis accelerometer
 
 Observed:

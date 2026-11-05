@@ -1,5 +1,5 @@
 # tests/test_intervention.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 # SYNTHETIC fixtures only ("signal-s", "band-b1" are placeholders).
 # J6-J9 real-world records are NOT entered here.
 

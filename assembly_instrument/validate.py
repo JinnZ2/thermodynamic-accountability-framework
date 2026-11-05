@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # validate.py -- CC0, stdlib only (json, re, sys, os, copy). Runs on python >= 3.5.
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Gate for assembly-instrument entries. Reads an entry, checks its
 # shape against schema.json, then the junction rules. Prints
@@ -438,7 +438,7 @@ def main(argv):
             import ledger as _ledger
             import status as _status
             recs = _ledger.read(ledger_path)
-            lp = _ledger.verify(recs)
+            lp = _ledger.verify(recs) + _ledger.head_problems(ledger_path, recs)
             if lp:
                 sys.stderr.write("ledger broken: %s\n" % lp[0])
                 return 1

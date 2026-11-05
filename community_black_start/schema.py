@@ -1,5 +1,5 @@
 # schema.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude).
+# Provenance: co-authored (JinnZ2 + Claude).
 #
 # One Item = one thing a community needs to hold through a TRUE black start
 # (wide-area, months-long, no outside help). Restoration runs community-first,

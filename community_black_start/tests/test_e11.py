@@ -1,5 +1,5 @@
 # tests/test_e11.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # E11 synthetic run. Pass rule = decision T3 in coordination_register.json,
 # committed in b0e32d5 before this file existed. Code-level only: it checks

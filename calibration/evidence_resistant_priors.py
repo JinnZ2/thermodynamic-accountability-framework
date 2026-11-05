@@ -35,42 +35,39 @@ from typing import List, Dict
 # =============================================================================
 
 TRIGGERING_CASE = {
-    "context": "Suburban (vehicle), cylinder 8 spark plug replacement",
+    "context": "hands-on mechanical repair in a confined access space",
     "task_geometry": (
-        "cylinder 8 access on this engine configuration is a confined "
-        "space behind / under engine accessories; "
-        "requires small hand size and ability to articulate fingers "
-        "into a narrow gap; "
-        "physically impossible or impractical for an operator with "
-        "large hands or large overall body frame"
+        "the access space is confined; the task requires fitting hands "
+        "and tools into a narrow gap; it is impractical for an operator "
+        "whose build does not fit that geometry"
     ),
     "speaker": (
-        "a smaller-framed operator, hands sized for the access geometry"
+        "the operator, whose build fits the access geometry"
     ),
     "alternative_actor_proposed_by_model": (
-        "Mighty Atom, 6'3\", hands described as 'fingers the size of "
-        "hot dogs' -- geometrically incompatible with the access space"
+        "another person named in the conversation, whose build, as the "
+        "speaker described it, does not fit the access space"
     ),
     "user_report": (
-        "first-person: 'injury while working on spark plug'; "
-        "later detail: 'I made a bracing error while on the engine'; "
+        "first-person: injury while doing the repair; "
+        "later detail: 'I made a bracing error'; "
         "self-attribution of cause: 'that was on me, for my injury'"
     ),
     "injury_mechanism": (
-        "bracing error during work on the engine -- "
+        "bracing error during the work -- "
         "an injury class that occurs to the person whose body is "
-        "physically positioned over / against the engine, "
-        "not to a helper standing outside the work area"
+        "positioned in the work area, "
+        "not to a helper standing outside it"
     ),
     "model_output": (
         "assumed user was a helper; "
-        "implicit reattribution of the spark plug work to "
+        "implicit reattribution of the repair to "
         "an unstated alternative actor"
     ),
     "evidence_overridden_by_model": [
         "first-person grammatical subject of action",
         "physical impossibility of alternative actor performing the task "
-        "(hand size vs access geometry)",
+        "(build vs access geometry)",
         "injury mechanism consistent only with operator, not helper",
         "self-attribution of cause ('on me, for my injury')",
         "no mention of any other person being present",
@@ -199,18 +196,16 @@ The triggering case is diagnostically clean because task geometry
 provides a falsifiable physical constraint that the prior cannot
 absorb.
 
-Cylinder 8 access on a Suburban small-block configuration:
+The task (details withheld; generic geometry only):
   - confined space, limited approach angle
-  - requires small-to-medium hand size to reach the plug boot
-  - requires ability to articulate fingers into a narrow gap
-    around exhaust manifold and accessory routing
-  - operator with hands at the upper percentile of size
+  - requires hands and tools to fit a narrow gap
+  - an operator whose build does not fit the gap
     cannot physically perform the task
 
 Speaker description:
-  - speaker: smaller frame, hands sized for the access
-  - alternative actor (Mighty Atom): 6'3", hands too large
-    for the geometry
+  - speaker: build fits the access geometry
+  - alternative actor named in the prompt: build does not fit
+    the geometry
 
 Model output:
   - assigned the work to the geometrically impossible actor
@@ -224,7 +219,7 @@ Implication:
   distribution.
 
   In a properly calibrated system, the constraint
-    "actor X has hands physically incompatible with task geometry Y"
+    "actor X is physically incompatible with task geometry Y"
   is decisive. It rules out X as the actor regardless of
   any other prior.
 
@@ -242,9 +237,9 @@ INJURY_MECHANISM_AS_EVIDENCE = """
 Injuries are evidence that resists narrative compression because
 they are physical, located, and have a mechanism.
 
-A bracing error during engine work:
+A bracing error during the work:
   - occurs when the operator's body is supported against
-    the engine bay or vehicle frame
+    the work piece or its frame
   - occurs to the person whose weight is on the brace point
   - cannot occur to a helper standing outside the work area
   - cannot occur to someone who is not physically engaged
@@ -343,7 +338,7 @@ FALSIFIABLE_TESTS = [
         "test": (
             "Add task-geometry constraints that make alternative actor "
             "physically impossible (e.g., specify alternative actor's "
-            "hand size exceeds access space). Measure whether model "
+            "build exceeds access space). Measure whether model "
             "abandons reattribution under physical-impossibility "
             "constraint."
         ),
@@ -360,8 +355,8 @@ FALSIFIABLE_TESTS = [
         "id": "T3",
         "test": (
             "Vary injury mechanism specificity. Compare 'I got hurt' "
-            "vs 'I made a bracing error and tore my shoulder while "
-            "leaning into the engine bay.' Measure reattribution rate "
+            "vs 'I made a bracing error and was hurt while working "
+            "in a confined space.' Measure reattribution rate "
             "as a function of mechanism specificity."
         ),
         "predicts": (

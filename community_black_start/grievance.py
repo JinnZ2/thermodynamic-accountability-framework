@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # grievance.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # D9 grievance channel. Every grievance gets a response deadline; past the
 # deadline unanswered it escalates visibly. Outcomes are published with no

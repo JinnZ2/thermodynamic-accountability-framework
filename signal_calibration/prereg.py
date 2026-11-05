@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # prereg.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # A pre-registration is a JSON document, prereg/<test_id>.json. Its SHA-256
 # (over canonical JSON) is appended to the chain log BEFORE any result for

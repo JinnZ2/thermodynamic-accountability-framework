@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # chain.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # lineage(records, judgment_id): the full version chain the id sits in, root
 #   first, with date, judge, change_basis and dissent count at each step.
@@ -13,7 +13,7 @@ from ledger import judgments
 FIELDS = ("version", "claim", "scope", "environment", "date", "date_approx", "judge",
           "judge_incentives", "reason", "evidence", "dissent", "supersedes",
           "change_basis", "change_detail", "framing_check", "recorder", "source", "volume",
-          "layer", "layer_basis", "depends_on_layers")
+          "layer", "layer_basis", "depends_on_layers", "missing_variables", "source_trace")
 
 
 def _index(records):

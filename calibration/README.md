@@ -674,7 +674,7 @@ social conventions, role assignments, status signals
 -----------------------------------------------------
 <- physics floor ->
 -----------------------------------------------------
-hand size vs access geometry
+body fit vs access geometry
 energy budget closure
 mass conservation
 thermodynamic gradient direction
@@ -724,10 +724,10 @@ If we frame these failures as functional:
 - no values consensus is required
 - the failure is falsifiable and therefore correctable
 
-A 6'3" person with hands too large for the access space cannot
-have performed the cylinder 8 spark plug work. This is not a
+A person whose build does not fit the access space cannot
+have performed work inside that space. This is not a
 statement about gender, partnership, character, or culture.
-It is a statement about hand size and access geometry. The
+It is a statement about body fit and access geometry. The
 model's output that demoted the actual operator to helper
 status is not wrong because of values. It is wrong because it
 violates physical possibility.

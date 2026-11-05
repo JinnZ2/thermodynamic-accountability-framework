@@ -1,6 +1,6 @@
 # judgment_registry
 
-Provenance: co-authored (Kavik + Claude), 2026-11-04. License: CC0 1.0.
+Provenance: co-authored (JinnZ2 + Claude), 2026-11-04. License: CC0 1.0.
 Standard library only; Python 3.7+; runs on a phone.
 
 ## Principle: data integrity only
@@ -109,6 +109,25 @@ SignalIntervention (kind "intervention"; intervention_id unique)
 Shape errors (unknown field, an enum value outside its set, a hand-set
 `superseded_by`, a duplicate id, self-supersession) are rejected. Gaps in
 completeness are not rejected: the record is stored and flagged.
+
+### Evidence status (2026-11-05)
+
+Each evidence item may carry `status`: SUPPORTED_BY_SOURCE,
+PARTIAL_SUPPORT_BY_SOURCE, CONTRADICTED_BY_SOURCE or NOT_CHECKED (or null).
+It records how the cited source bears on the item as the recorder read it;
+it does not say whether the source holds. A Judgment may also list
+`missing_variables` (named unknowns). Worked records: `records/` (J10).
+
+Two optional fields and two flags (2026-11-05):
+
+```text
+field                                   flag
+layer_basis.physics|sensor              LOWER_LAYER_SECONDHAND  agency record; every lower-layer basis
+  .reporter_relation                                            that states a relation says SECONDHAND
+  FIRSTHAND | SECONDHAND | UNKNOWN
+source_trace                            SOURCE_UNTRACEABLE      author_known false AND date_known
+  {author_known, date_known, locator}                           false AND no locator
+```
 
 ## Flags
 
@@ -304,6 +323,63 @@ enters sourced records.
   cross-checked.*
 - OUTCOME_UNRECORDED depends on the as-of date; a check run on another day
   can give a different list.
+
+<!-- misuse-section:begin (generated; edit docs/misuse_register.json) -->
+## How this could be used against its purpose
+
+Pattern level only. Full register: [`docs/misuse_register.md`](../docs/misuse_register.md).
+
+```text
+M8  registered judgments and dissent lists
+     use        'Registered' is presented as 'valid' (legitimacy laundering); the dissent list becomes a list of people to target.
+     mitigated  D-M6, D-M7, D-M9
+     residual   A header can be cropped from a screenshot; anonymous dissent cannot be verified as withdrawn by its holder.*
+     status     DERIVED (first pass)
+M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)
+     use        The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.
+     mitigated  D-M10
+     residual   Partial: the sidecar head sits next to the ledger, so someone who can rewrite both still passes the local check. Defense is a PUBLISHED head (headrec.py show -> bulletin / radio / paper / another node) checked with headrec.py check LEDGER COUNT:HASH; publishing on a schedule is policy, not code.*
+     status     PROPOSED (independent pass)
+M11  merge() of two ledgers
+     use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
+     status     PROPOSED (independent pass)
+M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
+     use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
+     mitigated  D-M12
+     residual   Cannot be fully closed without identity infrastructure. Partial mitigations and the logged residual: docs/misuse_M12_identity_note.md.*
+     status     PROPOSED (independent pass)
+M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)
+     use        Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: pre-agreed item codes on air; local place / call-sign blocklist; state that radio is public.*
+     status     PROPOSED (independent pass)
+M25  Withdrawal record (withdrawn_by_holder is a settable boolean)
+     use        A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.* Queued for the next round (2026-11-05).
+     status     PROPOSED (independent pass)
+M26  integrity flags and supersession forks
+     use        Thin records about an opponent's judgments generate flags that are cited to discredit them; fork spam fragments a lineage.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: show the recorder on each flag and group flags by recorder.*
+     status     PROPOSED (independent pass)
+M27  n-of-1 RECALIBRATE template records (calibration_log, channel mapping)
+     use        Personal calibration or health data sits in plain JSONL and can be merged or exported whole.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: separate local file marked do-not-merge / do-not-export (D-M1 path).*
+     status     PROPOSED (independent pass)
+```
+
+| mitigation | what |
+|---|---|
+| D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
+| D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
+| D-M6 | Registry is not validation: every judgment_registry CLI output starts with 'Registered = documented, not correct.' |
+| D-M7 | Dissent as position: dissent.holder may be 'anonymous'; a dissent entered with no holder is stored as anonymous. |
+| D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
+<!-- misuse-section:end -->
 
 ## License
 

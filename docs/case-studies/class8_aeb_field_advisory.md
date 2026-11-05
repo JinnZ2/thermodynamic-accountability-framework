@@ -8,7 +8,7 @@ category: "Technical Advisory"
 
 # Field Advisory Report: Class 8 AEB Logic Flaws & Real-World Failure Modes
 
-**Date:** 2026-07-27
+**Date:** withheld
 **Submitted by:** Field Operations / Independent Maintenance
 **Target:** ADAS/Automation Engineering Teams (OEM & Tier-1 Suppliers)
 

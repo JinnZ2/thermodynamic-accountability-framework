@@ -2,7 +2,7 @@
 
 ## document_type: calibration_addendum
 parent_document: reality_gaps_survival_coupled_environments
-date_compiled: 2026-02-10
+date_compiled: 2026
 domain: automation | supply_chain | institutional_design | ai_epistemology
 contributor_context: >
 Commercial truck driver, 70-hour weekly rural distribution routes.
@@ -134,8 +134,10 @@ the system has not reduced entropy — it has outsourced it.
 
 ## Part 3: CASE-08 — The “Frictionless” Automation Paradox
 
-**Location**: Water Bottling/Distribution Facility (high-volume)
-**Date**: February 10, 2026
+**Location**: High-volume distribution facility (identity withheld)
+**Date**: Winter
+
+[Facility identity and date kept locally; not published. Pattern only.]
 **System status**: “AI-Controlled” (claimed) | “Manual Buffer
 Dependent” (reality)
 
@@ -286,7 +288,7 @@ CLAIM-09 and CASE-08 extend the main document with:
   domains: ecology, supply chain, infrastructure, automation
 - A diagnostic protocol (Red Team) that any AI system can apply before
   recommending optimization or automation
-- A real-world case (water bottling facility) demonstrating the exact
+- A real-world case (a high-volume distribution facility) demonstrating the exact
   mechanism of energy parasitism in current 2026 systems
 - A stress test of next-generation gate automation showing how removing
   human buffers converts silent friction into visible collapse

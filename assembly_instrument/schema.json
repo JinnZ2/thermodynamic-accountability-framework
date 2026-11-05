@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "assembly_instrument/schema.json",
   "title": "Cross-domain assembly instrument: function entry",
-  "description": "Status: co-authored (Kavik + Claude), 2026-11-03. CC0. One entry per FUNCTION (what is needed), never per material. Each branch is one candidate way to meet the function; each junction is one joining step and carries its own provenance. validate.py enforces this file's structure plus the rules in x-rules.",
+  "description": "Status: co-authored (JinnZ2 + Claude), 2026-11-03. CC0. One entry per FUNCTION (what is needed), never per material. Each branch is one candidate way to meet the function; each junction is one joining step and carries its own provenance. validate.py enforces this file's structure plus the rules in x-rules.",
   "x-schema-version": "0.1.0",
   "x-rules": {
     "chain_length": "chain_length == len(junctions). Integer count of joining steps in the branch.",

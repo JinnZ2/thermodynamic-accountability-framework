@@ -1,6 +1,8 @@
 Primary operational failures observed:
 
-The truck arrival signal did not trigger a coordinated dock-readiness response. No key holder staged. Dock area obstructed by pallets. No certified electric pallet jack operator immediately available. No manual fallback initiated by store staff. No clear communication on expected delay duration.
+[Specific dock layout and staffing detail kept locally; not published. Pattern only.]
+
+The truck arrival signal did not trigger a coordinated dock-readiness response. Required access and equipment roles were not staged and the dock was not clear on arrival. No manual fallback was initiated. No clear communication on expected delay duration.
 
 Immediate effects:
 
@@ -8,7 +10,7 @@ Driver idle time increased. Route schedule compression occurred. Cognitive load 
 
 System design flaw identified:
 
-Single-point-of-failure certification structure. Only one licensed operator available. No redundancy. No graceful degradation protocol when certified operator unavailable. No pre-arrival synchronization checklist.
+Single-point-of-failure certification structure. No redundancy. No graceful degradation protocol when a certified role is unavailable. No pre-arrival synchronization checklist.
 
 Secondary operational effects:
 
@@ -17,8 +19,8 @@ Idle driver time converts to downstream time pressure. Time pressure increases f
 Secondary social effects:
 
 High-centrality certified operator pulled away from primary task → interruption stress.
-Interruption stress → visible irritation.
-Visible irritation → altered team interaction tone.
+Interruption stress -> strained interaction.
+Strained interaction -> altered team interaction tone.
 Altered tone → potential misinterpretation by other drivers or staff.
 Misinterpretation → escalation risk.
 

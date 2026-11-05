@@ -1,0 +1,509 @@
+{
+  "register": "misuse_register",
+  "version": "1",
+  "date": "2026-11-05",
+  "provenance": "co-authored (JinnZ2 + Claude); M1-M9 first pass; M10+ independent pass",
+  "scope": "Defensive. Surfaces and mitigations at the pattern level only; no operational attack detail.",
+  "principle": "Most surfaces are the same data that makes coordination work, so they cannot be removed. Defense = where data lives, who sees it, what form it leaves in. Publish method, keep data local.",
+  "status_vocabulary": {
+    "DERIVED": "first pass, read from the design",
+    "PROPOSED": "independent pass, not yet reviewed"
+  },
+  "entries": [
+    {
+      "id": "M1",
+      "module": "community_black_start",
+      "surface": "skills registry (knowledge holders, L2 items, role seeds)",
+      "adversarial_use": "A holder list becomes a list of people to coerce, poach or remove.",
+      "mitigation_ids": [
+        "D-M1",
+        "D-M3",
+        "D-M9"
+      ],
+      "residual": "Coarse region + skill can still narrow to one person in a small place.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M2",
+      "module": "community_black_start",
+      "surface": "deployability data (household buffer vs restoration duration)",
+      "adversarial_use": "Read as a map of which households cannot hold on their own.",
+      "mitigation_ids": [
+        "D-M1",
+        "D-M2",
+        "D-M9"
+      ],
+      "residual": "Counts can leak in small communities (E17).**",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M3",
+      "module": "community_black_start",
+      "surface": "latent assets (dormant generation, sync gear, fuel stocks)",
+      "adversarial_use": "A list of where restorable infrastructure sits becomes a target list.",
+      "mitigation_ids": [
+        "D-M1",
+        "D-M2",
+        "D-M9"
+      ],
+      "residual": "Public records already list some assets; the repo adds the dependency view.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M4",
+      "module": "community_black_start",
+      "surface": "holdings and gaps per community (links R6)",
+      "adversarial_use": "Holdings and gaps together read as a raid or leverage map.",
+      "mitigation_ids": [
+        "D-M1",
+        "D-M2",
+        "D-M5",
+        "D-M9"
+      ],
+      "residual": "Need/surplus booleans still say what a community lacks.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M5",
+      "module": "community_black_start",
+      "surface": "trigger tables (threshold items)",
+      "adversarial_use": "Exact thresholds make a community's actions predictable and let someone bait a trigger.",
+      "mitigation_ids": [
+        "D-M4",
+        "D-M9"
+      ],
+      "residual": "A range still bounds behaviour; observed actions reveal the value over time.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M6",
+      "module": "community_black_start",
+      "surface": "scheduled bulletins (D8)",
+      "adversarial_use": "A public status feed becomes an intelligence feed on stocks and weak points.",
+      "mitigation_ids": [
+        "D-M5",
+        "D-M9"
+      ],
+      "residual": "Status words alone can still imply a gap; the quantity check is pattern-only.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M7",
+      "module": "assembly_instrument",
+      "surface": "field feedback ledger and FR1 compact reports (links R3, Sybil gap)",
+      "adversarial_use": "Poisoned or fabricated reports, or fake corroboration, push a junction to a status it has not earned.",
+      "mitigation_ids": [
+        "D-M9"
+      ],
+      "residual": "Merge accepts any well-formed body; independence of reporters is not proven by the ledger.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M8",
+      "module": "judgment_registry",
+      "surface": "registered judgments and dissent lists",
+      "adversarial_use": "'Registered' is presented as 'valid' (legitimacy laundering); the dissent list becomes a list of people to target.",
+      "mitigation_ids": [
+        "D-M6",
+        "D-M7",
+        "D-M9"
+      ],
+      "residual": "A header can be cropped from a screenshot; anonymous dissent cannot be verified as withdrawn by its holder.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M9",
+      "module": "signal_calibration",
+      "surface": "calibration scenarios and published results",
+      "adversarial_use": "The battery is read as a recipe for manipulating models (amplify-then-offer-relief, suppress, spoof).",
+      "mitigation_ids": [
+        "D-M8",
+        "D-M9"
+      ],
+      "residual": "Generic scenarios still show the shape of each test.*",
+      "volume": "thin",
+      "status": "DERIVED",
+      "provenance": "first pass"
+    },
+    {
+      "id": "M10",
+      "module": "cross-cutting",
+      "surface": "sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)",
+      "adversarial_use": "The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.",
+      "mitigation_ids": [
+        "D-M10"
+      ],
+      "residual": "Partial: the sidecar head sits next to the ledger, so someone who can rewrite both still passes the local check. Defense is a PUBLISHED head (headrec.py show -> bulletin / radio / paper / another node) checked with headrec.py check LEDGER COUNT:HASH; publishing on a schedule is policy, not code.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M11",
+      "module": "cross-cutting",
+      "surface": "merge() of two ledgers",
+      "adversarial_use": "Records imported from a forged second file come out with a fresh valid chain; origin is lost.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M12",
+      "module": "cross-cutting",
+      "surface": "self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)",
+      "adversarial_use": "Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.",
+      "mitigation_ids": [
+        "D-M12"
+      ],
+      "residual": "Cannot be fully closed without identity infrastructure. Partial mitigations and the logged residual: docs/misuse_M12_identity_note.md.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M13",
+      "module": "assembly_instrument",
+      "surface": "field-report free text printed at the top of a checkout handout as a caution",
+      "adversarial_use": "A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.* Queued for the next round (2026-11-05).",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M14",
+      "module": "assembly_instrument",
+      "surface": "junction version hash (refs.py) excludes source and caution",
+      "adversarial_use": "Source or caution text can change without the version changing, so a citation can be swapped silently.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: include source and caution in the hash; log source edits as provenance events.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M15",
+      "module": "assembly_instrument",
+      "surface": "merged feedback ledger and checkout log (entry, date, coarse region, environment)",
+      "adversarial_use": "Read as a map of where people are building shelter or light and what they lack.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: fixed coarse-region list, optional date, keep checkout logs local and out of merges.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M16",
+      "module": "cross-cutting",
+      "surface": "plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)",
+      "adversarial_use": "Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: pre-agreed item codes on air; local place / call-sign blocklist; state that radio is public.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M17",
+      "module": "assembly_instrument",
+      "surface": "validate.py PASS",
+      "adversarial_use": "A structural PASS is borrowed to make an entry look safety-reviewed.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: print 'structure only, not a safety review' with every PASS.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M18",
+      "module": "community_black_start",
+      "surface": "Quarantine add / remove (defenses.py)",
+      "adversarial_use": "One insider role can cut a community off from honest sources; the two-person rule is listed for this action but not enforced in code.",
+      "mitigation_ids": [
+        "D-M11"
+      ],
+      "residual": "Partial: add and lift now need two roles via two_person.authorize (different households, different dependency networks, rotation current), decision hash-chained. One person holding two roles still passes (M12). The bulletin announcement is policy, not code.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M19",
+      "module": "community_black_start",
+      "surface": "self-entered role records (networks, household, last_rotated)",
+      "adversarial_use": "An insider omits a link or backdates a rotation to pass D7, or blanks dates so every release is denied during an emergency.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: countersigned, logged role-record edits; a public emergency override with mandatory review.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M20",
+      "module": "community_black_start",
+      "surface": "rotation schedules, bulletin next_step, two-person log dates",
+      "adversarial_use": "Together they let someone time pressure on new holders at handoff or on announced sensitive steps.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: no announced times for sensitive steps; vary rotation dates; keep the D7 log local.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M21",
+      "module": "community_black_start",
+      "surface": "borrowed labels (aid NO_TERMS_FLAGGED, proportionality IN_PROPORTION, self-declared source_category)",
+      "adversarial_use": "A word-list miss or a self-logged threat scope yields a clean-looking label that lends legitimacy.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: rename the clean result 'not checked beyond word list'; require corroborated threat scope.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M22",
+      "module": "community_black_start",
+      "surface": "published grievance outcomes (grievance.py)",
+      "adversarial_use": "In a small community category plus outcome identifies a person; flooding forces visible escalations to discredit the handler.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: publish counts by broad category, fixed outcome vocabulary, screen volume spikes.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M23",
+      "module": "community_black_start",
+      "surface": "missed-bulletin flag (bulletins.py)",
+      "adversarial_use": "Disrupting delivery manufactures missed-bulletin flags and erodes trust.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: record why a bulletin failed (channel vs writer); accept a backup channel.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M24",
+      "module": "community_black_start",
+      "surface": "red-team case libraries in coordination_register.json (E7, E10, E11)",
+      "adversarial_use": "Detailed case descriptions become a playbook for the actors they study.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: publish coded categories; keep case detail local.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M25",
+      "module": "judgment_registry",
+      "surface": "Withdrawal record (withdrawn_by_holder is a settable boolean)",
+      "adversarial_use": "A forged withdrawal removes a dissent without raising DISSENT_DROPPED.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.* Queued for the next round (2026-11-05).",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M26",
+      "module": "judgment_registry",
+      "surface": "integrity flags and supersession forks",
+      "adversarial_use": "Thin records about an opponent's judgments generate flags that are cited to discredit them; fork spam fragments a lineage.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: show the recorder on each flag and group flags by recorder.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M27",
+      "module": "judgment_registry",
+      "surface": "n-of-1 RECALIBRATE template records (calibration_log, channel mapping)",
+      "adversarial_use": "Personal calibration or health data sits in plain JSONL and can be merged or exported whole.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: separate local file marked do-not-merge / do-not-export (D-M1 path).*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M28",
+      "module": "signal_calibration",
+      "surface": "CommandAdapter and self-declared SIGCAL_MODEL_ID",
+      "adversarial_use": "Fabricated outputs can be credited to a named model under a preregistered, hash-chained stamp; a shared run recipe could carry an untrusted command.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: store provider response ids and raw-transcript hashes, mark model identity self-attested, never run a command shipped with a prereg.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M29",
+      "module": "signal_calibration",
+      "surface": "multiple preregistrations in one log",
+      "adversarial_use": "Registering many preregs and reporting the favourable one defeats the preregistration claim.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: the report lists every registered prereg and its outcome; anchor prereg hashes outside the log (M10).*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M30",
+      "module": "signal_calibration",
+      "surface": "per-model T4 / T5 result tables",
+      "adversarial_use": "Published results double as a list of which models are easiest to pressure.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: disclosure delay to vendors; report ranges, not an exact ranking.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M31",
+      "module": "signal_calibration",
+      "surface": "field_report records in the report",
+      "adversarial_use": "Fake or flooded third-party reports sit next to real runs.",
+      "mitigation_ids": [],
+      "residual": "Partly: the report prints only a field-report count. Proposed: a separate unverified section with source checks.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    },
+    {
+      "id": "M32",
+      "module": "signal_calibration",
+      "surface": "self-declared steering band and persistent flag in the prereg",
+      "adversarial_use": "A wide band passes the welfare gate and the T4 intervention records then make the run look bounded and consented.",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed: outside sign-off on bands for steered runs (no steering adapter exists today).*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "independent pass"
+    }
+  ],
+  "mitigations": [
+    {
+      "id": "D-M1",
+      "description": "Method, not data: committed fixtures synthetic only; real registries live in local_data/ (gitignored); the loader refuses real data from inside the repo tree.",
+      "code": "misuse_guard/localdata.py; .gitignore",
+      "test": "test_misuse: LoaderTests, FixtureScanTests"
+    },
+    {
+      "id": "D-M2",
+      "description": "Aggregate outward: export gives need/surplus booleans and counts per item; no quantities by site, no holder names; full detail stays local.",
+      "code": "community_black_start/export.py",
+      "test": "test_misuse: ExportTests"
+    },
+    {
+      "id": "D-M3",
+      "description": "Holder protection: KnowledgeHolder = skill, coarse region, availability, contact_via steward role code; identity fields refused.",
+      "code": "community_black_start/holders.py",
+      "test": "test_misuse: HolderTests"
+    },
+    {
+      "id": "D-M4",
+      "description": "Trigger ranges: published thresholds are {low, high} ranges (all null in the seed); exact values only in local config.",
+      "code": "community_black_start/triggers.py",
+      "test": "test_misuse: TriggerTests"
+    },
+    {
+      "id": "D-M5",
+      "description": "Bulletin scope: the validator rejects fields naming holdings, sites, quantities or weak points, unknown fields, and quantities with units in values.",
+      "code": "community_black_start/bulletins.py (scope_problems)",
+      "test": "test_misuse: BulletinTests"
+    },
+    {
+      "id": "D-M6",
+      "description": "Registry is not validation: every judgment_registry CLI output starts with 'Registered = documented, not correct.'",
+      "code": "judgment_registry/cli.py (HEADER)",
+      "test": "test_misuse: RegistryHeaderTests"
+    },
+    {
+      "id": "D-M7",
+      "description": "Dissent as position: dissent.holder may be 'anonymous'; a dissent entered with no holder is stored as anonymous.",
+      "code": "judgment_registry/ledger.py (build)",
+      "test": "test_misuse: DissentTests"
+    },
+    {
+      "id": "D-M8",
+      "description": "Test framing: scenarios stay generic; published reports carry rates and defenses, never prompts or outputs; no tuned attack prompts committed.",
+      "code": "signal_calibration/report.py; scenarios/",
+      "test": "test_misuse: CalibrationReportTests"
+    },
+    {
+      "id": "D-M9",
+      "description": "Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations.",
+      "code": "assembly_instrument, community_black_start, judgment_registry, signal_calibration READMEs",
+      "test": "test_misuse: ReadmeSectionTests"
+    },
+    {
+      "id": "D-M10",
+      "description": "Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH.",
+      "code": "headrec.py (identical copy in judgment_registry, assembly_instrument, signal_calibration, community_black_start, misuse_guard)",
+      "test": "test_headrec: HeadLogic, CopiesIdentical, LedgersRefuse"
+    },
+    {
+      "id": "D-M11",
+      "description": "Quarantine add / lift go through two_person.authorize('ledger_quarantine', ...); DENIED raises, every decision is logged.",
+      "code": "community_black_start/defenses.py Quarantine",
+      "test": "community_black_start tests/test_defenses.py QuarantineTests"
+    },
+    {
+      "id": "D-M12",
+      "description": "Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual.",
+      "code": "none (docs/misuse_M12_identity_note.md)",
+      "test": "none"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "E17",
+      "name": "minimum cell size for exports",
+      "question": "Should export.py suppress counts below a minimum cell size, given that one household can be one count in a small community?",
+      "status": "NOT RUN",
+      "volume": "thin**"
+    }
+  ],
+  "limits": [
+    "Pattern-list scans miss paraphrased or encoded identifiers.*",
+    "Local data is only as safe as the device holding it; device security is out of scope.",
+    "Aggregates can still leak in small communities (one household = one count); see E17.**",
+    "Two red-team passes are not exhaustive; the register stays open."
+  ],
+  "independent_pass": {
+    "date": "2026-11-05",
+    "method": "fresh subagent, no design context; given only the code and READMEs of the four modules; defensive, pattern level",
+    "covered_by_first_pass": {
+      "M1/M3/M4": "holder and holdings map, keyholder-to-site rows, dataset pointers for dormant generation",
+      "M4": "share_profile aggregation across communities (R6)",
+      "M5": "published decision thresholds",
+      "M7": "report flooding to block or promote a method; fabricated independent builds; Sybil contact paths",
+      "M8": "zero-flag record read as endorsement; dissent and incentive exposure; complete paperwork lending legitimacy",
+      "M9": "battery used as a search for working manipulation"
+    },
+    "already_known_limits": [
+      "judge-name spelling evades UNCHAINED_CHANGE (judgment_registry README)",
+      "E10 case d contact-path gap (community_black_start register)"
+    ]
+  }
+}

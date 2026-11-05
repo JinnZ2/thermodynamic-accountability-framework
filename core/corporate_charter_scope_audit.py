@@ -268,7 +268,7 @@ CLAIMS = [
 
 if __name__ == "__main__":
     # ---- Big-box retailer in a Northern Minnesota community
-    walmart_charter = CorporateCharter(
+    retailer_charter = CorporateCharter(
         corporation_id="big_box_retailer_001",
         community_id="northern_mn_community_A",
         function_served="food and household goods distribution",
@@ -312,7 +312,7 @@ if __name__ == "__main__":
         notes="store manager opened distribution before requested",
     )
 
-    a1 = audit_charter(walmart_charter, crisis, response_adequate)
+    a1 = audit_charter(retailer_charter, crisis, response_adequate)
     print("=" * 70)
     print("SCENARIO A: corporation responded adequately")
     print("=" * 70)
@@ -332,7 +332,7 @@ if __name__ == "__main__":
         notes="store locked, regional HQ unreachable",
     )
 
-    a2 = audit_charter(walmart_charter, crisis, response_failed)
+    a2 = audit_charter(retailer_charter, crisis, response_failed)
     print("\n" + "=" * 70)
     print("SCENARIO B: no response within threshold")
     print("=" * 70)
@@ -366,7 +366,7 @@ if __name__ == "__main__":
         notes="single delivery, then store re-locked",
     )
 
-    a3 = audit_charter(walmart_charter, crisis, response_partial)
+    a3 = audit_charter(retailer_charter, crisis, response_partial)
     print("\n" + "=" * 70)
     print("SCENARIO C: response within window but under threshold delivery")
     print("=" * 70)
@@ -387,7 +387,7 @@ if __name__ == "__main__":
             for k, v in crisis.needs.items()
         }
         claim3.assets_claimed = {
-            k: min(walmart_charter.on_site_assets.get(k, 0.0), q)
+            k: min(retailer_charter.on_site_assets.get(k, 0.0), q)
             for k, q in shortfall.items()
         }
         claim3.rationale = (

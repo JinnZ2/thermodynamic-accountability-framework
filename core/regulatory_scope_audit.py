@@ -321,15 +321,15 @@ if __name__ == "__main__":
     # ---- Situation A: rural homestead, low density
     homestead = Situation(
         id="SIT_HOMESTEAD_2025",
-        location="Grand Lake Township, St. Louis County, MN",
+        location="rural township, northern MN",
         description=(
-            "Two-acre homestead, no municipal sewer access, well water, "
+            "Rural homestead, no municipal sewer access, well water, "
             "composting toilet + graywater system proposed"
         ),
         conditions={
             "population_density_per_km2": 4.0,
             "groundwater_depth_m": 8.0,
-            "lot_size_ha": 0.8,
+            "lot_size_ha": 1.0,     # illustrative value above the 0.2 ha scope bound
             "annual_rainfall_mm": 720.0,
         },
     )

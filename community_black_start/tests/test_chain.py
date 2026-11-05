@@ -1,5 +1,5 @@
 # tests/test_chain.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude).
+# Provenance: co-authored (JinnZ2 + Claude).
 #   python -m unittest discover -s tests
 
 import os

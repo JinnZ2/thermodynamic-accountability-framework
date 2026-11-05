@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # two_person.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # D7 two-person rule (same principle as nuclear custody). Four actions need
 # two roles from different households:

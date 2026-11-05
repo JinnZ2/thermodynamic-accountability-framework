@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # schema.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # DATA INTEGRITY ONLY. This module checks that a record is well-formed. It
 # never rates a judgment, a judge or a tradition.
@@ -33,6 +33,11 @@ from typing import Dict, List, Optional
 
 JUDGE_TYPES = ("person", "body", "tradition", "court", "other")
 EVIDENCE_TAGS = ("OBSERVED", "DERIVED", "PROPOSED")
+# Optional per evidence item (J10, 2026-11-05): how the cited source bears on
+# the claim or sub-claim named in `item`, as the recorder read it. Neutral:
+# it records what the source says, not whether the source holds.
+EVIDENCE_STATUS = ("SUPPORTED_BY_SOURCE", "PARTIAL_SUPPORT_BY_SOURCE",
+                   "CONTRADICTED_BY_SOURCE", "NOT_CHECKED")
 CHANGE_BASIS = ("CONDITIONS", "EVIDENCE", "NONE_STATED")
 VOLUMES = ("thin", "medium", "solid")
 LAYERS = ("physics", "sensor", "interpretation", "agency")
@@ -40,18 +45,22 @@ CONTROL = ("YES", "NO", "PARTIAL", "UNKNOWN")
 SUBJECT_STATUS = ("ESTABLISHED", "OPEN", "NOT_APPLICABLE")
 CONSENT = ("GIVEN", "ABSENT", "NOT_POSSIBLE", "UNKNOWN")
 LOOP = ("CLOSED", "BROKEN", "UNKNOWN")
+REPORTER_RELATION = ("FIRSTHAND", "SECONDHAND", "UNKNOWN")   # how the recorder got the basis
 # system_class: free text (e.g. human, animal, plant, model). Coarse on
 # purpose; where a class boundary was a decision, say so in the record.
 BASIS_KEYS = {
-    "physics": ("input", "operating_range", "range_source", "exceeded", "system_class"),
-    "sensor": ("signal", "response", "observed", "source", "system_class"),
+    "physics": ("input", "operating_range", "range_source", "exceeded", "system_class",
+                "reporter_relation"),
+    "sensor": ("signal", "response", "observed", "source", "system_class", "reporter_relation"),
     "interpretation": ("meaning", "control_available", "expectation", "social_environment",
                        "valence_reported", "intensity_reported", "source", "system_class"),
     "agency": ("agent", "subject", "subject_status", "consent", "loop", "system_class"),
 }
 BASIS_ENUMS = {("interpretation", "control_available"): CONTROL,
                ("agency", "subject_status"): SUBJECT_STATUS, ("agency", "consent"): CONSENT,
-               ("agency", "loop"): LOOP}
+               ("agency", "loop"): LOOP,
+               ("physics", "reporter_relation"): REPORTER_RELATION,
+               ("sensor", "reporter_relation"): REPORTER_RELATION}
 BASIS_BOOLS = (("physics", "exceeded"), ("sensor", "observed"))
 
 # Signal-intervention axis (addendum 2)
@@ -112,6 +121,8 @@ class Judgment:
     layer_basis: Optional[Dict] = None          # {physics: {...}|None, sensor: {...}|None, agency: {...}|None}
     depends_on_layers: List[str] = field(default_factory=list)   # judgment_ids for lower layers
     intervention_id: Optional[str] = None       # links a SignalIntervention record
+    missing_variables: List[str] = field(default_factory=list)   # named unknowns the claim would need
+    source_trace: Optional[Dict] = None         # {author_known, date_known, locator}; booleans or null
 
     def get(self, dotted):
         cur = asdict(self)
@@ -136,6 +147,8 @@ class Judgment:
         for e in self.evidence or []:
             if e.get("tag") not in EVIDENCE_TAGS:
                 out.append("evidence tag must be one of %s" % (EVIDENCE_TAGS,))
+            if e.get("status") is not None and e.get("status") not in EVIDENCE_STATUS:
+                out.append("evidence status must be null or one of %s" % (EVIDENCE_STATUS,))
         for c in self.change_basis or []:
             if c not in CHANGE_BASIS:
                 out.append("change_basis entries must be from %s" % (CHANGE_BASIS,))
@@ -176,6 +189,17 @@ class Judgment:
             out.append("depends_on_layers must be a list of judgment_ids")
         elif self.judgment_id in deps:
             out.append("a judgment cannot depend on itself")
+        st = self.source_trace
+        if st is not None:
+            if not isinstance(st, dict) or set(st) - {"author_known", "date_known", "locator"}:
+                out.append("source_trace must be null or {author_known, date_known, locator}")
+            else:
+                for k in ("author_known", "date_known"):
+                    if st.get(k) not in (True, False, None):
+                        out.append("source_trace.%s must be true, false or null" % k)
+        mv = self.missing_variables
+        if not isinstance(mv, list) or not all(isinstance(x, str) for x in mv):
+            out.append("missing_variables must be a list of strings")
         return out
 
     def to_dict(self):

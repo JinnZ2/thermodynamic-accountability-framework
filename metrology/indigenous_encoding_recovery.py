@@ -865,7 +865,7 @@ def _seed_taino_hurricane_forecasting() -> EncodingInstrument:
     )
 
 
-def _seed_carlton_crystal_array() -> EncodingInstrument:
+def _seed_crystal_array() -> EncodingInstrument:
     return EncodingInstrument(
         lineage=(
             "(specific to substrate carrier; lineage field "
@@ -874,12 +874,12 @@ def _seed_carlton_crystal_array() -> EncodingInstrument:
         encoding_type=EncodingType.LANDSCAPE_FEATURE,
         what_it_measures=None,            # TODO: navigation reference structure
         temporal_depth_generations=None,  # TODO
-        spatial_scope="Carlton, MN coordinates (specific site)",
+        spatial_scope="a site in northern MN",
         encoding_mechanism=None,          # TODO: landscape-encoded array
         cross_reference_instrument=None,  # no instrumental equivalent
         status=EncodingStatus.LANDSCAPE_ONLY,
         recovery_pathway=(
-            "physical site presence + Fe3+ defect physics simulation "
+            "on-site observation + Fe3+ defect physics simulation "
             "(see related repos in the JinnZ2 ecosystem); "
             "literature trace is minimal"
         ),
@@ -904,7 +904,7 @@ def seed_catalog() -> list[EncodingInstrument]:
         _seed_inuit_sea_ice(),
         _seed_pacific_salmon_timing(),
         _seed_taino_hurricane_forecasting(),
-        _seed_carlton_crystal_array(),
+        _seed_crystal_array(),
     ]
 
 

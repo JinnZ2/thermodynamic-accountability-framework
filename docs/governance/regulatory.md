@@ -25,7 +25,7 @@ companion_documents:
 - taf-applied-epistemology.md
   license: CC-BY-4.0
   version: 1.0.0
-  last_updated: 2026-02-10
+  last_updated: 2026-11-05
 
 -----
 

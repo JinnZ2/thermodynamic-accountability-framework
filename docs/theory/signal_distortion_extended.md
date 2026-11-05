@@ -178,4 +178,4 @@ This document does not propose solutions. It reports measurements. The distortio
 
 -----
 
-*Compiled from operational telemetry: 6 million miles, Upper Midwest commercial corridors, heavy combination vehicles, 70-hour weekly schedules. Sensor platform: consequence-exposed human operator. Receiving system failures documented across NHTSA FARS, FHWA Traffic Volume Trends, FMCSA Hours of Service framework, commercial AV development pipelines, large language model architectures, and freight compensation structures.*
+*Compiled from operational telemetry: millions of safe miles, Upper Midwest commercial corridors, heavy combination vehicles, 70-hour weekly schedules. Sensor platform: consequence-exposed human operator. Receiving system failures documented across NHTSA FARS, FHWA Traffic Volume Trends, FMCSA Hours of Service framework, commercial AV development pipelines, large language model architectures, and freight compensation structures.*

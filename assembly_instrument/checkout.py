@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # checkout.py -- CC0, stdlib only, python >= 3.5
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Run before an entry is handed to anyone. Cautions print FIRST, in plain
 # language, above the method. The checkout is logged to the ledger (kind
@@ -68,7 +68,7 @@ def main(argv):
         entry = json.load(f)
     path = opt("--ledger")
     recs = ledger.read(path)
-    probs = ledger.verify(recs)
+    probs = ledger.verify(recs) + ledger.head_problems(path, recs)
     if probs:
         sys.stderr.write("ledger broken, refusing checkout: %s\n" % probs[0])
         return 1

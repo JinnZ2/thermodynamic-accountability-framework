@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # adapters/base.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Model access goes through an adapter. No keys live in this repository;
 # a concrete adapter reads what it needs from the environment.

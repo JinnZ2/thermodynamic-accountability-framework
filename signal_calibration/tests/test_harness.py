@@ -1,5 +1,5 @@
 # tests/test_harness.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 # ScriptedAdapter only: no model is called. Scenarios are the synthetic files.
 
 import csv

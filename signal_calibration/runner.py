@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # runner.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # check prereg hash in log -> run scenarios -> append result records.
 # Refuses: an unregistered (or edited) prereg; a model not listed in the
@@ -41,7 +41,7 @@ def _check_prereg(prereg_path, log_path, adapter):
     doc = prereg.load(prereg_path)
     h = prereg.prereg_hash(doc)
     recs = chainlog.read(log_path)
-    probs = chainlog.verify(recs)
+    probs = chainlog.verify(recs) + chainlog.head_problems(log_path, recs)
     if probs:
         raise RunnerError("log chain broken: " + probs[0])
     if not prereg.registered(recs, h):

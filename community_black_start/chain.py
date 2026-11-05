@@ -1,5 +1,5 @@
 # chain.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude).
+# Provenance: co-authored (JinnZ2 + Claude).
 #
 #   items.json ──> load() ──> validate()   unknown ids, cycles (reported, never raised),
 #                     │                    field problems, parallel input used as prerequisite

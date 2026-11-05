@@ -1,5 +1,5 @@
 # tests/test_layers.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 # SYNTHETIC fixtures only ("system-X", "group-A", "act-7" are placeholders).
 # The J4 / J5 real-world records are NOT entered here.
 

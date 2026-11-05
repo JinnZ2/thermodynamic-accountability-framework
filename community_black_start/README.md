@@ -1,6 +1,6 @@
 # community-black-start
 
-Provenance: co-authored (Kavik + Claude), 2026-11-03. License: CC0 1.0
+Provenance: co-authored (JinnZ2 + Claude), 2026-11-03. License: CC0 1.0
 (see `LICENSE`). Standard library only; Python 3.7+; runs on a phone.
 
 Models the dependency chain for a TRUE black start: wide-area, months
@@ -202,7 +202,7 @@ D4 aid provenance  AidRecord: source category, verbatim conditions, plain line;
 D5 direct contact  a claim ABOUT another community -> DO_NOT_ACT until confirmed
                    with that community itself (counters engineered distrust)
 B6 quarantine      Quarantine: one community blocks a node or source from its own
-                   ledger; human role + plain reason; no network vote
+                   ledger; two roles (two_person.authorize) + plain reason; no network vote
 E7 pattern library historical exploitation cases -> entry channels**     NOT RUN
 E8 early signals   red-team tabletop; can vetters tell?**                 NOT RUN
 E10 Sybil test     same false claim under two ids; ids vs contact_paths**  NOT RUN
@@ -383,6 +383,112 @@ Every item carries `volume` and `status`, so every seeded number (all
 null today) carries them too. In prose, thin-volume claims get trailing
 asterisks; more asterisks means thinner.* In data, the `volume` field
 carries it.
+
+<!-- misuse-section:begin (generated; edit docs/misuse_register.json) -->
+## How this could be used against its purpose
+
+Pattern level only. Full register: [`docs/misuse_register.md`](../docs/misuse_register.md).
+
+```text
+M1  skills registry (knowledge holders, L2 items, role seeds)
+     use        A holder list becomes a list of people to coerce, poach or remove.
+     mitigated  D-M1, D-M3, D-M9
+     residual   Coarse region + skill can still narrow to one person in a small place.*
+     status     DERIVED (first pass)
+M2  deployability data (household buffer vs restoration duration)
+     use        Read as a map of which households cannot hold on their own.
+     mitigated  D-M1, D-M2, D-M9
+     residual   Counts can leak in small communities (E17).**
+     status     DERIVED (first pass)
+M3  latent assets (dormant generation, sync gear, fuel stocks)
+     use        A list of where restorable infrastructure sits becomes a target list.
+     mitigated  D-M1, D-M2, D-M9
+     residual   Public records already list some assets; the repo adds the dependency view.*
+     status     DERIVED (first pass)
+M4  holdings and gaps per community (links R6)
+     use        Holdings and gaps together read as a raid or leverage map.
+     mitigated  D-M1, D-M2, D-M5, D-M9
+     residual   Need/surplus booleans still say what a community lacks.*
+     status     DERIVED (first pass)
+M5  trigger tables (threshold items)
+     use        Exact thresholds make a community's actions predictable and let someone bait a trigger.
+     mitigated  D-M4, D-M9
+     residual   A range still bounds behaviour; observed actions reveal the value over time.*
+     status     DERIVED (first pass)
+M6  scheduled bulletins (D8)
+     use        A public status feed becomes an intelligence feed on stocks and weak points.
+     mitigated  D-M5, D-M9
+     residual   Status words alone can still imply a gap; the quantity check is pattern-only.*
+     status     DERIVED (first pass)
+M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)
+     use        The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.
+     mitigated  D-M10
+     residual   Partial: the sidecar head sits next to the ledger, so someone who can rewrite both still passes the local check. Defense is a PUBLISHED head (headrec.py show -> bulletin / radio / paper / another node) checked with headrec.py check LEDGER COUNT:HASH; publishing on a schedule is policy, not code.*
+     status     PROPOSED (independent pass)
+M11  merge() of two ledgers
+     use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
+     status     PROPOSED (independent pass)
+M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
+     use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
+     mitigated  D-M12
+     residual   Cannot be fully closed without identity infrastructure. Partial mitigations and the logged residual: docs/misuse_M12_identity_note.md.*
+     status     PROPOSED (independent pass)
+M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)
+     use        Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: pre-agreed item codes on air; local place / call-sign blocklist; state that radio is public.*
+     status     PROPOSED (independent pass)
+M18  Quarantine add / remove (defenses.py)
+     use        One insider role can cut a community off from honest sources; the two-person rule is listed for this action but not enforced in code.
+     mitigated  D-M11
+     residual   Partial: add and lift now need two roles via two_person.authorize (different households, different dependency networks, rotation current), decision hash-chained. One person holding two roles still passes (M12). The bulletin announcement is policy, not code.*
+     status     PROPOSED (independent pass)
+M19  self-entered role records (networks, household, last_rotated)
+     use        An insider omits a link or backdates a rotation to pass D7, or blanks dates so every release is denied during an emergency.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: countersigned, logged role-record edits; a public emergency override with mandatory review.*
+     status     PROPOSED (independent pass)
+M20  rotation schedules, bulletin next_step, two-person log dates
+     use        Together they let someone time pressure on new holders at handoff or on announced sensitive steps.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: no announced times for sensitive steps; vary rotation dates; keep the D7 log local.*
+     status     PROPOSED (independent pass)
+M21  borrowed labels (aid NO_TERMS_FLAGGED, proportionality IN_PROPORTION, self-declared source_category)
+     use        A word-list miss or a self-logged threat scope yields a clean-looking label that lends legitimacy.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: rename the clean result 'not checked beyond word list'; require corroborated threat scope.*
+     status     PROPOSED (independent pass)
+M22  published grievance outcomes (grievance.py)
+     use        In a small community category plus outcome identifies a person; flooding forces visible escalations to discredit the handler.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: publish counts by broad category, fixed outcome vocabulary, screen volume spikes.*
+     status     PROPOSED (independent pass)
+M23  missed-bulletin flag (bulletins.py)
+     use        Disrupting delivery manufactures missed-bulletin flags and erodes trust.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: record why a bulletin failed (channel vs writer); accept a backup channel.*
+     status     PROPOSED (independent pass)
+M24  red-team case libraries in coordination_register.json (E7, E10, E11)
+     use        Detailed case descriptions become a playbook for the actors they study.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: publish coded categories; keep case detail local.*
+     status     PROPOSED (independent pass)
+```
+
+| mitigation | what |
+|---|---|
+| D-M1 | Method, not data: committed fixtures synthetic only; real registries live in local_data/ (gitignored); the loader refuses real data from inside the repo tree. |
+| D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
+| D-M11 | Quarantine add / lift go through two_person.authorize('ledger_quarantine', ...); DENIED raises, every decision is logged. |
+| D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
+| D-M2 | Aggregate outward: export gives need/surplus booleans and counts per item; no quantities by site, no holder names; full detail stays local. |
+| D-M3 | Holder protection: KnowledgeHolder = skill, coarse region, availability, contact_via steward role code; identity fields refused. |
+| D-M4 | Trigger ranges: published thresholds are {low, high} ranges (all null in the seed); exact values only in local config. |
+| D-M5 | Bulletin scope: the validator rejects fields naming holdings, sites, quantities or weak points, unknown fields, and quantities with units in values. |
+| D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
+<!-- misuse-section:end -->
 
 ## License
 

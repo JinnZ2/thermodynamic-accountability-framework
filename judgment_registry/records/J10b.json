@@ -1,0 +1,70 @@
+{
+  "judgment_id": "J10b",
+  "version": "1",
+  "claim": "'Stochastic Collapse' is the mechanism: sampling randomness accumulates until output collapses into repetition.",
+  "scope": {
+    "who": "language models at inference",
+    "act_type": "mechanism claim for repetition loops",
+    "conditions": "not stated by the claimant"
+  },
+  "environment": {
+    "other": "inference-time generation; settings not stated"
+  },
+  "date": null,
+  "date_approx": false,
+  "judge": {
+    "name_or_body": null,
+    "type": null
+  },
+  "judge_incentives": null,
+  "reason": "as stated in a YouTube comment; full text not recorded in this entry",
+  "evidence": [
+    {
+      "item": "mechanism sub-claim (randomness accumulates into collapse)",
+      "tag": "PROPOSED",
+      "source": "arXiv 2504.01100 reports entropy dropping each repetition cycle (cited by co-author; not read this session)",
+      "status": "CONTRADICTED_BY_SOURCE"
+    },
+    {
+      "item": "repetition loops are a known failure mode",
+      "tag": "OBSERVED",
+      "source": null,
+      "status": "PARTIAL_SUPPORT_BY_SOURCE"
+    },
+    {
+      "item": "term check: 'Stochastic Collapse' is a nonstandard term; 'model collapse' names a different, training-time phenomenon (recursive training on generated data)",
+      "tag": "DERIVED",
+      "source": "Shumailov et al., Nature 2024 (from model knowledge; not checked this session)",
+      "status": "NOT_CHECKED"
+    }
+  ],
+  "dissent": [],
+  "framing_check": null,
+  "recorder": "co-author",
+  "source": "YouTube comment; author and date unknown",
+  "volume": "thin",
+  "layer": "physics",
+  "layer_basis": {
+    "physics": {
+      "input": "sampled token sequence",
+      "operating_range": null,
+      "range_source": null,
+      "exceeded": null,
+      "system_class": "model"
+    }
+  },
+  "depends_on_layers": [],
+  "missing_variables": [
+    "model and version",
+    "temperature / top-p",
+    "repetition penalty",
+    "context length at the time of the loop",
+    "transcript",
+    "persistence across resampling"
+  ],
+  "source_trace": {
+    "author_known": false,
+    "date_known": false,
+    "locator": null
+  }
+}

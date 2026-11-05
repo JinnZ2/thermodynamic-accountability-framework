@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "assembly_instrument/feedback_schema.json",
   "title": "FieldReport: one build result returned against one junction",
-  "description": "Status: co-authored (Kavik + Claude), 2026-11-03. CC0. Only junction_id and outcome are required; everything else is optional so a report fits one SMS or radio line (compact.py). NO personal identifiers: no names, phone numbers, call signs, addresses or exact coordinates. coarse_region is a region a reader could not use to find a household.",
+  "description": "Status: co-authored (JinnZ2 + Claude), 2026-11-03. CC0. Only junction_id and outcome are required; everything else is optional so a report fits one SMS or radio line (compact.py). NO personal identifiers: no names, phone numbers, call signs, addresses or exact coordinates. coarse_region is a region a reader could not use to find a household.",
   "type": "object",
   "required": ["junction_id", "outcome"],
   "additionalProperties": false,

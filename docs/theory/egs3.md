@@ -34,7 +34,7 @@
 ## Examples
 
 ```
-Walmart DC Yard B | DEVIATION | Equipment | GPS offset 4m, manual correction applied
+Distribution DC Yard B | DEVIATION | Equipment | GPS offset 4m, manual correction applied
 Route 22 MM 147 | CRITICAL | Infrastructure | Bridge surface deterioration, reduced speed
 Terminal 5 Dock 3 | DEVIATION | Supply Chain | Trailer sequence error, rerouted to Dock 7
 I-40 Westbound MM 203 | STABLE | Weather | Light rain, no action needed

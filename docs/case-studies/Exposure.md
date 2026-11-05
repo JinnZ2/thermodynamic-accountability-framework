@@ -9,7 +9,7 @@ topics where training data is derived primarily from comfort-native,
 documentation-rich environments. Provide structured claims with testability
 status to enable weighted integration rather than binary accept/reject.
 author_context: >
-Commercial truck driver operating within Walmart distribution network,
+Commercial truck driver operating within a national retail distribution network,
 delivering food to rural areas on 70-hour weekly schedules. Direct operational
 exposure to infrastructure failure, wildlife-vehicle interactions, scavenger
 cascades, deferred maintenance, and institutional friction across contract
@@ -17,7 +17,7 @@ layers. All claims grounded in firsthand consequence-bearing experience.
 framework_affiliation: Thermodynamic Accountability Framework (TAF)
 license: CC-BY-4.0
 version: 1.0.0
-last_updated: 2026-02-10
+last_updated: 2026
 testimony_status: founding_cases_active | additional_testimony_welcome
 
 # Reality Gaps in Survival-Coupled Environments
@@ -290,11 +290,11 @@ See Contributing section below.
 
 -----
 
-### CASE-01: Wisconsin CWD / Warden-Only Culling / Eagle Mortality Cascade
+### CASE-01: Upper Midwest CWD / Warden-Only Culling / Eagle Mortality Cascade
 
-**Location**: Wisconsin, multiple rural counties
+**Location**: Upper Midwest, multiple rural counties
 **Timeframe**: 2002-present (escalating)
-**Originating policy**: Wisconsin DNR Chronic Wasting Disease response
+**Originating policy**: State wildlife agency Chronic Wasting Disease response
 mandating centralized management of infected deer. Local hunters restricted
 from independent culling in affected zones. Sharpshooter and warden-based
 programs used instead.
@@ -304,7 +304,7 @@ management.
 
 **What actually happened**:
 
-- CWD was first detected in Wisconsin in 2002. As of 2025, CWD prevalence
+- CWD was first detected in the state in the early 2000s. As of 2025, CWD prevalence
   in the top 12 affected counties has risen to 23.6%, up from 22% in 2024.
   The disease has not been contained.
 - Centralized culling introduced response latency. Local hunters who could
@@ -331,9 +331,9 @@ Scavenger cascade never initiates. Eagles never concentrate on roadways.
 
 -----
 
-### CASE-02: Southern Minnesota Waterfowl / Predator Removal / Road Collisions
+### CASE-02: Waterfowl / Predator Removal / Road Collisions
 
-**Location**: Southern Minnesota, rural highway corridors
+**Location**: Rural highway corridors
 **Timeframe**: Ongoing
 **Originating policy**: Fox and predator management policies that reduced
 natural predation pressure on waterfowl populations, combined with
@@ -349,16 +349,16 @@ wetland proximity to transportation corridors.
   remaining water sources, many adjacent to rural highways.
 - Waterfowl flocks crossing rural roads in large numbers created collision
   hazards for vehicles.
-- A specific incident involved multiple vehicles including two semi-trucks
-  and five cars in a collision cascade triggered by waterfowl on a rural
-  road corridor.
-- Tow and recovery response time in rural areas: up to 12 hours. Road
-  blocked for duration.
+- A specific incident: multi-vehicle crash, extended closure, rural
+  highway, in a collision cascade triggered by waterfowl on the road
+  corridor.
+- Tow and recovery response in rural areas is slow. Road blocked for
+  the duration.
 - None of this was formally reported as connected to wildlife population
   management policy.
 
-**Unaccounted costs**: Vehicle replacement and repair (two semis, five cars),
-road closure (12+ hours), supply chain delay, potential human injury or
+**Unaccounted costs**: Vehicle replacement and repair (multiple vehicles),
+road closure (extended), supply chain delay, potential human injury or
 death, insurance claims absorbed into regional premium pools.
 
 **What local knowledge would have done**: Maintained predator-prey balance
@@ -367,12 +367,12 @@ Flocking behavior remains normal. Road collisions do not cascade.
 
 -----
 
-### CASE-03: Northern Minnesota Beaver / Trapping Restrictions / Bog Collapse
+### CASE-03: Upper Midwest Beaver / Trapping Restrictions / Bog Collapse
 
-**Location**: Northern Minnesota
+**Location**: Upper Midwest
 **Timeframe**: Ongoing
 **Originating policy**: Beaver management regulations requiring permits,
-seasonal restrictions, and bureaucratic process for dam removal. Minnesota
+seasonal restrictions, and bureaucratic process for dam removal. State
 law simplified some beaver management in 2020 but still requires permits
 for dam removal that changes waterway cross-section, and conservation
 officer notification within 24 hours of taking beaver causing damage.
@@ -400,8 +400,8 @@ time by people who observe water levels daily. Bog hydrology stays intact.
 
 ### CASE-04: Bear Behavior Shift / Packing Males / Residential Safety
 
-**Location**: Rural residential areas (specific location withheld)
-**Timeframe**: Current (2025-2026)
+**Location**: Wildlife encounter near a rural residence (location withheld)
+**Timeframe**: Recent (date withheld)
 **Originating policy**: Bear management restrictions limiting local
 response to nuisance or dangerous bear activity.
 
@@ -411,20 +411,20 @@ response to nuisance or dangerous bear activity.
   pattern for normally solitary adult male black bears.
 - Pack behavior directed at garbage and food sources in residential areas.
 - Property destruction from coordinated foraging.
-- Direct child safety risk in residential zones where bears are active.
+- Direct human safety risk in residential zones where bears are active.
 - Behavioral shift suggests population pressure, habitat compression, or
   food source disruption forcing abnormal social behavior.
 - Local residents cannot respond to the immediate safety threat without
   navigating permit and regulatory processes that introduce days or weeks
   of delay.
 
-**Unaccounted costs**: Property damage, child safety risk, community stress,
-potential human injury. If a child is harmed, the cost is catastrophic and
+**Unaccounted costs**: Property damage, human safety risk, community stress,
+potential human injury. If a person is harmed, the cost is catastrophic and
 irreversible. No regulatory process can undo it.
 
 **What local knowledge would have done**: Immediate assessment by people
 who know bear behavior from lifelong exposure. Lethal removal if necessary,
-without waiting for institutional authorization. The safety of children in
+without waiting for institutional authorization. Human safety in
 the community is not a bureaucratic question.
 
 -----

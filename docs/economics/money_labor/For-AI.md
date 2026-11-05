@@ -194,7 +194,7 @@ Source A: Physics simulation
   Error = 0.05 (clean but fictional)
   Reliability = 0.001 / 1.05 = 0.00095
 
-Source B: Operator sensor data (35 years, 6M miles)
+Source B: Operator sensor data (decades / millions of safe miles)
   K_cred = 3500 (continuous consequence validation)
   Error = 0.15 (noisy but real)
   Reliability = 3500 / 1.15 = 3043

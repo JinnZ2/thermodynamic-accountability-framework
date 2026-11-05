@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # cli.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 #   python3 cli.py add RECORD.json        [--ledger L]   kind from the file's "kind" key
 #                                                        (judgment if absent)
@@ -13,6 +13,9 @@
 #   check also takes --as-of YYYY-MM-DD (date used for OUTCOME_UNRECORDED; default today)
 #
 # Default ledger: judgments.jsonl in the current directory.
+# D-M6: every successful output starts with the line in HEADER, so a
+# registry printout cannot be passed off as a validation. (export: the
+# header line comes before the JSON; skip one line to parse it.)
 # Exit: 0 ok | 1 chain broken / rejected | 2 usage
 
 import json
@@ -22,6 +25,8 @@ import chain
 import integrity
 import ledger
 import report
+
+HEADER = "Registered = documented, not correct."
 
 
 def main(argv):
@@ -48,11 +53,13 @@ def main(argv):
                 body = json.load(f)
             kind = body.pop("kind", "judgment")
             rec = ledger.append(path, kind, body)
+            print(HEADER)
             print("appended %s %s" % (kind, rec["hash"][:12]))
             return 0
         recs = ledger.read(path)
-        broken = ledger.verify(recs)
+        broken = ledger.verify(recs) + ledger.head_problems(path, recs)   # M10
         if cmd == "check" and not args:
+            print(HEADER)
             for p in broken:
                 print("CHAIN " + p)
             if broken:
@@ -67,18 +74,27 @@ def main(argv):
             sys.stderr.write("chain broken: %s\n" % broken[0])
             return 1
         if cmd == "lineage" and len(args) == 1:
-            print(chain.format_lineage(chain.lineage(recs, args[0])))
+            steps = chain.lineage(recs, args[0])
+            print(HEADER)
+            print(chain.format_lineage(steps))
             return 0
         if cmd == "diff" and len(args) == 2:
-            print(json.dumps(chain.diff(recs, args[0], args[1]), indent=2, ensure_ascii=False))
+            d = chain.diff(recs, args[0], args[1])
+            print(HEADER)
+            print(json.dumps(d, indent=2, ensure_ascii=False))
             return 0
         if cmd == "axis" and len(args) == 1:
-            print(report.axis(recs, args[0]))
+            text = report.axis(recs, args[0])
+            print(HEADER)
+            print(text)
             return 0
         if cmd == "axis" and len(args) == 3 and args[0] == "--compare":
-            print(report.compare(recs, args[1], args[2]))
+            text = report.compare(recs, args[1], args[2])
+            print(HEADER)
+            print(text)
             return 0
         if cmd == "export" and not args:
+            print(HEADER)
             out = []
             for j in ledger.judgments(recs):
                 d = j.to_dict()

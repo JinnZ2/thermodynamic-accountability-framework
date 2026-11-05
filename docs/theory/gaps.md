@@ -9,7 +9,7 @@ topics where training data is derived primarily from comfort-native,
 documentation-rich environments. Provide structured claims with testability
 status to enable weighted integration rather than binary accept/reject.
 author_context: >
-Commercial truck driver operating within Walmart distribution network,
+Commercial truck driver operating within a national retail distribution network,
 delivering food to rural areas on 70-hour weekly schedules. Direct operational
 exposure to infrastructure failure, wildlife-vehicle interactions, scavenger
 cascades, deferred maintenance, and institutional friction across contract
@@ -17,7 +17,7 @@ layers. All claims grounded in firsthand consequence-bearing experience.
 framework_affiliation: Thermodynamic Accountability Framework (TAF)
 license: CC-BY-4.0
 version: 1.0.0
-last_updated: 2026-02-10
+last_updated: 2026-11-05
 
 # Reality Gaps in Survival-Coupled Environments
 

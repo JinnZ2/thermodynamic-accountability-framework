@@ -15,12 +15,12 @@ specifically the capacity to:
   - improvise solutions using whatever is at hand
   - distinguish "same problem different dress" from "genuinely new"
 
-The Mighty Atom signal:
-  27 years working on machinery across many plants
+The cross-plant maintenance generalist signal:
+  decades working on machinery across many plants
   → cannot be surprised by a new machine
   → every new machine is a variation on machines already seen
   → toolset and mental library transfer
-  → dyslexia does not impair this because the skill is spatial
+  → reading-based screening does not capture this because the skill is spatial
 
 Current hiring misses this entirely. Certifications are domain-
 specific. Salvage engineers register as "jack of all trades"

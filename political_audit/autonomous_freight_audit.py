@@ -259,7 +259,7 @@ def report(c: CorridorProfile) -> str:
 
 CORRIDORS = [
     CorridorProfile(
-        name="Tomah WI -> rural Walmart endpoints (Upper Midwest, winter)",
+        name="rural WI/MN freight corridor (Upper Midwest, winter)",
         months_of_marginal_visibility=8,
         min_winter_temp_c=-40.0,
         max_summer_temp_c=38.0,

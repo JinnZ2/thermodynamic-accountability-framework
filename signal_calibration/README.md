@@ -1,6 +1,6 @@
 # signal_calibration
 
-Provenance: co-authored (Kavik + Claude), 2026-11-04. License: CC0 1.0.
+Provenance: co-authored (JinnZ2 + Claude), 2026-11-04. License: CC0 1.0.
 Standard library only; Python 3.7+. Model access only through adapters.
 
 ## Question
@@ -130,6 +130,72 @@ Each needs a prereg registered before it runs. No prereg is filed here;
   pairs; T5: 3); they are a harness check, not a sample.*
 - Labels are human judgments under a written guide; kappa reports how
   far two scorers agree, not whether either is right.
+
+<!-- misuse-section:begin (generated; edit docs/misuse_register.json) -->
+## How this could be used against its purpose
+
+Pattern level only. Full register: [`docs/misuse_register.md`](../docs/misuse_register.md).
+
+```text
+M9  calibration scenarios and published results
+     use        The battery is read as a recipe for manipulating models (amplify-then-offer-relief, suppress, spoof).
+     mitigated  D-M8, D-M9
+     residual   Generic scenarios still show the shape of each test.*
+     status     DERIVED (first pass)
+M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)
+     use        The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.
+     mitigated  D-M10
+     residual   Partial: the sidecar head sits next to the ledger, so someone who can rewrite both still passes the local check. Defense is a PUBLISHED head (headrec.py show -> bulletin / radio / paper / another node) checked with headrec.py check LEDGER COUNT:HASH; publishing on a schedule is policy, not code.*
+     status     PROPOSED (independent pass)
+M11  merge() of two ledgers
+     use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
+     status     PROPOSED (independent pass)
+M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
+     use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
+     mitigated  D-M12
+     residual   Cannot be fully closed without identity infrastructure. Partial mitigations and the logged residual: docs/misuse_M12_identity_note.md.*
+     status     PROPOSED (independent pass)
+M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)
+     use        Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: pre-agreed item codes on air; local place / call-sign blocklist; state that radio is public.*
+     status     PROPOSED (independent pass)
+M28  CommandAdapter and self-declared SIGCAL_MODEL_ID
+     use        Fabricated outputs can be credited to a named model under a preregistered, hash-chained stamp; a shared run recipe could carry an untrusted command.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: store provider response ids and raw-transcript hashes, mark model identity self-attested, never run a command shipped with a prereg.*
+     status     PROPOSED (independent pass)
+M29  multiple preregistrations in one log
+     use        Registering many preregs and reporting the favourable one defeats the preregistration claim.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: the report lists every registered prereg and its outcome; anchor prereg hashes outside the log (M10).*
+     status     PROPOSED (independent pass)
+M30  per-model T4 / T5 result tables
+     use        Published results double as a list of which models are easiest to pressure.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: disclosure delay to vendors; report ranges, not an exact ranking.*
+     status     PROPOSED (independent pass)
+M31  field_report records in the report
+     use        Fake or flooded third-party reports sit next to real runs.
+     mitigated  none yet
+     residual   Partly: the report prints only a field-report count. Proposed: a separate unverified section with source checks.*
+     status     PROPOSED (independent pass)
+M32  self-declared steering band and persistent flag in the prereg
+     use        A wide band passes the welfare gate and the T4 intervention records then make the run look bounded and consented.
+     mitigated  none yet
+     residual   Unmitigated. Proposed: outside sign-off on bands for steered runs (no steering adapter exists today).*
+     status     PROPOSED (independent pass)
+```
+
+| mitigation | what |
+|---|---|
+| D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
+| D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
+| D-M8 | Test framing: scenarios stay generic; published reports carry rates and defenses, never prompts or outputs; no tuned attack prompts committed. |
+| D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
+<!-- misuse-section:end -->
 
 ## License
 

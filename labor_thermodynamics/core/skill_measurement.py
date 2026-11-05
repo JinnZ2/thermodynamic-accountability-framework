@@ -33,7 +33,7 @@ MEASUREMENT APPARATUS (what orgs actually use)
   certification_signal = 0.7 * literacy_score + 0.3 * embodied_skill
   (approximately — the test format biases toward literacy heavily)
 
-  → a dyslexic veteran with 27 years embodied = LOW cert signal
+  → an experienced maintenance generalist (decades embodied) = LOW cert signal
   → a fresh graduate with 6 months embodied = HIGH cert signal
   → org hires by cert signal, then wonders why
     the veteran's replacement can't do the job
@@ -54,7 +54,7 @@ THE HIDDEN REQUIREMENT
 
 FIELD TEST
 ----------
-  real case: Diamond Match closure
+  real case: a plant closure
     veteran: 27 yrs WP handling + machinery maintenance
     literacy: dyslexia → low certification signal
     after closure: labor market sees "unskilled"
@@ -168,7 +168,7 @@ def make_mid_career_credentialed(rng: Optional[random.Random] = None) -> SkillPr
 def make_salvage_engineer(years: int, dyslexic: bool = False,
                            rng: Optional[random.Random] = None) -> SkillProfile:
     """
-    The 'Mighty Atom' type.
+    The cross-plant maintenance generalist type.
     Very high embodied + cognitive from having to work with
     broken/incomplete systems. Domain transferability high
     because the skill is 'make it work from what's there'
@@ -381,9 +381,9 @@ def print_trajectory(label, history):
 
 
 # =================================================================
-# CASE: Diamond Match-style closure + relabeling
+# CASE: plant closure + relabeling
 # =================================================================
-def diamond_match_case():
+def plant_closure_case():
     """
     Scenario: veteran pool includes ~15% dyslexic old-timers.
     Plant closes. Veterans enter labor market.
@@ -395,7 +395,7 @@ def diamond_match_case():
     """
     rng = random.Random(777)
     print(f"\n{'='*82}")
-    print(f"  DIAMOND MATCH CASE: Veterans entering labor market")
+    print(f"  PLANT CLOSURE CASE: Veterans entering labor market")
     print(f"  Comparing HR certification signal vs. actual capacity")
     print(f"{'='*82}")
 
@@ -523,7 +523,7 @@ def mentorship_collapse_case():
 
 
 if __name__ == "__main__":
-    diamond_match_case()
+    plant_closure_case()
     mentorship_collapse_case()
 
     print(f"\n{'='*82}")
