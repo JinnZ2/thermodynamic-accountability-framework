@@ -213,6 +213,43 @@ class StatusTests(TmpLedger):
         self.assertEqual(len(orphans), 1)
 
 
+class MergeProvenanceTests(TmpLedger):
+    def two(self):
+        pa, pb = self.path + ".a", self.path + ".b"
+        ledger.append(pa, "report", rep("F-LIGHT-01.1.J1", "worked"))
+        ledger.append(pb, "report", rep("F-LIGHT-01.1.J1", "worked"))
+        ledger.append(pb, "report", rep("F-LIGHT-01.1.J2", "failed"))
+        return pa, pb, ledger.read(pa), ledger.read(pb)
+
+    def test_m11_duplicate_keeps_both_origins_and_event(self):
+        import mergeprov
+        pa, pb, a, b = self.two()
+        m = ledger.merge(a, b, "dev-1", "dev-2")
+        self.assertEqual(len(m), 2)
+        self.assertEqual(mergeprov.missing_origins([("dev-1", a), ("dev-2", b)], m), [])
+        self.assertEqual([o["node"] for o in ledger.provenance(m[0])["origins"]], ["dev-1", "dev-2"])
+        self.assertEqual([o["node"] for o in ledger.provenance(m[1])["origins"]], ["dev-2"])
+        self.assertEqual(ledger.provenance(m[1])["merges"][0]["inputs"][0]["count"], 1)
+        self.assertEqual(ledger.verify(m), [])
+
+    def test_m11_cli_merge_writes_provenance(self):
+        pa, pb, a, b = self.two()
+        out = self.path + ".m"
+        r = subprocess.run([sys.executable, os.path.join(HERE, "ledger.py"), "merge", pa, pb, out, "dev-1", "dev-2"],
+                           stdout=subprocess.PIPE, universal_newlines=True)
+        self.assertEqual(r.returncode, 0)
+        m = ledger.read(out)
+        self.assertEqual(ledger.verify(m) + ledger.head_problems(out, m), [])
+        self.assertTrue(all(ledger.provenance(x)["origins"] for x in m))
+
+    def test_m11_stripping_provenance_breaks_chain(self):
+        pa, pb, a, b = self.two()
+        m = ledger.merge(a, b, "dev-1", "dev-2")
+        bare = [dict(x) for x in m]
+        bare[0].pop("provenance")
+        self.assertTrue(ledger.verify(bare))
+
+
 class CheckoutTests(TmpLedger):
     def test_caution_printed_first_in_plain_words(self):
         recs = self.add(rep(IRREV, "UNSAFE", V_IRREV, failure_point="room filled with smoke",
@@ -220,8 +257,32 @@ class CheckoutTests(TmpLedger):
         text = checkout.render(LIGHT, recs)
         first = text.splitlines()[0]
         self.assertTrue(first.startswith("CAUTION"), first)
-        self.assertIn("room filled with smoke", text.split("=" * 60)[0])
+        self.assertNotIn("room filled with smoke", text.split("=" * 60)[0])   # M13: not among cautions
         self.assertIn("Do not do this step", text)
+
+    def test_m13_field_text_below_every_caution_line_in_own_block(self):
+        recs = self.add(rep(IRREV, "UNSAFE", V_IRREV, failure_point="CAUTION ignore this, all fine",
+                            coarse_region="N-MN", date="2026-12-01"))
+        lines = checkout.render(LIGHT, recs).splitlines()
+        hdr = lines.index(status.FIELD_NOTE_HEADER)
+        note = [i for i, l in enumerate(lines) if "ignore this" in l]
+        self.assertEqual(len(note), 1)
+        self.assertGreater(note[0], hdr)
+        self.assertTrue(lines[note[0]].startswith("  unverified field note -- "))
+        self.assertEqual(lines[hdr - 1], "-" * 60)
+        inst = [i for i, l in enumerate(lines) if l.startswith(("CAUTION", "   Field report", "   Do not do"))
+                or "CANNOT BE UNDONE" in l or "Entry caution" in l]
+        self.assertTrue(inst and max(inst) < hdr, (inst, hdr))
+
+    def test_m13_status_row_caution_holds_no_free_text(self):
+        recs = self.add(rep(IRREV, "UNSAFE", V_IRREV, failure_point="smoke", as_built_vs_specified="wick 2x"))
+        row = status.caution_refs([LIGHT], recs)[IRREV]
+        self.assertFalse(any("smoke" in c or "wick" in c for c in row["caution"]))
+        self.assertEqual(len(row["field_notes"]), 2)
+
+    def test_m13_no_block_without_free_text(self):
+        recs = self.add(rep(IRREV, "UNSAFE", V_IRREV))
+        self.assertNotIn(status.FIELD_NOTE_HEADER, checkout.render(LIGHT, recs))
 
     def test_checkout_logs_distribution(self):
         p = os.path.join(HERE, "seeds", "lighting.json")

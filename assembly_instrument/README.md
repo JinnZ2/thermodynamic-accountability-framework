@@ -20,10 +20,12 @@ validate.py                  gate: PASS/FAIL per branch + failing field; exit 1 
 feedback_schema.json         FieldReport: junction_id + outcome required, rest optional, no personal ids
 refs.py                      junction address F-LIGHT-01.1.J4 + 8-hex version of the method text
 compact.py                   FieldReport <-> one SMS/radio line; personal-identifier guard
-ledger.py                    append-only JSONL, sha256 chained; verify; merge (union by hash)
+ledger.py                    append-only JSONL, sha256 chained; verify; merge (union by hash,
+                             origin node(s) + merge event kept per record: mergeprov.py, M11)
 status.py                    per-junction field status from the ledger, triage-ordered
-checkout.py                  prints cautions first, then the entry; logs the handout
-tests/test_feedback.py       25 tests: python3 -m unittest discover -s tests
+checkout.py                  prints cautions first, then the entry, then reporter free text
+                             in a separate "unverified field note" block (M13); logs the handout
+tests/test_feedback.py       python3 -m unittest discover -s tests (prints its count)
 ```
 
 ## ORDER OF USE (part of the instrument)
@@ -181,7 +183,12 @@ checkout.py ──> handout (cautions on top) ──> build ──> FR1 line (SM
 - **Builds are counted, not reports.** Five reports from one build on
   one day in one region count as one build.
 - **Duplicates merge.** A line forwarded twice has the same hash, and
-  merge keeps one copy.
+  merge keeps one copy. It keeps every origin: each merged record lists
+  the device(s) it came from and the merge events it passed through
+  (M11). Stripping that block breaks the chain.
+- **Reporter words sit below the instrument's words.** A field report's
+  free text (failure_point, as_built_vs_specified) never prints among
+  the caution lines. It prints last, under UNVERIFIED FIELD NOTES (M13).
 
 ### Limits (thin assumptions)
 
@@ -218,8 +225,8 @@ M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coord
      status     PROPOSED (independent pass)
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
+     mitigated  D-M13
+     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
@@ -228,8 +235,8 @@ M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, 
      status     PROPOSED (independent pass)
 M13  field-report free text printed at the top of a checkout handout as a caution
      use        A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.* Queued for the next round (2026-11-05).
+     mitigated  D-M14
+     residual   Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.*
      status     PROPOSED (independent pass)
 M14  junction version hash (refs.py) excludes source and caution
      use        Source or caution text can change without the version changing, so a citation can be swapped silently.
@@ -257,5 +264,7 @@ M17  validate.py PASS
 |---|---|
 | D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
+| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. |
+| D-M14 | Field-report free text never prints among caution lines: status rows split caution (instrument lines) from field_notes (reporter text); checkout and status print field notes last, in a separate block headed UNVERIFIED FIELD NOTES, each line 'unverified field note -- ...'. |
 | D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
 <!-- misuse-section:end -->

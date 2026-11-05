@@ -13,7 +13,11 @@
 #   CHANGE_BASIS_UNSTATED         supersedes set, change_basis empty or only NONE_STATED
 #   NO_NEW_CONDITIONS_OR_EVIDENCE supersedes set, environment and evidence identical to the
 #                                 superseded record (change recorded, no material basis listed)
-#   DISSENT_DROPPED               dissent in N absent from N+1, no withdrawal by its holder
+#   DISSENT_DROPPED               dissent in N absent from N+1, no confirmed withdrawal by its holder
+#   DISSENT_WITHDRAWAL_UNCONFIRMED withdrawal with no confirmation on record: holder via a contact
+#                                 path recorded earlier, or (anonymous holder) steward + second
+#                                 under the two-person rule (M25, 2026-11-05). An unconfirmed
+#                                 withdrawal does not clear DISSENT_DROPPED.
 #   INCENTIVES_UNRECORDED         judge_incentives is null
 #   NO_FRAMING_CHECK              framing_check is null (informational)
 #   SCOPE_TRANSFER                application outside recorded scope / environment / dates,
@@ -73,7 +77,9 @@ FLAGS = {
     "NO_NEW_CONDITIONS_OR_EVIDENCE": "supersedes {prior}; environment and evidence entered are identical "
                                      "to it; no material basis listed (completeness note only)",
     "DISSENT_DROPPED": "dissent ({holder}: {position}) present in {prior}, not carried here, "
-                       "no withdrawal by its holder recorded",
+                       "no confirmed withdrawal by its holder recorded",
+    "DISSENT_WITHDRAWAL_UNCONFIRMED": "withdrawal of dissent ({holder}: {position}) from {prior} has no "
+                                      "confirmation on record: {why}",
     "INCENTIVES_UNRECORDED": "judge_incentives not recorded",
     "NO_FRAMING_CHECK": "framing_check not recorded (informational)",
     "SCOPE_TRANSFER": "application {app} differs from the recorded {what}; no transfer record",
@@ -192,6 +198,53 @@ def _dkey(d):
     return (_norm(d.get("holder")), _norm(d.get("position")))
 
 
+def _confirmation_gap(w, paths_before):
+    """M25. '' when the withdrawal's confirmation is on record, else what is missing."""
+    c = w.get("confirmation") or {}
+    holder = _norm(w.get("holder"))
+    m = c.get("method")
+    if not m:
+        return "no confirmation recorded"
+    if m == "holder_contact_path":
+        if holder in ("", "anonymous"):
+            return "holder is anonymous; steward_two_person confirmation needed"
+        pid = str(c.get("path_id") or "").strip()
+        if not pid:
+            return "holder_contact_path without path_id"
+        if (pid, holder) not in paths_before:
+            return "contact path %s not recorded for this holder before the withdrawal" % pid
+        return ""
+    if m == "steward_two_person":
+        if holder not in ("", "anonymous"):
+            return "holder is named; holder_contact_path confirmation needed"
+        st, nd = _norm(c.get("steward") or ""), _norm(c.get("second") or "")
+        if not st or not nd:
+            return "steward_two_person needs steward and second"
+        if st == nd:
+            return "steward and second are the same name"
+        return ""
+    return "confirmation method %s not in the recognized set" % m
+
+
+def _withdrawals(records):
+    """-> (set of confirmed withdrawal keys, list of DISSENT_WITHDRAWAL_UNCONFIRMED flags).
+    Contact paths count only when written earlier in the chain than the withdrawal."""
+    paths, confirmed, flags = set(), set(), []
+    for r in records:
+        b = r.get("body") or {}
+        if r.get("kind") == "contact_path":
+            paths.add((str(b.get("path_id") or "").strip(), _norm(b.get("holder"))))
+        elif r.get("kind") == "withdrawal" and b.get("withdrawn_by_holder"):
+            why = _confirmation_gap(b, paths)
+            if why:
+                flags.append(flag("DISSENT_WITHDRAWAL_UNCONFIRMED", "withdrawal:%s" % b.get("judgment_id"),
+                                  holder=b.get("holder"), position=b.get("position"),
+                                  prior=b.get("judgment_id"), why=why))
+            else:
+                confirmed.add((b.get("judgment_id"), _norm(b.get("holder")), _norm(b.get("position"))))
+    return confirmed, flags
+
+
 def _intervention_flags(iv, iv_transfers, as_of):
     a, out = iv.get("intervention_id"), []
     if _blank(iv.get("direction")):
@@ -228,8 +281,7 @@ def check(records, as_of=None):
     as_of = as_of or datetime.date.today().isoformat()
     js = judgments(records)
     by_id = dict((j.judgment_id, j) for j in js)
-    withdrawn = set((w["judgment_id"], _norm(w.get("holder")), _norm(w.get("position")))
-                    for w in bodies(records, "withdrawal") if w.get("withdrawn_by_holder"))
+    withdrawn, unconfirmed = _withdrawals(records)
     ivs = bodies(records, "intervention")
     iv_ids = set(iv["intervention_id"] for iv in ivs)
     iv_transfers = set(t.get("intervention_id") for t in bodies(records, "transfer") if t.get("intervention_id"))
@@ -276,6 +328,7 @@ def check(records, as_of=None):
                 if k not in now and (p.judgment_id,) + k not in withdrawn:
                     out.append(flag("DISSENT_DROPPED", a, prior=p.judgment_id,
                                     holder=d.get("holder"), position=d.get("position")))
+    out.extend(unconfirmed)
     for iv in ivs:
         out.extend(_intervention_flags(iv, iv_transfers, as_of))
     transfers = set(t.get("application_id") for t in bodies(records, "transfer"))

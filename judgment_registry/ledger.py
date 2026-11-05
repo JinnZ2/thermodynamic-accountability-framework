@@ -9,7 +9,8 @@
 #   {"kind", "body", "body_hash", "prev_hash", "hash"}
 #   append()  the only write; no edit or delete exists
 #   verify()  any edit, deletion or reorder breaks the chain
-#   merge()   union by body_hash into a NEW record list; inputs untouched
+#   merge()   union by body_hash into a NEW record list; inputs untouched;
+#             M11: each record keeps origin node(s) + merge event (mergeprov.py)
 #
 # A new version never edits an old one: supersession is a new record that
 # points back. superseded_by is derived here, at read time.
@@ -22,6 +23,7 @@ from dataclasses import asdict
 from schema import KIND_CLASSES, Judgment, SchemaError, SignalIntervention
 
 import headrec  # M10: head record per ledger
+import mergeprov  # M11: merge keeps origin node + merge event
 
 GENESIS = "0" * 64
 
@@ -38,10 +40,8 @@ def _h(obj):
     return hashlib.sha256(canonical(obj)).hexdigest()
 
 
-def _record(kind, body, prev):
-    bh = _h(body)
-    return {"kind": kind, "body": body, "body_hash": bh, "prev_hash": prev,
-            "hash": _h({"kind": kind, "body_hash": bh, "prev_hash": prev})}
+def _record(kind, body, prev, provenance=None):
+    return mergeprov.make_record(_h, kind, body, prev, provenance)
 
 
 def read(path):
@@ -68,8 +68,7 @@ def verify(records):
             probs.append("record %d: prev_hash does not match (deleted, inserted or reordered)" % i)
         if _h(r.get("body")) != r.get("body_hash"):
             probs.append("record %d: body changed after it was written" % i)
-        if _h({"kind": r.get("kind"), "body_hash": r.get("body_hash"),
-               "prev_hash": r.get("prev_hash")}) != r.get("hash"):
+        if not mergeprov.record_hash_ok(_h, r):     # covers provenance (M11)
             probs.append("record %d: hash mismatch" % i)
         prev = r.get("hash")
     return probs
@@ -139,20 +138,22 @@ def append(path, kind, body):
     return recs[-1]
 
 
-def merge(a, b):
+def merge(a, b, node_a="a", node_b="b"):
+    """Union by body_hash into NEW records, re-chained. M11: every output record
+    carries provenance.origins (each (node, record_hash) its body came from; a
+    body on both sides keeps both) and provenance.merges (this event appended)."""
     for name, recs in (("a", a), ("b", b)):
         probs = verify(recs)
         if probs:
             raise LedgerError("ledger %s broken: %s" % (name, probs[0]))
-    seen, out, prev = set(), [], GENESIS
-    for r in list(a) + list(b):
-        if r["body_hash"] in seen:
-            continue
-        seen.add(r["body_hash"])
-        nr = _record(r["kind"], r["body"], prev)
-        out.append(nr)
-        prev = nr["hash"]
-    return out
+    if node_a == node_b:
+        raise LedgerError("node labels must differ (both %r): origins would be indistinguishable" % node_a)
+    return mergeprov.merge(_h, [(node_a, a), (node_b, b)])
+
+
+def provenance(record):
+    """Origins + merge events of a record; a never-merged record has none."""
+    return record.get("provenance") or {"origins": [], "merges": []}
 
 
 def write_new(path, records):

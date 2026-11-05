@@ -3,9 +3,11 @@
 # Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Run before an entry is handed to anyone. Cautions print FIRST, in plain
-# language, above the method. The checkout is logged to the ledger (kind
-# "checkout": entry id + optional date/region, no personal identifiers) so
-# steps that are handed out and never reported read UNCONFIRMED, not fine.
+# language, above the method. Reporter free text (failure_point,
+# as_built_vs_specified) never prints among them: it goes LAST, in its own
+# block labelled "unverified field note" (M13). The checkout is logged to
+# the ledger (kind "checkout": entry id + optional date/region, no personal
+# identifiers) so steps that are handed out and never reported read UNCONFIRMED, not fine.
 #
 #   python3 checkout.py ENTRY.json --ledger LEDGER [--date YYYY-MM-DD] [--region R] [--dry-run]
 
@@ -28,6 +30,8 @@ def render(entry, records, n_required=status.DEFAULT_N):
         for c in r["caution"]:
             lines.append("   Field report: " + c)
         lines.append("   Do not do this step until someone has checked what went wrong.")
+        if r.get("field_notes"):
+            lines.append("   What the reporter wrote is at the end, under UNVERIFIED FIELD NOTES.")
     for r in mixed:
         lines.append("MIXED RESULTS -- %s, step %s: worked in some places and failed in others. "
                      "Compare your conditions before trying it." % (r["branch"], r["ref"].split(".")[-1]))
@@ -52,6 +56,7 @@ def render(entry, records, n_required=status.DEFAULT_N):
     lines.append("  FR1|<step address>|<version>|worked/partial/failed/UNSAFE|what happened")
     lines.append("  step addresses: " + ", ".join("%s=%s" % (k, v["version"]) for k, v in
                                                      sorted(index_entry(entry).items())))
+    lines.extend(status.field_note_block(rows))   # M13: below every caution line, separate block
     return "\n".join(lines)
 
 

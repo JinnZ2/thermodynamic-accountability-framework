@@ -9,7 +9,8 @@
 #   Application  the judgment applied to a case (scope / environment / date)
 #   Transfer     the record that says why an application outside the recorded
 #                scope was made
-#   Withdrawal   a dissent withdrawn by its own holder
+#   Withdrawal   a dissent withdrawn by its own holder (M25: with confirmation)
+#   ContactPath  id of a recorded way to reach a holder (address held locally)
 #   SignalIntervention  a recorded move along the signal axis (AMPLIFY /
 #                SUPPRESS / RECALIBRATE / NONE) relative to a band the
 #                record itself defines; a Judgment links to it by
@@ -309,6 +310,15 @@ class Transfer:
             raise TypeError("transfer needs application_id, judgment_id or intervention_id")
 
 
+# M25: a withdrawal counts only with a confirmation on record.
+#   holder_contact_path  {"method", "path_id", "confirmed_on"?}   named holder;
+#                        path_id must match a contact_path record for the same
+#                        holder written EARLIER in the chain
+#   steward_two_person   {"method", "steward", "second", "authorization_ref"?}
+#                        anonymous holder only; steward and second must differ
+CONFIRMATION_METHODS = ("holder_contact_path", "steward_two_person")
+
+
 @dataclass
 class Withdrawal:
     judgment_id: str             # the version that carried the dissent
@@ -317,8 +327,32 @@ class Withdrawal:
     withdrawn_by_holder: bool = True
     recorder: Optional[str] = None
     source: Optional[str] = None
+    confirmation: Optional[dict] = None   # M25; see CONFIRMATION_METHODS
+
+    def __post_init__(self):
+        c = self.confirmation
+        if c is not None and (not isinstance(c, dict) or c.get("method") not in CONFIRMATION_METHODS):
+            raise TypeError("confirmation.method must be one of %s" % (CONFIRMATION_METHODS,))
+
+
+@dataclass
+class ContactPath:
+    """M25: a way to reach a dissent holder, by id only. The address itself is
+    held locally (local_data/ or off-repo, D-M1); the ledger never stores it."""
+    path_id: str
+    holder: str
+    recorded_on: Optional[str] = None
+    recorder: Optional[str] = None
+    source: Optional[str] = None
+
+    def __post_init__(self):
+        if not str(self.path_id or "").strip() or not str(self.holder or "").strip():
+            raise TypeError("contact_path needs path_id and holder")
+        if " ".join(str(self.holder).lower().split()) == "anonymous":
+            raise TypeError("an anonymous holder has no contact path on record; "
+                            "use steward_two_person confirmation")
 
 
 KIND_CLASSES = {"judgment": Judgment, "application": Application,
                 "transfer": Transfer, "withdrawal": Withdrawal,
-                "intervention": SignalIntervention}
+                "intervention": SignalIntervention, "contact_path": ContactPath}
