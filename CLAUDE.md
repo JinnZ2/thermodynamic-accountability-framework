@@ -3160,6 +3160,15 @@ session's notes only.
   test fails if any flag text holds an evaluative word. J1-J3 NOT RUN /
   NOT BUILT (no DCEA code in this repo). Branch claude/judgment-registry
   off main after PR #54 merged.
+  Follow-up (layer addendum, 2026-11-04): Judgment gains layer
+  (physics | sensor | agency), layer_basis (three optional sub-blocks,
+  each with optional system_class), depends_on_layers. Flags added:
+  LAYER_UNSTATED, SKIPPED_LAYER, SUBJECT_STATUS_UNSTATED, SUBJECT_OPEN,
+  CONSENT_UNSTATED, LOOP_UNSTATED, CROSS_SYSTEM_TRANSFER, plus
+  LAYER_DEPENDENCY_NOT_FOUND (ours). Transfer now takes application_id OR
+  judgment_id. UNCHAINED_CHANGE key now includes layer. J4 (pain-axis
+  record) and J5 (anthropodenial calibration) NOT RUN; no real records
+  seeded. tests/test_layers.py 18 tests; suite 42.
 - Added `assembly_instrument/` (2026-11-03, co-authored): cross-domain
   assembly instrument keyed on FUNCTION, not material. schema.json
   (draft-07 + x-rules), entry_template.md (1:1 mirror), validate.py

@@ -11,6 +11,13 @@
 #                scope was made
 #   Withdrawal   a dissent withdrawn by its own holder
 #
+# Layers (addendum 2026-11-04): a judgment states which layer it sits on.
+#   physics   input vs operating range of the structure (measurable)
+#   sensor    edge signal + response (withdrawal, avoidance; observable)
+#   agency    who directs the input at whom; subjecthood, consent, loop
+# Each layer basis can be recorded on its own, so an OPEN agency layer does
+# not block recording the physics and sensor layers under it.
+#
 # Shape errors (wrong enum, superseded_by set by hand) are REJECTED at the
 # door. Completeness gaps are not errors: they are integrity flags, raised by
 # integrity.py, and the record is stored anyway.
@@ -22,6 +29,20 @@ JUDGE_TYPES = ("person", "body", "tradition", "court", "other")
 EVIDENCE_TAGS = ("OBSERVED", "DERIVED", "PROPOSED")
 CHANGE_BASIS = ("CONDITIONS", "EVIDENCE", "NONE_STATED")
 VOLUMES = ("thin", "medium", "solid")
+LAYERS = ("physics", "sensor", "agency")
+SUBJECT_STATUS = ("ESTABLISHED", "OPEN", "NOT_APPLICABLE")
+CONSENT = ("GIVEN", "ABSENT", "NOT_POSSIBLE", "UNKNOWN")
+LOOP = ("CLOSED", "BROKEN", "UNKNOWN")
+# system_class: free text (e.g. human, animal, plant, model). Coarse on
+# purpose; where a class boundary was a decision, say so in the record.
+BASIS_KEYS = {
+    "physics": ("input", "operating_range", "range_source", "exceeded", "system_class"),
+    "sensor": ("signal", "response", "observed", "source", "system_class"),
+    "agency": ("agent", "subject", "subject_status", "consent", "loop", "system_class"),
+}
+BASIS_ENUMS = {("agency", "subject_status"): SUBJECT_STATUS, ("agency", "consent"): CONSENT,
+               ("agency", "loop"): LOOP}
+BASIS_BOOLS = (("physics", "exceeded"), ("sensor", "observed"))
 
 # Required for completeness (MISSING_FIELD). `source` is checked separately
 # as NO_SOURCE so one gap is not counted twice.
@@ -66,6 +87,9 @@ class Judgment:
     recorder: Optional[str] = None              # role code, not a personal ID
     source: Optional[str] = None
     volume: Optional[str] = None
+    layer: Optional[str] = None                 # physics | sensor | agency
+    layer_basis: Optional[Dict] = None          # {physics: {...}|None, sensor: {...}|None, agency: {...}|None}
+    depends_on_layers: List[str] = field(default_factory=list)   # judgment_ids for lower layers
 
     def get(self, dotted):
         cur = asdict(self)
@@ -100,6 +124,36 @@ class Judgment:
             out.append("framing_check must be null or {done, variants_tried, result_text}")
         if self.supersedes and self.supersedes == self.judgment_id:
             out.append("a judgment cannot supersede itself")
+        if self.layer is not None and self.layer not in LAYERS:
+            out.append("layer must be one of %s" % (LAYERS,))
+        lb = self.layer_basis
+        if lb is not None:
+            if not isinstance(lb, dict):
+                out.append("layer_basis must be null or {physics, sensor, agency}")
+                lb = {}
+            for name, block in lb.items():
+                if name not in BASIS_KEYS:
+                    out.append("layer_basis key %r not in %s" % (name, LAYERS))
+                    continue
+                if block is None:
+                    continue
+                if not isinstance(block, dict):
+                    out.append("layer_basis.%s must be null or an object" % name)
+                    continue
+                extra = set(block) - set(BASIS_KEYS[name])
+                if extra:
+                    out.append("layer_basis.%s unknown field(s): %s" % (name, ", ".join(sorted(extra))))
+                for (bn, k), allowed in BASIS_ENUMS.items():
+                    if bn == name and block.get(k) is not None and block[k] not in allowed:
+                        out.append("layer_basis.%s.%s must be one of %s" % (name, k, allowed))
+                for bn, k in BASIS_BOOLS:
+                    if bn == name and block.get(k) not in (True, False, None):
+                        out.append("layer_basis.%s.%s must be true, false or null" % (name, k))
+        deps = self.depends_on_layers
+        if not isinstance(deps, list) or not all(isinstance(x, str) for x in deps):
+            out.append("depends_on_layers must be a list of judgment_ids")
+        elif self.judgment_id in deps:
+            out.append("a judgment cannot depend on itself")
         return out
 
     def to_dict(self):
@@ -129,10 +183,15 @@ class Application:
 
 @dataclass
 class Transfer:
-    application_id: str
-    reason: str                  # why the judgment is carried to the new scope
+    reason: str                  # why the judgment / basis is carried to the new scope or class
+    application_id: Optional[str] = None   # clears SCOPE_TRANSFER / CROSS_SYSTEM_TRANSFER on an application
+    judgment_id: Optional[str] = None      # clears CROSS_SYSTEM_TRANSFER on a judgment's layer basis
     recorder: Optional[str] = None
     source: Optional[str] = None
+
+    def __post_init__(self):
+        if not (self.application_id or self.judgment_id):
+            raise TypeError("transfer needs application_id or judgment_id")
 
 
 @dataclass

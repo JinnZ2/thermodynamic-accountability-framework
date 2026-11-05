@@ -12,7 +12,8 @@ from ledger import judgments
 
 FIELDS = ("version", "claim", "scope", "environment", "date", "date_approx", "judge",
           "judge_incentives", "reason", "evidence", "dissent", "supersedes",
-          "change_basis", "change_detail", "framing_check", "recorder", "source", "volume")
+          "change_basis", "change_detail", "framing_check", "recorder", "source", "volume",
+          "layer", "layer_basis", "depends_on_layers")
 
 
 def _index(records):
@@ -41,7 +42,7 @@ def lineage(records, jid):
             continue
         seen.add(j.judgment_id)
         out.append({"depth": depth, "judgment_id": j.judgment_id, "version": j.version,
-                    "date": j.date, "date_approx": j.date_approx,
+                    "date": j.date, "date_approx": j.date_approx, "layer": j.layer,
                     "judge": (j.judge or {}).get("name_or_body"),
                     "change_basis": list(j.change_basis or []),
                     "dissent_count": len(j.dissent or []),
@@ -55,8 +56,9 @@ def lineage(records, jid):
 def format_lineage(steps):
     lines = []
     for s in steps:
-        lines.append("%s%s v%s  %s%s  %s  basis=%s  dissent=%d" % (
+        lines.append("%s%s v%s  [%s]  %s%s  %s  basis=%s  dissent=%d" % (
             "  " * s["depth"] + ("-> " if s["depth"] else ""), s["judgment_id"], s["version"],
+            s["layer"] or "layer?",
             s["date"] or "(no date)", " (approx)" if s["date_approx"] else "",
             s["judge"] or "(no judge)", ",".join(s["change_basis"]) or "-", s["dissent_count"]))
     return "\n".join(lines)

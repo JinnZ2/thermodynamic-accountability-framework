@@ -32,7 +32,10 @@ def J(jid, **kw):
             "judge_incentives": "none documented in source S", "reason": "Stated reason text.",
             "evidence": [{"item": "e1", "tag": "OBSERVED", "source": "S"}],
             "dissent": [], "framing_check": {"done": True, "variants_tried": ["v1"], "result_text": "same"},
-            "recorder": "rec-01", "source": "synthetic source S", "volume": "thin"}
+            "recorder": "rec-01", "source": "synthetic source S", "volume": "thin",
+            "layer": "physics",
+            "layer_basis": {"physics": {"input": "load-1", "operating_range": "0-10 units",
+                                        "range_source": "S", "exceeded": False}}}
     base.update(kw)
     return base
 

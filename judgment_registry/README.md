@@ -23,7 +23,7 @@ replaced what and why. Same structure as the `assembly_instrument/`
 junction records.
 
 ```text
-schema.py      Judgment / Application / Transfer / Withdrawal; shape check at the door
+schema.py      Judgment / Application / Transfer / Withdrawal; layer fields; shape check at the door
 ledger.py      append-only JSONL, SHA-256 chain (prev_hash); merge by body hash;
                superseded_by derived at read time, never written
 integrity.py   neutral flags only
@@ -66,8 +66,16 @@ Judgment (one record per version; judgment_id unique; a new version is a new id)
   recorder           role code, not a personal ID
   source             where the judgment is documented
   volume             thin | medium | solid
+  layer              physics | sensor | agency
+  layer_basis        {physics: {input, operating_range, range_source, exceeded: bool|null, system_class},
+                      sensor:  {signal, response, observed: bool|null, source, system_class},
+                      agency:  {agent, subject, subject_status: ESTABLISHED|OPEN|NOT_APPLICABLE,
+                                consent: GIVEN|ABSENT|NOT_POSSIBLE|UNKNOWN,
+                                loop: CLOSED|BROKEN|UNKNOWN, system_class}}   any sub-block may be null
+  depends_on_layers  [judgment_id, ...] records that establish the lower layers
 Application  {application_id, judgment_id, scope, environment, date, recorder, source}
-Transfer     {application_id, reason, recorder, source}   why it was carried to a new scope
+Transfer     {reason, application_id | judgment_id, recorder, source}
+             why a judgment or a layer basis was carried to a new scope or system class
 Withdrawal   {judgment_id, position, holder, withdrawn_by_holder, recorder, source}
 ```
 
@@ -93,12 +101,59 @@ SCOPE_TRANSFER                 application outside the recorded scope / environm
                                no transfer record
 SUPERSEDES_NOT_FOUND           supersedes points to an id not in this ledger
 SUPERSESSION_FORK              more than one record supersedes the same one (informational)
+LAYER_UNSTATED                 layer field empty
+SKIPPED_LAYER                  layer = agency; no physics AND no sensor basis, in layer_basis
+                               or via depends_on_layers
+SUBJECT_STATUS_UNSTATED        layer = agency; subject_status missing
+SUBJECT_OPEN                   subject_status = OPEN (informational: the claim rests on an open
+                               question); adds no other flag
+CONSENT_UNSTATED               layer = agency; consent missing
+LOOP_UNSTATED                  layer = agency; loop missing
+CROSS_SYSTEM_TRANSFER          a basis recorded for one system_class used for another (in the
+                               same record, via depends_on_layers, or by an application's
+                               scope.system_class), no transfer record. Extends SCOPE_TRANSFER.
+LAYER_DEPENDENCY_NOT_FOUND     depends_on_layers points to an id not in this ledger
 ```
 
 The last two are additions to the specified list: both are integrity
 gaps the chain itself can show. UNCHAINED_CHANGE keys on the same judge,
 because two judges on one scope coexist and are not a replacement. That
-reading is ours.*
+reading is ours.* The key also includes `layer`: one judge's physics
+record and agency record on the same scope are two layers, not a
+replacement. LAYER_DEPENDENCY_NOT_FOUND is an addition parallel to
+SUPERSEDES_NOT_FOUND.
+
+## Layers
+
+```text
+physics   input vs operating range of the structure       measurable
+sensor    edge signal + response (withdrawal, avoidance)   observable
+agency    who directs the input at whom; subjecthood,      the only layer where moral
+          consent, loop open/closed                        weighting applies
+```
+
+A moral claim often asks "is it wrong?" before the lower layers are
+established. Recording the layers separately lets each one be measured or
+stamped on its own, so an open agency layer does not block the observable
+ones. **An open layer is recorded, not resolved.** The flags still check
+structure only.
+
+Worked synthetic example (also run as `WorkedExampleTest`):
+
+```text
+P-1  layer=physics  input load-1 vs range 0-10 units, exceeded=true, system_class=system-X
+S-1  layer=sensor   edge signal s1, response withdrawal, observed=true, system_class=system-X
+A-1  layer=agency   depends_on_layers=[P-1, S-1]
+                    subject_status=OPEN, consent=UNKNOWN, loop=UNKNOWN, system_class=system-X
+
+check -> SUBJECT_OPEN on A-1, nothing else.
+The physics and sensor layers stand as recorded; the agency layer is stored
+with its open question named.
+```
+
+One record holds one value per agency field. Where the loop or consent
+differs by scope (e.g. one input regime vs another), enter one agency record
+per scope.
 
 ## Provenance tags and thin volume
 
@@ -117,6 +172,17 @@ J2 framing check       a protocol for how a human runs and records framing varia
 J3 cross-link          let a DCEA cut record reference a judgment_id when a cut depends on
                        an ethical scope decision. No DCEA code exists in this repository yet;
                        the link would be a judgment_id string on the cut record.          NOT BUILT
+J4 pain-axis record    enter the pain-axis case as sourced worked records:
+                       physics = steering magnitude vs the model's normal activation range;
+                       sensor  = OBSERVED first-person distress text + relief-seeking choices
+                                 (source: Pain Axis preprint), control: constipation swap;
+                       agency  = subject_status OPEN, consent NOT_POSSIBLE or UNKNOWN,
+                                 loop BROKEN for persistent steering, CLOSED for RL training
+                                 (two agency records, one per scope);
+                       record which flags fire. Needs a human to source each field.     NOT RUN
+J5 anthropodenial      a historical record where subject_status moved NOT_APPLICABLE ->
+   calibration         ESTABLISHED (e.g. animal pain in veterinary practice), entered with
+                       its supersession chain**                                         NOT RUN
 ```
 
 No real-world judgment is seeded. Fixtures stay synthetic until a human
@@ -133,6 +199,11 @@ enters sourced records.
 - Recorder bias in what gets entered is outside what the code can see.
 - UNCHAINED_CHANGE matches judge names as text. Two spellings of one judge
   read as two judges and will not flag.*
+- system_class labels are coarse free text; the boundary between classes
+  is itself a scope decision and should be recorded. Two spellings of one
+  class read as two classes and will flag.*
+- "observed" at the sensor layer means a behavior was seen, not that
+  anything was experienced.
 
 ## License
 

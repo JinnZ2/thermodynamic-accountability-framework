@@ -21,11 +21,26 @@
 #   SUPERSEDES_NOT_FOUND          supersedes points to an id not in the ledger
 #   SUPERSESSION_FORK             two or more records supersede the same record (informational)
 #
+# Layer flags (addendum 2026-11-04):
+#   LAYER_UNSTATED                layer field empty
+#   SKIPPED_LAYER                 layer = agency, no physics AND no sensor basis
+#                                 (in layer_basis or via depends_on_layers)
+#   SUBJECT_STATUS_UNSTATED       layer = agency, subject_status missing
+#   SUBJECT_OPEN                  subject_status = OPEN (informational)
+#   CONSENT_UNSTATED              layer = agency, consent missing
+#   LOOP_UNSTATED                 layer = agency, loop missing
+#   CROSS_SYSTEM_TRANSFER         basis recorded for one system_class, used for another,
+#                                 no transfer record (extends SCOPE_TRANSFER)
+#   LAYER_DEPENDENCY_NOT_FOUND    depends_on_layers id not in the ledger
+#
 # UNCHAINED_CHANGE keys on the SAME JUDGE: two judges on one scope coexist
 # and are not a replacement. A judge's own later record on the same scope
-# with no link is the silent-replacement shape.
+# with no link is the silent-replacement shape. The key also carries the
+# layer: one judge's physics record and agency record on the same scope are
+# two layers, not a replacement.
 
 from ledger import bodies, judgments
+from schema import _blank
 
 FLAGS = {
     "MISSING_FIELD": "required field(s) empty: {fields}",
@@ -41,7 +56,19 @@ FLAGS = {
     "SCOPE_TRANSFER": "application {app} differs from the recorded {what}; no transfer record",
     "SUPERSEDES_NOT_FOUND": "supersedes {prior}, which is not in this ledger",
     "SUPERSESSION_FORK": "superseded by more than one record: {ids} (informational)",
+    "LAYER_UNSTATED": "layer not stated (physics | sensor | agency)",
+    "SKIPPED_LAYER": "layer is agency; no physics or sensor basis recorded here or via depends_on_layers",
+    "SUBJECT_STATUS_UNSTATED": "layer is agency; subject_status not stated",
+    "SUBJECT_OPEN": "subject_status is OPEN; the claim rests on an open question (informational)",
+    "CONSENT_UNSTATED": "layer is agency; consent not stated",
+    "LOOP_UNSTATED": "layer is agency; loop not stated",
+    "CROSS_SYSTEM_TRANSFER": "{basis} recorded for system class '{src}', used here for '{dst}'; "
+                             "no transfer record",
+    "LAYER_DEPENDENCY_NOT_FOUND": "depends_on_layers lists {dep}, which is not in this ledger",
 }
+
+AGENCY_FIELDS = (("subject_status", "SUBJECT_STATUS_UNSTATED"), ("consent", "CONSENT_UNSTATED"),
+                 ("loop", "LOOP_UNSTATED"))
 
 SCOPE_KEYS = ("who", "act_type", "conditions")
 
@@ -62,7 +89,52 @@ def _norm(v):
 
 def _scope_key(j):
     s = j.scope or {}
-    return (_norm((j.judge or {}).get("name_or_body")), _norm(s.get("who")), _norm(s.get("act_type")))
+    return (_norm((j.judge or {}).get("name_or_body")), _norm(s.get("who")), _norm(s.get("act_type")),
+            j.layer or "")
+
+
+def _block(j, name):
+    b = (j.layer_basis or {}).get(name)
+    if isinstance(b, dict) and any(not _blank(v) for v in b.values()):
+        return b
+    return None
+
+
+def _cls(j, name):
+    b = _block(j, name) if name else None
+    c = (b or {}).get("system_class")
+    return None if _blank(c) else _norm(c)
+
+
+def _layer_flags(j, by_id, jt_transfers):
+    a, out = j.judgment_id, []
+    if _blank(j.layer):
+        out.append(flag("LAYER_UNSTATED", a))
+    deps = []
+    for d in j.depends_on_layers or []:
+        if d in by_id:
+            deps.append(by_id[d])
+        else:
+            out.append(flag("LAYER_DEPENDENCY_NOT_FOUND", a, dep=d))
+    if j.layer == "agency":
+        lower = [n for n in ("physics", "sensor") if _block(j, n)]
+        lower += [d.layer for d in deps if d.layer in ("physics", "sensor")]
+        if not lower:
+            out.append(flag("SKIPPED_LAYER", a))
+        ag = _block(j, "agency") or {}
+        for key, code in AGENCY_FIELDS:
+            if _blank(ag.get(key)):
+                out.append(flag(code, a))
+        if ag.get("subject_status") == "OPEN":
+            out.append(flag("SUBJECT_OPEN", a))
+    dst = _cls(j, j.layer)
+    if dst and a not in jt_transfers:
+        sources = [("own %s basis" % n, _cls(j, n)) for n in ("physics", "sensor", "agency") if n != j.layer]
+        sources += [("%s basis of %s" % (d.layer, d.judgment_id), _cls(d, d.layer)) for d in deps]
+        for basis, src in sources:
+            if src and src != dst:
+                out.append(flag("CROSS_SYSTEM_TRANSFER", a, basis=basis, src=src, dst=dst))
+    return out
 
 
 def _evidence_set(j):
@@ -78,6 +150,7 @@ def check(records):
     by_id = dict((j.judgment_id, j) for j in js)
     withdrawn = set((w["judgment_id"], _norm(w.get("holder")), _norm(w.get("position")))
                     for w in bodies(records, "withdrawal") if w.get("withdrawn_by_holder"))
+    jt_transfers = set(t.get("judgment_id") for t in bodies(records, "transfer") if t.get("judgment_id"))
     out = []
     seen_keys = {}
     for j in js:
@@ -91,10 +164,11 @@ def check(records):
             out.append(flag("INCENTIVES_UNRECORDED", a))
         if j.framing_check is None:
             out.append(flag("NO_FRAMING_CHECK", a))
+        out.extend(_layer_flags(j, by_id, jt_transfers))
         key = _scope_key(j)
-        if all(key) and key in seen_keys and not j.supersedes:
+        if all(key[:3]) and key in seen_keys and not j.supersedes:
             out.append(flag("UNCHAINED_CHANGE", a, earlier=seen_keys[key]))
-        if all(key):
+        if all(key[:3]):
             seen_keys.setdefault(key, a)
         if j.superseded_by and len(j.superseded_by) > 1:
             out.append(flag("SUPERSESSION_FORK", a, ids=", ".join(j.superseded_by)))
@@ -132,6 +206,11 @@ def check(records):
         if diffs and ap.get("application_id") not in transfers:
             out.append(flag("SCOPE_TRANSFER", ap.get("application_id"),
                             app=ap.get("application_id"), what=", ".join(diffs)))
+        sc = (ap.get("scope") or {}).get("system_class")
+        src = _cls(j, j.layer)
+        if not _blank(sc) and src and _norm(sc) != src and ap.get("application_id") not in transfers:
+            out.append(flag("CROSS_SYSTEM_TRANSFER", ap.get("application_id"),
+                            basis="%s basis of %s" % (j.layer, j.judgment_id), src=src, dst=_norm(sc)))
     return out
 
 
