@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coordination.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-03.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Community-to-community AI coordination layer. Communities act locally;
 # AI nodes MATCH surplus to gap and PROPOSE; humans in each community

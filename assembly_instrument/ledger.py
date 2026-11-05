@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ledger.py -- CC0, stdlib only, python >= 3.5
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Append-only JSONL ledger. One line per record:
 #   {"kind": "report"|"checkout", "body": {...}, "body_hash": H(body),

@@ -1,6 +1,6 @@
 # Entry template -- mirrors schema.json
 
-Status: co-authored (Kavik + Claude), 2026-11-03. CC0.
+Status: co-authored (JinnZ2 + Claude), 2026-11-03. CC0.
 
 Fill this on paper or in a text editor, then transcribe to
 `seeds/<function>.json` and run `python3 validate.py seeds/<function>.json`.

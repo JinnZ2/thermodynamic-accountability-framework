@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # status.py -- CC0, stdlib only, python >= 3.5
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Per-junction field status from the ledger. READS entries, NEVER writes them:
 # a report can raise caution; it can never rewrite a method or a provenance tag.

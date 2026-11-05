@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # proportionality.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # D11 proportionality. Every enforcement action records the threat it
 # answers and its scope; an action broader than the logged threat is

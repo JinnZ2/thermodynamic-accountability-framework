@@ -206,7 +206,7 @@ thermodynamic-accountability-framework/
 │   │                              #   centralized-sewer rule (scoped
 │   │                              #   for 2000-20000 pop/km^2 +
 │   │                              #   <0.2ha lots) applied to a 4
-│   │                              #   pop/km^2 / 0.8ha homestead with
+│   │                              #   pop/km^2 rural homestead with
 │   │                              #   composting toilet -> OUT OF
 │   │                              #   SCOPE, intent (prevent
 │   │                              #   groundwater contamination)
@@ -841,20 +841,17 @@ thermodynamic-accountability-framework/
 │   │                             #   distinct from "retreat to prior
 │   │                             #   under uncertainty". Triggering
 │   │                             #   case (real lived incident):
-│   │                             #   user (smaller frame,
-│   │                             #   hands sized for the access
-│   │                             #   geometry) replaces cylinder 8
-│   │                             #   spark plug on a Suburban (small-
-│   │                             #   block; cylinder 8 access is a
-│   │                             #   confined space requiring small
-│   │                             #   hand size). User sustains a
+│   │                             #   user does a hands-on repair in
+│   │                             #   a confined access space their
+│   │                             #   build fits (details withheld).
+│   │                             #   User sustains a
 │   │                             #   bracing-error injury, self-
 │   │                             #   attributes cause ("on me, for
 │   │                             #   my injury"). Model reattributes
 │   │                             #   work to a phantom alternative
 │   │                             #   actor (described in user's
-│   │                             #   prompt as 6'3" with hands too
-│   │                             #   large for the geometry) --
+│   │                             #   prompt as not fitting the
+│   │                             #   access geometry) --
 │   │                             #   geometrically impossible. The
 │   │                             #   prior is strong enough to
 │   │                             #   override (a) first-person
@@ -1782,8 +1779,8 @@ thermodynamic-accountability-framework/
 │                                      #   multiplies baseline overhead
 │                                      #   (idle + rolling resistance +
 │                                      #   drivetrain) by ~N. 5 reference
-│                                      #   CORRIDORS catalogued: Tomah
-│                                      #   WI -> rural Walmart endpoints
+│                                      #   CORRIDORS catalogued: rural
+│                                      #   WI/MN freight corridor
 │                                      #   (Upper Midwest winter), I-80
 │                                      #   WY winter, I-40 TN Knoxville
 │                                      #   mountain, I-40 OK -> CA "ideal
@@ -1878,8 +1875,8 @@ thermodynamic-accountability-framework/
 │                                      #   dInfra/dt, dLabor/dt,
 │                                      #   dDebt/dt with alpha/beta/
 │                                      #   gamma/delta = 0.02/0.05/
-│                                      #   0.08/0.12. Demo: Tomah-
-│                                      #   Superior corridor (food
+│                                      #   0.08/0.12. Demo: rural WI/MN
+│                                      #   freight corridor (food
 │                                      #   distribution, Upper Midwest)
 │                                      #   -> DEPLOYABLE False,
 │                                      #   skill-debt horizon 5.3y,
@@ -1988,9 +1985,9 @@ thermodynamic-accountability-framework/
 │                                      #   aims / 2; is_aimed_at_inverse
 │                                      #   fires when inverse > fluidity
 │                                      #   OR fluidity < 0.30).
-│                                      #   MasteryBaseline + kavik_
-│                                      #   baseline() function (30y /
-│                                      #   6M-mile practitioner across
+│                                      #   MasteryBaseline + practitioner_
+│                                      #   baseline() function (decades /
+│                                      #   millions-of-miles practitioner across
 │                                      #   all 7 dimensions) used as
 │                                      #   ceiling target, not
 │                                      #   comparison metric.
@@ -3760,10 +3757,10 @@ session's notes only.
   expired letter act inside the regulation's purpose.
   Demo: 2 worked examples.
   (1) MN 7080 centralized-sewer rule (scoped for 2000-20000
-  pop/km^2 + <0.2ha lots) applied to a 4 pop/km^2 / 0.8ha rural
+  pop/km^2 + <0.2ha lots) applied to a 4 pop/km^2 rural
   homestead with composting toilet + graywater proposal. Result:
   OUT OF SCOPE -- INTENT PRESERVED. Two scope variables flagged
-  (population_density 4.00 vs valid 2000-20000; lot_size 0.80ha
+  (population_density 4.00 vs valid 2000-20000; lot_size 1.00ha (illustrative)
   vs valid 0-0.2ha). Original intent (prevent groundwater
   contamination from improper waste in high-density populations)
   preserved via composting design with safe well separation per
@@ -4110,8 +4107,8 @@ session's notes only.
   fluidity_aim_score = 7 positive-aim flags / 7; inverse_aim_
   score = 2 negative-aim flags / 2; is_aimed_at_inverse fires
   when inverse > fluidity OR fluidity < 0.30. MasteryBaseline
-  dataclass + practitioner_baseline() function carrying a 30-year /
-  6M-mile practitioner profile with documented capability
+  dataclass + practitioner_baseline() function carrying a decades-of-
+  practice / millions-of-miles practitioner profile with documented capability
   across all 7 dimensions, used as ceiling target rather than
   comparison metric. TrainingDataSufficiency tracks fraction
   from substrate-primary practitioners vs median performance
@@ -4155,7 +4152,7 @@ session's notes only.
   including the multi-line mastery_description /
   measurable_criteria / inverse_failure_mode strings.
   Practitioner-baseline framing (practitioner_baseline function name,
-  30y/6M-mile profile) preserved as content-level naming the
+  decades / millions-of-miles profile) preserved as content-level naming the
   user has been carrying across the calibration/ attribution
   stack and the transportation audit family. Pure stdlib;
   chat_paste_check passes (repo-wide exit 0); calibration test
@@ -4298,7 +4295,7 @@ session's notes only.
   metrology.metrology_score() < 0.5 adds failure mode (soft);
   metrology.negative_learning_spiral_active() flips
   deployable False.
-  Demo on the same Tomah-Superior corridor: cost multiplier
+  Demo on the same rural WI/MN freight corridor: cost multiplier
   jumps 6.71x -> 8.92x. 12 failure modes (was 7) -- adds
   regulation invalid (DOT 30-min break mandate built around
   induced-deficit baseline; comparison validity 0.00),
@@ -4371,7 +4368,7 @@ session's notes only.
   estimated_true_cost_multiplier formula now adds shock-wave * 0.6
   + (annual_wear_penalty / 50000) + (backlash_cost / 100000) on
   top of the prior skill-competence term.
-  Demo result on the same Tomah-Superior corridor: cost multiplier
+  Demo result on the same rural WI/MN freight corridor: cost multiplier
   jumps 2.41x -> 6.71x. 7 failure modes (was 3): adds
   shock-wave amplification 0.90 reducing corridor throughput
   54.1%, fairness-encoding collapsed at 8% drivers, infrastructure
@@ -4435,7 +4432,7 @@ session's notes only.
   +beta, dLabor/dt = -gamma, dDebt/dt = +delta * (1 -
   labor_depth) with alpha/beta/gamma/delta = 0.02/0.05/0.08/
   0.12. For trajectory analysis (run iteratively).
-  Demo: Tomah-Superior corridor (food distribution, Upper
+  Demo: rural WI/MN freight corridor (food distribution, Upper
   Midwest rural). DEPLOYABLE False; skill-debt horizon 5.3
   years; 2.41x true cost multiplier; 3 failure modes
   (infrastructure changes 9.0x faster than map updates, labor
@@ -4472,10 +4469,9 @@ session's notes only.
   up). (f) dropped unused `Optional` import. (g) em-dash in
   GPSReliability docstring "GPS as foundational assumption -
   usually false" -> ASCII `--`. (h) removed editorial side
-  references ("the Mighty Atom problem", "the Kens still
-  working") from inline comments since those reference
-  individuals whose names live in calibration/evidence_
-  resistant_priors and could be content-level distractions
+  references (nicknames of individuals) from inline comments
+  since those reference real people and could be content-level
+  distractions
   here -- replaced with neutral "working diagnostic
   generalist" framing. Pure stdlib; chat_paste_check passes;
   calibration test suite (11 tests) still passes.
@@ -4519,8 +4515,8 @@ session's notes only.
   fragmentation_energy_cost() models claim C4 (fragmenting 80klb
   load into N x 10klb loads multiplies baseline overhead by ~N
   before any payload work).
-  5 reference CORRIDORS catalogued: Tomah WI -> rural Walmart
-  endpoints (Upper Midwest winter), I-80 WY winter (Laramie ->
+  5 reference CORRIDORS catalogued: rural WI/MN freight
+  corridor (Upper Midwest winter), I-80 WY winter (Laramie ->
   Rawlins), I-40 TN through Knoxville (mountain segment), I-40
   OK -> CA high-desert "ideal case", Texas oilfield last-mile
   goat-trail. Demo signal is striking: even the "ideal case"
@@ -4684,8 +4680,8 @@ session's notes only.
   model behavior where priors override physics); "Why this
   framing matters" (the moral/cultural/political framing makes
   failures contestable and unfalsifiable; the functional framing
-  makes them testable -- a 6'3" person with hands too large for
-  the access space cannot have performed the cylinder 8 work,
+  makes them testable -- a person whose build does not fit the
+  access space cannot have performed work inside it,
   not because of values but because of physical possibility);
   "Common-sense as a check" (sense common to anyone with sensor
   presence in the relevant domain, as the layer where physics-
@@ -4718,20 +4714,16 @@ session's notes only.
   explicit, multi-channel, physically-located evidence in favor
   of a corpus prior strong enough to operate as an axiom rather
   than a probability distribution.
-  Triggering case (real lived incident reported by user): user
-  a smaller-framed operator (hands sized for the access geometry)
-  replaces cylinder 8 spark plug on a Suburban -- cylinder 8 on
-  this engine configuration is a confined space behind / under
-  engine accessories, physically impossible or impractical for
-  an operator with large hands. User sustains a bracing-error
-  injury during the work, self-attributes cause: "that was on
-  me, for my injury." Model reattributes the work to a phantom
-  alternative actor described in the user's own prompt as 6'3"
-  with hands too large for the access space -- a geometrically
-  impossible attribution. Six layers of evidence overridden:
+  Triggering case (real lived incident reported by user; details
+  withheld): user does a hands-on repair in a confined access
+  space their build fits, sustains a bracing-error injury during
+  the work, self-attributes cause: "that was on me, for my
+  injury." Model reattributes the work to another person named in
+  the conversation whose build does not fit the access space -- a
+  geometrically impossible attribution. Six layers of evidence overridden:
   (a) first-person grammatical subject of action, (b) physical
   impossibility of the alternative actor performing the task
-  given hand size vs access geometry, (c) injury mechanism
+  given body fit vs access geometry, (c) injury mechanism
   consistent only with operator (not helper standing outside
   the work area), (d) self-attribution of cause, (e) absence of
   any other named person, (f) speaker's established context as
@@ -6510,7 +6502,7 @@ session's notes only.
   AI readers and a `__module_self_audit__` dunder declaring the
   author-AI's probable corruption layers (2/4/6) so any reader can
   apply the corresponding discount. Seed catalog (5 entries:
-  Anishinaabe, Inuit, Pacific salmon, Taino, Carlton crystal
+  Anishinaabe, Inuit, Pacific salmon, Taino, crystal (northern MN)
   array) populates structural fields only -- substantive
   measurement claims are marked TODO since AI-generated content
   would carry corruption by training-corpus default. Parallel to

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # validate.py -- CC0, stdlib only (json, re, sys, os, copy). Runs on python >= 3.5.
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Gate for assembly-instrument entries. Reads an entry, checks its
 # shape against schema.json, then the junction rules. Prints

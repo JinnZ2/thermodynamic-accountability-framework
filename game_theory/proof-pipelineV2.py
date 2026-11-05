@@ -28,7 +28,7 @@ Each module returns a structured proof object:
 'contradiction': str,    # The specific contradiction exposed (if any)
 }
 
-Author context: Designed in a truck cab during a blizzard in Neenah, Wisconsin.
+Author context: Designed in a truck cab during a Wisconsin blizzard.
 The architect had a windshield scraper. A stranger with a plow and his kid
 showed up and refused payment. That event is not representable in the framework
 these proofs dismantle.

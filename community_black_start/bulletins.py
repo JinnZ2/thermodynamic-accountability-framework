@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # bulletins.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # D8 scheduled bulletins: plain-language public status on a fixed cadence.
 # Feeds the POPULATION SEES / DOES column (docs/black_start_workforce_dependency_gap.md).

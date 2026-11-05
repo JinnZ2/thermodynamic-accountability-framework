@@ -984,7 +984,7 @@ def differential_cascade_step(
 # =============================================================================
 
 if __name__ == "__main__":
-    # Example: Tomah-Superior corridor, food distribution
+    # Example: rural WI/MN freight corridor, food distribution
     gps = GPSReliability(
         corridor_id="tomah_superior",
         canopy_obstruction_pct=35.0,

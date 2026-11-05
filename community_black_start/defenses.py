@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # defenses.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-03.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # R8 outside actors: devastation draws outside agendas (states, groups,
 # profiteers) that exploit desperation through aid with strings, poisoned

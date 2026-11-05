@@ -1,5 +1,5 @@
 # tests/test_defenses.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude).
+# Provenance: co-authored (JinnZ2 + Claude).
 
 import json
 import os

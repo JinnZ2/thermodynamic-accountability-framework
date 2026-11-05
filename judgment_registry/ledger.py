@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ledger.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Append-only JSONL, SHA-256 hash chain. Same pattern as
 # assembly_instrument/ledger.py, kept as its own module because that one

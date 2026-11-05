@@ -1,6 +1,6 @@
 # assembly_instrument/
 
-Status: co-authored (Kavik + Claude), 2026-11-03. CC0. stdlib only;
+Status: co-authored (JinnZ2 + Claude), 2026-11-03. CC0. stdlib only;
 runs on python >= 3.5, phone-buildable.
 
 Practical knowledge for making things from local material is split

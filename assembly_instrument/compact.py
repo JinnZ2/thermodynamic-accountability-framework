@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # compact.py -- CC0, stdlib only, python >= 3.5
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # FieldReport <-> one pipe-delimited text line for SMS / radio.
 #

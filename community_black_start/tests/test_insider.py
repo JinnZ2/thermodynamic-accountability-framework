@@ -1,5 +1,5 @@
 # tests/test_insider.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 # R9 insider threat: D6 chokepoints, D7 two-person, D8 bulletins,
 # D9 grievances, D10 rotation, D11 proportionality.
 

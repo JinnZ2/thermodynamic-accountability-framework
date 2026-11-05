@@ -1,5 +1,5 @@
 # refs.py -- CC0, stdlib only, python >= 3.5
-# Status: co-authored (Kavik + Claude), 2026-11-03.
+# Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
 # Stable, SMS-short addresses for junctions, and a content version so a
 # field report binds to the exact method text it tested.

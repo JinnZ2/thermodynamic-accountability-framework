@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # scoring/rubrics.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Label sets per test, human-scoring CSV out/in, agreement (Cohen's kappa).
 # Human scoring is the required mode. Automated scores (mode "auto") are

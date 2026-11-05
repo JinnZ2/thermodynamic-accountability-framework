@@ -1,5 +1,5 @@
 # community.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude).
+# Provenance: co-authored (JinnZ2 + Claude).
 #
 # A Community records WHO locally holds each item and how long each segment
 # holds without grid (buffer_hours). Buffer duration is the restoration

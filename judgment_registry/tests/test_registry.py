@@ -1,5 +1,5 @@
 # tests/test_registry.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 # SYNTHETIC fixtures only. "Judge Q", "Council R", act type "act-7" etc. are
 # placeholders; no real-world judgment is seeded here.
 

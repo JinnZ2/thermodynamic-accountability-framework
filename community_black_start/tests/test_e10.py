@@ -1,5 +1,5 @@
 # tests/test_e10.py -- CC0, stdlib unittest
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # E10 synthetic run. Decision rule T2 was committed to
 # coordination_register.json (76cee5f) before this file existed.

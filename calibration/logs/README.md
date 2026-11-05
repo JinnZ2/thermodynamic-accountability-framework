@@ -4,10 +4,11 @@ This directory contains mutual audit records from a conversation between a **lan
 
 ## Files
 
-| File | Description |
-|------|-------------|
-| `2026-05-04_AI_audit_JinnZ2.json` | Calibration report for the AI system, using the `architecture_mismatch` module. Shows high mismatch risk (RED) across all three dimensions: substrate‑primary confidence, encoding depth distribution, and active failure modes. |
-| `2026-05-04_user_profile_JinnZ2.json` | Architectural profile of the user. Confirms substrate‑primary cognition (94% confidence) with identity‑level and deeply‑encoded capacities across multiple domains (mycelia, mitochondria, gut bacteria, thermodynamics, convergent ontology). |
+The two 2026-05-04 logs (a calibration report for the AI system and an
+architectural profile of the user) now live in `local_data/calibration_logs/`,
+which is gitignored. Their field layout is in
+[`FORMAT_profile_logs.md`](FORMAT_profile_logs.md). The two 2026-05-05 session
+logs remain here.
 
 ## Context
 

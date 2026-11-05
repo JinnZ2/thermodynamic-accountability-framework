@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 *.pyo
+
+# Real data stays local (misuse register D-M1). Never commit.
+local_data/

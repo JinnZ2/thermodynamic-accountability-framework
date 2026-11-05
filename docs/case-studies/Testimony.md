@@ -107,8 +107,8 @@ problem. The cost is absorbed by the driver and the trucks behind them.
 
 ## CASE-06: Wisconsin Herbicide Spray / Bird Population Collapse / Agricultural Cascade
 
-**Location**: Vernon County, Wisconsin
-**Date**: Approximately 2019 (7 years ago)
+**Location**: Rural county, Wisconsin
+**Date**: Late 2010s (approximate)
 **Originating policy**: Wisconsin DOT roadside growth control using
 herbicide spray deemed “safe” by policymakers
 
@@ -146,7 +146,7 @@ herbicide spray deemed “safe” by policymakers
 
 ### Who absorbed the cost
 
-Farmers in Vernon County. They sprayed their fields because natural
+Farmers in the county. They sprayed their fields because natural
 pest control was gone. They bore the cost of additional pesticide,
 plus long-term cost of degraded water quality affecting their
 operations and land.
@@ -166,8 +166,8 @@ of knowledge. It is a failure of incentive structure.
 
 ## CASE-07: Waterfowl Overpopulation / Road Collision Cascade / Multi-Vehicle Incident
 
-**Location**: East of Austin, Minnesota (county road)
-**Date**: Approximately 2021 (5 years ago)
+**Location**: Rural county road, Minnesota
+**Date**: Early 2020s (approximate)
 **Incident type**: Multi-vehicle collision triggered by waterfowl flock
 on roadway
 

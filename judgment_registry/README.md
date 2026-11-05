@@ -1,6 +1,6 @@
 # judgment_registry
 
-Provenance: co-authored (Kavik + Claude), 2026-11-04. License: CC0 1.0.
+Provenance: co-authored (JinnZ2 + Claude), 2026-11-04. License: CC0 1.0.
 Standard library only; Python 3.7+; runs on a phone.
 
 ## Principle: data integrity only

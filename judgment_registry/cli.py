@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # cli.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 #   python3 cli.py add RECORD.json        [--ledger L]   kind from the file's "kind" key
 #                                                        (judgment if absent)

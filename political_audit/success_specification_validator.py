@@ -9,7 +9,8 @@ all coupled constraint layers, then measures whether the
 system being deployed is aimed at that target or at its
 inverse.
 
-Core insight (from a 6M-mile practitioner baseline):
+Core insight (from a practitioner baseline: decades of practice,
+millions of miles):
 
   Success is not "minimize individual vehicle time."
   Success is FLUIDITY across all coupled layers:
@@ -315,8 +316,8 @@ class MasteryBaseline:
     capable of teaching it?'
     """
     practitioner_id: str
-    practitioner_field_experience_years: float
-    practitioner_total_operational_units: float  # miles, hours, etc.
+    practitioner_field_experience: str       # coarse, e.g. "decades of practice"
+    practitioner_operational_volume: str     # coarse, e.g. "millions of miles"
     practitioner_substrate_primary: bool
     practitioner_substrate_domains: List[FluidityDimension]
     documented_capability: Dict[FluidityDimension, str]
@@ -326,8 +327,8 @@ def practitioner_baseline() -> MasteryBaseline:
     """The mastery baseline used as success specification."""
     return MasteryBaseline(
         practitioner_id="long_haul_practitioner",
-        practitioner_field_experience_years=30.0,
-        practitioner_total_operational_units=6_000_000.0,  # miles
+        practitioner_field_experience="decades of practice",
+        practitioner_operational_volume="millions of miles",
         practitioner_substrate_primary=True,
         practitioner_substrate_domains=[d for d in FluidityDimension],
         documented_capability={

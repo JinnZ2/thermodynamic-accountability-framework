@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # cli.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 #   python3 cli.py register prereg/T2.json --log L
 #   python3 cli.py run prereg/T2.json --log L [--registry R] [--date D] [--recorder ROLE]

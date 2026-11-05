@@ -1,6 +1,6 @@
 # community-black-start
 
-Provenance: co-authored (Kavik + Claude), 2026-11-03. License: CC0 1.0
+Provenance: co-authored (JinnZ2 + Claude), 2026-11-03. License: CC0 1.0
 (see `LICENSE`). Standard library only; Python 3.7+; runs on a phone.
 
 Models the dependency chain for a TRUE black start: wide-area, months

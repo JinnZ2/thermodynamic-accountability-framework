@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # chainlog.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Append-only JSONL, SHA-256 hash chain, for the calibration battery.
 # Same pattern as judgment_registry/ledger.py; kept separate (and named

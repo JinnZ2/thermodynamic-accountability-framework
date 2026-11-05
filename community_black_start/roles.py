@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # roles.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # R9 insider threat: a trusted role is bought, coerced, exhausted, or acts
 # on its own agenda, or slowly gathers control. This module measures the

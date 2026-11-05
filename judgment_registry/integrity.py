@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # integrity.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Flags are about COMPLETENESS, not CORRECTNESS. Every flag says something is
 # missing, unchained or unstated. None says a judgment, judge or tradition is

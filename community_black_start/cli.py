@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # cli.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude).
+# Provenance: co-authored (JinnZ2 + Claude).
 #
 #   python cli.py check                     validation + level check
 #   python cli.py rank                      criticality, highest first

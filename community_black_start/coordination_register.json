@@ -1,5 +1,5 @@
 {
-  "provenance": "co-authored (Kavik + Claude), 2026-11-03. Design: communities act locally; AI nodes match and propose; humans in each community decide. Government action is an optional parallel input, never a prerequisite. Asterisks = thin volume. Every row PROPOSED unless stated.",
+  "provenance": "co-authored (JinnZ2 + Claude), 2026-11-03. Design: communities act locally; AI nodes match and propose; humans in each community decide. Government action is an optional parallel input, never a prerequisite. Asterisks = thin volume. Every row PROPOSED unless stated.",
   "risks": [
     {
       "id": "R1",

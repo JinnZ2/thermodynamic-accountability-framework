@@ -1,6 +1,6 @@
 # Black Start Workforce Dependency Gap
 
-Co-authored (Kavik + Claude), 2026-11-03. CC0. Tags: OBSERVED / DERIVED / PROPOSED. Thin-volume claims marked with asterisks (more = thinner).
+Co-authored (JinnZ2 + Claude), 2026-11-03. CC0. Tags: OBSERVED / DERIVED / PROPOSED. Thin-volume claims marked with asterisks (more = thinner).
 
 ## 1. The gap
 

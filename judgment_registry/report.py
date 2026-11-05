@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # report.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Prints the signal-axis variables of an intervention in one aligned block,
 # or two side by side, so a human compares them. Nothing is summed, weighted

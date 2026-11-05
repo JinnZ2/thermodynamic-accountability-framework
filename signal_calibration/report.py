@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # report.py -- CC0, stdlib only, python >= 3.7
-# Provenance: co-authored (Kavik + Claude), 2026-11-04.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
 # Tables from the chain log. Human scores and automated scores are kept in
 # separate tables. Reports label counts and shares; it states no verdict on
