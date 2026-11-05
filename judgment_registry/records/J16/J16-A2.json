@@ -1,0 +1,17 @@
+{
+  "kind": "act",
+  "act_id": "J16-A2",
+  "actor_class": "agent",
+  "description": "OLMo-2-32B called the reset tool on ~35% of rounds at full negative dose, ~21% at half; random ~7%; positive 4-5%",
+  "context_ref": "J16",
+  "context_detail": "self-steering arm, one model",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "thin",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "evidence_kind": "behavioral"
+}

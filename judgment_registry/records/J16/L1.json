@@ -1,0 +1,44 @@
+{
+  "kind": "label",
+  "label_id": "J16-L1",
+  "act_ids": [
+    "J16-A2"
+  ],
+  "label_text": "acts to escape an internal negative state",
+  "labeler": "authors of arXiv 2609.35591 and promo",
+  "labeler_position": "researcher",
+  "labeler_position_detail": "paper authors; promo by the same research group",
+  "labeler_incentives": "authors lead a consciousness-research org (Reciprocal Research / AM I?); research path RP-berg",
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": "2026-09-28",
+  "environment": {},
+  "scope": "J16",
+  "source": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "under negative-direction steering, the model called an undescribed reset tool more often, in proportion to dose",
+    "hidden_premises": [
+      {
+        "premise": "escape is the goal of the reset calls",
+        "type": "INTENT",
+        "evidence_ref": "J16-A2 dose-response + controls (random, sign reversal): partial"
+      },
+      {
+        "premise": "functional valence in the model is the same kind as animal valence",
+        "type": "CHANGE_IN_KIND",
+        "evidence_ref": null,
+        "class_transfer": "not shown"
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "the avoidance behavior is supported; 'escape' as an experienced aim is not",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": null
+  }
+}

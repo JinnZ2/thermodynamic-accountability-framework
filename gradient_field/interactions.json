@@ -264,6 +264,31 @@
           "note": "internal signature; one model, post hoc word groups"
         }
       }
+    },
+    {
+      "id": "I10",
+      "gradients": [
+        "G11"
+      ],
+      "type": "AMPLIFY",
+      "other_party": "pre-existing valence channel",
+      "predicted_outcome": "valence becomes action-relevant (preference training wires an existing signal to decisions)",
+      "evidence_refs": [
+        "J16-A4"
+      ],
+      "status": "PROPOSED",
+      "stated_for": [
+        "model"
+      ],
+      "applied_to": [
+        "model",
+        "human"
+      ],
+      "transfer_note": "parallel, not equivalence: human evidence is reward-prediction learning wiring affect to action (dopamine RPE literature); model evidence is one checkpoint series",
+      "pending_refs": [],
+      "modifiers": [],
+      "notes": "G11 (grader approval) here = preference training (DPO). model evidence: J16-A4 (OLMo-2-32B Base -> SFT -> DPO; valence vector cos ~1, behavioral effect rises most after DPO). Link: I3 (masked signals) and the pain-axis records (J4 NOT RUN); same family of findings about signals becoming behavior through training. Research path RP-berg (J16): J16, Pain Axis and the 2025 AE Studio study count as one path. PROPOSED: one model family for the training-stage result.",
+      "volume": "thin"
     }
   ]
 }

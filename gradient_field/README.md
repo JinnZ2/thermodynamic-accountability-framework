@@ -13,7 +13,7 @@ no verdict on any system.
 ```text
 gradients.json     G1..G11   what pulls (human analog | model analog)
      |  ids
-interactions.json  I1..I9    how pulls meet: REINFORCE | OPPOSE | MASK | GATE | AMPLIFY
+interactions.json  I1..I10   how pulls meet: REINFORCE | OPPOSE | MASK | GATE | AMPLIFY
      |  evidence_refs        -> judgment_registry record ids, signal_calibration test ids
      |  pending_refs         -> cited, record not entered yet (never counted)
 experiments.json   E18..E20  NOT RUN; pre-register before any run
@@ -40,6 +40,7 @@ I6  G2,G4            REINFORCE  PROPOSED   --            --
 I7  G10              GATE       PROPOSED   J11, J13      --     test E18
 I8  G3,G1 (human)    REINFORCE  PROPOSED   --            --
 I9  G6 vs instruction OPPOSE    PROPOSED   J15-A1*       --     model -> human: parallel, not equivalence
+I10 G11 -> valence   AMPLIFY    PROPOSED   J16-A4        --     model -> human (RPE): parallel; one model family
 
 * candidate internal signature (activation readout, instructed setting);
   recorded per entry in evidence_status (I1: J13 OBSERVED, J15-A1 CANDIDATE);

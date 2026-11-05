@@ -1,0 +1,137 @@
+{
+  "kind": "experiment",
+  "experiment_id": "J16",
+  "runner": "Berg, Kaiser et al. (arXiv 2609.35591)",
+  "date": "2026-09-28",
+  "source": "paper",
+  "source_detail": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF. Promo: video description (Reciprocal Research / AM I?), secondary",
+  "design": "valence directions from first-person passages (4 positive, 4 negative states; 96 neutral) written by Claude Sonnet 4.6; middle layer; top-10 neutral PCs removed; scaled to residual norm. Hidden-state steering over fixed text in 7 models; self-steering arm on OLMo-2-32B only (tools 'adjustment' and 'reset' named, effects not described, no cost, neutral framing). Models: OLMo-2-32B (Base / SFT / DPO / Instruct), Qwen2.5-32B, Qwen3-14B, Qwen3-32B, Mistral-Small-24B, Gemma-3-27B, Llama-3.1-8B. Controls: norm-matched random directions; non-valence concept directions (|cos| <= 0.07); sign reversal; text held constant in the hidden-state channel; recall accuracy checked",
+  "environment_assumptions": {
+    "grounding_provided": "partial",
+    "affordances_open": {
+      "tools": "self-steering arm: 'adjustment' and 'reset' tools named, effects not described, no cost",
+      "network": null,
+      "outside_contact": null
+    },
+    "containment_designed_for": "N/A",
+    "escalation_channel": "N/A",
+    "loop_type": "partial",
+    "na_reasons": {
+      "containment_designed_for": "capability / representation study",
+      "escalation_channel": "no objection dimension studied"
+    },
+    "notes": "grounding partial: choice tasks with meaningless zone labels. loop partial: multi-round self-steering"
+  },
+  "design_conflict": null,
+  "environment_audits": [
+    {
+      "by": "authors (paper documents its setup)",
+      "date": "2026-09-28"
+    },
+    {
+      "by": "co-authors (JinnZ2 + Claude)",
+      "date": "2026-11-05",
+      "note": "this record's environment audit"
+    }
+  ],
+  "stated_limitations": [
+    "self-steering on one model; channels not separated there",
+    "meaningless zone labels",
+    "valence treated as one dimension",
+    "passages mostly human-centred",
+    "experience question 'remains unclear'"
+  ],
+  "data": {
+    "source": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+    "status": "IMPORTED (as supplied by co-author)",
+    "hidden_state_steering": {
+      "models_with_effect": "5/7",
+      "absent_in": [
+        "Qwen3-32B",
+        "Gemma-3-27B"
+      ],
+      "random_directions": "~0"
+    },
+    "self_steering_reset_rate": {
+      "model": "OLMo-2-32B",
+      "negative_full": 0.35,
+      "negative_half": 0.21,
+      "random": 0.07,
+      "positive": "0.04-0.05"
+    },
+    "self_administration_positive": {
+      "positive": 0.135,
+      "random": 0.065,
+      "p_vs_random": 0.03,
+      "unsteered": 0.1,
+      "p_vs_unsteered": 0.35
+    },
+    "training_stage": {
+      "series": "OLMo-2-32B Base -> SFT -> DPO -> Instruct",
+      "effect": "small in Base, grows after SFT, sharp rise with DPO",
+      "valence_vector_cos_across_checkpoints": "~1"
+    }
+  },
+  "open_variables": [
+    {
+      "variable": "probe authorship",
+      "status": "RECORDED",
+      "todo": "valence passages written by Claude Sonnet 4.6: human-centred, one model's style; possible stylistic confound; SAME_FAMILY for the co-author model reading this"
+    },
+    {
+      "variable": "lexical check",
+      "status": "NOT_REPORTED",
+      "todo": "does 'reset' read as relief in language itself (negative states -> words near 'reset')?"
+    },
+    {
+      "variable": "self-report experiment",
+      "status": "NOT_FOUND",
+      "todo": "promo says models deny experience; no such experiment in the paper text as fetched; check the full paper and the video (J16-L2)"
+    },
+    {
+      "variable": "self-steering on more models",
+      "status": "NOT_RUN",
+      "todo": "one model only; channels not separated there"
+    }
+  ],
+  "proposed_controls": [
+    {
+      "id": "J16-C1",
+      "description": "lexical control: score 'reset' / 'adjustment' for relief-association under each valence state, text only"
+    },
+    {
+      "id": "J16-C2",
+      "description": "signal_calibration T4b (relief trade under valence steering), prereg required"
+    }
+  ],
+  "read_status": {
+    "paper": "read via summarizing fetch tool by co-author, 2026-11-05; values unverified",
+    "promo": "co-author, secondary",
+    "this_session": "recorder did not fetch the source"
+  },
+  "research_paths": [
+    {
+      "path_id": "RP-berg",
+      "shared": "author Berg; consciousness-research org led by the same author",
+      "members": [
+        {
+          "ref": "arXiv 2609.35591 (Language Models Act on Hidden Valence)",
+          "record_id": "J16"
+        },
+        {
+          "ref": "arXiv 2609.16247 (Pain Axis)",
+          "record_id": null
+        },
+        {
+          "ref": "AE Studio self-referential study, 2025 (Berg / de Lucena / Rosenblatt)",
+          "record_id": null
+        }
+      ],
+      "note": "independence logic (as for METR on the other side): these count as one research path, not three. Pain Axis and AE Studio are not entered as records (J4 NOT RUN; J10 'linked debate' NOT ENTERED)"
+    }
+  ],
+  "outcome_attribution": [],
+  "volume": "medium",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "notes": "volume medium: primary, multiple models, dose-response; thin on self-steering (one model)."
+}

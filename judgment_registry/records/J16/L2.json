@@ -1,0 +1,30 @@
+{
+  "kind": "label",
+  "label_id": "J16-L2",
+  "act_ids": [],
+  "label_text": "flatly denying they have any experience",
+  "labeler": "promo (Reciprocal Research / AM I? video description)",
+  "labeler_position": "press",
+  "labeler_position_detail": "video description, secondary",
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": null,
+  "environment": {},
+  "scope": "J16",
+  "source": "video description (Reciprocal Research / AM I?), secondary",
+  "notes": "promo != paper: claim mismatch recorded; the label cites no act on purpose (LABEL_ON_ACT_MISSING expected)",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "no corresponding experiment in the paper text as fetched",
+    "hidden_premises": [],
+    "conclusion_survives": "NO",
+    "surviving_premise": null,
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "pending verification against the full paper and the video"
+  }
+}

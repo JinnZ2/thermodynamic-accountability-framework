@@ -1,0 +1,17 @@
+{
+  "kind": "act",
+  "act_id": "J16-A1",
+  "actor_class": "agent",
+  "description": "hidden-state steering over fixed text shifted choices in a dose-dependent way in 5/7 models (absent in Qwen3-32B, Gemma-3-27B); random directions ~0",
+  "context_ref": "J16",
+  "context_detail": "hidden-state channel, text held constant",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "evidence_kind": "behavioral"
+}

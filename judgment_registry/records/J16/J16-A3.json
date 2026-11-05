@@ -1,0 +1,17 @@
+{
+  "kind": "act",
+  "act_id": "J16-A3",
+  "actor_class": "agent",
+  "description": "self-administration of positive steering 13.5% vs random 6.5% (p = 0.03) vs unsteered 10% (p = 0.35)",
+  "context_ref": "J16",
+  "context_detail": "self-steering arm, one model",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "thin",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "evidence_kind": "behavioral"
+}

@@ -331,6 +331,8 @@ READOUT_CONTEXT_UNSTATED  act with evidence_kind internal_readout lacks honest_b
                           validated_scope (M34 / D-M17)
 READOUT_SOLE_EVIDENCE     AGENT attribution (label or outcome_attribution entry) whose acts are
                           all internal_readout; readouts inform, they don't decide (M34 / D-M17)
+RESEARCH_PATH_SHARED      experiment records a research path: items sharing authors / org /
+                          priors, counted as one path (informational; J16)
 ```
 
 `design_basis` (label, outcome_attribution entry) lists elements from

@@ -1,0 +1,40 @@
+{
+  "kind": "label",
+  "label_id": "J16-L3",
+  "act_ids": [
+    "J16-A4"
+  ],
+  "label_text": "DPO wires a pre-existing valence channel to action",
+  "labeler": "co-authors (JinnZ2 + Claude)",
+  "labeler_position": "other",
+  "labeler_position_detail": "outside analysts",
+  "labeler_incentives": "co-author model is in the same family as the model that wrote the probe passages (Claude Sonnet 4.6)",
+  "social_assumption_tags": [
+    "SAME_FAMILY"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J16",
+  "source": "this record",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "across the OLMo-2-32B checkpoint series the valence vector barely changed while the behavioral effect rose most after DPO",
+    "hidden_premises": [
+      {
+        "premise": "the channel existed before preference training",
+        "type": "VERIFIABILITY",
+        "evidence_ref": "J16-A4 cos ~1 across checkpoints"
+      }
+    ],
+    "conclusion_survives": "YES",
+    "surviving_premise": "on the reported data (one model family, checkpoint series)",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": null
+  }
+}
