@@ -239,9 +239,9 @@ class SystemicConstraint:
         if serviceable:
             verdict = "BANKING SYSTEM SUSTAINABLE under current parameters"
         elif gap < 5.0:
-            verdict = "BANKING SYSTEM STRESSED -- gap manageable short term"
+            verdict = "BANKING SYSTEM STRESSED — gap manageable short term"
         elif gap < 15.0:
-            verdict = "BANKING SYSTEM IN CRISIS -- debt restructuring required"
+            verdict = "BANKING SYSTEM IN CRISIS — debt restructuring required"
         else:
             verdict = "BANKING SYSTEM STRUCTURALLY UNVIABLE at this energy regime"
 

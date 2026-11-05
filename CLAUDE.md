@@ -3158,8 +3158,9 @@ session's notes only.
   changing the final `exit 0` to `exit "$rc"`. in_progress/
   eroi_real_time_audit.py and banking_thermodynamic_audit.py cleaned
   like earlier pastes (straight quotes, fences and bold dunders removed,
-  em-dash dividers -> `=`, 3 em-dashes in text -> `--`, indentation
-  restored); non-whitespace content otherwise byte-identical (checked);
+  em-dash dividers -> `=`, the heading em-dash -> `--`, indentation
+  restored; the two verdict-string em-dashes kept so string literals and
+  printed output match the original); string literals verbatim (checked);
   both compile, import and run. Repo-wide paste check now exit 0.
   Register: M11 / M13 / M25 residual follow-ups queued (status.py
   origins; 280-char cap with [truncated]; steward + second via
