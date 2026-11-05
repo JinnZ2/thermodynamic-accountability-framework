@@ -3143,6 +3143,15 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- judgment_registry worked record J10 (2026-11-05, co-authored), branch
+  claude/misuse-register. records/J10a.json (agency, "Maya" loop, secondhand
+  Substack 2026-05-03), J10b.json (physics, "Stochastic Collapse", YouTube
+  comment), J10c.json (sensor, PROPOSED inadvertent-T2 reading). Schema
+  adds evidence `status` (SUPPORTED_BY_SOURCE / PARTIAL_SUPPORT_BY_SOURCE /
+  CONTRADICTED_BY_SOURCE / NOT_CHECKED) and `missing_variables`. Expected
+  vs actual flags in records/README.md: SKIPPED_LAYER (J10a) and NO_SOURCE
+  (J10b) do NOT fire under current rules; no rule changed. Linked debate
+  NOT ENTERED. tests/test_records_j10.py 6 tests; suite 69.
 - Misuse register + Step 0 audit (2026-11-05, co-authored), branch
   claude/misuse-register. Step 0: full-history pattern scan (473 commits,
   every blob) + full read of docs/case-studies/ and in_progress/; fixes

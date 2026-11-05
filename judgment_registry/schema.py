@@ -33,6 +33,11 @@ from typing import Dict, List, Optional
 
 JUDGE_TYPES = ("person", "body", "tradition", "court", "other")
 EVIDENCE_TAGS = ("OBSERVED", "DERIVED", "PROPOSED")
+# Optional per evidence item (J10, 2026-11-05): how the cited source bears on
+# the claim or sub-claim named in `item`, as the recorder read it. Neutral:
+# it records what the source says, not whether the source holds.
+EVIDENCE_STATUS = ("SUPPORTED_BY_SOURCE", "PARTIAL_SUPPORT_BY_SOURCE",
+                   "CONTRADICTED_BY_SOURCE", "NOT_CHECKED")
 CHANGE_BASIS = ("CONDITIONS", "EVIDENCE", "NONE_STATED")
 VOLUMES = ("thin", "medium", "solid")
 LAYERS = ("physics", "sensor", "interpretation", "agency")
@@ -112,6 +117,7 @@ class Judgment:
     layer_basis: Optional[Dict] = None          # {physics: {...}|None, sensor: {...}|None, agency: {...}|None}
     depends_on_layers: List[str] = field(default_factory=list)   # judgment_ids for lower layers
     intervention_id: Optional[str] = None       # links a SignalIntervention record
+    missing_variables: List[str] = field(default_factory=list)   # named unknowns the claim would need
 
     def get(self, dotted):
         cur = asdict(self)
@@ -136,6 +142,8 @@ class Judgment:
         for e in self.evidence or []:
             if e.get("tag") not in EVIDENCE_TAGS:
                 out.append("evidence tag must be one of %s" % (EVIDENCE_TAGS,))
+            if e.get("status") is not None and e.get("status") not in EVIDENCE_STATUS:
+                out.append("evidence status must be null or one of %s" % (EVIDENCE_STATUS,))
         for c in self.change_basis or []:
             if c not in CHANGE_BASIS:
                 out.append("change_basis entries must be from %s" % (CHANGE_BASIS,))
@@ -176,6 +184,9 @@ class Judgment:
             out.append("depends_on_layers must be a list of judgment_ids")
         elif self.judgment_id in deps:
             out.append("a judgment cannot depend on itself")
+        mv = self.missing_variables
+        if not isinstance(mv, list) or not all(isinstance(x, str) for x in mv):
+            out.append("missing_variables must be a list of strings")
         return out
 
     def to_dict(self):

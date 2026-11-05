@@ -110,6 +110,14 @@ Shape errors (unknown field, an enum value outside its set, a hand-set
 `superseded_by`, a duplicate id, self-supersession) are rejected. Gaps in
 completeness are not rejected: the record is stored and flagged.
 
+### Evidence status (2026-11-05)
+
+Each evidence item may carry `status`: SUPPORTED_BY_SOURCE,
+PARTIAL_SUPPORT_BY_SOURCE, CONTRADICTED_BY_SOURCE or NOT_CHECKED (or null).
+It records how the cited source bears on the item as the recorder read it;
+it does not say whether the source holds. A Judgment may also list
+`missing_variables` (named unknowns). Worked records: `records/` (J10).
+
 ## Flags
 
 ```text
