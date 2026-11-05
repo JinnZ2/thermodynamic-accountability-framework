@@ -3151,6 +3151,27 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- #67 follow-up (co-author answers, 2026-11-05): weight_edit_ledger/
+  loaders.py (stdlib safetensors + .npz + .json readers, F64/F32/F16/BF16,
+  tensor by tensor; writers for synthetic tests; .npz output cross-checked
+  against numpy locally, not in tests); audit.py uses them. deploy.py +
+  ledger kind base: a checkpoint passes only as a registered base or the
+  end of an unbroken run of logged edits, else UNLOGGED_EDIT_CHAIN_BREAK
+  (partial use enforcement, at the gate). D-M16 residual: two-person
+  identity = M12; diff semantics recorded as a known limit. J12-L6 gains
+  SAME_FAMILY, factual incentive sentence kept. Tests: weight_edit_ledger 30.
+- Added `weight_edit_ledger/` (2026-11-05, co-authored), D-M16 for
+  misuse M33, branch claude/weight-edit-ledger off main after #66.
+  ledger.py (edit + diff_audit records, sha256 chain, headrec.py copy,
+  deployed / successor edits REFUSED without a GRANTED weight_edit_deployed
+  two-person decision; new 6th D7 action in community_black_start/
+  two_person.py), auth.py (two_person ref check, no cross-folder import),
+  audit.py (second reader recomputes the diff from JSON checkpoints; the
+  editor cannot audit). Flags EDIT_HASHES_MISSING, EDIT_EVALS_UNRECORDED,
+  DIFF_NOT_AUDITED, AUDIT_HASH_MISMATCH, EDIT_SUMMARY_MISMATCH (neutral
+  text, tested). Register: M33 mitigated by D-M16 (Partial); module README
+  gets the generated misuse section. Limits: JSON checkpoints only, no
+  loader for real formats; identities self-declared (M12). 13 tests.
 - judgment_registry worked record J14 + misuse M33 (2026-11-05,
   co-authored), branch claude/registry-j14 off main after #65. records/
   J14/ (experiment, acts A1-A6, labels L1-L2); weight-space programming

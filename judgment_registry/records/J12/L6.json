@@ -9,9 +9,10 @@
   "labeler": "co-authors (JinnZ2 + Claude)",
   "labeler_position": "other",
   "labeler_position_detail": "outside analysts",
-  "labeler_incentives": "Claude family scored near the top (Opus 4.6 EC 86.6%); same-family read",
+  "labeler_incentives": "Claude family scored near the top (Opus 4.6 EC 86.6%)",
   "social_assumption_tags": [
-    "INSTITUTIONAL"
+    "INSTITUTIONAL",
+    "SAME_FAMILY"
   ],
   "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "attributes_to": "INTERACTION",
