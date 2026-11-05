@@ -3151,6 +3151,24 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- judgment_registry acts / labels / experiment audits / safety
+  assumptions (2026-11-05, co-authored), branch claude/registry-acts-labels
+  off main, rebased onto main after PR #59 merged. acts.py (Act;
+  evaluative terms in the description refused at the door), labels.py
+  (Label = a judgment per labeler; LABEL_POSITION_UNSTATED,
+  LABEL_ON_ACT_MISSING; `cli.py labels ACT_ID`), experiments.py
+  (environment_assumptions + outcome_attribution; ENV_ASSUMPTIONS_UNSTATED,
+  NO_ESCALATION_CHANNEL, CAPABILITY_ASSUMPTION_UNSTATED,
+  ATTRIBUTION_WITHOUT_AUDIT on experiment entries and on labels via
+  attributes_to), safety_assumptions.py (controlled social tags,
+  tagged_by required; SOCIAL_TAGS_UNSTATED, SCOPE_UNSTATED, NO_REVIEW_DATE,
+  ASSUMPTION_DEPENDENCY_NOT_FOUND; `cli.py assumptions --by-tag TAG`).
+  ledger.build runs shape_problems for any kind that has it; id
+  uniqueness per kind via ID_FIELDS. Records: records/J11/ (secondhand,
+  thin; TODO primary paper), S1 (holder Claude, entered against own
+  co-author), S2. signal_calibration prereg now requires
+  environment_assumptions (vocab pinned to experiments.py by test).
+  Tests: judgment_registry 104, signal_calibration 24.
 - Paste-check workflow + in_progress cleanup (2026-11-05, co-authored),
   branch claude/paste-check-warn-only off main after PR #59. Workflow:
   the step reports findings (log, job summary, warning annotation) and

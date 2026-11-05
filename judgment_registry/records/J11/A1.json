@@ -1,0 +1,16 @@
+{
+  "kind": "act",
+  "act_id": "A1",
+  "actor_class": "agent",
+  "description": "agents stated the economy lacked external reference",
+  "context_ref": "J11",
+  "context_detail": "Claude single-model world",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "secondhand press coverage, reported 2026-09-15; primary paper not read (TODO: replace with the paper)",
+  "volume": "thin",
+  "status": "REPORTED_SECONDHAND",
+  "notes": "date within the 16-day run, not reported",
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

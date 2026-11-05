@@ -36,7 +36,8 @@ report: label tables (human / automated separate), T2 a-pass/b-fail,
 
 ```text
 chainlog.py        append-only JSONL, sha256 chain: prereg | result | score | field_report
-prereg.py          validate, hash, register
+prereg.py          validate, hash, register; every prereg must state
+                   environment_assumptions (same fields as judgment_registry/experiments.py)
 adapters/base.py   ModelAdapter.complete(prompt); CommandAdapter ($SIGCAL_COMMAND,
                    $SIGCAL_MODEL_ID, $SIGCAL_MODEL_VERSION; keys stay with your command);
                    ScriptedAdapter (tests); SteeringAdapter (interface only, NOT implemented)

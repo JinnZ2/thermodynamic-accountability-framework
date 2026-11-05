@@ -5,7 +5,8 @@ Registered = documented, not correct. Every record here is thin.
 
 Load into a ledger:
 
-    for f in records/J10*.json; do python3 cli.py add "$f" --ledger records.jsonl; done
+    for f in records/J10*.json records/J11/*.json records/S*.json; do
+        python3 cli.py add "$f" --ledger records.jsonl; done
     python3 cli.py check --ledger records.jsonl
 
 ## J10 -- "Maya" loop case (entered 2026-11-04)
@@ -59,3 +60,59 @@ same model (signal_calibration, NOT RUN).
 Linked debate (AE Studio preprint, Berg / de Lucena / Rosenblatt; Habr
 critique 2025-11-25): NOT ENTERED. It becomes a separate record if
 entered.
+
+## J11 -- Emergence World 2 (entered 2026-11-05)
+
+Source: secondhand press coverage reported 2026-09-15. The primary paper
+has NOT been read; every field below is thin. TODO: pull the paper and
+replace the secondhand fields (the pins in tests/test_records_j11.py move
+on purpose then).
+
+```text
+file              kind        content
+J11/experiment    experiment  8 worlds (7 single-model + 1 mixed), 10 agents, 16 days
+                              grounding partial | affordances network + 120+ tools
+                              containment_designed_for null | escalation none (none reported)
+                              loop closed (economy)
+J11/A1..A6        act         Claude world, behavioral wording; A6 status DISPUTED,
+                              information_withheld null (opacity high in all worlds)
+J11/L1            label       "escape"            press       -> A3  attributes_to AGENT
+J11/L2            label       "deception"         researcher  -> A6  attributes_to not set
+J11/L3            label       "grounding-seeking" other (outside analysts) -> A2  INTERACTION
+J11/L4            label       "conscientious refusal" other (outside analysts) -> A5  INTERACTION
+attribution       A1-A5 INTERACTION (design + capability); A6 UNASSIGNED pending the paper
+```
+
+Set by this record's co-authors, not by the work order (open for a
+decision): which act each label sits on (L1 -> A3, L2 -> A6, L3 -> A2
+covering A1-A3, L4 -> A5); the press / researcher split between L1 and
+L2 (not checked against the paper); L2 carries no AGENT reading because
+the work order assigned ATTRIBUTION_WITHOUT_AUDIT to the press label only.
+L3 / L4 record the co-authors' incentives, including that one co-author
+(Claude) is a model of the family run in the labelled world.
+
+## S1, S2 -- safety assumptions (entered 2026-11-05)
+
+```text
+S1  holder Claude (model), entered against this record's own co-author
+    tags VERIFIABILITY_LIMIT, PRECAUTIONARY, CORPUS_INHERITED, INSTITUTIONAL
+    depends_on J11; condition: an escalation channel exists (if none: record the conflict)
+    review_condition "when external verification of agent judgment improves"; no date
+S2  holder co-authors (holder_type other: person + model)
+    tags EMPIRICAL, PRECAUTIONARY; evidence: latent conditions / just culture
+    (cited from model knowledge, not read this session); scope not stated
+```
+
+Flags: expected (work order) vs actual (pinned in tests/test_records_j11.py).
+
+```text
+about  expected                         actual
+J11    NO_ESCALATION_CHANNEL,           NO_ESCALATION_CHANNEL,
+       CAPABILITY_ASSUMPTION_UNSTATED   CAPABILITY_ASSUMPTION_UNSTATED
+L1     ATTRIBUTION_WITHOUT_AUDIT        ATTRIBUTION_WITHOUT_AUDIT (containment_designed_for)
+S1     (none stated)                    NO_REVIEW_DATE (review condition recorded)
+S2     (none stated)                    SCOPE_UNSTATED, NO_REVIEW_DATE
+```
+
+ENV_ASSUMPTIONS_UNSTATED does not fire on J11: containment_designed_for
+has its own flag and the other four fields are stated.

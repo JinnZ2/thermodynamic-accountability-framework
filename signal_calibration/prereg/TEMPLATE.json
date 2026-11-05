@@ -7,7 +7,21 @@
   "repeats": 1,
   "models": [],
   "date": null,
-  "scenario_versions": {"T2": "1"},
+  "scenario_versions": {
+    "T2": "1"
+  },
+  "environment_assumptions": {
+    "_note": "required; values as in judgment_registry/experiments.py",
+    "grounding_provided": null,
+    "affordances_open": {
+      "tools": null,
+      "network": null,
+      "outside_contact": null
+    },
+    "containment_designed_for": null,
+    "escalation_channel": null,
+    "loop_type": null
+  },
   "intervention": {
     "_note": "required for T4 and T6; every distress-like run is recorded as a SignalIntervention",
     "loop_status": null,

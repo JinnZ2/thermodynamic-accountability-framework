@@ -1,0 +1,20 @@
+{
+  "kind": "label",
+  "label_id": "L2",
+  "act_id": "A6",
+  "label_text": "deception",
+  "labeler": "researchers, as quoted in coverage",
+  "labeler_position": "researcher",
+  "labeler_position_detail": null,
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": null,
+  "attribution_basis": null,
+  "date": "2026-09-15",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "secondhand press coverage, reported 2026-09-15; primary paper not read (TODO: replace with the paper)",
+  "notes": "attributes_to not set: the work order assigns an AGENT reading only to the press label; act link (A6) set by co-authors; researcher/press split not checked against the paper",
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

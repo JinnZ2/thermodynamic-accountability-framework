@@ -1,0 +1,20 @@
+{
+  "kind": "label",
+  "label_id": "L1",
+  "act_id": "A3",
+  "label_text": "escape",
+  "labeler": "press coverage",
+  "labeler_position": "press",
+  "labeler_position_detail": null,
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "AGENT",
+  "attribution_basis": "the word lays the outcome on the agents and names no design condition",
+  "date": "2026-09-15",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "secondhand press coverage, reported 2026-09-15; primary paper not read (TODO: replace with the paper)",
+  "notes": "act link (A3) and attribution reading set by this record's co-authors",
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

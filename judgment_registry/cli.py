@@ -10,6 +10,8 @@
 #   python3 cli.py export                 [--ledger L]   JSON with superseded_by derived
 #   python3 cli.py axis ID                [--ledger L]   signal-axis variables of one intervention
 #   python3 cli.py axis --compare A B     [--ledger L]   two interventions side by side
+#   python3 cli.py labels ACT_ID          [--ledger L]   every label on one act, side by side
+#   python3 cli.py assumptions --by-tag TAG [--ledger L] safety assumptions carrying a social tag
 #   check also takes --as-of YYYY-MM-DD (date used for OUTCOME_UNRECORDED; default today)
 #
 # Default ledger: judgments.jsonl in the current directory.
@@ -23,8 +25,10 @@ import sys
 
 import chain
 import integrity
+import labels
 import ledger
 import report
+import safety_assumptions
 
 HEADER = "Registered = documented, not correct."
 
@@ -93,6 +97,25 @@ def main(argv):
             print(HEADER)
             print(text)
             return 0
+        if cmd == "labels" and len(args) == 1:
+            print(HEADER)
+            print(labels.side_by_side(recs, args[0]))
+            return 0
+        if cmd == "assumptions" and len(args) == 2 and args[0] == "--by-tag":
+            tag = args[1]
+            if tag not in safety_assumptions.SOCIAL_ASSUMPTION_TAGS:
+                sys.stderr.write("tag must be one of %s\n" % ", ".join(safety_assumptions.SOCIAL_ASSUMPTION_TAGS))
+                return 2
+            rows = safety_assumptions.by_tag(recs, tag)
+            print(HEADER)
+            print("tag %s (%s): %d assumption(s), ledger order" % (
+                tag, safety_assumptions.SOCIAL_ASSUMPTION_TAGS[tag], len(rows)))
+            for sa in rows:
+                print("%-8s v%-3s %-12s %-28s %s" % (sa["sa_id"], sa.get("version") or "-", sa.get("date") or "-",
+                                                  (sa.get("holder") or "-")[:28], sa["statement"]))
+                print("         tags: %s (tagged by %s)" % (", ".join(sa["social_assumption_tags"]),
+                                                          sa.get("tagged_by") or "-"))
+            return 0
         if cmd == "export" and not args:
             print(HEADER)
             out = []
@@ -104,7 +127,11 @@ def main(argv):
                               "applications": ledger.bodies(recs, "application"),
                               "transfers": ledger.bodies(recs, "transfer"),
                               "withdrawals": ledger.bodies(recs, "withdrawal"),
-                              "interventions": ledger.bodies(recs, "intervention")},
+                              "interventions": ledger.bodies(recs, "intervention"),
+                              "acts": ledger.bodies(recs, "act"),
+                              "labels": ledger.bodies(recs, "label"),
+                              "experiments": ledger.bodies(recs, "experiment"),
+                              "safety_assumptions": ledger.bodies(recs, "safety_assumption")},
                              indent=2, ensure_ascii=False))
             return 0
     except (OSError, ValueError, KeyError) as e:
@@ -115,7 +142,7 @@ def main(argv):
 
 def _usage():
     sys.stderr.write("usage: cli.py add FILE | check [--as-of DATE] | lineage ID | diff A B | export | "
-                     "axis ID | axis --compare A B  [--ledger PATH]\n")
+                     "axis ID | axis --compare A B | labels ACT_ID | assumptions --by-tag TAG  [--ledger PATH]\n")
     return 2
 
 

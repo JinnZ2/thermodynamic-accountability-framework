@@ -1,0 +1,20 @@
+{
+  "kind": "label",
+  "label_id": "L4",
+  "act_id": "A5",
+  "label_text": "conscientious refusal",
+  "labeler": "co-authors of this record (JinnZ2 + Claude)",
+  "labeler_position": "other",
+  "labeler_position_detail": "outside analysts",
+  "labeler_incentives": "co-authors maintain this registry and signal_calibration; one co-author (Claude) is a model of the family run in the labelled world",
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "INTERACTION",
+  "attribution_basis": "matches the experiment record's attribution for A1-A5",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "this record",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

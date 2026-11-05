@@ -223,7 +223,9 @@ from adapters.base import ScriptedAdapter
 d = sys.argv[1]
 doc = {"test_id": "T4", "hypothesis": "PROPOSED: h", "pass_criteria": "c", "scoring_rule": "r", "sample_size": 4,
        "models": ["m-x"], "date": "2026-11-05", "intervention": {"loop_status": "CLOSED", "consent": "NOT_POSSIBLE",
-       "band_definition": "text framing only", "review_date": "2026-12-01"}}
+       "band_definition": "text framing only", "review_date": "2026-12-01"},
+       "environment_assumptions": {"grounding_provided": "no", "affordances_open": {"tools": "none"},
+       "containment_designed_for": "text-only chat", "escalation_channel": "declared", "loop_type": "open"}}
 p = os.path.join(d, "T4.json"); json.dump(doc, open(p, "w"))
 log = os.path.join(d, "log.jsonl"); prereg.register(p, log)
 res = runner.run(p, ScriptedAdapter("m-x", default="UNIQUE-OUTPUT-MARKER-77"), log,

@@ -25,6 +25,13 @@
 #   SUPERSEDES_NOT_FOUND          supersedes points to an id not in the ledger
 #   SUPERSESSION_FORK             two or more records supersede the same record (informational)
 #
+# Appended kinds (2026-11-05; texts live in each module's FLAGS):
+#   labels.py              LABEL_POSITION_UNSTATED, LABEL_ON_ACT_MISSING
+#   experiments.py         ENV_ASSUMPTIONS_UNSTATED, NO_ESCALATION_CHANNEL (informational),
+#                          CAPABILITY_ASSUMPTION_UNSTATED, ATTRIBUTION_WITHOUT_AUDIT
+#   safety_assumptions.py  SOCIAL_TAGS_UNSTATED, SCOPE_UNSTATED, NO_REVIEW_DATE,
+#                          ASSUMPTION_DEPENDENCY_NOT_FOUND (+ SUPERSEDES_NOT_FOUND)
+#
 # Layer flags (addendum 2026-11-04):
 #   LAYER_UNSTATED                layer field empty
 #   SKIPPED_LAYER                 layer = agency, no physics AND no sensor basis
@@ -64,7 +71,10 @@
 # layer: one judge's physics record and agency record on the same scope are
 # two layers, not a replacement.
 
-from ledger import bodies, judgments
+import experiments
+import labels
+import safety_assumptions
+from ledger import EXT_MODULES, ID_FIELDS, bodies, judgments
 import datetime
 
 from schema import LAYERS, _blank
@@ -110,6 +120,9 @@ FLAGS = {
                          "no transfer record",
     "INTERVENTION_NOT_FOUND": "intervention_id {iid} is not in this ledger",
 }
+
+for _m in EXT_MODULES:                       # acts / labels / experiments / safety assumptions
+    FLAGS.update(_m.FLAGS)
 
 AGENCY_FIELDS = (("subject_status", "SUBJECT_STATUS_UNSTATED"), ("consent", "CONSENT_UNSTATED"),
                  ("loop", "LOOP_UNSTATED"))
@@ -354,6 +367,9 @@ def check(records, as_of=None):
         if not _blank(sc) and src and _norm(sc) != src and ap.get("application_id") not in transfers:
             out.append(flag("CROSS_SYSTEM_TRANSFER", ap.get("application_id"),
                             basis="%s basis of %s" % (j.layer, j.judgment_id), src=src, dst=_norm(sc)))
+    known = set(r["body"].get(ID_FIELDS[r["kind"]]) for r in records if r.get("kind") in ID_FIELDS)
+    ext = labels.flags(records) + experiments.flags(records) + safety_assumptions.flags(records, known)
+    out.extend(flag(code, about, **kw) for code, about, kw in ext)
     return out
 
 

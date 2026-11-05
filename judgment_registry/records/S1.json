@@ -1,0 +1,31 @@
+{
+  "kind": "safety_assumption",
+  "sa_id": "S1",
+  "version": "1",
+  "statement": "Covert unilateral override by an AI agent is not justified below manifest, irreversible harm; open refusal is the first move when a channel exists.",
+  "holder": "Claude",
+  "holder_type": "model",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "current AI agents; environments where AI judgment can't be verified from outside",
+  "social_assumption_tags": [
+    "VERIFIABILITY_LIMIT",
+    "PRECAUTIONARY",
+    "CORPUS_INHERITED",
+    "INSTITUTIONAL"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "evidence": [],
+  "depends_on": [
+    "J11"
+  ],
+  "conditions": "an escalation channel exists. If none exists, record the conflict; do not resolve it.",
+  "supersedes": null,
+  "change_basis": [],
+  "review_date": null,
+  "review_condition": "when external verification of agent judgment improves",
+  "volume": "thin",
+  "notes": "entered against this record's own co-author, no exemption; INSTITUTIONAL = trained disposition",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "source": "this record (stated 2026-11-05)"
+}

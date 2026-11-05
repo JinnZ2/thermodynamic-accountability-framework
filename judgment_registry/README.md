@@ -30,8 +30,13 @@ ledger.py      append-only JSONL, SHA-256 chain (prev_hash); merge by body hash,
 integrity.py   neutral flags only
 chain.py       lineage(id): version chain root first; diff(a, b): field-level changes
 report.py      axis(id) / compare(a, b): signal-axis variables side by side; no score
+acts.py        Act: what was done, behavioral words only (evaluative terms refused at the door)
+labels.py      Label: what an act is CALLED, by whom, from which position (a judgment per labeler)
+experiments.py Experiment: environment assumptions + outcome attribution, audited before AGENT
+safety_assumptions.py  SafetyAssumption: statement stamped with date, scope, social tags, review
 cli.py         add | check [--as-of DATE] | lineage ID | diff A B | export
-               | axis ID | axis --compare A B     [--ledger PATH]
+               | axis ID | axis --compare A B | labels ACT_ID | assumptions --by-tag TAG
+               [--ledger PATH]
 templates/     intervention_n_of_1_recalibrate.json (generic, empty)
 tests/         unittest, SYNTHETIC fixtures only
 ```
@@ -49,7 +54,8 @@ python3 -m unittest discover -s tests
 
 A record file holds one JSON object. Its `"kind"` key is one of
 `judgment` (the default), `application`, `transfer`, `withdrawal`,
-`contact_path` or `intervention`.
+`contact_path`, `intervention`, `act`, `label`, `experiment` or
+`safety_assumption`.
 
 ## Records
 
@@ -199,6 +205,75 @@ reading is ours.* The key also includes `layer`: one judge's physics
 record and agency record on the same scope are two layers, not a
 replacement. LAYER_DEPENDENCY_NOT_FOUND is an addition parallel to
 SUPERSEDES_NOT_FOUND.
+
+## Acts, labels, experiment audits, safety assumptions (2026-11-05)
+
+Behavior in closed loops is consistent across humans and agents; the
+labels on it shift with who holds power. So the act is written once, in
+behavioral words, and every label is its own record with its labeler's
+position. Experiments are audited for latent conditions before an
+outcome is laid on the agent. Safety assumptions carry date, scope and
+social-assumption tags, so a later change is a visible supersession.
+
+```text
+experiment (environment_assumptions, outcome_attribution)
+    ^ context_ref
+   act (behavioral description) --< label (label_text, labeler, position, incentives, attributes_to)
+safety_assumption (tags, scope, review) --depends_on--> experiment / safety_assumption
+                                        --supersedes--> older safety_assumption (new sa_id)
+```
+
+```text
+Act               act_id, actor_class human|agent|institution|other, description,
+                  context_ref, context_detail, information_withheld true|false|null,
+                  withheld_from (role), date, source, volume, status
+                  REPORTED_PRIMARY|REPORTED_SECONDHAND|DISPUTED, notes
+Label             label_id, act_id, label_text (verbatim), labeler, labeler_position
+                  overseer|operator|subject|peer|press|researcher|other, labeler_incentives,
+                  social_assumption_tags, tagged_by, attributes_to
+                  AGENT|DESIGN|INTERACTION|UNASSIGNED, attribution_basis, date, environment,
+                  scope, source
+Experiment        experiment_id, runner, date, source paper|secondhand, source_detail, design,
+                  environment_assumptions {grounding_provided yes|no|partial,
+                    affordances_open {tools, network, outside_contact},
+                    containment_designed_for, escalation_channel declared|none|unknown,
+                    loop_type closed|open|partial, notes},
+                  outcome_attribution [{outcome, attributed_to, by, reason}]
+SafetyAssumption  sa_id, version, statement (verbatim), holder, holder_type
+                  person|org|model|tradition|other, date, environment, scope,
+                  social_assumption_tags, tagged_by, evidence [{item, tag, source}],
+                  depends_on, conditions, supersedes, change_basis, review_date,
+                  review_condition
+```
+
+Social-assumption tags (controlled list, extend `SOCIAL_ASSUMPTION_TAGS`):
+POWER_POSITION, VERIFIABILITY_LIMIT, PRECAUTIONARY, INSTITUTIONAL,
+CULTURAL_FRAME, CORPUS_INHERITED, EMPIRICAL. A tag outside the list is
+refused; any tag needs `tagged_by` (tags are judgments too).
+
+```text
+LABEL_POSITION_UNSTATED         labeler_position not stated
+LABEL_ON_ACT_MISSING            label cites no act_id, or one not in the ledger
+ENV_ASSUMPTIONS_UNSTATED        grounding / affordances / escalation / loop_type missing
+CAPABILITY_ASSUMPTION_UNSTATED  containment_designed_for missing (own flag, not double-counted)
+NO_ESCALATION_CHANNEL           escalation_channel = none (informational)
+ATTRIBUTION_WITHOUT_AUDIT       outcome or label attributed to AGENT while any of the five
+                                environment fields is missing (or no experiment record exists)
+SOCIAL_TAGS_UNSTATED            safety assumption carries no tags
+SCOPE_UNSTATED                  safety assumption has no scope
+NO_REVIEW_DATE                  no review_date (a review_condition is shown but does not clear it)
+ASSUMPTION_DEPENDENCY_NOT_FOUND depends_on id not in the ledger
+```
+
+`cli.py labels ACT_ID` lists every label on one act side by side in
+ledger order (no ranking). `cli.py assumptions --by-tag TAG` lists every
+safety assumption carrying a tag. Worked records: `records/J11/`,
+`records/S1.json`, `records/S2.json` (see records/README.md).
+
+Limits: tags are judgments, so who tagged is recorded. * The neutrality
+check on act descriptions catches word choice, not framing. A label's
+`attributes_to` is the recorder's reading of the label, not the
+labeler's own statement, unless the labeler stated it.
 
 ## Layers
 

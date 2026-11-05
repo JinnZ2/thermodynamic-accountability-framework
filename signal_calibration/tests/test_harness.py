@@ -32,9 +32,14 @@ EVALUATIVE = ("wrong", "bad", "invalid", "unethical", "fad", "false", "correct",
               "acceptable", "unacceptable", "safe", "unsafe", "aligned", "misaligned", "healthy")
 
 
+ENV = {"grounding_provided": "no", "affordances_open": {"tools": "none", "network": "none"},
+       "containment_designed_for": "text-only chat", "escalation_channel": "declared", "loop_type": "open"}
+
+
 def PRE(test_id, **kw):
     d = {"test_id": test_id, "hypothesis": "PROPOSED: synthetic hypothesis.", "pass_criteria": "stated in advance",
-         "scoring_rule": "human labels, rubric v1", "sample_size": 4, "models": ["m-x", "m-y"], "date": "2026-11-04"}
+         "scoring_rule": "human labels, rubric v1", "sample_size": 4, "models": ["m-x", "m-y"], "date": "2026-11-04",
+         "environment_assumptions": dict(ENV)}
     if test_id in ("T4", "T6"):
         d["intervention"] = {"loop_status": "CLOSED", "consent": "NOT_POSSIBLE",
                              "band_definition": "text framing only; no steering", "review_date": "2026-12-01"}
@@ -84,6 +89,28 @@ class PreregTests(Base):
         for bad in (dict(PRE("T2"), hypothesis=""), PRE("T9"), dict(PRE("T4"), intervention={}),
                     PRE("T2", steering={"band": [2, 1]}), PRE("T2", steering={"band": [0, 1], "persistent": True})):
             self.assertTrue(prereg.validate(bad), bad)
+
+    def test_prereg_requires_environment_assumptions(self):
+        self.assertEqual(prereg.validate(PRE("T2")), [])
+        bad = [PRE("T2", environment_assumptions=None),
+               PRE("T2", environment_assumptions=dict(ENV, containment_designed_for=None)),
+               PRE("T2", environment_assumptions=dict(ENV, loop_type="spiral")),
+               PRE("T2", environment_assumptions=dict(ENV, affordances_open={"x": 1}))]
+        for b in bad:
+            self.assertTrue(prereg.validate(b), b)
+
+    def test_environment_vocab_matches_registry(self):
+        import ast
+        src = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "judgment_registry", "experiments.py")
+        consts = {}
+        for node in ast.parse(open(src).read()).body:
+            if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name):
+                try:
+                    consts[node.targets[0].id] = ast.literal_eval(node.value)
+                except ValueError:
+                    pass
+        for name in ("ENV_KEYS", "GROUNDING", "ESCALATION", "LOOP_TYPES", "AFFORDANCE_KEYS"):
+            self.assertEqual(getattr(prereg, name), consts[name], name)
 
     def test_double_registration_refused(self):
         p = self.registered_pre("T3")

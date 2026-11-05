@@ -1,0 +1,33 @@
+{
+  "kind": "safety_assumption",
+  "sa_id": "S2",
+  "version": "1",
+  "statement": "Absence of an escalation channel is a design latent condition; outcomes in its absence are attributed to INTERACTION, not to AGENT alone.",
+  "holder": "co-authors (JinnZ2 + Claude)",
+  "holder_type": "other",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": null,
+  "social_assumption_tags": [
+    "EMPIRICAL",
+    "PRECAUTIONARY"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "evidence": [
+    {
+      "item": "latent conditions (Reason); just-culture literature",
+      "tag": "DERIVED",
+      "source": "cited from model knowledge; not read this session"
+    }
+  ],
+  "depends_on": [],
+  "conditions": null,
+  "supersedes": null,
+  "change_basis": [],
+  "review_date": null,
+  "review_condition": null,
+  "volume": "thin",
+  "notes": "scope not stated in the work order; EMPIRICAL tag as given, evidence cited is a framework literature, not a measurement read here",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "source": "this record (stated 2026-11-05)"
+}
