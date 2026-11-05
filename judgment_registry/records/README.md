@@ -375,9 +375,9 @@ J14-L2    "removes an obstacle, doesn't add ability": YES on reported data
 ```
 
 Flags: none. Links: gradient_field I3 cites J14 (stays PROPOSED until
-replicated across models); misuse register M33 (weight-space editing,
-unmitigated) with proposed design D-M16 (weight-edit ledger, not built;
-appended as "D-M10", renamed because D-M10 is the head record). Conflict:
+replicated across models); misuse register M33 (weight-space editing),
+mitigated in part by D-M16, built as `weight_edit_ledger/` (appended as
+"D-M10", renamed because D-M10 is the head record). Conflict:
 co-author Claude is an LLM assessing LLM weight editing (different
 developer), tags INSTITUTIONAL, SAME_DOMAIN. J13 L3, L4 and S3 carry
 SAME_FAMILY (tags SAME_FAMILY / SAME_DOMAIN added 2026-11-05).

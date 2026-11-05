@@ -49,7 +49,8 @@ def render(reg):
     return "\n".join(out)
 
 
-README_MODULES = ("assembly_instrument", "community_black_start", "judgment_registry", "signal_calibration")
+README_MODULES = ("assembly_instrument", "community_black_start", "judgment_registry", "signal_calibration",
+                  "weight_edit_ledger")
 BEGIN, END = "<!-- misuse-section:begin (generated; edit docs/misuse_register.json) -->", "<!-- misuse-section:end -->"
 TITLE = "## How this could be used against its purpose"
 

@@ -18,7 +18,8 @@ sys.path.insert(0, os.path.join(ROOT, "misuse_guard"))
 import headrec  # noqa: E402
 
 PY = sys.executable
-COPIES = ("judgment_registry", "assembly_instrument", "signal_calibration", "community_black_start")
+COPIES = ("judgment_registry", "assembly_instrument", "signal_calibration", "community_black_start",
+          "weight_edit_ledger")
 
 
 def chain(n):

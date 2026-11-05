@@ -2,10 +2,11 @@
 # two_person.py -- CC0, stdlib only, python >= 3.7
 # Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
-# D7 two-person rule (same principle as nuclear custody). Five actions need
+# D7 two-person rule (same principle as nuclear custody). Six actions need
 # two roles from different households (confirm_dissent_withdrawal added
 # 2026-11-05 for judgment_registry M25: an anonymous holder's dissent
-# withdrawal is confirmed by a steward + second through this rule):
+# withdrawal is confirmed by a steward + second through this rule;
+# weight_edit_deployed added 2026-11-05 for weight_edit_ledger D-M16):
 #
 #   authorize(action, role_a, role_b, ledger, networks, today)
 #     ├─ same holder ............................... DENIED
@@ -29,7 +30,7 @@ import coordination as co
 import roles as rl
 
 ACTIONS = ("release_critical_stock", "energize_or_switch", "ledger_quarantine", "accept_flagged_aid",
-           "confirm_dissent_withdrawal")
+           "confirm_dissent_withdrawal", "weight_edit_deployed")   # weight_edit_deployed: D-M16
 
 
 def check(action, role_a, role_b, networks=None, today=None):

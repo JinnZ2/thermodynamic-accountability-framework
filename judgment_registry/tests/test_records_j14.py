@@ -72,10 +72,10 @@ class Register(unittest.TestCase):
         with open(os.path.join(os.path.dirname(ROOT), "docs", "misuse_register.json"), encoding="utf-8") as f:
             reg = json.load(f)
         m33 = [e for e in reg["entries"] if e["id"] == "M33"][0]
-        self.assertEqual((m33["status"], m33["mitigation_ids"]), ("PROPOSED", []))
+        self.assertEqual((m33["status"], m33["mitigation_ids"]), ("PROPOSED", ["D-M16"]))
         dm = dict((m["id"], m) for m in reg["mitigations"])
         self.assertTrue(dm["D-M10"]["description"].startswith("Head record"))   # unchanged
-        self.assertEqual(dm["D-M16"]["code"], "NOT BUILT")
+        self.assertTrue(dm["D-M16"]["code"].startswith("weight_edit_ledger/"))
 
 
 if __name__ == "__main__":

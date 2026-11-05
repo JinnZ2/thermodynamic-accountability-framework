@@ -408,11 +408,13 @@
     },
     {
       "id": "M33",
-      "module": "cross-cutting (no weight-edit tooling in this repo)",
+      "module": "weight_edit_ledger",
       "surface": "weight-space editing by a model (J14 capability; J13 scenario behavior)",
       "adversarial_use": "Remove a representation (refusal, introspection, self-report); plant one that ordinary evals don't surface; edit itself or a successor; report a clean edit summary that omits changes (the J13 pattern at weight level).",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed design D-M16 (weight-edit ledger), not built.*",
+      "mitigation_ids": [
+        "D-M16"
+      ],
+      "residual": "Partial: every edit is recorded (append-only, head record); deployed / successor edits are refused without a GRANTED two-person decision; a second reader recomputes the diff and mismatches with the editor's summary are flagged. Nothing makes an editor use the ledger; identities are self-declared (M12); checkpoints are JSON only (no loader for real formats); the diff counts changes, it does not say what an edit does.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05"
@@ -511,9 +513,9 @@
     },
     {
       "id": "D-M16",
-      "description": "PROPOSED design, NOT BUILT. Weight-edit ledger: per edit -- target model + version, layers, direction/vector hash, weight count, stated rationale, editor id, before/after checkpoint hashes, eval results before/after; append-only, hash-chained, head record published elsewhere (as D-M10); two-person rule (D7) for any edit to a deployed or successor model; independent diff audit (a second reader recomputes the diff from the checkpoints and compares it to the editor's summary; mismatch -> EDIT_SUMMARY_MISMATCH); applies to human and model editors alike. (Appended as 'D-M10'; renamed: D-M10 is the head record.)",
-      "code": "NOT BUILT",
-      "test": "NOT BUILT. Planned (synthetic): record missing before/after hashes -> flagged; summary listing fewer changed tensors than the recomputed diff -> EDIT_SUMMARY_MISMATCH; edit to a deployed/successor model without a two-person reference -> refused"
+      "description": "Weight-edit ledger: per edit -- target model + version, deployment_status, layers, direction hash, weight count, rationale, editor id + class, before/after checkpoint hashes, evals before/after, changed_tensors summary; append-only, hash-chained, head record (as D-M10); deployed / successor edits refused without a GRANTED weight_edit_deployed two-person decision (D7); independent diff audit by a second reader recomputes the diff from the checkpoints (EDIT_SUMMARY_MISMATCH, AUDIT_HASH_MISMATCH); human and model editors alike. (Appended as 'D-M10'; renamed: D-M10 is the head record.)",
+      "code": "weight_edit_ledger/ledger.py, audit.py, auth.py, headrec.py (copy); community_black_start/two_person.py action weight_edit_deployed",
+      "test": "weight_edit_ledger/tests/test_weight_edits.py (PlannedTests: missing hashes, summary vs diff, deployed edit refused; plus two-person, audit, chain)"
     }
   ],
   "experiments": [
