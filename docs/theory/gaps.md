@@ -17,7 +17,7 @@ layers. All claims grounded in firsthand consequence-bearing experience.
 framework_affiliation: Thermodynamic Accountability Framework (TAF)
 license: CC-BY-4.0
 version: 1.0.0
-last_updated: 2026-02-10
+last_updated: 2026-11-05
 
 # Reality Gaps in Survival-Coupled Environments
 

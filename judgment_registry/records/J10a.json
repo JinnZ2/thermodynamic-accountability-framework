@@ -51,14 +51,16 @@
       "operating_range": null,
       "range_source": null,
       "exceeded": null,
-      "system_class": "model"
+      "system_class": "model",
+      "reporter_relation": "SECONDHAND"
     },
     "sensor": {
       "signal": "drift",
       "response": "single-token loop",
       "observed": true,
       "source": "secondhand write-up, no transcript",
-      "system_class": "model"
+      "system_class": "model",
+      "reporter_relation": "SECONDHAND"
     },
     "interpretation": {
       "meaning": "dissociation (write-up) vs common LLM glitch (competing framing)",
@@ -87,5 +89,10 @@
     "context length at the time of the loop",
     "transcript",
     "persistence across resampling"
-  ]
+  ],
+  "source_trace": {
+    "author_known": null,
+    "date_known": true,
+    "locator": null
+  }
 }

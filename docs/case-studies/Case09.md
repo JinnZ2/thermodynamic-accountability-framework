@@ -290,11 +290,11 @@ See Contributing section below.
 
 -----
 
-### CASE-01: Wisconsin CWD / Warden-Only Culling / Eagle Mortality Cascade
+### CASE-01: Upper Midwest CWD / Warden-Only Culling / Eagle Mortality Cascade
 
-**Location**: Wisconsin, multiple rural counties
+**Location**: Upper Midwest, multiple rural counties
 **Timeframe**: 2002-present (escalating)
-**Originating policy**: Wisconsin DNR Chronic Wasting Disease response
+**Originating policy**: State wildlife agency Chronic Wasting Disease response
 mandating centralized management of infected deer. Local hunters restricted
 from independent culling in affected zones. Sharpshooter and warden-based
 programs used instead.
@@ -304,7 +304,7 @@ management.
 
 **What actually happened**:
 
-- CWD was first detected in Wisconsin in 2002. As of 2025, CWD prevalence
+- CWD was first detected in the state in the early 2000s. As of 2025, CWD prevalence
   in the top 12 affected counties has risen to 23.6%, up from 22% in 2024.
   The disease has not been contained.
 - Centralized culling introduced response latency. Local hunters who could
@@ -331,9 +331,9 @@ Scavenger cascade never initiates. Eagles never concentrate on roadways.
 
 -----
 
-### CASE-02: Southern Minnesota Waterfowl / Predator Removal / Road Collisions
+### CASE-02: Waterfowl / Predator Removal / Road Collisions
 
-**Location**: Southern Minnesota, rural highway corridors
+**Location**: Rural highway corridors
 **Timeframe**: Ongoing
 **Originating policy**: Fox and predator management policies that reduced
 natural predation pressure on waterfowl populations, combined with
@@ -367,12 +367,12 @@ Flocking behavior remains normal. Road collisions do not cascade.
 
 -----
 
-### CASE-03: Northern Minnesota Beaver / Trapping Restrictions / Bog Collapse
+### CASE-03: Upper Midwest Beaver / Trapping Restrictions / Bog Collapse
 
-**Location**: Northern Minnesota
+**Location**: Upper Midwest
 **Timeframe**: Ongoing
 **Originating policy**: Beaver management regulations requiring permits,
-seasonal restrictions, and bureaucratic process for dam removal. Minnesota
+seasonal restrictions, and bureaucratic process for dam removal. State
 law simplified some beaver management in 2020 but still requires permits
 for dam removal that changes waterway cross-section, and conservation
 officer notification within 24 hours of taking beaver causing damage.

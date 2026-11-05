@@ -118,6 +118,17 @@ It records how the cited source bears on the item as the recorder read it;
 it does not say whether the source holds. A Judgment may also list
 `missing_variables` (named unknowns). Worked records: `records/` (J10).
 
+Two optional fields and two flags (2026-11-05):
+
+```text
+field                                   flag
+layer_basis.physics|sensor              LOWER_LAYER_SECONDHAND  agency record; every lower-layer basis
+  .reporter_relation                                            that states a relation says SECONDHAND
+  FIRSTHAND | SECONDHAND | UNKNOWN
+source_trace                            SOURCE_UNTRACEABLE      author_known false AND date_known
+  {author_known, date_known, locator}                           false AND no locator
+```
+
 ## Flags
 
 ```text

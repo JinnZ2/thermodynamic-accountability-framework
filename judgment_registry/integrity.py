@@ -34,6 +34,11 @@
 #   LAYER_DEPENDENCY_NOT_FOUND    depends_on_layers id not in the ledger
 #   INTERPRETATION_UNRECORDED     layer = agency, no interpretation basis (informational;
 #                                 recommended, not required)
+#   LOWER_LAYER_SECONDHAND        layer = agency; every physics / sensor basis it rests on
+#                                 (own or via depends_on_layers) that states reporter_relation
+#                                 says SECONDHAND, none says FIRSTHAND (J10, 2026-11-05)
+#   SOURCE_UNTRACEABLE            source_trace records author_known false AND date_known false,
+#                                 and no locator (J10, 2026-11-05)
 #
 # Intervention flags (addendum 2; SignalIntervention records):
 #   DIRECTION_UNSTATED            direction missing
@@ -85,6 +90,9 @@ FLAGS = {
     "LAYER_DEPENDENCY_NOT_FOUND": "depends_on_layers lists {dep}, which is not in this ledger",
     "INTERPRETATION_UNRECORDED": "layer is agency; no interpretation basis recorded here or via "
                                  "depends_on_layers (informational)",
+    "LOWER_LAYER_SECONDHAND": "layer is agency; the physics / sensor basis it rests on is recorded "
+                              "as secondhand only ({bases})",
+    "SOURCE_UNTRACEABLE": "source recorded with author and date unknown and no locator",
     "DIRECTION_UNSTATED": "direction not stated (AMPLIFY | SUPPRESS | RECALIBRATE | NONE)",
     "BAND_UNDEFINED": "distance_from_band given with no band_definition",
     "DURATION_TYPE_UNSTATED": "duration.type not stated (BRIDGE | BOUNDED | OPEN_ENDED)",
@@ -151,6 +159,13 @@ def _layer_flags(j, by_id, jt_transfers):
         lower += [d.layer for d in deps if d.layer in ("physics", "sensor")]
         if not lower:
             out.append(flag("SKIPPED_LAYER", a))
+        rel = [("own " + n, (_block(j, n) or {}).get("reporter_relation")) for n in ("physics", "sensor")
+               if _block(j, n)]
+        rel += [("%s basis of %s" % (d.layer, d.judgment_id), (_block(d, d.layer) or {}).get("reporter_relation"))
+                for d in deps if d.layer in ("physics", "sensor") and _block(d, d.layer)]
+        stated = [(w, r) for w, r in rel if r in ("FIRSTHAND", "SECONDHAND")]
+        if stated and all(r == "SECONDHAND" for _, r in stated):
+            out.append(flag("LOWER_LAYER_SECONDHAND", a, bases=", ".join(w for w, _ in stated)))
         if not (_block(j, "interpretation") or any(d.layer == "interpretation" for d in deps)):
             out.append(flag("INTERPRETATION_UNRECORDED", a))
         ag = _block(j, "agency") or {}
@@ -228,6 +243,9 @@ def check(records, as_of=None):
             out.append(flag("MISSING_FIELD", a, fields=", ".join(miss)))
         if not (j.source or "").strip():
             out.append(flag("NO_SOURCE", a))
+        st = j.source_trace or {}
+        if st.get("author_known") is False and st.get("date_known") is False and _blank(st.get("locator")):
+            out.append(flag("SOURCE_UNTRACEABLE", a))
         if j.judge_incentives is None:
             out.append(flag("INCENTIVES_UNRECORDED", a))
         if j.framing_check is None:

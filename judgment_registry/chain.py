@@ -13,7 +13,7 @@ from ledger import judgments
 FIELDS = ("version", "claim", "scope", "environment", "date", "date_approx", "judge",
           "judge_incentives", "reason", "evidence", "dissent", "supersedes",
           "change_basis", "change_detail", "framing_check", "recorder", "source", "volume",
-          "layer", "layer_basis", "depends_on_layers", "missing_variables")
+          "layer", "layer_basis", "depends_on_layers", "missing_variables", "source_trace")
 
 
 def _index(records):

@@ -345,7 +345,7 @@ measurement:
                         + 0.70 × literacy
 
   THE INVERSION:
-    a dyslexic 27-year veteran:
+    an experienced maintenance generalist:
       embodied 0.95, cognitive 0.85, literacy 0.25
       → actual capacity = 0.84
       → cert signal = 0.33
@@ -356,7 +356,7 @@ measurement:
       → cert signal = 0.66
 
     cert signal RANKS the fresh graduate HIGHER
-    than the 27-year veteran, by 0.33 points.
+    than the experienced maintenance generalist, by 0.33 points.
     actual capacity is INVERSE: veteran outperforms
     fresh graduate by 0.55 points.
 
@@ -382,7 +382,7 @@ measurement:
 ### Data signature
 
 ```
-  Diamond Match case (30 vets including salvage engineers
+  plant-closure case (30 vets including salvage engineers
   with 15% dyslexia rate, competing with 30 fresh grads)
 
   HR HIRES TOP 15 BY CERTIFICATION SIGNAL:
@@ -401,7 +401,7 @@ measurement:
     -0.26 in teaching capacity (breaks future pipeline)
 
   SPECIFIC WORKERS LOST TO THE MEASUREMENT:
-    27-year veteran, dyslexic, salvage engineer:
+    experienced maintenance generalist (salvage engineer):
       cert signal 0.53 (rank 24 of 60)
       actual capacity 0.92 (rank 8 of 60)
       hired? NO

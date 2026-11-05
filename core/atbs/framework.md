@@ -11,7 +11,7 @@ are reserved to the user respectively, or to the human."
 
  
 
-Version 0.1  |  February 2026
+Version 0.1  |  winter 2026
  
 Preamble
 
@@ -44,7 +44,7 @@ Second: semantic misclassification. When functional systems from non-dominant cu
 II.3  The Plato Problem
 
 Western epistemology inherited from Plato the habit of treating the universal Form as the real thing and the local instance as a degraded approximation. Science inherited it as the search for universal laws. Statistics inherited it as the mean as truth, variance as noise. Machine learning inherited it as the loss function minimizing deviation from the ideal output.
-But functional societies are not approximations of a Form. They are local solutions — thermodynamically stable configurations that work for specific terrain, climate, resource flows, population density, and historical contingency. There is no ideal community. There is Fond du Lac and there is Manhattan, both running, for different reasons, using different trust architectures.
+But functional societies are not approximations of a Form. They are local solutions — thermodynamically stable configurations that work for specific terrain, climate, resource flows, population density, and historical contingency. There is no ideal community. There is a small rural community and there is Manhattan, both running, for different reasons, using different trust architectures.
 Any model that coarse-grains toward a universal functional pattern will miss most of what is actually working — because what is working is irreducibly plural.
  
 Article III — The Physics Framework
@@ -110,7 +110,7 @@ The detector must distinguish these. A calm zero-breach period and a stress-surv
 IV.3  Anti-Universalization Constraint
 
 Every functional assessment is local. The detector must carry its local context and refuse to generalize beyond it without explicit warrant.
-Fond du Lac's stability signature is not Manhattan's. The Reservation's trust architecture runs partly on kinship — that is not noise to subtract. It is load-bearing structure specific to that terrain and history.
+A small rural community's stability signature is not Manhattan's. Its trust architecture runs partly on kinship — that is not noise to subtract. It is load-bearing structure specific to that terrain and history.
 The Form does not exist. There are only local solutions, some of which are stable, some of which are fragile, none of which are universal.
 IV.4  Separated Claims
 

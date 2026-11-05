@@ -46,8 +46,8 @@ Pattern: a requirement removes a passive or non-electric function, metered load 
 
 ### Latent assets inventory
 
-- Dormant or disconnected hydro along the Mississippi, St. Louis, St. Croix, Green Bay area. Per site: facility type, output, horsepower, tooling, old parts.
-- Industrial on-site generation (e.g. USG and local mills) able to island nearby feeders.
+- Dormant or disconnected hydro on upper Midwest river systems. Per site: facility type, output, horsepower, tooling, old parts.
+- Industrial on-site generation (e.g. local mills and plants) able to island nearby feeders.
 - Data leads: USACE National Inventory of Dams; ORNL/DOE non-powered dam assessment (\~12 GW national potential\*\*); FERC license history; Historic American Engineering Record drawings; state historical societies.
 - "Nobody makes it anymore" describes the supply chain, not what is physically possible. Local foundries are the only supply chain left in a black start.
 
@@ -100,7 +100,7 @@ POSITION INDEX: name the rung on the historical ladder (1700s, 1800s, 1880s, 192
 - Old timers: dam and boiler operators, millwrights, patternmakers, molders, machinists who work from drawings. Capture now: filmed walkthroughs on equipment, part drawings and foundry patterns, list of which local shops make which parts.
 - Hobbyist casters: backyard foundries on charcoal, propane or waste oil; small parts only.
 - Antique steam and threshermen clubs, blacksmith guilds, model engineering clubs.
-- Heritage rail crews (Duluth area as starting point).
+- Heritage rail crews.
 - Navy boiler technicians, old (BT rating) and current (Machinist's Mate); findable through veterans' rosters.
 - Composite earth builders (fiber, clay, lime); thinnest-documented pool.
 

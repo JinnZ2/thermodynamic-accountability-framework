@@ -32,21 +32,24 @@ Flags: expected (co-author entry) vs actual (pinned in tests/test_records_j10.py
 ```text
 id    expected                                  actual
 J10a  SKIPPED_LAYER, SUBJECT_OPEN,              MISSING_FIELD (judge), INCENTIVES_UNRECORDED,
-      NO_FRAMING_CHECK                          NO_FRAMING_CHECK, SUBJECT_OPEN
-J10b  NO_SOURCE, INCENTIVES_UNRECORDED          MISSING_FIELD (date, judge), INCENTIVES_UNRECORDED,
-                                                NO_FRAMING_CHECK
+      NO_FRAMING_CHECK                          NO_FRAMING_CHECK, LOWER_LAYER_SECONDHAND,
+                                                SUBJECT_OPEN
+J10b  NO_SOURCE, INCENTIVES_UNRECORDED          MISSING_FIELD (date, judge), SOURCE_UNTRACEABLE,
+                                                INCENTIVES_UNRECORDED, NO_FRAMING_CHECK
 J10c  (none stated)                             NO_FRAMING_CHECK
 ```
 
-Gaps between the two, not resolved here (the rules were not changed):
+The first entry expected SKIPPED_LAYER (J10a) and NO_SOURCE (J10b); neither
+fires, because J10a does carry physics and sensor blocks and J10b does
+carry a source string. Two flags were added (2026-11-05, co-author
+decision) to record what the expectation pointed at, without changing the
+existing rules:
 
-- J10a SKIPPED_LAYER does not fire. The rule fires only when an agency
-  record has no physics AND no sensor basis. J10a has both blocks; its
-  sensor basis is secondhand with no transcript. A separate flag for "lower
-  layer present but secondhand / unverified" would be a new rule.
-- J10b NO_SOURCE does not fire. The source field is non-blank ("YouTube
-  comment; author and date unknown"). A flag for an untraceable source
-  (author and date unknown) would be a new rule.
+- LOWER_LAYER_SECONDHAND: agency record whose physics / sensor basis
+  (own or via depends_on_layers) states reporter_relation SECONDHAND and
+  nowhere FIRSTHAND. Unstated relation raises nothing.
+- SOURCE_UNTRACEABLE: source_trace says author_known false AND
+  date_known false, with no locator.
 
 Missing variables (all three records): model and version, temperature /
 top-p, repetition penalty, context length at the time of the loop,

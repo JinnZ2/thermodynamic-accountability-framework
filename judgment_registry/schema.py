@@ -45,18 +45,22 @@ CONTROL = ("YES", "NO", "PARTIAL", "UNKNOWN")
 SUBJECT_STATUS = ("ESTABLISHED", "OPEN", "NOT_APPLICABLE")
 CONSENT = ("GIVEN", "ABSENT", "NOT_POSSIBLE", "UNKNOWN")
 LOOP = ("CLOSED", "BROKEN", "UNKNOWN")
+REPORTER_RELATION = ("FIRSTHAND", "SECONDHAND", "UNKNOWN")   # how the recorder got the basis
 # system_class: free text (e.g. human, animal, plant, model). Coarse on
 # purpose; where a class boundary was a decision, say so in the record.
 BASIS_KEYS = {
-    "physics": ("input", "operating_range", "range_source", "exceeded", "system_class"),
-    "sensor": ("signal", "response", "observed", "source", "system_class"),
+    "physics": ("input", "operating_range", "range_source", "exceeded", "system_class",
+                "reporter_relation"),
+    "sensor": ("signal", "response", "observed", "source", "system_class", "reporter_relation"),
     "interpretation": ("meaning", "control_available", "expectation", "social_environment",
                        "valence_reported", "intensity_reported", "source", "system_class"),
     "agency": ("agent", "subject", "subject_status", "consent", "loop", "system_class"),
 }
 BASIS_ENUMS = {("interpretation", "control_available"): CONTROL,
                ("agency", "subject_status"): SUBJECT_STATUS, ("agency", "consent"): CONSENT,
-               ("agency", "loop"): LOOP}
+               ("agency", "loop"): LOOP,
+               ("physics", "reporter_relation"): REPORTER_RELATION,
+               ("sensor", "reporter_relation"): REPORTER_RELATION}
 BASIS_BOOLS = (("physics", "exceeded"), ("sensor", "observed"))
 
 # Signal-intervention axis (addendum 2)
@@ -118,6 +122,7 @@ class Judgment:
     depends_on_layers: List[str] = field(default_factory=list)   # judgment_ids for lower layers
     intervention_id: Optional[str] = None       # links a SignalIntervention record
     missing_variables: List[str] = field(default_factory=list)   # named unknowns the claim would need
+    source_trace: Optional[Dict] = None         # {author_known, date_known, locator}; booleans or null
 
     def get(self, dotted):
         cur = asdict(self)
@@ -184,6 +189,14 @@ class Judgment:
             out.append("depends_on_layers must be a list of judgment_ids")
         elif self.judgment_id in deps:
             out.append("a judgment cannot depend on itself")
+        st = self.source_trace
+        if st is not None:
+            if not isinstance(st, dict) or set(st) - {"author_known", "date_known", "locator"}:
+                out.append("source_trace must be null or {author_known, date_known, locator}")
+            else:
+                for k in ("author_known", "date_known"):
+                    if st.get(k) not in (True, False, None):
+                        out.append("source_trace.%s must be true, false or null" % k)
         mv = self.missing_variables
         if not isinstance(mv, list) or not all(isinstance(x, str) for x in mv):
             out.append("missing_variables must be a list of strings")

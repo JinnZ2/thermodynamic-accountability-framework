@@ -66,16 +66,16 @@ problem. The cost is absorbed by the driver and the trucks behind them.
 
 -----
 
-## CASE-06: Wisconsin Herbicide Spray / Bird Population Collapse / Agricultural Cascade
+## CASE-06: Upper Midwest Herbicide Spray / Bird Population Collapse / Agricultural Cascade
 
-**Location**: Rural county, Wisconsin
+**Location**: Rural county, upper Midwest
 **Date**: Late 2010s (approximate)
-**Originating policy**: Wisconsin DOT roadside growth control using
+**Originating policy**: State DOT roadside growth control using
 herbicide spray deemed “safe” by policymakers
 
 ### What happened
 
-1. **Policy decision**: Wisconsin DOT authorized herbicide spray on
+1. **Policy decision**: The state DOT authorized herbicide spray on
    roadsides to control vegetation growth. Herbicide classified as
    “safe” at the policy level.
 1. **Ecological impact**: Birds feeding on roadside vegetation and
@@ -98,7 +98,7 @@ herbicide spray deemed “safe” by policymakers
   mechanism, no incentive, no one to report to)
 - State wildlife agency found the bird deaths “not interesting” enough
   to investigate
-- University of Wisconsin researchers found the issue interesting but
+- University researchers found the issue interesting but
   **declined to pursue it** because the herbicide had been newly
   classified as “safe” by policy — making waves would contradict the
   official safety determination
@@ -227,7 +227,7 @@ model is incomplete.
 - **Source**: Commercial truck driver, 70-hour weekly rural food
   distribution routes
 - **Signal quality**: High — direct operational observation, quantified
-  delays, named locations and dates
+  delays; locations and dates withheld; held locally
 - **Consequence exposure**: Direct — driver absorbs cost of delays,
   system failures, and cascades personally
 - **Time to report**: Minimal — voice testimony during operational
@@ -648,11 +648,11 @@ See Contributing section below.
 
 -----
 
-### CASE-01: Wisconsin CWD / Warden-Only Culling / Eagle Mortality Cascade
+### CASE-01: Upper Midwest CWD / Warden-Only Culling / Eagle Mortality Cascade
 
-**Location**: Wisconsin, multiple rural counties
+**Location**: Upper Midwest, multiple rural counties
 **Timeframe**: 2002-present (escalating)
-**Originating policy**: Wisconsin DNR Chronic Wasting Disease response
+**Originating policy**: State wildlife agency Chronic Wasting Disease response
 mandating centralized management of infected deer. Local hunters restricted
 from independent culling in affected zones. Sharpshooter and warden-based
 programs used instead.
@@ -662,7 +662,7 @@ management.
 
 **What actually happened**:
 
-- CWD was first detected in Wisconsin in 2002. As of 2025, CWD prevalence
+- CWD was first detected in the state in the early 2000s. As of 2025, CWD prevalence
   in the top 12 affected counties has risen to 23.6%, up from 22% in 2024.
   The disease has not been contained.
 - Centralized culling introduced response latency. Local hunters who could
@@ -689,9 +689,9 @@ Scavenger cascade never initiates. Eagles never concentrate on roadways.
 
 -----
 
-### CASE-02: Southern Minnesota Waterfowl / Predator Removal / Road Collisions
+### CASE-02: Waterfowl / Predator Removal / Road Collisions
 
-**Location**: Southern Minnesota, rural highway corridors
+**Location**: Rural highway corridors
 **Timeframe**: Ongoing
 **Originating policy**: Fox and predator management policies that reduced
 natural predation pressure on waterfowl populations, combined with
@@ -725,12 +725,12 @@ Flocking behavior remains normal. Road collisions do not cascade.
 
 -----
 
-### CASE-03: Northern Minnesota Beaver / Trapping Restrictions / Bog Collapse
+### CASE-03: Upper Midwest Beaver / Trapping Restrictions / Bog Collapse
 
-**Location**: Northern Minnesota
+**Location**: Upper Midwest
 **Timeframe**: Ongoing
 **Originating policy**: Beaver management regulations requiring permits,
-seasonal restrictions, and bureaucratic process for dam removal. Minnesota
+seasonal restrictions, and bureaucratic process for dam removal. State
 law simplified some beaver management in 2020 but still requires permits
 for dam removal that changes waterway cross-section, and conservation
 officer notification within 24 hours of taking beaver causing damage.

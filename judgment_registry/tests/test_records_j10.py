@@ -20,8 +20,9 @@ from test_registry import EVALUATIVE, build, codes  # noqa: E402
 REC = os.path.join(ROOT, "records")
 
 ACTUAL = {
-    "J10a": ["MISSING_FIELD", "INCENTIVES_UNRECORDED", "NO_FRAMING_CHECK", "SUBJECT_OPEN"],
-    "J10b": ["MISSING_FIELD", "INCENTIVES_UNRECORDED", "NO_FRAMING_CHECK"],
+    "J10a": ["MISSING_FIELD", "INCENTIVES_UNRECORDED", "NO_FRAMING_CHECK", "LOWER_LAYER_SECONDHAND",
+             "SUBJECT_OPEN"],
+    "J10b": ["MISSING_FIELD", "SOURCE_UNTRACEABLE", "INCENTIVES_UNRECORDED", "NO_FRAMING_CHECK"],
     "J10c": ["NO_FRAMING_CHECK"],
 }
 
@@ -50,6 +51,51 @@ class J10Records(unittest.TestCase):
     def test_status_values_neutral(self):
         words = set(w for v in schema.EVIDENCE_STATUS for w in v.lower().split("_"))
         self.assertEqual(sorted(words & set(EVALUATIVE)), [])
+
+
+class NewFlagRules(unittest.TestCase):
+    """LOWER_LAYER_SECONDHAND and SOURCE_UNTRACEABLE (2026-11-05), synthetic variations."""
+
+    def flags(self, d):
+        return codes(build(("judgment", d)), d["judgment_id"])
+
+    def test_firsthand_basis_clears_secondhand_flag(self):
+        d = load("J10a")
+        d["layer_basis"]["sensor"]["reporter_relation"] = "FIRSTHAND"
+        self.assertNotIn("LOWER_LAYER_SECONDHAND", self.flags(d))
+
+    def test_unstated_relation_raises_nothing(self):
+        d = load("J10a")
+        for n in ("physics", "sensor"):
+            d["layer_basis"][n].pop("reporter_relation")
+        self.assertNotIn("LOWER_LAYER_SECONDHAND", self.flags(d))
+
+    def test_secondhand_via_dependency(self):
+        d = load("J10a")
+        dep = load("J10c")
+        dep["layer_basis"]["sensor"]["reporter_relation"] = "SECONDHAND"
+        d["layer_basis"] = {"agency": d["layer_basis"]["agency"],
+                            "interpretation": d["layer_basis"]["interpretation"]}
+        d["depends_on_layers"] = ["J10c"]
+        recs = build(("judgment", dep), ("judgment", d))
+        self.assertIn("LOWER_LAYER_SECONDHAND", codes(recs, "J10a"))
+
+    def test_source_untraceable_needs_both_unknown_and_no_locator(self):
+        d = load("J10b")
+        self.assertIn("SOURCE_UNTRACEABLE", self.flags(d))
+        d["source_trace"]["locator"] = "comment permalink (synthetic)"
+        self.assertNotIn("SOURCE_UNTRACEABLE", self.flags(d))
+        d = load("J10b")
+        d["source_trace"]["date_known"] = True
+        self.assertNotIn("SOURCE_UNTRACEABLE", self.flags(d))
+
+    def test_bad_shapes_rejected(self):
+        d = load("J10b")
+        d["source_trace"] = {"author_known": "no"}
+        self.assertTrue(schema.Judgment.from_dict(d).shape_problems())
+        d = load("J10a")
+        d["layer_basis"]["sensor"]["reporter_relation"] = "HEARSAY"
+        self.assertTrue(schema.Judgment.from_dict(d).shape_problems())
 
 
 class EvidenceStatusShape(unittest.TestCase):

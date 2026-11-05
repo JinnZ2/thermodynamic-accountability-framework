@@ -3143,6 +3143,17 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- R-items + J10 flags (2026-11-05, co-authored), branch
+  claude/misuse-register. R1 hydro leads -> "upper Midwest river systems"
+  (method kept; city, rivers, plant name dropped); R2 framework.md
+  community generic; R3 "experienced maintenance generalist" (person-
+  specific dyslexia / 27-year lines; plant-closure case renamed from the
+  named plant, function plant_closure_case); R4 ecology-case regions ->
+  upper Midwest / removed (CASE-02 none); R5 last_updated 2026-11-05,
+  "February 2026" -> "winter 2026"; R6 Testimony metadata "locations and
+  dates withheld; held locally". judgment_registry: reporter_relation on
+  physics / sensor basis, source_trace field, flags LOWER_LAYER_SECONDHAND
+  and SOURCE_UNTRACEABLE (J10a / J10b now raise them); 74 tests.
 - N-items + M10/M18/M12 (2026-11-05, co-authored), branch
   claude/misuse-register. Forward fixes only, no history rewrite. N1-N13
   applied per the owner's decisions (employer -> "a national retail

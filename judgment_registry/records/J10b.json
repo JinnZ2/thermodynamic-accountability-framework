@@ -61,5 +61,10 @@
     "context length at the time of the loop",
     "transcript",
     "persistence across resampling"
-  ]
+  ],
+  "source_trace": {
+    "author_known": false,
+    "date_known": false,
+    "locator": null
+  }
 }

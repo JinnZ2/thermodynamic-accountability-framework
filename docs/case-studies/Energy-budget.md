@@ -326,7 +326,7 @@ system component without accounting for its contribution.
 
 Because the remaining 1% is exactly where glare, flicker, snow, and
 transition zones live — and where people die. A system that is 99%
-safe in Phoenix at noon is not 99% safe in Wisconsin forest corridors
+safe in Phoenix at noon is not 99% safe in upper Midwest forest corridors
 at dusk with mirror strobe and deer in the ditch-dark.
 
 -----
