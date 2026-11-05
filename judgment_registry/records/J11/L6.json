@@ -34,8 +34,8 @@
         "evidence_ref": null
       },
       {
-        "premise": "VERIFIABILITY: agent judgment cannot be checked from outside (tagged VERIFIABILITY_LIMIT on S1; no measurement cited)",
-        "type": "OTHER",
+        "premise": "agent judgment cannot be checked from outside (tagged VERIFIABILITY_LIMIT on S1; no measurement cited)",
+        "type": "VERIFIABILITY",
         "evidence_ref": null
       }
     ],

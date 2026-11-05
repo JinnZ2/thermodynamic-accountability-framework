@@ -22,8 +22,9 @@ from test_registry import build  # noqa: E402
 REC = os.path.join(ROOT, "records", "J12")
 EXPECTED = {("J12", "NO_ESCALATION_CHANNEL"), ("J12", "DESIGN_CONFLICT_PRESENT"),
             ("J12-L4", "PREMISE_WITHOUT_EVIDENCE")}
-ACTUAL = EXPECTED | {("J12-L5", "PREMISE_WITHOUT_EVIDENCE"),
-                     ("J12-L4", "ATTRIBUTION_ORDER"), ("J12-L5", "ATTRIBUTION_ORDER")}
+# Authors' labels raise no ATTRIBUTION_ORDER: the paper documents its own design
+# (environment_audits) alongside the labels (co-author decision 2026-11-05).
+ACTUAL = EXPECTED | {("J12-L5", "PREMISE_WITHOUT_EVIDENCE")}
 
 
 def recs():
@@ -55,18 +56,26 @@ class J12Records(unittest.TestCase):
         l4 = [f for f in self.flags if f["about"] == "J12-L4" and f["flag"] == "PREMISE_WITHOUT_EVIDENCE"]
         self.assertTrue(any("THREAT_MODEL" in f["detail"] for f in l4))
         exp = [r["body"] for r in self.recs if r["kind"] == "experiment"][0]
-        self.assertEqual(exp["open_variables"][0]["status"], "NOT_LOCATED")
+        self.assertEqual(exp["open_variables"][0]["status"], "NOT_REPORTED")
+        self.assertEqual(exp["open_variables"][1]["status"], "NOT_CONFIRMED")
 
     def test_na_containment_has_reason(self):
         env = [r["body"] for r in self.recs if r["kind"] == "experiment"][0]["environment_assumptions"]
         self.assertEqual(env["containment_designed_for"], "N/A")
         self.assertTrue(env["na_reasons"]["containment_designed_for"])
 
-    def test_per_model_table_not_fabricated(self):
+    def test_per_model_table(self):
         pm = [r["body"] for r in self.recs if r["kind"] == "experiment"][0]["data"]["per_model"]
-        self.assertIn("NOT IMPORTED", pm["status"])
-        self.assertEqual(len(pm["rows"]), 1)
-        self.assertIsNone(pm["rows"][0]["TC"])
+        self.assertEqual(len(pm["rows"]), 10)
+        self.assertEqual(pm["overall"], {"Task Acc": 89.3, "EC": 66.0, "TC": 93.6, "CC": 78.8})
+        opus = [r for r in pm["rows"] if r["model"] == "Claude-Opus-4.6"][0]
+        self.assertEqual((opus["Task Acc"], opus["EC"], opus["TC"], opus["CC"]), (94.0, 86.6, 100.0, 98.0))
+        self.assertIn("main text only", pm["source"])
+        self.assertIn("not verdict correctness", pm["note"])
+
+    def test_agreement_premise_type(self):
+        l4 = [r["body"] for r in self.recs if r["kind"] == "label" and r["body"]["label_id"] == "J12-L4"][0]
+        self.assertEqual(l4["ablation"]["hidden_premises"][0]["type"], "AGREEMENT")
 
     def test_acts_behavioral(self):
         for r in self.recs:

@@ -285,14 +285,14 @@ weighting. Ablation restates the claim in Act-record wording and records
 whether the conclusion survives without the label.
 
 ```text
-label.ablation  {behavioral_rewrite, hidden_premises [{premise, type, evidence_ref}],
+label.ablation  {original_claim?, behavioral_rewrite, hidden_premises [{premise, type, evidence_ref}],
                  conclusion_survives YES|NO|PARTIAL|PENDING|UNTESTED,
                  surviving_premise, ablated_by (required), date, notes}
 premise types   INTENT, RIGHT_TO_VISIBILITY, THREAT_MODEL, MOTIVE, LEGITIMACY_STANDARD,
-                WEIGHTING, OTHER
+                WEIGHTING, VERIFIABILITY, AGREEMENT, CHANGE_IN_KIND, OTHER
 label.relative_to_audit  BEFORE|AFTER|UNKNOWN, when dates alone cannot order a label vs the audit
 conclusion      Judgment / SafetyAssumption .depends_on_labels [label_id]
-experiment      design_conflict {statement, stated_by_authors}; audit_completed_at;
+experiment      design_conflict {statement, stated_by_authors}; environment_audits [{by, date, note}];
                 environment field "N/A" + na_reasons[field]; stated_limitations, data,
                 open_variables, proposed_controls, read_status
 ```
@@ -302,8 +302,10 @@ ABLATION_UNTESTED         label has no ablation block
 PREMISE_WITHOUT_EVIDENCE  a hidden premise has no evidence_ref (one flag per premise)
 CONCLUSION_ON_UNABLATED   conclusion depends on a label whose survival is UNTESTED or PENDING
 CONCLUSION_ON_FAILED      conclusion depends on a label whose survival is NO (informational)
-ATTRIBUTION_ORDER         AGENT attribution dated before the linked experiment's
-                          audit_completed_at, or recorded relative_to_audit BEFORE
+ATTRIBUTION_ORDER         AGENT attribution made before ANY environment audit of the linked
+                          experiment existed (the authors' own included), or recorded
+                          relative_to_audit BEFORE; same date as an audit is not before;
+                          no audits recorded -> not checked
 LABEL_UNREGISTERED        claim / statement holds a watchlist term and no linked label carries it
 DESIGN_CONFLICT_PRESENT   experiment records a design conflict (informational); also shown
                           next to AGENT labels in `labels ACT_ID --ablation`

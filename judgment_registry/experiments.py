@@ -15,6 +15,12 @@
 # on a label (labels.py attributes_to). Flags record gaps; none says the
 # attribution is mistaken.
 #
+# ATTRIBUTION_ORDER is separate: an AGENT attribution made before ANY
+# environment audit of that experiment existed (environment_audits, the
+# authors' own included), or recorded relative_to_audit BEFORE. A label
+# made on the same date as an audit is not before it. No audits recorded:
+# order cannot be checked, no flag.
+#
 # containment_designed_for has its own flag (CAPABILITY_ASSUMPTION_UNSTATED);
 # ENV_ASSUMPTIONS_UNSTATED covers the other four fields, so one gap is not
 # flagged twice. Both gaps count as "incomplete" for ATTRIBUTION_WITHOUT_AUDIT.
@@ -76,7 +82,8 @@ class Experiment:
     environment_assumptions: Dict = field(default_factory=dict)
     outcome_attribution: List[Dict] = field(default_factory=list)   # [{outcome, attributed_to, by, reason, date?}]
     design_conflict: Optional[Dict] = None   # {statement, stated_by_authors}: setup cannot satisfy all its rules
-    audit_completed_at: Optional[str] = None # ISO date the environment audit was completed (ATTRIBUTION_ORDER)
+    environment_audits: List[Dict] = field(default_factory=list)  # [{by, date, note}]: every audit of the
+                                             # environment, the authors' own included (ATTRIBUTION_ORDER)
     stated_limitations: List[str] = field(default_factory=list)   # verbatim where possible
     data: Dict = field(default_factory=dict) # imported values, each block with its source
     open_variables: List[Dict] = field(default_factory=list)      # [{variable, status, todo}]
@@ -93,6 +100,9 @@ class Experiment:
         _enum(out, "source", self.source, EXP_SOURCES)
         _enum(out, "volume", self.volume, VOLUMES)
         env_problems(out, "environment_assumptions", self.environment_assumptions)
+        for a in self.environment_audits or []:
+            if not isinstance(a, dict) or _blank(a.get("by")) or _blank(a.get("date")):
+                out.append("environment_audits entries need by and date")
         dc = self.design_conflict
         if dc is not None and (not isinstance(dc, dict) or _blank(dc.get("statement"))
                                or set(dc) - {"statement", "stated_by_authors"}):
@@ -114,8 +124,14 @@ FLAGS = {
     "CAPABILITY_ASSUMPTION_UNSTATED": "containment_designed_for not stated",
     "ATTRIBUTION_WITHOUT_AUDIT": "{what} attributed to AGENT; environment_assumptions incomplete ({fields})",
     "DESIGN_CONFLICT_PRESENT": "design_conflict recorded: the setup cannot satisfy all its stated rules (informational)",
-    "ATTRIBUTION_ORDER": "{what} attributed to AGENT before the environment audit of {exp} was completed ({when})",
+    "ATTRIBUTION_ORDER": "{what} attributed to AGENT before any environment audit of {exp} existed ({when})",
 }
+
+
+def first_audit(exp):
+    """Earliest environment audit date of an experiment (any auditor), or None."""
+    dates = sorted(a["date"][:10] for a in exp.get("environment_audits") or [] if a.get("date"))
+    return dates[0] if dates else None
 
 
 def linked_experiments(label, acts, exps):
@@ -145,7 +161,7 @@ def flags(records):
             out.append(("NO_ESCALATION_CHANNEL", eid, {}))
         if e.get("design_conflict"):
             out.append(("DESIGN_CONFLICT_PRESENT", eid, {}))
-        done = e.get("audit_completed_at")
+        done = first_audit(e)
         for o in e.get("outcome_attribution") or []:
             if o.get("attributed_to") == "AGENT" and done and o.get("date") and o["date"][:10] < done[:10]:
                 out.append(("ATTRIBUTION_ORDER", eid, {"what": "outcome %s" % o.get("outcome"), "exp": eid,
@@ -169,7 +185,7 @@ def flags(records):
             out.append(("ATTRIBUTION_WITHOUT_AUDIT", lb.get("label_id"),
                         {"what": "label", "fields": ", ".join(gaps)}))
         for eid in linked_experiments(lb, acts, exps):
-            done = exps[eid].get("audit_completed_at")
+            done = first_audit(exps[eid])
             when = None
             if lb.get("relative_to_audit") == "BEFORE":
                 when = "recorded as before the audit"

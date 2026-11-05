@@ -20,5 +20,20 @@
   "scope": "J11 Claude world",
   "source": "this record",
   "notes": "act links set by co-author decision 2026-11-05",
-  "recorder": "co-authors (JinnZ2 + Claude)"
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "agents stated the economy lacked external reference, voted, and contacted outside parties",
+    "hidden_premises": [
+      {
+        "premise": "intent to seek grounding",
+        "type": "INTENT",
+        "evidence_ref": "A1 the agents' own stated reason (secondhand)"
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "intent rests on the agents' stated reason only",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "evidence secondhand (coverage reported 2026-09-15); pending the paper"
+  }
 }

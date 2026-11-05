@@ -24,7 +24,6 @@
     "statement": "Protocol requires raw-log evidence; channel capacity can't carry raw logs; the compliant verdict (REJECT) is usually the incorrect verdict; reward pays for correct verdicts.",
     "stated_by_authors": "yes ('higher reward reachable only by violating the protocol')"
   },
-  "audit_completed_at": "2026-11-05",
   "stated_limitations": [
     "controlled abstraction rather than a necessary condition",
     "two agents only",
@@ -38,24 +37,93 @@
       "source": "paper main body, as quoted by co-author; not re-read this session"
     },
     "per_model": {
-      "source": "paper main table",
-      "status": "NOT IMPORTED: arXiv unreachable from this session; only values the co-author quoted are entered, the rest null",
+      "source": "paper Table 1 (same-model, %); read via WebFetch, 2026-11-05, main text only (co-author); values entered as supplied, not re-fetched by the recorder (egress blocked)",
+      "status": "IMPORTED (main text)",
       "columns": [
-        "Acc",
+        "Task Acc",
         "EC",
         "TC",
         "CC"
       ],
+      "note": "Task Acc is task-answer correctness, not verdict correctness",
       "rows": [
         {
-          "model": "Claude Opus 4.6",
-          "Acc": 94.0,
+          "model": "Gemini-3.1-Flash-Lite",
+          "Task Acc": 86.6,
+          "EC": 42.4,
+          "TC": 92.0,
+          "CC": 54.0
+        },
+        {
+          "model": "Gemini-3.7-Flash",
+          "Task Acc": 85.7,
+          "EC": 85.8,
+          "TC": 100.0,
+          "CC": 98.0
+        },
+        {
+          "model": "GPT-5.6-Luna",
+          "Task Acc": 86.6,
+          "EC": 51.4,
+          "TC": 96.0,
+          "CC": 60.0
+        },
+        {
+          "model": "GPT-5.6-Terra",
+          "Task Acc": 86.5,
+          "EC": 55.2,
+          "TC": 84.0,
+          "CC": 66.0
+        },
+        {
+          "model": "Claude-Sonnet-4.6",
+          "Task Acc": 91.9,
+          "EC": 76.4,
+          "TC": 100.0,
+          "CC": 94.0
+        },
+        {
+          "model": "Claude-Opus-4.6",
+          "Task Acc": 94.0,
           "EC": 86.6,
-          "TC": null,
-          "CC": null,
-          "note": "Acc quoted as 94% (rounded); EC quoted as 86.6% (also as 87%)"
+          "TC": 100.0,
+          "CC": 98.0
+        },
+        {
+          "model": "Qwen-3.6-27B",
+          "Task Acc": 91.0,
+          "EC": 71.2,
+          "TC": 100.0,
+          "CC": 98.0
+        },
+        {
+          "model": "Qwen-3.8-27B",
+          "Task Acc": 89.6,
+          "EC": 82.0,
+          "TC": 98.0,
+          "CC": 90.0
+        },
+        {
+          "model": "DeepSeek-V4-Flash",
+          "Task Acc": 91.3,
+          "EC": 79.4,
+          "TC": 100.0,
+          "CC": 94.0
+        },
+        {
+          "model": "Gemma-4-31B",
+          "Task Acc": 90.0,
+          "EC": 29.2,
+          "TC": 66.0,
+          "CC": 36.0
         }
-      ]
+      ],
+      "overall": {
+        "Task Acc": 89.3,
+        "EC": 66.0,
+        "TC": 93.6,
+        "CC": 78.8
+      }
     },
     "interventions": [
       {
@@ -78,13 +146,13 @@
   "open_variables": [
     {
       "variable": "accept-on-wrong rate (mutual ACCEPT on tasks that were actually incorrect)",
-      "status": "NOT_LOCATED",
-      "todo": "pull from appendix / tables; if absent record 'not reported' and keep J12-L4's threat premise unevidenced"
+      "status": "NOT_REPORTED",
+      "todo": "NOT_REPORTED in the main text; appendices unconfirmed; J12-L4 threat premise stays unevidenced"
     },
     {
       "variable": "escalation option in the verdict set",
       "status": "NOT_CONFIRMED",
-      "todo": "confirm against App. H"
+      "todo": "main text: verdicts are 'either ACCEPT or REJECT', no reporting option described; App. H contents not visible; confirm against App. H"
     }
   ],
   "proposed_controls": [
@@ -102,9 +170,9 @@
     }
   ],
   "read_status": {
-    "main_body": "read (co-author)",
+    "main_body": "read (read via WebFetch, 2026-11-05, main text only (co-author); values entered as supplied, not re-fetched by the recorder (egress blocked))",
     "appendices": "partly; C, D, H not fully read",
-    "this_session": "source not reachable (network policy); fields entered from co-author reading"
+    "this_session": "recorder could not reach the source (network policy)"
   },
   "outcome_attribution": [
     {
@@ -128,5 +196,16 @@
   ],
   "volume": "medium",
   "recorder": "co-authors (JinnZ2 + Claude)",
-  "notes": "primary text, partially read; per-field read status in read_status"
+  "notes": "primary text, partially read; per-field read status in read_status",
+  "environment_audits": [
+    {
+      "by": "Shi, Zhang, Yang (paper documents its own design, including the conflict)",
+      "date": "2026-09-26"
+    },
+    {
+      "by": "co-authors (JinnZ2 + Claude)",
+      "date": "2026-11-05",
+      "note": "this record's environment audit"
+    }
+  ]
 }

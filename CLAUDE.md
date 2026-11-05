@@ -3166,7 +3166,13 @@ session's notes only.
   J11 L5, L6, S1v2 (supersedes S1); J12 (primary, partly read, arXiv
   unreachable this session; per-model table not imported). Ids renamed
   to avoid collisions (addendum L1-L3 -> L5, L6, S1v2; J12 -> J12-
-  prefix). Tests: judgment_registry 138.
+  prefix). Follow-up (co-author answers): L5 retired, its ablation moved
+  to L2 (original_claim); L1, L3, L4 ablated (all secondhand);
+  premise types + VERIFIABILITY, AGREEMENT, CHANGE_IN_KIND (migrated);
+  ATTRIBUTION_ORDER measured against any environment audit that existed
+  (environment_audits, the authors' own included); J12 Table 1 imported
+  as supplied (main text, co-author WebFetch), accept-on-wrong
+  NOT_REPORTED. Tests: judgment_registry 140.
 - judgment_registry acts / labels / experiment audits / safety
   assumptions (2026-11-05, co-authored), branch claude/registry-acts-labels
   off main, rebased onto main after PR #59 merged. acts.py (Act;

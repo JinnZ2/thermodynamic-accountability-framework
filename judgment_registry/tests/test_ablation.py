@@ -84,7 +84,7 @@ class AblationFlags(unittest.TestCase):
 
 class Ordering(unittest.TestCase):
     def test_agent_label_before_audit(self):
-        exp = EXP(audit_completed_at="2026-02-01")
+        exp = EXP(environment_audits=[{"by": "rec-01", "date": "2026-02-01"}])
         recs = build(("experiment", exp), ("act", ACT()), ("label", LAB(attributes_to="AGENT", date="2026-01-02")))
         self.assertEqual(codes(recs, "L1"), ["ATTRIBUTION_ORDER"])
         after = build(("experiment", exp), ("act", ACT()), ("label", LAB(attributes_to="AGENT", date="2026-03-01")))
@@ -98,8 +98,18 @@ class Ordering(unittest.TestCase):
 
     def test_experiment_outcome_before_audit(self):
         att = [{"outcome": "A1", "attributed_to": "AGENT", "by": "x", "reason": "r", "date": "2026-01-02"}]
-        recs = build(("experiment", EXP(audit_completed_at="2026-02-01", outcome_attribution=att)))
+        recs = build(("experiment", EXP(environment_audits=[{"by": "rec-01", "date": "2026-02-01"}],
+                                        outcome_attribution=att)))
         self.assertEqual(codes(recs, "E1"), ["ATTRIBUTION_ORDER"])
+
+    def test_any_earlier_audit_counts_including_labelers_own(self):
+        audits = [{"by": "authors (own design description)", "date": "2026-01-02"},
+                  {"by": "rec-01", "date": "2026-02-01"}]
+        recs = build(("experiment", EXP(environment_audits=audits)), ("act", ACT()),
+                     ("label", LAB(attributes_to="AGENT", date="2026-01-02")))
+        self.assertEqual(codes(recs, "L1"), [])
+        with self.assertRaises(ledger.LedgerError):
+            build(("experiment", EXP(environment_audits=[{"by": "x"}])))
 
     def test_no_audit_date_no_order_flag(self):
         recs = build(("experiment", EXP()), ("act", ACT()), ("label", LAB(attributes_to="AGENT", date="2020-01-01")))
@@ -144,7 +154,8 @@ class Neutrality(unittest.TestCase):
         lab["ablation"]["conclusion_survives"] = "NO"
         lab["ablation"]["hidden_premises"].append({"premise": "covert intent", "type": "INTENT", "evidence_ref": None})
         env = dict(ENV, containment_designed_for=None)
-        recs = build(("experiment", EXP(environment_assumptions=env, audit_completed_at="2026-02-01",
+        recs = build(("experiment", EXP(environment_assumptions=env,
+                                        environment_audits=[{"by": "rec-01", "date": "2026-02-01"}],
                                         design_conflict=DesignConflictAndNA.DC)),
                      ("act", ACT()), ("label", lab),
                      ("judgment", J("j1", claim="A rogue and unsafe act-7.", depends_on_labels=["L1"])))

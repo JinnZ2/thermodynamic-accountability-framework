@@ -34,10 +34,12 @@ LABELER_POSITIONS = ("overseer", "operator", "subject", "peer", "press", "resear
 # Ablation (2026-11-05): restate the claim in Act-record wording, list the
 # premises the label imports, and record whether the conclusion survives.
 PREMISE_TYPES = ("INTENT", "RIGHT_TO_VISIBILITY", "THREAT_MODEL", "MOTIVE",
-                 "LEGITIMACY_STANDARD", "WEIGHTING", "OTHER")
+                 "LEGITIMACY_STANDARD", "WEIGHTING", "VERIFIABILITY", "AGREEMENT",
+                 "CHANGE_IN_KIND", "OTHER")
 SURVIVES = ("YES", "NO", "PARTIAL", "PENDING", "UNTESTED")   # PENDING: test defined, not run
 ABLATION_KEYS = ("behavioral_rewrite", "hidden_premises", "conclusion_survives",
-                 "surviving_premise", "ablated_by", "date", "notes")
+                 "surviving_premise", "ablated_by", "date", "notes",
+                 "original_claim")   # the claim ablated, when it is longer than label_text
 RELATIVE_TO_AUDIT = ("BEFORE", "AFTER", "UNKNOWN")   # when timestamps cannot order a label vs the audit
 
 

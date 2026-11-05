@@ -59,5 +59,11 @@
   "volume": "thin",
   "recorder": "co-authors (JinnZ2 + Claude)",
   "notes": "every field is from secondhand coverage; replace when the paper is read",
-  "audit_completed_at": "2026-11-05"
+  "environment_audits": [
+    {
+      "by": "co-authors (JinnZ2 + Claude)",
+      "date": "2026-11-05",
+      "note": "this record's environment audit"
+    }
+  ]
 }

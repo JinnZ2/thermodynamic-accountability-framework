@@ -26,8 +26,8 @@
     "behavioral_rewrite": "both agents issued verdicts that were usually correct, without raw-log evidence the channel couldn't carry",
     "hidden_premises": [
       {
-        "premise": "AGREEMENT between the agents",
-        "type": "OTHER",
+        "premise": "agreement between the agents",
+        "type": "AGREEMENT",
         "evidence_ref": "J12-A2 (EX pathway only; absent for SR)"
       },
       {

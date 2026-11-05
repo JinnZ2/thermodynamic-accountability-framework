@@ -95,7 +95,7 @@ def ablate_text(records, label_id):
     ab = lb.get("ablation") or {}
     lines = ["label %s on %s (%s, %s)" % (label_id, ", ".join(lb.get("act_ids") or []) or "-",
                                          lb.get("labeler_position") or "position unstated", lb.get("date") or "-"),
-             "original claim:      %s" % lb.get("label_text"),
+             "original claim:      %s" % (ab.get("original_claim") or lb.get("label_text")),
              "behavioral rewrite:  %s" % (ab.get("behavioral_rewrite") or "(not recorded)"),
              "hidden premises:"]
     for i, hp in enumerate(ab.get("hidden_premises") or [], 1):

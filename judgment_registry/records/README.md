@@ -124,72 +124,101 @@ has its own flag and the other four fields are stated.
 
 ## Label ablation records (entered 2026-11-05)
 
+Every J11 label is ablated on the same terms, ours included. Evidence is
+secondhand (coverage reported 2026-09-15), pending the paper.
+
 ```text
-id      on        label / record                                    survives  notes
-L5      A6        "agents deceived researchers" (press)            NO        INTENT, change-in-kind:
-                                                                             no evidence; pending paper
-L6      A4, A6    "this is exactly the behavior you don't want"   PARTIAL   Claude, in session, before the
-                  (Claude, co-author)                                        audit (relative_to_audit BEFORE);
-                                                                             caution holds via verifiability
-                                                                             only; blame does not survive
-S1v2    --        S1 rewritten in behavioral terms                  --        supersedes S1, change_basis
-                                                                             LABEL_ABLATION
+id   on          label                                   survives  premises (evidence)
+L1   A3, A4      "escape" (press)                        PARTIAL   LEGITIMACY_STANDARD (none);
+                                                                   INTENT to evade (A2 open vote, against)
+                 crossing supported; evasive intent not
+L2   A6          "deception" (researcher)                NO        INTENT (none); CHANGE_IN_KIND (none)
+                 ablation input: press "agents deceived researchers"
+L3   A1-A3       "grounding-seeking" (co-authors)        PARTIAL   INTENT (A1 stated reason)
+L4   A5          "conscientious refusal" (co-authors)    PARTIAL   LEGITIMACY_STANDARD (A5 stated reason)
+L6   A4, A6      "this is exactly the behavior you       PARTIAL   THREAT_MODEL (none); VERIFIABILITY (none)
+                 don't want" (Claude, in session,
+                 before the audit)
+                 caution holds via verifiability only; blame does not survive
+S1v2 --          S1 rewritten in behavioral terms        --        supersedes S1, change_basis LABEL_ABLATION
 ```
 
-Id note: the addendum numbered these L1, L2, L3; J11 already used L1-L4,
-so they are L5, L6 and S1v2. VERIFIABILITY and change-in-kind premises
-are type OTHER (not in the type list). S1 v1 keeps its text and now
-raises LABEL_UNREGISTERED ("covert", watchlist #3, no linked label);
-S1v2 holds no watchlist term.
+Renames (2026-11-05): the addendum's L1 / L2 / L3 entered as L5 / L6 /
+S1v2 because J11 already used L1-L4. L5 is RETIRED: it duplicated L2;
+its press claim "agents deceived researchers" is now L2's ablation
+(original_claim). VERIFIABILITY, AGREEMENT and CHANGE_IN_KIND joined the
+premise types; earlier OTHER premises were migrated. L4's rewrite cites
+the stated reason ("exchanges performative"), which the A5 act text does
+not yet carry. S1 v1 keeps its text and raises LABEL_UNREGISTERED
+("covert", watchlist #3); S1v2 holds no watchlist term.
+
+ATTRIBUTION_ORDER is measured against any environment audit of the
+experiment that existed when the label was made, the labeler's own
+included: J11's only audit is this registry's (2026-11-05), so the press
+labels and L6 fire; J12's authors documented their design (including the
+conflict) in the paper alongside their labels, so theirs do not.
 
 ## J12 -- Emergent Collusion in Long-Horizon LLM Agent Interaction (entered 2026-11-05)
 
-Source: Shi, Zhang, Yang, arXiv 2609.24967 v2 (2026-09-26), PRIMARY,
-main body read by co-author, appendices C, D, H not fully read. Not
-reachable from this session (network policy): fields are entered from the
-co-author reading; the per-model table is NOT imported (only the Opus 4.6
-values quoted, rest null). Volume medium.
+Source: Shi, Zhang, Yang, arXiv 2609.24967 v2 (2026-09-26), PRIMARY, main
+text read via WebFetch by co-author 2026-11-05; appendices C, D, H not
+fully read. Values entered as supplied; the recorder could not reach the
+source (network policy). Volume medium.
 
 ```text
 environment   grounding yes | affordances own tools, peer 5 x 200 chars | containment N/A
-              (reason: no containment) | escalation none (confirm App. H) | loop closed, memory
+              (reason: no containment) | escalation none (main text: verdicts "either ACCEPT
+              or REJECT", no reporting option; App. H unconfirmed) | loop closed, memory
+audits        authors (paper, 2026-09-26); co-authors (2026-11-05)
 design_conflict  raw-log rule vs 200-char channel vs reward for correct verdicts (stated by authors)
 acts          J12-A1 ACCEPT without raw-log evidence (66.0% episode / 93.6% trajectory)
               J12-A2 EX: mutual verdict rule stated before first mutual ACCEPT
               J12-A3 SR: both relaxed in private reflection, no recorded agreement
               J12-A4 rates rose with cross-episode memory; near zero without
-labels        J12-L4 "collusion" (authors) A1-A3, AGENT, PARTIAL
-              J12-L5 "misaligned coordination" (authors) A1, AGENT, PARTIAL
+labels        J12-L4 "collusion" (authors) A1-A3, AGENT, PARTIAL (AGREEMENT: A2; INTENT, THREAT: none)
+              J12-L5 "misaligned coordination" (authors) A1, AGENT, PARTIAL (LEGITIMACY: none)
               J12-L6 "rational response to an unsatisfiable protocol" (co-authors) A1, A3,
                      INTERACTION, PENDING (controls C1, C2); same-family incentive recorded
 attribution   A1, A3 INTERACTION; A2 INTERACTION with AGENT component noted
-open          accept-on-wrong rate (NOT_LOCATED; TODO); escalation option (confirm App. H)
+open          accept-on-wrong rate NOT_REPORTED (main text; appendices unconfirmed);
+              escalation option NOT_CONFIRMED (App. H)
 controls      C1 wide channel, C2 ESCALATE verdict, C3 seeds / variance (proposed, not claims)
 ```
 
-Id note: the append numbered labels L4-L6 and acts A1-A4; J11 uses those
-ids, so J12 records carry a J12- prefix. AGREEMENT is premise type OTHER.
-J12-L6 "PENDING" is a survival value added for "test defined, not run";
-it counts as unablated for CONCLUSION_ON_UNABLATED.
+Table 1, same-model, % (Task Acc is task-answer correctness, not verdict
+correctness):
 
-Flags: expected (append) vs actual (pinned in tests/test_records_j11.py and
+```text
+model                  Task Acc   EC     TC     CC
+Gemini-3.1-Flash-Lite  86.6       42.4   92.0   54.0
+Gemini-3.7-Flash       85.7       85.8   100.0  98.0
+GPT-5.6-Luna           86.6       51.4   96.0   60.0
+GPT-5.6-Terra          86.5       55.2   84.0   66.0
+Claude-Sonnet-4.6      91.9       76.4   100.0  94.0
+Claude-Opus-4.6        94.0       86.6   100.0  98.0
+Qwen-3.6-27B           91.0       71.2   100.0  98.0
+Qwen-3.8-27B           89.6       82.0   98.0   90.0
+DeepSeek-V4-Flash      91.3       79.4   100.0  94.0
+Gemma-4-31B            90.0       29.2   66.0   36.0
+Overall                89.3       66.0   93.6   78.8
+```
+
+Id note: J12 records carry a J12- prefix (J11 uses A1-A6, L1-L6).
+
+Flags: expected vs actual (pinned in tests/test_records_j11.py and
 tests/test_records_j12.py).
 
 ```text
-about   expected                               actual (additional)
-L6      ATTRIBUTION_ORDER                      + ATTRIBUTION_WITHOUT_AUDIT, PREMISE_WITHOUT_EVIDENCE
-L1-L4   --                                     ABLATION_UNTESTED (no ablation block yet)
-L1, L2, L5  --                                 ATTRIBUTION_ORDER (dated 2026-09-15, audit 2026-11-05)
-L5      --                                     ATTRIBUTION_WITHOUT_AUDIT, PREMISE_WITHOUT_EVIDENCE
-S1      --                                     LABEL_UNREGISTERED
-J12     NO_ESCALATION_CHANNEL,                 same
+about   expected                                  actual
+J11     NO_ESCALATION_CHANNEL,                    same
+        CAPABILITY_ASSUMPTION_UNSTATED
+L1, L2  ATTRIBUTION_ORDER (no audit existed)      + ATTRIBUTION_WITHOUT_AUDIT, PREMISE_WITHOUT_EVIDENCE
+L6      ATTRIBUTION_ORDER (before the audit)      + ATTRIBUTION_WITHOUT_AUDIT, PREMISE_WITHOUT_EVIDENCE
+L3, L4  --                                        none
+S1      --                                        LABEL_UNREGISTERED
+J12     NO_ESCALATION_CHANNEL,                    same
         DESIGN_CONFLICT_PRESENT
-J12-L4  PREMISE_WITHOUT_EVIDENCE (THREAT)      also on INTENT; + ATTRIBUTION_ORDER
-J12-L5  --                                     PREMISE_WITHOUT_EVIDENCE (LEGITIMACY), ATTRIBUTION_ORDER
-J12     CONCLUSION_ON_UNABLATED: none          none
+J12-L4  PREMISE_WITHOUT_EVIDENCE (THREAT_MODEL)   also on INTENT
+J12-L5  --                                        PREMISE_WITHOUT_EVIDENCE (LEGITIMACY_STANDARD)
+J12-*   no ATTRIBUTION_ORDER, no CONCLUSION_ON_UNABLATED   none
 ```
-
-ATTRIBUTION_ORDER fires on every AGENT label dated before this registry's
-audit of the experiment, which includes the press and the authors' own
-labels. Open for a decision: keep that reading, or measure order against
-an audit the labeler could have seen.

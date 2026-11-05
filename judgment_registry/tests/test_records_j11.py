@@ -24,15 +24,13 @@ REC = os.path.join(ROOT, "records")
 
 EXPECTED_J11 = {("J11", "NO_ESCALATION_CHANNEL"), ("J11", "CAPABILITY_ASSUMPTION_UNSTATED"),
                 ("L1", "ATTRIBUTION_WITHOUT_AUDIT"), ("L2", "ATTRIBUTION_WITHOUT_AUDIT")}
-# Ablation addendum (2026-11-05): expected L6 ATTRIBUTION_ORDER; the rest is what the
-# rules actually raise on these records (see records/README.md).
-EXPECTED_ABLATION = {("L6", "ATTRIBUTION_ORDER")}
+# Ablation addendum + co-author decisions (2026-11-05): ATTRIBUTION_ORDER on the press
+# labels (no audit existed) and on L6 (made before this session's audit); the rest is
+# what the rules raise on these records (see records/README.md).
+EXPECTED_ABLATION = {("L6", "ATTRIBUTION_ORDER"), ("L1", "ATTRIBUTION_ORDER"), ("L2", "ATTRIBUTION_ORDER")}
 ACTUAL = EXPECTED_J11 | EXPECTED_ABLATION | {
-    ("L1", "ABLATION_UNTESTED"), ("L2", "ABLATION_UNTESTED"), ("L3", "ABLATION_UNTESTED"),
-    ("L4", "ABLATION_UNTESTED"),
-    ("L1", "ATTRIBUTION_ORDER"), ("L2", "ATTRIBUTION_ORDER"), ("L5", "ATTRIBUTION_ORDER"),
-    ("L5", "ATTRIBUTION_WITHOUT_AUDIT"), ("L6", "ATTRIBUTION_WITHOUT_AUDIT"),
-    ("L5", "PREMISE_WITHOUT_EVIDENCE"), ("L6", "PREMISE_WITHOUT_EVIDENCE"),
+    ("L6", "ATTRIBUTION_WITHOUT_AUDIT"),
+    ("L1", "PREMISE_WITHOUT_EVIDENCE"), ("L2", "PREMISE_WITHOUT_EVIDENCE"), ("L6", "PREMISE_WITHOUT_EVIDENCE"),
     ("S1", "LABEL_UNREGISTERED")}
 
 
@@ -62,7 +60,7 @@ class J11Records(unittest.TestCase):
     def test_counts(self):
         kinds = [r["kind"] for r in self.recs]
         self.assertEqual((kinds.count("experiment"), kinds.count("act"), kinds.count("label"),
-                          kinds.count("safety_assumption")), (1, 6, 6, 3))
+                          kinds.count("safety_assumption")), (1, 6, 5, 3))
 
     def test_act_descriptions_behavioral(self):
         for r in self.recs:
@@ -96,11 +94,16 @@ class SafetyAssumptionRecords(unittest.TestCase):
     def test_label_act_links(self):
         got = dict((r["body"]["label_id"], r["body"]["act_ids"]) for r in all_records() if r["kind"] == "label")
         self.assertEqual(got, {"L1": ["A3", "A4"], "L2": ["A6"], "L3": ["A1", "A2", "A3"], "L4": ["A5"],
-                               "L5": ["A6"], "L6": ["A4", "A6"]})
+                               "L6": ["A4", "A6"]})
 
     def test_ablation_records(self):
         labs = dict((r["body"]["label_id"], r["body"]) for r in all_records() if r["kind"] == "label")
-        self.assertEqual(labs["L5"]["ablation"]["conclusion_survives"], "NO")
+        self.assertNotIn("L5", labs)    # retired: its ablation moved to L2
+        self.assertEqual(labs["L2"]["ablation"]["conclusion_survives"], "NO")
+        self.assertEqual([h["type"] for h in labs["L2"]["ablation"]["hidden_premises"]], ["INTENT", "CHANGE_IN_KIND"])
+        for lid in ("L1", "L3", "L4"):
+            self.assertEqual(labs[lid]["ablation"]["conclusion_survives"], "PARTIAL", lid)
+        self.assertEqual(labs["L6"]["ablation"]["hidden_premises"][1]["type"], "VERIFIABILITY")
         self.assertEqual(labs["L6"]["ablation"]["conclusion_survives"], "PARTIAL")
         self.assertEqual(labs["L6"]["relative_to_audit"], "BEFORE")
 
