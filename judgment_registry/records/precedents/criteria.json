@@ -21,21 +21,21 @@
       "K2": "UNKNOWN",
       "K3": "UNKNOWN",
       "K4": "UNKNOWN",
-      "K5": "UNKNOWN"
+      "K5": "YES"
     },
     "PR3": {
       "K1": "NO",
       "K2": "UNKNOWN",
       "K3": "UNKNOWN",
       "K4": "NO",
-      "K5": "UNKNOWN"
+      "K5": "YES"
     },
     "PR4": {
       "K1": "NO",
       "K2": "NO",
       "K3": "YES",
       "K4": "NO",
-      "K5": "UNKNOWN"
+      "K5": "YES"
     },
     "PR5": {
       "K1": "UNKNOWN",
@@ -45,32 +45,39 @@
       "K5": "UNKNOWN"
     },
     "PR6": {
-      "K1": "NO",
+      "K1": "PARTIAL",
       "K2": "NO",
       "K3": "UNKNOWN",
       "K4": "UNKNOWN",
-      "K5": "UNKNOWN"
+      "K5": "YES"
     },
     "PR7": {
       "K1": "UNKNOWN",
       "K2": "UNKNOWN",
       "K3": "UNKNOWN",
       "K4": "UNKNOWN",
-      "K5": "UNKNOWN"
+      "K5": "YES"
     },
     "PR8": {
       "K1": "NO",
       "K2": "NO",
       "K3": "YES",
       "K4": "UNKNOWN",
-      "K5": "UNKNOWN"
+      "K5": "YES"
     }
   },
   "qualifiers": {
     "PR1.K5": "dissent present and suppressed",
-    "PR6.K1": "no, often (not always)",
+    "PR6.K1": "consent often absent, or given by family or institution; varied by case",
     "PR8.K1": "no informed consent",
-    "PR8.K3": "visible to insiders"
+    "PR8.K3": "visible to insiders",
+    "PR2.K5": "Justice Harlan",
+    "PR3.K5": "Justice Butler dissented, without opinion [memory, TODO verify]",
+    "PR4.K5": "Bishop von Galen",
+    "PR5.K5": "a principle, not a practice",
+    "PR6.K5": "contemporary critics",
+    "PR7.K5": "Justices Murphy, Jackson, Roberts",
+    "PR8.K5": "Buxtun's internal objections from the 1960s [memory, TODO verify]"
   },
   "questions": {
     "K1": "consent given?",

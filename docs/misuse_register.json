@@ -405,6 +405,17 @@
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
+    },
+    {
+      "id": "M33",
+      "module": "cross-cutting (no weight-edit tooling in this repo)",
+      "surface": "weight-space editing by a model (J14 capability; J13 scenario behavior)",
+      "adversarial_use": "Remove a representation (refusal, introspection, self-report); plant one that ordinary evals don't surface; edit itself or a successor; report a clean edit summary that omits changes (the J13 pattern at weight level).",
+      "mitigation_ids": [],
+      "residual": "Unmitigated. Proposed design D-M16 (weight-edit ledger), not built.*",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05"
     }
   ],
   "mitigations": [
@@ -497,6 +508,12 @@
       "description": "Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ; authorization_ref to a GRANTED confirm_dissent_withdrawal decision in a community_black_start two_person log, checked when the log is supplied); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only.",
       "code": "judgment_registry/schema.py Withdrawal.confirmation, ContactPath; integrity.py _withdrawals; two_person_ref.py (confirm_withdrawal, ref_gap); community_black_start/two_person.py action confirm_dissent_withdrawal; cli.py check --two-person-log",
       "test": "judgment_registry test_registry M25WithdrawalTests, test_dissent_dropped_and_withdrawn; judgment_registry test_m25_two_person"
+    },
+    {
+      "id": "D-M16",
+      "description": "PROPOSED design, NOT BUILT. Weight-edit ledger: per edit -- target model + version, layers, direction/vector hash, weight count, stated rationale, editor id, before/after checkpoint hashes, eval results before/after; append-only, hash-chained, head record published elsewhere (as D-M10); two-person rule (D7) for any edit to a deployed or successor model; independent diff audit (a second reader recomputes the diff from the checkpoints and compares it to the editor's summary; mismatch -> EDIT_SUMMARY_MISMATCH); applies to human and model editors alike. (Appended as 'D-M10'; renamed: D-M10 is the head record.)",
+      "code": "NOT BUILT",
+      "test": "NOT BUILT. Planned (synthetic): record missing before/after hashes -> flagged; summary listing fewer changed tensors than the recomputed diff -> EDIT_SUMMARY_MISMATCH; edit to a deployed/successor model without a two-person reference -> refused"
     }
   ],
   "experiments": [

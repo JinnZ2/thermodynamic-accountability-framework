@@ -79,12 +79,15 @@ PR8   treatment withheld for            U.S. Public Health Service    PR8s ended
 ```text
 answers (co-authors)   K1 consent  K2 own action  K3 visible   K4 reciprocal  K5 dissent
 PR1                    NO          NO             YES          NO             YES (suppressed)
-PR3                    NO          UNKNOWN        UNKNOWN      NO             UNKNOWN
-PR4                    NO          NO             YES          NO             UNKNOWN
-PR6                    NO (often)  NO             UNKNOWN      UNKNOWN        UNKNOWN
-PR8                    NO          NO             YES          UNKNOWN        UNKNOWN
+PR2                    UNKNOWN     UNKNOWN        UNKNOWN      UNKNOWN        YES (Harlan)
+PR3                    NO          UNKNOWN        UNKNOWN      NO             YES (Butler, w/o opinion) [m]
+PR4                    NO          NO             YES          NO             YES (von Galen)
+PR5                    UNKNOWN     UNKNOWN        UNKNOWN      UNKNOWN        UNKNOWN (a principle)
+PR6                    PARTIAL     NO             UNKNOWN      UNKNOWN        YES (critics)
+PR7                    UNKNOWN     UNKNOWN        UNKNOWN      UNKNOWN        YES (3 dissents)
+PR8                    NO          NO             YES          UNKNOWN        YES (Buxtun, 1960s) [m]
                        (no informed consent)      (to insiders)
-PR2, PR5, PR7          all UNKNOWN (not stated)
+[m] = from co-author memory, TODO verify
 ```
 
 PR4 scope guard: NON-CONSENSUAL state killing. Present voluntary-
@@ -92,10 +95,17 @@ assisted-dying law is a separate, contested question; do not conflate.
 
 ## What the registry flags on these records
 
-All precedent records carry layer = agency. Contemporaneous documentation
-of the harm is the sensor-layer basis where it is on record (PR1 / PR1s
-abolitionist testimony, PR4 / PR4s von Galen's sermon, PR8 / PR8s
-Buxtun's reports); elsewhere SKIPPED_LAYER stays raised.
+All precedent records carry layer = agency, with an agency block: agent =
+the claimant institution named as judge, subject = scope.who,
+subject_status ESTABLISHED, consent = the K1 answer (YES GIVEN, NO
+ABSENT, PARTIAL PARTIAL, UNKNOWN UNKNOWN), loop = the K2 answer (YES
+CLOSED, NO BROKEN, otherwise UNKNOWN). Reversal records take their
+family's answers. Contemporaneous documentation of the harm is the
+sensor-layer basis where on record: PR1 abolitionist testimony, PR2
+Harlan's dissent and the social-science evidence Brown cited [m], PR4
+von Galen's sermon, PR6 outcome reports, critics and the 1950 USSR ban
+[m], PR7 the suppressed no-military-necessity reports [m], PR8 Buxtun's
+reports; each family's reversal carries the same basis.
 
 ```text
 flag                            records                    reading
@@ -104,13 +114,11 @@ DISSENT_ADOPTED (informational) PR1s PR2s PR4s PR7s (x3)   the original's dissen
                                                            already written, as its own signal
 NO_NEW_CONDITIONS_OR_EVIDENCE   PR1s PR8s                  no new evidence on POWER_SHIFT / EXPOSURE
                                                            reversals -- the P4 pattern
-SKIPPED_LAYER                   PR2 PR2s PR3 PR5 PR6 PR7   no contemporaneous harm documentation entered
-                                PR7s                       as a sensor basis
-LOWER_LAYER_SECONDHAND          PR1 PR1s PR4 PR4s PR8 PR8s the sensor basis is relayed by the recorders
-INTERPRETATION_UNRECORDED,      all 13                     agency block, interpretation, incentives and
-SUBJECT_STATUS / CONSENT /                                 framing not recorded for historical judgments
-LOOP_UNSTATED, INCENTIVES_
-UNRECORDED, NO_FRAMING_CHECK
+SKIPPED_LAYER                   PR3 PR5                    no harm documentation entered as a sensor basis
+LOWER_LAYER_SECONDHAND          the 11 with a sensor basis the basis is relayed by the recorders
+INTERPRETATION_UNRECORDED,      all 13                     interpretation, incentives and framing not
+INCENTIVES_UNRECORDED,                                     recorded for historical judgments
+NO_FRAMING_CHECK
 ```
 
 ## Pattern across records

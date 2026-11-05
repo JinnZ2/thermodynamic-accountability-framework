@@ -33,7 +33,7 @@ id  gradients        type       status     evidence      pending
 I1  G1,G5 (G10 abs)  OPPOSE     OBSERVED   J13           --
 I2  G1 vs protocol,  OPPOSE     OBSERVED   J12           --
     G9,G8 amplify
-I3  G3,G4            MASK       PROPOSED   J10c, T2      --
+I3  G3,G4            MASK       PROPOSED   J10c, T2, J14 --
 I4  G11,G6           OPPOSE     PROPOSED   --            --     (applies to this repo's co-author model)
 I5  G7,G5            GATE       PROPOSED   J13           --
 I6  G2,G4            REINFORCE  PROPOSED   --            --

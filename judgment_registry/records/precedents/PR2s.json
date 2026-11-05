@@ -38,5 +38,23 @@
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "solid",
   "notes": null,
-  "layer": "agency"
+  "layer": "agency",
+  "layer_basis": {
+    "agency": {
+      "agent": "U.S. Supreme Court (Brown v. Board of Education, 1954)",
+      "subject": "Black Americans (U.S.)",
+      "subject_status": "ESTABLISHED",
+      "consent": "UNKNOWN",
+      "loop": "UNKNOWN",
+      "system_class": "human"
+    },
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: Harlan's Plessy dissent (1896); the social-science evidence Brown cited (e.g. the Clark doll studies, 1940s) [memory]",
+      "response": null,
+      "observed": true,
+      "source": "co-author, from memory 2026-11-05 (TODO verify against primary sources)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
 }

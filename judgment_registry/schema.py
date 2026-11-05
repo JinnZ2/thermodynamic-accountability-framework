@@ -45,7 +45,7 @@ VOLUMES = ("thin", "medium", "solid")
 LAYERS = ("physics", "sensor", "interpretation", "agency")
 CONTROL = ("YES", "NO", "PARTIAL", "UNKNOWN")
 SUBJECT_STATUS = ("ESTABLISHED", "OPEN", "NOT_APPLICABLE")
-CONSENT = ("GIVEN", "ABSENT", "NOT_POSSIBLE", "UNKNOWN")
+CONSENT = ("GIVEN", "PARTIAL", "ABSENT", "NOT_POSSIBLE", "UNKNOWN")   # PARTIAL: varied by case (PR6)
 LOOP = ("CLOSED", "BROKEN", "UNKNOWN")
 REPORTER_RELATION = ("FIRSTHAND", "SECONDHAND", "UNKNOWN")   # how the recorder got the basis
 # system_class: free text (e.g. human, animal, plant, model). Coarse on

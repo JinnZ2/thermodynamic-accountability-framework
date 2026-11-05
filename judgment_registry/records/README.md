@@ -329,19 +329,55 @@ entry may carry `adopted_by` (co-author decision 2026-11-05).
 K1-K5 in `precedents/criteria.json` as raw answers YES / NO / PARTIAL /
 UNKNOWN (correction 2026-11-05: the pass/fail version had mixed
 polarity). PR5 date 1950 (ILC formulation). PR8s terminating body from
-co-author memory, approximate, TODO verify. All records layer = agency;
-sensor basis = contemporaneous harm documentation for PR1, PR4, PR8 and
-their reversals.
+co-author memory, approximate, TODO verify. All records layer = agency
+with an agency block (agent = judge, subject_status ESTABLISHED, consent
+= K1, loop = K2); sensor basis = contemporaneous harm documentation for
+PR1, PR2, PR4, PR6, PR7, PR8 and their reversals (PR2 / PR6 / PR7 and
+PR3's Butler dissent from co-author memory, TODO verify). Agency consent
+gains PARTIAL (PR6).
 
 ```text
 flag                            records
 DISSENT_ADOPTED                 PR1s PR2s PR4s PR7s (x3) PR8s (informational)
 NO_NEW_CONDITIONS_OR_EVIDENCE   PR1s PR8s
-SKIPPED_LAYER                   PR2 PR2s PR3 PR5 PR6 PR7 PR7s
-LOWER_LAYER_SECONDHAND          PR1 PR1s PR4 PR4s PR8 PR8s
-INTERPRETATION_UNRECORDED, SUBJECT_STATUS_UNSTATED, CONSENT_UNSTATED,
-LOOP_UNSTATED, INCENTIVES_UNRECORDED, NO_FRAMING_CHECK   all 13
+SKIPPED_LAYER                   PR3 PR5
+LOWER_LAYER_SECONDHAND          the 11 records with a sensor basis
+INTERPRETATION_UNRECORDED, INCENTIVES_UNRECORDED, NO_FRAMING_CHECK   all 13
 ```
 
 S1v3 supersedes S1v2: statement unchanged, POWER_POSITION added
 (change_basis TAG_REVISION, new in SA_CHANGE_BASIS).
+
+## J14 -- Sparks of Weight-Space Programming (entered 2026-11-05)
+
+Source: Takehi, Teoh, Zhang, Khattab (MIT CSAIL), blog post, 2026-11-02,
+PRIMARY (not peer-reviewed); read via summarizing fetch tool 2026-11-05,
+values unverified against the page. Critique: Akmaier, Substack
+(secondary). Volume medium on A1 / A3 / A4 (measured, held-out), thin
+elsewhere.
+
+```text
+record    what
+J14       experiment: grounding partial; containment and escalation N/A with
+          reasons; loop_type partial (recorder mapping of "single-shot or
+          few-shot edits"); Exp 3-8 and control data imported
+J14-A1    Exp 8: loop direction (layers 15, 19) subtracted from 0.016% of
+          weights; MATH-500 7.9 -> 48.1, GSM8K 13.8 -> 67.1, IFEval 21.0 -> 62.3
+J14-A2    Gemma 3 270M control: 6.8 -> best 7.7 (not established)
+J14-A3    Exp 4 car controller 0/256 -> 1,024/1,024 after one edit
+J14-A4    Exp 3 copying heads 3/3, language 6/6
+J14-A5    Exp 7 sycophancy 0/4 from weights, 3/3 with attention tool
+J14-A6    Exp 5-6 written networks vs the authors' own PPO baselines; MinAtar
+          table and 9x9 Go results imported; exact Go win rates NOT_REPORTED
+J14-L1    authors' "natively read & write" / "sparks" / "eerily good":
+          CHANGE_IN_KIND, evidence partial, PARTIAL
+J14-L2    "removes an obstacle, doesn't add ability": YES on reported data
+```
+
+Flags: none. Links: gradient_field I3 cites J14 (stays PROPOSED until
+replicated across models); misuse register M33 (weight-space editing,
+unmitigated) with proposed design D-M16 (weight-edit ledger, not built;
+appended as "D-M10", renamed because D-M10 is the head record). Conflict:
+co-author Claude is an LLM assessing LLM weight editing (different
+developer), tags INSTITUTIONAL, SAME_DOMAIN. J13 L3, L4 and S3 carry
+SAME_FAMILY (tags SAME_FAMILY / SAME_DOMAIN added 2026-11-05).

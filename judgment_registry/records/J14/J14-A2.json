@@ -1,0 +1,16 @@
+{
+  "kind": "act",
+  "act_id": "J14-A2",
+  "actor_class": "agent",
+  "description": "same procedure on Gemma 3 270M (rarely loops): MATH-500 6.8 to best 7.7 (authors: not established)",
+  "context_ref": "J14",
+  "context_detail": "control",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Takehi, Teoh, Zhang, Khattab (MIT CSAIL), \"Sparks of Weight-Space Programming\", blog post, 2026-11-02 (primary, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "volume": "thin",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

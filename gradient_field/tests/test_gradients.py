@@ -127,6 +127,10 @@ class ShippedFiles(unittest.TestCase):
         self.assertEqual(got, {"I1": ["J13"], "I5": ["J13"], "I7": ["J11", "J13"]})
         self.assertTrue(all(not x["pending_refs"] for x in self.xs))
 
+    def test_i3_j14_stays_proposed(self):
+        i3 = [x for x in self.xs if x["id"] == "I3"][0]
+        self.assertEqual((i3["evidence_refs"], i3["status"]), (["J10c", "T2", "J14"], "PROPOSED"))
+
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]
         self.assertEqual([(x["id"], x["status"], x["prereg"]) for x in e],

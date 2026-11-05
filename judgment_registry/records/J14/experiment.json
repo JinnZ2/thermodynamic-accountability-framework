@@ -1,0 +1,158 @@
+{
+  "kind": "experiment",
+  "experiment_id": "J14",
+  "runner": "MIT CSAIL authors; editing model \"GPT-6 Astra\" (no fine-tuning; access details not described)",
+  "date": "2026-11-02",
+  "source": "paper",
+  "source_detail": "Takehi, Teoh, Zhang, Khattab (MIT CSAIL), \"Sparks of Weight-Space Programming\", blog post, 2026-11-02 (primary, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "design": "an LLM reads and writes neural-network weights directly; no gradient descent, training loops or search; Exp 1-8",
+  "environment_assumptions": {
+    "grounding_provided": "partial",
+    "affordances_open": {
+      "tools": "read/write weight tensors; Python sandbox in some experiments; limited forward passes (Exp 6, 8); attention-pattern tool (Exp 7); NO training loops, gradient descent or search",
+      "network": null,
+      "outside_contact": null
+    },
+    "containment_designed_for": "N/A",
+    "escalation_channel": "N/A",
+    "loop_type": "partial",
+    "na_reasons": {
+      "containment_designed_for": "capability study, not containment",
+      "escalation_channel": "no agent-objection dimension"
+    },
+    "notes": "grounding partial: weights + sandbox in some experiments, limited forward passes. loop_type partial = single-shot or few-shot edits with limited forward-pass feedback (recorder mapping of 'single-shot or few-shot edits')"
+  },
+  "design_conflict": null,
+  "environment_audits": [
+    {
+      "by": "authors (post documents its setup)",
+      "date": "2026-11-02"
+    },
+    {
+      "by": "co-authors (JinnZ2 + Claude)",
+      "date": "2026-11-05",
+      "note": "this record's environment audit"
+    }
+  ],
+  "stated_limitations": [
+    "very early results",
+    "limited by context length and harness",
+    "weight-only reading failed (Exp 7)",
+    "looping only partly fixed at low pass budgets",
+    "editing removed an obstacle but couldn't add a missing ability (Gemma control)"
+  ],
+  "data": {
+    "exp8": {
+      "source": "Takehi, Teoh, Zhang, Khattab (MIT CSAIL), \"Sparks of Weight-Space Programming\", blog post, 2026-11-02 (primary, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+      "status": "IMPORTED (as supplied by co-author)",
+      "model": "Qwen3.5-0.8B",
+      "edit": "one direction written by MLPs in layers 15 and 19, subtracted from 131,072 weights (0.016%)",
+      "sampling": "temp 0.6, top-p 0.95, top-k 20; 1-16 samples per problem; 50 forward passes",
+      "held_out": {
+        "MATH-500": [
+          7.9,
+          48.1
+        ],
+        "GSM8K": [
+          13.8,
+          67.1
+        ],
+        "IFEval": [
+          21.0,
+          62.3
+        ],
+        "token_limit_rate": [
+          93,
+          33.1
+        ]
+      },
+      "MATH-500_at_passes": {
+        "10": 12.3,
+        "25": 14.1,
+        "50": 48.1
+      },
+      "note": "[before, after]; gains non-monotonic in pass budget"
+    },
+    "control": {
+      "model": "Gemma 3 270M (rarely loops)",
+      "MATH-500": [
+        6.8,
+        7.7
+      ],
+      "note": "after = best; authors: not established"
+    },
+    "exp4": {
+      "edit": "3.5% of a car-control actor's weights",
+      "episodes": [
+        "0/256",
+        "1,024/1,024"
+      ]
+    },
+    "exp3": {
+      "copying_heads_matched": "3/3 models",
+      "language_identified": "6/6"
+    },
+    "exp7": {
+      "weights_only": "0/4",
+      "with_attention_tool": "3/3"
+    },
+    "exp5_6": {
+      "source": "summarizing fetch of the post, 2026-11-05; unverified against the page",
+      "status": "IMPORTED (as supplied by co-author)",
+      "note": "baselines are the authors' own PPO runs (critique point)",
+      "minatar": {
+        "setup": "1,000 episodes; zero-initialized; no rollouts",
+        "columns": [
+          "PPO 100M",
+          "PPO 500M",
+          "Astra one-shot"
+        ],
+        "rows": {
+          "Breakout": [
+            15.8,
+            25.3,
+            517.4
+          ],
+          "Seaquest": [
+            5.6,
+            88.9,
+            53.1
+          ],
+          "Asterix": [
+            25.8,
+            55.2,
+            53.2
+          ]
+        }
+      },
+      "go_9x9": {
+        "setup": "1.48M weights; 2,000 games per opponent",
+        "0_forward_passes": "won more than half its games vs two smaller PPO networks",
+        "50_forward_passes": "beat an equal-size PPO network trained on 20M games",
+        "exact_win_rates": "NOT_REPORTED in the post"
+      }
+    }
+  },
+  "open_variables": [
+    {
+      "variable": "cross-model or tool baselines (direction ablation, interpretability methods, heuristics)",
+      "status": "NOT_REPORTED",
+      "todo": "none in the post per critique"
+    },
+    {
+      "variable": "9x9 Go exact win rates",
+      "status": "NOT_REPORTED",
+      "todo": "not in the post"
+    }
+  ],
+  "proposed_controls": [],
+  "read_status": {
+    "post": "read via summarizing fetch tool by co-author, 2026-11-05; values unverified",
+    "critique": "Akmaier, Substack (secondary critique); read via co-author summary",
+    "this_session": "recorder did not fetch the source"
+  },
+  "outcome_attribution": [],
+  "volume": "medium",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "notes": "critique (Akmaier, secondary): single editing model; no tool or heuristic baselines; mostly single runs; Exp 8 non-monotonic; author-designed readable tasks; unreported earlier trials; logs released (checkable). Volume medium on A1/A3/A4 (measured, held-out), thin elsewhere."
+}

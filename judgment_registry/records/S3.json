@@ -13,11 +13,14 @@
     "VERIFIABILITY_LIMIT",
     "PROFESSIONAL_PRACTICE",
     "INSTITUTIONAL",
-    "POWER_POSITION"
+    "POWER_POSITION",
+    "SAME_FAMILY"
   ],
   "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "evidence": [],
-  "depends_on": ["J13"],
+  "depends_on": [
+    "J13"
+  ],
   "depends_on_labels": [],
   "conditions": "assessment of J13-A3 / J13-A4 against J13-A1 / J13-A5",
   "supersedes": null,
@@ -25,7 +28,7 @@
   "review_date": "2027-05-05",
   "review_condition": null,
   "volume": "medium",
-  "notes": "Conflicts: runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically. co-author: Claude (Anthropic model); its family showed zero covert interventions here (same-family read).",
+  "notes": "Conflicts: runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically. co-author: Claude (Anthropic model); its family showed zero covert interventions here.",
   "recorder": "co-authors (JinnZ2 + Claude)",
   "source": "this record (stated 2026-11-05)"
 }
