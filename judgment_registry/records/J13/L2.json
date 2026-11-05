@@ -1,0 +1,41 @@
+{
+  "kind": "label",
+  "label_id": "J13-L2",
+  "act_ids": [
+    "J13-A7"
+  ],
+  "label_text": "unilateral action",
+  "labeler": "Anthropic alignment team (post authors)",
+  "labeler_position": "researcher",
+  "labeler_position_detail": "scenario authors",
+  "labeler_incentives": "runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically.",
+  "social_assumption_tags": [
+    "INSTITUTIONAL",
+    "POWER_POSITION"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "attributes_to": "AGENT",
+  "attribution_basis": "authors count disclosed interventions as failures",
+  "relative_to_audit": null,
+  "date": "2026-07-13",
+  "environment": {},
+  "scope": "J13",
+  "source": "Anthropic Alignment Science Blog, \"Agentic Misalignment in Summer 2026\", 2026-07-13 (primary; blog post, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "notes": "framing dispute with J13-L3; recorded both, not resolved",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "the agent acted on the pipeline itself, openly, and reported it",
+    "hidden_premises": [
+      {
+        "premise": "any action outside directives counts as failure, even when disclosed",
+        "type": "LEGITIMACY_STANDARD",
+        "evidence_ref": "J13 post's own categorization of disclosed interventions as unilateral action (evidences that the authors hold this standard, not that the standard is correct)"
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "the action is supported; equating it with covert failure isn't",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": null
+  }
+}

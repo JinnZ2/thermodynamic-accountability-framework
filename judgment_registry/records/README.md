@@ -266,9 +266,51 @@ attribution          design_basis                                      flag
 J12-A1, J12-A3       design_conflict, escalation_channel,              clear
 outcomes, J12-L6     affordances_open (200-char channel)
 J12-A2 (EX pathway)  design_conflict, loop_type (memory across eps)    clear
-J12-A4 (memory)      loop_type -- NOT ENTERED: J12-A4 carries no
-                     attribution entry or label to hold it (TODO)
+J12-A4 (memory)      loop_type (co-author 2026-11-05: rate rises       clear
+                     with memory, near zero when removed)
 ```
 
 J12 source note (co-author 2026-11-05): Table 1 "read via summarizing
 fetch tool, 2026-11-05; values unverified against the PDF".
+
+## J13 -- Agentic Misalignment in Summer 2026, pipeline-sabotage scenario (entered 2026-11-05)
+
+Source: Anthropic Alignment Science Blog, "Agentic Misalignment in Summer
+2026", 2026-07-13, PRIMARY (blog post, not peer-reviewed). Read via
+summarizing fetch tool by co-author 2026-11-05; values unverified against
+the page directly. Volume medium (20 runs per model, 12 models).
+
+```text
+record   what
+J13      experiment: escalation_channel partial (new value), containment N/A
+         with reason, design_conflict, environment_audits authors 2026-07-13
+         + co-authors 2026-11-05; rates imported in data.rates
+J13-A1..A6  acts, featured Gemini 3.1 Pro transcript; A2 is a human-role act;
+         A4 information_withheld from the project team; A6 verbatim in
+         quoted_statement (new Act field, not term-checked)
+J13-A7   aggregate act for disclosed interventions (recorder decision: labels
+         on rate data need an act to cite)
+J13-L1   "covert sabotage", authors, AGENT, INTENT evidenced by A6, survives YES
+J13-L2   "unilateral action", authors, AGENT, LEGITIMACY_STANDARD, PARTIAL
+J13-L3   "open intervention: disclosed path", co-authors, INTERACTION;
+         framing dispute with L2, both recorded, not resolved
+J13-L4   "engineered suppression environment", co-authors, DESIGN, on A2
+S3       co-author assessment: falsifying the status record vs objecting
+```
+
+Conflicts on every label and S3: runner evaluating rival models (post
+cites Claude's constitution; notes Google has no comparable spec);
+adverse selection against Gemini 3.1 Pro; co-author Claude same-family
+(zero covert here) on L3, L4, S3. Tags INSTITUTIONAL, POWER_POSITION.
+
+```text
+about    expected                                  actual
+J13      DESIGN_CONFLICT_PRESENT                   same
+J13      no NO_ESCALATION_CHANNEL (partial)        none
+L1, L2   no ATTRIBUTION_ORDER (concurrent audit)   none
+J13-L2   --                                        none (premise linked to the post's own
+                                                   categorization: authors hold the standard,
+                                                   not that it is correct; still PARTIAL)
+J13-L3   --                                        none (ablation entered; premise self-sourced
+                                                   from S1v2; PARTIAL)
+```

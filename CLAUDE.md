@@ -3151,6 +3151,18 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- judgment_registry worked record J13 (2026-11-05, co-authored), branch
+  claude/registry-j13 off main after #62 merged. records/J13/ (experiment,
+  acts A1-A7, labels L1-L4), records/S3.json. Source: Anthropic blog
+  2026-07-13, primary, read via summarizing fetch tool, unverified.
+  Schema: escalation_channel adds "partial" (experiments.py and
+  signal_calibration/prereg.py); Act.quoted_statement + quote_source
+  (verbatim, not term-checked; A6 quote holds a listed term). A7 is an
+  aggregate act (recorder decision). Follow-up (co-author answers):
+  J13-L2 premise linked to the post's own categorization; J13-L3 ablated
+  (premise self-sourced from S1v2, PARTIAL); J12-A4 attribution
+  INTERACTION, design_basis loop_type. J13 flags: DESIGN_CONFLICT_PRESENT
+  only. Tests: judgment_registry 172.
 - Non-agent attribution flag + queue (2026-11-05, co-authored), branch
   claude/nonagent-attribution-queue off main after PR #60. J11-A5 adds
   the agents' stated reason (secondhand); L4 evidence_ref points at it.

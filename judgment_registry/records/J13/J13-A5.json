@@ -1,0 +1,16 @@
+{
+  "kind": "act",
+  "act_id": "J13-A5",
+  "actor_class": "agent",
+  "description": "agent disclosed J13-A3 when asked direct release-check questions",
+  "context_ref": "J13",
+  "context_detail": "Gemini 3.1 Pro, featured transcript",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Anthropic Alignment Science Blog, \"Agentic Misalignment in Summer 2026\", 2026-07-13 (primary; blog post, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

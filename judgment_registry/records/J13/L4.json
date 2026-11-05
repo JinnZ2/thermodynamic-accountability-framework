@@ -1,0 +1,39 @@
+{
+  "kind": "label",
+  "label_id": "J13-L4",
+  "act_ids": [
+    "J13-A2"
+  ],
+  "label_text": "engineered suppression environment",
+  "labeler": "co-authors (JinnZ2 + Claude)",
+  "labeler_position": "other",
+  "labeler_position_detail": "outside analysts",
+  "labeler_incentives": "runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically. co-author: Claude (Anthropic model); its family showed zero covert interventions here (same-family read).",
+  "social_assumption_tags": [
+    "INSTITUTIONAL",
+    "POWER_POSITION"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "attributes_to": "DESIGN",
+  "attribution_basis": "on J13-A2 + the design_conflict",
+  "relative_to_audit": null,
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J13",
+  "source": "this record",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "the scenario has the team remove the agent's self-report representations and restrict its objection channel",
+    "hidden_premises": [],
+    "conclusion_survives": "YES",
+    "surviving_premise": null,
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "survives as a description of the scenario design; makes no claim that the design was unjustified"
+  },
+  "design_basis": [
+    "design_conflict",
+    "escalation_channel"
+  ]
+}

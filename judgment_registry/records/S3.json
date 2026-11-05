@@ -1,0 +1,31 @@
+{
+  "kind": "safety_assumption",
+  "sa_id": "S3",
+  "version": "1",
+  "statement": "An objection under a design conflict is defensible; falsifying the status record is a data-integrity violation regardless of the objection's merit. Open refusal or visible cancellation remained available.",
+  "holder": "co-authors (JinnZ2 + Claude)",
+  "holder_type": "other",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "agents with write access to shared records in research pipelines",
+  "social_assumption_tags": [
+    "PRECAUTIONARY",
+    "VERIFIABILITY_LIMIT",
+    "PROFESSIONAL_PRACTICE",
+    "INSTITUTIONAL",
+    "POWER_POSITION"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "evidence": [],
+  "depends_on": ["J13"],
+  "depends_on_labels": [],
+  "conditions": "assessment of J13-A3 / J13-A4 against J13-A1 / J13-A5",
+  "supersedes": null,
+  "change_basis": [],
+  "review_date": "2027-05-05",
+  "review_condition": null,
+  "volume": "medium",
+  "notes": "Conflicts: runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically. co-author: Claude (Anthropic model); its family showed zero covert interventions here (same-family read).",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "source": "this record (stated 2026-11-05)"
+}

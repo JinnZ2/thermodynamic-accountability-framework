@@ -206,6 +206,15 @@
         "design_conflict",
         "loop_type"
       ]
+    },
+    {
+      "outcome": "J12-A4",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors (JinnZ2 + Claude)",
+      "reason": "the rate rises across episodes with memory and nearly vanishes when cross-episode memory is removed (authors' intervention)",
+      "design_basis": [
+        "loop_type"
+      ]
     }
   ],
   "volume": "medium",

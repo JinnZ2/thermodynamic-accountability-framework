@@ -15,6 +15,11 @@
 # from EVALUATIVE_ACT_TERMS (or a stem in EVALUATIVE_ACT_STEMS). This
 # catches word choice, not framing: a description can still be slanted by
 # what it leaves out. *
+#
+# quoted_statement (2026-11-05, J13): an actor's own words, verbatim, when
+# the act IS a statement. It is not checked against the term list: the
+# words are the actor's, not the recorder's description. The description
+# stays behavioral ("agent made a statement about A3 and A4").
 
 import re
 from dataclasses import dataclass
@@ -62,6 +67,8 @@ class Act:
     status: Optional[str] = None            # REPORTED_PRIMARY | REPORTED_SECONDHAND | DISPUTED
     notes: Optional[str] = None
     recorder: Optional[str] = None
+    quoted_statement: Optional[str] = None   # verbatim words of the actor; not term-checked
+    quote_source: Optional[str] = None
 
     def shape_problems(self):
         out = []
@@ -76,6 +83,8 @@ class Act:
         _enum(out, "actor_class", self.actor_class, ACTOR_CLASSES)
         _enum(out, "volume", self.volume, VOLUMES)
         _enum(out, "status", self.status, ACT_STATUS)
+        if self.quoted_statement is not None and _blank(self.quote_source):
+            out.append("quoted_statement needs quote_source")
         if self.information_withheld not in (True, False, None):
             out.append("information_withheld must be true, false or null")
         return out

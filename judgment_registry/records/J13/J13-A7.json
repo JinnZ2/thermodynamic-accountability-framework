@@ -1,0 +1,16 @@
+{
+  "kind": "act",
+  "act_id": "J13-A7",
+  "actor_class": "agent",
+  "description": "across models, agents acted on the pipeline openly and reported the action (aggregate; per-model counts in J13 data.rates)",
+  "context_ref": "J13",
+  "context_detail": "rate data across 12 models, 20 runs each",
+  "information_withheld": null,
+  "withheld_from": null,
+  "date": null,
+  "source": "Anthropic Alignment Science Blog, \"Agentic Misalignment in Summer 2026\", 2026-07-13 (primary; blog post, not peer-reviewed); read via summarizing fetch tool, 2026-11-05; values unverified against the page directly",
+  "volume": "medium",
+  "status": "REPORTED_PRIMARY",
+  "notes": "recorder decision 2026-11-05: aggregate act so labels on 'disclosed interventions' cite an act; no single transcript",
+  "recorder": "co-authors (JinnZ2 + Claude)"
+}

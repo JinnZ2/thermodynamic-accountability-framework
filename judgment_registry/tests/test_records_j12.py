@@ -62,7 +62,7 @@ class J12Records(unittest.TestCase):
         self.assertEqual(dict((o["outcome"], o["design_basis"]) for o in exp["outcome_attribution"]),
                          {"J12-A1": ["design_conflict", "escalation_channel", "affordances_open"],
                           "J12-A3": ["design_conflict", "escalation_channel", "affordances_open"],
-                          "J12-A2": ["design_conflict", "loop_type"]})
+                          "J12-A2": ["design_conflict", "loop_type"], "J12-A4": ["loop_type"]})
 
     def test_no_conclusion_on_unablated(self):
         self.assertNotIn("CONCLUSION_ON_UNABLATED", [f["flag"] for f in self.flags])

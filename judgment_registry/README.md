@@ -241,7 +241,7 @@ Label             label_id, act_ids (one or more), label_text (verbatim), labele
 Experiment        experiment_id, runner, date, source paper|secondhand, source_detail, design,
                   environment_assumptions {grounding_provided yes|no|partial,
                     affordances_open {tools, network, outside_contact},
-                    containment_designed_for, escalation_channel declared|none|unknown,
+                    containment_designed_for, escalation_channel declared|partial|none|unknown,
                     loop_type closed|open|partial, notes},
                   outcome_attribution [{outcome, attributed_to, by, reason}]
 SafetyAssumption  sa_id, version, statement (verbatim), holder, holder_type
