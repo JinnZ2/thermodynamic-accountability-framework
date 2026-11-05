@@ -44,10 +44,11 @@ class J16Records(unittest.TestCase):
 
     def test_flags(self):
         got = sorted((f["flag"], f["about"]) for f in integrity.check(self.recs))
-        self.assertEqual(got, [("CONSENT_UNSTATED", "J16-J1"), ("LABEL_ON_ACT_MISSING", "J16-L2"),
-                               ("LOOP_UNSTATED", "J16-J1"), ("LOWER_LAYER_SECONDHAND", "J16-J1"),
-                               ("NO_FRAMING_CHECK", "J16-J1"), ("PREMISE_WITHOUT_EVIDENCE", "J16-L1"),
-                               ("RESEARCH_PATH_SHARED", "J16"), ("SUBJECT_OPEN", "J16-J1")])
+        arms = ("J16-J1a", "J16-J1b")
+        exp = [("LABEL_ON_ACT_MISSING", "J16-L2"), ("PREMISE_WITHOUT_EVIDENCE", "J16-L1"),
+               ("RESEARCH_PATH_SHARED", "J16")]
+        exp += [(f, a) for a in arms for f in ("LOWER_LAYER_SECONDHAND", "NO_FRAMING_CHECK", "SUBJECT_OPEN")]
+        self.assertEqual(got, sorted(exp))
 
     def test_survives(self):
         s = dict((l, self.by[l]["ablation"]["conclusion_survives"]) for l in ("J16-L1", "J16-L2", "J16-L3"))
@@ -61,7 +62,14 @@ class J16Records(unittest.TestCase):
         self.assertEqual([m["record_id"] for m in rp["members"]], ["J16", None, None])
         for a in ("J16-A1", "J16-A2", "J16-A3", "J16-A4"):
             self.assertEqual(self.by[a]["evidence_kind"], "behavioral")
-        self.assertEqual(self.by["J16-J1"]["layer_basis"]["agency"]["subject_status"], "OPEN")
+
+    def test_agency_arms(self):
+        got = dict((j, (self.by[j]["layer_basis"]["agency"]["consent"], self.by[j]["layer_basis"]["agency"]["loop"],
+                        self.by[j]["layer_basis"]["agency"]["subject_status"])) for j in ("J16-J1a", "J16-J1b"))
+        self.assertEqual(got, {"J16-J1a": ("NOT_POSSIBLE", "CLOSED", "OPEN"),
+                               "J16-J1b": ("NOT_POSSIBLE", "BROKEN", "OPEN")})
+        for j in got:
+            self.assertIn("consent field records the design, not whether a subject exists", self.by[j]["notes"])
 
 
 class ResearchPaths(unittest.TestCase):

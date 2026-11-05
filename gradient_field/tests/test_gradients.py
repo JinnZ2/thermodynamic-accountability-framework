@@ -169,6 +169,10 @@ class ShippedFiles(unittest.TestCase):
                          (["G11"], "AMPLIFY", "PROPOSED", ["J16-A4"]))
         self.assertIn("J16-A4", field.known_refs())
         self.assertIn("not equivalence", i10["transfer_note"])
+        self.assertEqual(i10["evidence_status"]["J16-A4"]["status"], "OBSERVED")
+        g11 = dict((g["id"], g) for g in self.gs)["G11"]
+        self.assertEqual((g11["name"], g11["aliases"]),
+                         ("approval / preference training", ["grader approval", "sycophancy pressure", "RLHF/DPO"]))
 
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]

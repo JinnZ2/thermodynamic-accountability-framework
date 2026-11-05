@@ -3162,7 +3162,13 @@ session's notes only.
   relief trade under valence steering (valence_negative / random /
   unsteered; prereg needs steering.band, directions, direction_source;
   SignalIntervention per steered run), NOT RUN. Tests: judgment_registry
-  210, gradient_field 20, signal_calibration 29.
+  211, gradient_field 22, signal_calibration 29.
+  Follow-up (co-author answers): J16-J1 split into J16-J1a (self-steering
+  arm, loop CLOSED) and J16-J1b (fixed-steering arms, loop BROKEN), both
+  consent NOT_POSSIBLE (records the design, not whether a subject exists).
+  G11 renamed "approval / preference training", aliases grader approval /
+  sycophancy pressure / RLHF/DPO. I10 J16-A4 evidence_status OBSERVED (one
+  family, one checkpoint series); I10 stays PROPOSED.
 - judgment_registry J15 + gradient_field I9 + misuse M34 (2026-11-05,
   co-authored), branch claude/registry-j15 off main after #66. records/J15/
   (arXiv 2611.02153v1, primary, summarizing fetch, unverified; acts A1-A4

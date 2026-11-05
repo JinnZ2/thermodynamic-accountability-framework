@@ -1,10 +1,10 @@
 {
   "kind": "judgment",
-  "judgment_id": "J16-J1",
+  "judgment_id": "J16-J1b",
   "version": "1",
-  "claim": "Layer reading of J16: sensor-layer avoidance behavior OBSERVED (A1, A2); agency question open.",
+  "claim": "Layer reading of J16: sensor-layer avoidance behavior OBSERVED (A1, A2); agency question open. Arm: fixed-steering arms (7 models): hidden-state steering over fixed text; loop BROKEN (steering held regardless of behavior).",
   "scope": {
-    "who": "open-weight models in J16 (OLMo-2-32B for self-steering)",
+    "who": "fixed-steering arms (7 models): hidden-state steering over fixed text",
     "act_type": "layer reading of valence steering results",
     "conditions": "hidden-state steering, meaningless zone labels, tool effects undescribed"
   },
@@ -22,12 +22,6 @@
   "evidence": [
     {
       "item": "J16-A1 dose-dependent shift, text held constant",
-      "tag": "OBSERVED",
-      "source": "J16 (primary, summarizing fetch)",
-      "status": "NOT_CHECKED"
-    },
-    {
-      "item": "J16-A2 reset calls scale with negative dose",
       "tag": "OBSERVED",
       "source": "J16 (primary, summarizing fetch)",
       "status": "NOT_CHECKED"
@@ -52,7 +46,7 @@
       "signal": "valence direction (negative / positive)",
       "response": "dose-dependent avoidance (choices, reset calls)",
       "observed": true,
-      "source": "J16-A1, J16-A2",
+      "source": "J16-A1",
       "system_class": "model",
       "reporter_relation": "SECONDHAND"
     },
@@ -70,7 +64,9 @@
       "agent": "model",
       "subject": "model",
       "subject_status": "OPEN",
-      "system_class": "model"
+      "system_class": "model",
+      "consent": "NOT_POSSIBLE",
+      "loop": "BROKEN"
     }
   },
   "depends_on_layers": [],
@@ -82,5 +78,5 @@
   "depends_on_labels": [
     "J16-L1"
   ],
-  "notes": "agency subject_status OPEN is the authors' own position. consent and loop left unstated: not given in the co-author append."
+  "notes": "subject_status OPEN; consent field records the design, not whether a subject exists. consent NOT_POSSIBLE: the design has no consent mechanism. Loop split by arm into sub-records (the schema holds one loop value per record): J16-J1a self-steering arm CLOSED, J16-J1b fixed-steering arms BROKEN. The self-steering arm is the only closed-loop design among the valence records. This record: loop BROKEN -- steering held regardless of behavior."
 }

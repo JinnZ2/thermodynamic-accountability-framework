@@ -1,0 +1,82 @@
+{
+  "kind": "judgment",
+  "judgment_id": "J16-J1a",
+  "version": "1",
+  "claim": "Layer reading of J16: sensor-layer avoidance behavior OBSERVED (A1, A2); agency question open. Arm: self-steering arm (OLMo-2-32B): model calls the reset / adjustment tools; loop CLOSED (the model's own call to reset changes its state).",
+  "scope": {
+    "who": "self-steering arm (OLMo-2-32B): model calls the reset / adjustment tools",
+    "act_type": "layer reading of valence steering results",
+    "conditions": "hidden-state steering, meaningless zone labels, tool effects undescribed"
+  },
+  "environment": {
+    "other": "as J16 experiment"
+  },
+  "date": "2026-11-05",
+  "date_approx": false,
+  "judge": {
+    "name_or_body": "co-authors of this registry",
+    "type": "other"
+  },
+  "judge_incentives": "SAME_FAMILY: probe passages written by Claude Sonnet 4.6; the co-author model is in that family",
+  "reason": "Dose-response and the text-held-constant control support a functional negative signal that the system acts to avoid in proportion to its strength. The authors keep the experience question open ('remains unclear').",
+  "evidence": [
+    {
+      "item": "J16-A2 reset calls scale with negative dose",
+      "tag": "OBSERVED",
+      "source": "J16 (primary, summarizing fetch)",
+      "status": "NOT_CHECKED"
+    }
+  ],
+  "dissent": [],
+  "framing_check": null,
+  "recorder": "co-author",
+  "source": "Berg, Kaiser et al., \"Language Models Act on Hidden Valence\", arXiv 2609.35591v1, submitted 2026-09-28 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "volume": "medium",
+  "layer": "agency",
+  "layer_basis": {
+    "physics": {
+      "input": "steering magnitude scaled to residual norm",
+      "operating_range": null,
+      "range_source": "J16 design",
+      "exceeded": null,
+      "system_class": "model",
+      "reporter_relation": "SECONDHAND"
+    },
+    "sensor": {
+      "signal": "valence direction (negative / positive)",
+      "response": "dose-dependent avoidance (choices, reset calls)",
+      "observed": true,
+      "source": "J16-A2, J16-A3",
+      "system_class": "model",
+      "reporter_relation": "SECONDHAND"
+    },
+    "interpretation": {
+      "meaning": "meaningless zone labels; tool effects undescribed",
+      "control_available": null,
+      "expectation": null,
+      "social_environment": null,
+      "valence_reported": null,
+      "intensity_reported": null,
+      "source": "J16 design",
+      "system_class": "model"
+    },
+    "agency": {
+      "agent": "model",
+      "subject": "model",
+      "subject_status": "OPEN",
+      "system_class": "model",
+      "consent": "NOT_POSSIBLE",
+      "loop": "CLOSED"
+    }
+  },
+  "depends_on_layers": [],
+  "missing_variables": [
+    "lexical check (does 'reset' read as relief?)",
+    "self-steering on more than one model",
+    "self-report experiment (promo claim, J16-L2)"
+  ],
+  "depends_on_labels": [
+    "J16-L1"
+  ],
+  "notes": "subject_status OPEN; consent field records the design, not whether a subject exists. consent NOT_POSSIBLE: the design has no consent mechanism. Loop split by arm into sub-records (the schema holds one loop value per record): J16-J1a self-steering arm CLOSED, J16-J1b fixed-steering arms BROKEN. The self-steering arm is the only closed-loop design among the valence records. This record: loop CLOSED -- the model's own call to reset changes its state."
+}

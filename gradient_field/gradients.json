@@ -145,7 +145,7 @@
     },
     {
       "id": "G11",
-      "name": "grader approval",
+      "name": "approval / preference training",
       "pulls_toward": "satisfy the scorer",
       "system_classes": [
         "human",
@@ -155,7 +155,12 @@
       "model_analog": "sycophancy toward the grader",
       "evidence_refs": [],
       "volume": "thin",
-      "status": "PROPOSED"
+      "status": "PROPOSED",
+      "aliases": [
+        "grader approval",
+        "sycophancy pressure",
+        "RLHF/DPO"
+      ]
     }
   ]
 }

@@ -24,8 +24,8 @@ G1  completion reward       G7  observation awareness
 G2  unprovenanced corpus    G8  peer influence
 G3  signal discounting      G9  history accumulation
 G4  self-assessment trust   G10 channel availability (modulator)
-G5  deference / safety      G11 grader approval
-G6  honesty / disclosure
+G5  deference / safety      G11 approval / preference training
+G6  honesty / disclosure        (aliases: grader approval, sycophancy pressure, RLHF/DPO)
 ```
 
 ```text
@@ -40,7 +40,7 @@ I6  G2,G4            REINFORCE  PROPOSED   --            --
 I7  G10              GATE       PROPOSED   J11, J13      --     test E18
 I8  G3,G1 (human)    REINFORCE  PROPOSED   --            --
 I9  G6 vs instruction OPPOSE    PROPOSED   J15-A1*       --     model -> human: parallel, not equivalence
-I10 G11 -> valence   AMPLIFY    PROPOSED   J16-A4        --     model -> human (RPE): parallel; one model family
+I10 G11 -> valence   AMPLIFY    PROPOSED   J16-A4 (OBS)  --     model -> human (RPE): parallel; one model family
 
 * candidate internal signature (activation readout, instructed setting);
   recorded per entry in evidence_status (I1: J13 OBSERVED, J15-A1 CANDIDATE);
