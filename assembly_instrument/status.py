@@ -54,16 +54,20 @@ def junction_status(ref, info, reps, distributed, n_required=DEFAULT_N):
     for r in reps:
         counts[r["outcome"]] += 1
     flags = []
-    caution = []
+    caution = []        # instrument lines: outcome word, region/date, version -- no reporter free text
+    field_notes = []    # M13: reporter free text, kept apart; printed below every caution line
     for r in reps:
         ver = r.get("junction_version")
         vnote = "" if ver == cur else (" (version unknown)" if not ver else " (reported on older text %s)" % ver)
         where = ", ".join(x for x in (r.get("coarse_region"), r.get("date")) if x) or "no region/date"
         if r["outcome"] == "UNSAFE":
-            caution.append("UNSAFE: %s [%s]%s" % (r.get("failure_point") or "no detail given", where, vnote))
+            caution.append("UNSAFE reported [%s]%s" % (where, vnote))
         elif r["outcome"] == "failed" and irreversible:
-            caution.append("failed on an irreversible step: %s [%s]%s" % (
-                r.get("failure_point") or "no detail given", where, vnote))
+            caution.append("failed on an irreversible step [%s]%s" % (where, vnote))
+        for k in ("failure_point", "as_built_vs_specified"):
+            t = (r.get(k) or "").strip()
+            if t:
+                field_notes.append("%s (%s, %s) [%s]: %s" % (ref, r["outcome"], k, where, t))
     builds = set()
     for r in reps:
         if (r["outcome"] == "worked" and r.get("reporter_relation") == "hands-on"
@@ -90,7 +94,7 @@ def junction_status(ref, info, reps, distributed, n_required=DEFAULT_N):
     return {"ref": ref, "branch": info["branch"], "step": j.get("step"), "irreversible": irreversible,
             "version": cur, "state": state, "flags": flags, "counts": counts,
             "independent_builds": len(builds), "builds_required": n_required,
-            "caution": caution, "environment_groups": groups, "worst": worst}
+            "caution": caution, "field_notes": field_notes, "environment_groups": groups, "worst": worst}
 
 
 def compute(entries, records, n_required=DEFAULT_N):
@@ -114,6 +118,19 @@ def compute(entries, records, n_required=DEFAULT_N):
             for ref, info in index.items()]
     rows.sort(key=lambda x: (x["worst"], STATE_RANK.index(x["state"]), x["ref"]))
     return rows, orphans
+
+
+FIELD_NOTE_HEADER = ("UNVERIFIED FIELD NOTES -- free text from field reports, as sent. "
+                     "Not checked; not part of the instrument's cautions above.")
+
+
+def field_note_block(rows):
+    """M13: reporter free text as a separate block. Callers print it after
+    every instrument caution line, never above them."""
+    notes = [n for r in rows for n in r.get("field_notes") or []]
+    if not notes:
+        return []
+    return ["", "-" * 60, FIELD_NOTE_HEADER] + ["  unverified field note -- " + n for n in notes]
 
 
 def caution_refs(entries, records, n_required=DEFAULT_N):
@@ -151,6 +168,9 @@ def main(argv):
             print("    env %s -> U%d F%d P%d W%d" % (g, gc["UNSAFE"], gc["failed"], gc["partial"], gc["worked"]))
     for o in orphans:
         print("ORPHAN report for unknown junction %s (%s)" % (o.get("junction_id"), o.get("outcome")))
+    notes = field_note_block(rows)
+    if notes:
+        print("\n".join(notes))
     return 0
 
 

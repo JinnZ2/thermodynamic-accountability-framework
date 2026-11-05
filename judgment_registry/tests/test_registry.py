@@ -91,9 +91,74 @@ class FlagTests(unittest.TestCase):
                  ("judgment", J("j2", supersedes="j1", change_basis=["CONDITIONS"],
                                 environment={"scarcity": "high"}))]
         self.assertEqual(codes(build(*steps), "j2"), ["DISSENT_DROPPED"])
+        steps.append(("contact_path", {"path_id": "cp-1", "holder": "member-3", "recorder": "rec-01"}))
         steps.append(("withdrawal", {"judgment_id": "j1", "position": "p1", "holder": "member-3",
-                                     "recorder": "rec-01", "source": "S"}))
+                                     "recorder": "rec-01", "source": "S",
+                                     "confirmation": {"method": "holder_contact_path", "path_id": "cp-1"}}))
         self.assertEqual(codes(build(*steps), "j2"), [])
+        self.assertEqual(codes(build(*steps)), [])
+
+
+class M25WithdrawalTests(unittest.TestCase):
+    D = {"position": "p1", "holder": "member-3", "reason": "r", "source": "S"}
+
+    def steps(self, holder="member-3"):
+        d = dict(self.D, holder=holder)
+        return [("judgment", J("j1", dissent=[d])),
+                ("judgment", J("j2", supersedes="j1", change_basis=["CONDITIONS"],
+                               environment={"scarcity": "high"}))]
+
+    def W(self, holder="member-3", **conf):
+        return ("withdrawal", {"judgment_id": "j1", "position": "p1", "holder": holder,
+                               "recorder": "rec-01", "source": "S", "confirmation": conf or None})
+
+    def flags(self, steps):
+        return [(f["flag"], f["about"]) for f in integrity.check(build(*steps))
+                if f["flag"] in ("DISSENT_DROPPED", "DISSENT_WITHDRAWAL_UNCONFIRMED")]
+
+    def test_unconfirmed_withdrawal_flags_and_does_not_clear_dropped(self):
+        got = self.flags(self.steps() + [self.W()])
+        self.assertIn(("DISSENT_WITHDRAWAL_UNCONFIRMED", "withdrawal:j1"), got)
+        self.assertIn(("DISSENT_DROPPED", "j2"), got)
+
+    def test_contact_path_must_exist_match_holder_and_come_first(self):
+        conf = {"method": "holder_contact_path", "path_id": "cp-1"}
+        late = self.steps() + [self.W(**conf), ("contact_path", {"path_id": "cp-1", "holder": "member-3"})]
+        other = self.steps() + [("contact_path", {"path_id": "cp-1", "holder": "member-9"}), self.W(**conf)]
+        none = self.steps() + [self.W(**conf)]
+        for s in (late, other, none):
+            self.assertIn("DISSENT_WITHDRAWAL_UNCONFIRMED", [f for f, _ in self.flags(s)])
+        ok = self.steps() + [("contact_path", {"path_id": "cp-1", "holder": "Member-3 "}), self.W(**conf)]
+        self.assertEqual(self.flags(ok), [])
+
+    def test_anonymous_needs_steward_and_distinct_second(self):
+        base = self.steps("anonymous")
+        self.assertIn("DISSENT_WITHDRAWAL_UNCONFIRMED",
+                      [f for f, _ in self.flags(base + [self.W("anonymous", method="holder_contact_path",
+                                                                path_id="cp-1")])])
+        for conf in ({"method": "steward_two_person", "steward": "st-1"},
+                     {"method": "steward_two_person", "steward": "st-1", "second": "ST-1"}):
+            self.assertIn("DISSENT_WITHDRAWAL_UNCONFIRMED",
+                          [f for f, _ in self.flags(base + [self.W("anonymous", **conf)])], conf)
+        ok = base + [self.W("anonymous", method="steward_two_person", steward="st-1", second="st-2")]
+        self.assertEqual(self.flags(ok), [])
+
+    def test_named_holder_cannot_use_steward_path(self):
+        s = self.steps() + [self.W(method="steward_two_person", steward="st-1", second="st-2")]
+        self.assertIn("DISSENT_WITHDRAWAL_UNCONFIRMED", [f for f, _ in self.flags(s)])
+
+    def test_shape_rejections(self):
+        with self.assertRaises(ledger.LedgerError):
+            build(("contact_path", {"path_id": "cp-1", "holder": "anonymous"}))
+        with self.assertRaises(ledger.LedgerError):
+            build(("withdrawal", {"judgment_id": "j1", "position": "p", "holder": "h",
+                                  "confirmation": {"method": "said-so"}}))
+
+    def test_detail_text_neutral(self):
+        flags = integrity.check(build(*(self.steps() + [self.W()])))
+        for f in flags:
+            words = set(re.findall(r"[a-z]+", (f["flag"] + " " + f["detail"]).lower()))
+            self.assertEqual(sorted(words & set(EVALUATIVE)), [], f)
 
     def test_scope_transfer(self):
         app = {"application_id": "a1", "judgment_id": "j1",
@@ -170,9 +235,47 @@ class LedgerTests(unittest.TestCase):
         b = build(("judgment", J("j1")), ("judgment", J("j2", judge={"name_or_body": "R", "type": "body"})))
         m = ledger.merge(a, b)
         self.assertEqual(len(m), 2)
-        self.assertEqual(ledger.merge(m, m), m)
-        self.assertEqual(ledger.merge(m, b), m)
+        bodies = lambda rs: [r["body_hash"] for r in rs]
+        origins = lambda rs: [ledger.provenance(r)["origins"] for r in rs]
+        # M11: a re-merge appends its own merge event, so records are not equal;
+        # bodies and origins are.
+        for again in (ledger.merge(m, m, "x", "y"), ledger.merge(m, b)):
+            self.assertEqual(bodies(again), bodies(m))
+            self.assertEqual(ledger.verify(again), [])
+        self.assertEqual(origins(ledger.merge(m, m, "x", "y")), origins(m))
         self.assertEqual(ledger.verify(m), [])
+
+    def test_m11_merge_keeps_origin_and_event(self):
+        import mergeprov
+        a = build(("judgment", J("j1")))
+        b = build(("judgment", J("j1")), ("judgment", J("j2", judge={"name_or_body": "R", "type": "body"})))
+        m = ledger.merge(a, b, "node-north", "node-south")
+        self.assertEqual(mergeprov.missing_origins([("node-north", a), ("node-south", b)], m), [])
+        p0 = ledger.provenance(m[0])
+        self.assertEqual(sorted(o["node"] for o in p0["origins"]), ["node-north", "node-south"])
+        self.assertEqual([o["record_hash"] for o in p0["origins"]], [a[0]["hash"], b[0]["hash"]])
+        ev = p0["merges"][-1]
+        self.assertEqual([i["node"] for i in ev["inputs"]], ["node-north", "node-south"])
+        self.assertEqual(ev["inputs"][1]["head_hash"], b[-1]["hash"])
+        # a second merge keeps the first origins and both events
+        c = build(("judgment", J("j3", judge={"name_or_body": "S", "type": "body"})))
+        m2 = ledger.merge(m, c, "merged-1", "node-east")
+        self.assertEqual(ledger.provenance(m2[0])["origins"], p0["origins"])
+        self.assertEqual(len(ledger.provenance(m2[0])["merges"]), 2)
+        self.assertEqual(ledger.provenance(m2[2])["origins"][0]["node"], "node-east")
+
+    def test_m11_provenance_cannot_be_stripped_or_edited(self):
+        a = build(("judgment", J("j1")))
+        b = build(("judgment", J("j2", judge={"name_or_body": "R", "type": "body"})))
+        m = ledger.merge(a, b, "n1", "n2")
+        stripped = [dict(r) for r in m]
+        del stripped[0]["provenance"]
+        self.assertTrue(ledger.verify(stripped))
+        edited = json.loads(json.dumps(m))
+        edited[1]["provenance"]["origins"][0]["node"] = "n1"
+        self.assertTrue(ledger.verify(edited))
+        with self.assertRaises(ledger.LedgerError):
+            ledger.merge(a, b, "same", "same")
 
     def test_merge_refuses_existing_file(self):
         open(self.path, "w").close()

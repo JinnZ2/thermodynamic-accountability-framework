@@ -118,8 +118,8 @@ volume           thin
 ```text
 surface          merge() of two ledgers
 adversarial use  Records imported from a forged second file come out with a fresh valid chain; origin is lost.
-mitigations      none yet
-residual         Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
+mitigations      D-M13
+residual         Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*
 volume           thin
 ```
 
@@ -138,8 +138,8 @@ volume           thin
 ```text
 surface          field-report free text printed at the top of a checkout handout as a caution
 adversarial use  A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.
-mitigations      none yet
-residual         Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.* Queued for the next round (2026-11-05).
+mitigations      D-M14
+residual         Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.*
 volume           thin
 ```
 
@@ -258,8 +258,8 @@ volume           thin
 ```text
 surface          Withdrawal record (withdrawn_by_holder is a settable boolean)
 adversarial use  A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
-mitigations      none yet
-residual         Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.* Queued for the next round (2026-11-05).
+mitigations      D-M15
+residual         Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.*
 volume           thin
 ```
 
@@ -349,6 +349,9 @@ volume           thin
 | D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. | `headrec.py (identical copy in judgment_registry, assembly_instrument, signal_calibration, community_black_start, misuse_guard)` | test_headrec: HeadLogic, CopiesIdentical, LedgersRefuse |
 | D-M11 | Quarantine add / lift go through two_person.authorize('ledger_quarantine', ...); DENIED raises, every decision is logged. | `community_black_start/defenses.py Quarantine` | community_black_start tests/test_defenses.py QuarantineTests |
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. | `none (docs/misuse_M12_identity_note.md)` | none |
+| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. | `mergeprov.py (identical copy in misuse_guard, judgment_registry, assembly_instrument); ledger.merge in judgment_registry and assembly_instrument; ledger.py merge A B OUT [NODE_A NODE_B]` | judgment_registry test_registry: test_m11_*; assembly_instrument test_feedback MergeProvenanceTests; misuse_guard test_headrec test_mergeprov_byte_identical |
+| D-M14 | Field-report free text never prints among caution lines: status rows split caution (instrument lines) from field_notes (reporter text); checkout and status print field notes last, in a separate block headed UNVERIFIED FIELD NOTES, each line 'unverified field note -- ...'. | `assembly_instrument/status.py field_note_block; checkout.py render` | assembly_instrument test_feedback CheckoutTests test_m13_* |
+| D-M15 | Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only. | `judgment_registry/schema.py Withdrawal.confirmation, ContactPath; integrity.py _withdrawals` | judgment_registry test_registry M25WithdrawalTests, test_dissent_dropped_and_withdrawn |
 
 ## Independent pass
 

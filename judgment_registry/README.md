@@ -24,7 +24,8 @@ junction records.
 
 ```text
 schema.py      Judgment / Application / Transfer / Withdrawal; layer fields; shape check at the door
-ledger.py      append-only JSONL, SHA-256 chain (prev_hash); merge by body hash;
+ledger.py      append-only JSONL, SHA-256 chain (prev_hash); merge by body hash,
+               keeping origin node(s) + merge event per record (mergeprov.py, M11);
                superseded_by derived at read time, never written
 integrity.py   neutral flags only
 chain.py       lineage(id): version chain root first; diff(a, b): field-level changes
@@ -47,8 +48,8 @@ python3 -m unittest discover -s tests
 ```
 
 A record file holds one JSON object. Its `"kind"` key is one of
-`judgment` (the default), `application`, `transfer`, `withdrawal` or
-`intervention`.
+`judgment` (the default), `application`, `transfer`, `withdrawal`,
+`contact_path` or `intervention`.
 
 ## Records
 
@@ -86,7 +87,15 @@ Judgment (one record per version; judgment_id unique; a new version is a new id)
 Application  {application_id, judgment_id, scope, environment, date, recorder, source}
 Transfer     {reason, application_id | judgment_id | intervention_id, recorder, source}
              why a judgment or a layer basis was carried to a new scope or system class
-Withdrawal   {judgment_id, position, holder, withdrawn_by_holder, recorder, source}
+Withdrawal   {judgment_id, position, holder, withdrawn_by_holder, recorder, source, confirmation}
+             M25: counts only with confirmation on record --
+               {method: holder_contact_path, path_id, [confirmed_on]}  named holder; path_id must
+                    match a contact_path for the same holder written earlier in the chain
+               {method: steward_two_person, steward, second, [authorization_ref]}  anonymous
+                    holder only; steward and second must differ
+             otherwise DISSENT_WITHDRAWAL_UNCONFIRMED, and DISSENT_DROPPED stays raised
+ContactPath  {path_id, holder, recorded_on, recorder, source}   kind "contact_path"
+             an id only; the address is held locally (local_data/ or off-repo)
 SignalIntervention (kind "intervention"; intervention_id unique)
   intervention_id, version
   system_class        human | animal | plant | model | other
@@ -140,7 +149,8 @@ CHANGE_BASIS_UNSTATED          supersedes set; change_basis empty or only NONE_S
 NO_NEW_CONDITIONS_OR_EVIDENCE  supersedes set; environment and evidence entered are identical
                                to the superseded record. The change is recorded but no
                                material basis is listed. Not a verdict.
-DISSENT_DROPPED                dissent in version N absent from N+1, no withdrawal by its holder
+DISSENT_DROPPED                dissent in version N absent from N+1, no confirmed withdrawal by its holder
+DISSENT_WITHDRAWAL_UNCONFIRMED withdrawal with no confirmation on record (M25)
 INCENTIVES_UNRECORDED          judge_incentives is null
 NO_FRAMING_CHECK               framing_check is null (informational)
 SCOPE_TRANSFER                 application outside the recorded scope / environment / dates,
@@ -342,8 +352,8 @@ M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coord
      status     PROPOSED (independent pass)
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
+     mitigated  D-M13
+     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
@@ -357,8 +367,8 @@ M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, blac
      status     PROPOSED (independent pass)
 M25  Withdrawal record (withdrawn_by_holder is a settable boolean)
      use        A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.* Queued for the next round (2026-11-05).
+     mitigated  D-M15
+     residual   Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.*
      status     PROPOSED (independent pass)
 M26  integrity flags and supersession forks
      use        Thin records about an opponent's judgments generate flags that are cited to discredit them; fork spam fragments a lineage.
@@ -376,6 +386,8 @@ M27  n-of-1 RECALIBRATE template records (calibration_log, channel mapping)
 |---|---|
 | D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
+| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. |
+| D-M15 | Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only. |
 | D-M6 | Registry is not validation: every judgment_registry CLI output starts with 'Registered = documented, not correct.' |
 | D-M7 | Dissent as position: dissent.holder may be 'anonymous'; a dissent entered with no holder is stored as anonymous. |
 | D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |

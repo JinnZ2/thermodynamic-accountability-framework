@@ -159,8 +159,10 @@
       "module": "cross-cutting",
       "surface": "merge() of two ledgers",
       "adversarial_use": "Records imported from a forged second file come out with a fresh valid chain; origin is lost.",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).",
+      "mitigation_ids": [
+        "D-M13"
+      ],
+      "residual": "Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -183,8 +185,10 @@
       "module": "assembly_instrument",
       "surface": "field-report free text printed at the top of a checkout handout as a caution",
       "adversarial_use": "A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.* Queued for the next round (2026-11-05).",
+      "mitigation_ids": [
+        "D-M14"
+      ],
+      "residual": "Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -317,8 +321,10 @@
       "module": "judgment_registry",
       "surface": "Withdrawal record (withdrawn_by_holder is a settable boolean)",
       "adversarial_use": "A forged withdrawal removes a dissent without raising DISSENT_DROPPED.",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.* Queued for the next round (2026-11-05).",
+      "mitigation_ids": [
+        "D-M15"
+      ],
+      "residual": "Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -473,6 +479,24 @@
       "description": "Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual.",
       "code": "none (docs/misuse_M12_identity_note.md)",
       "test": "none"
+    },
+    {
+      "id": "D-M13",
+      "description": "Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped.",
+      "code": "mergeprov.py (identical copy in misuse_guard, judgment_registry, assembly_instrument); ledger.merge in judgment_registry and assembly_instrument; ledger.py merge A B OUT [NODE_A NODE_B]",
+      "test": "judgment_registry test_registry: test_m11_*; assembly_instrument test_feedback MergeProvenanceTests; misuse_guard test_headrec test_mergeprov_byte_identical"
+    },
+    {
+      "id": "D-M14",
+      "description": "Field-report free text never prints among caution lines: status rows split caution (instrument lines) from field_notes (reporter text); checkout and status print field notes last, in a separate block headed UNVERIFIED FIELD NOTES, each line 'unverified field note -- ...'.",
+      "code": "assembly_instrument/status.py field_note_block; checkout.py render",
+      "test": "assembly_instrument test_feedback CheckoutTests test_m13_*"
+    },
+    {
+      "id": "D-M15",
+      "description": "Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only.",
+      "code": "judgment_registry/schema.py Withdrawal.confirmation, ContactPath; integrity.py _withdrawals",
+      "test": "judgment_registry test_registry M25WithdrawalTests, test_dissent_dropped_and_withdrawn"
     }
   ],
   "experiments": [

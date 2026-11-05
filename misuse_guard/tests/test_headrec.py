@@ -45,6 +45,11 @@ class CopiesIdentical(unittest.TestCase):
         for d in COPIES:
             self.assertTrue(filecmp.cmp(src, os.path.join(ROOT, d, "headrec.py"), shallow=False), d)
 
+    def test_mergeprov_byte_identical(self):    # M11
+        src = os.path.join(ROOT, "misuse_guard", "mergeprov.py")
+        for d in ("judgment_registry", "assembly_instrument"):
+            self.assertTrue(filecmp.cmp(src, os.path.join(ROOT, d, "mergeprov.py"), shallow=False), d)
+
 
 # Each snippet: append 3 records, then (a) truncate -> append refused,
 # (b) rebuild from scratch (valid chain, 1 record) -> append refused.

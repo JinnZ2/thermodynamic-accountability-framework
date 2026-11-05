@@ -3134,6 +3134,14 @@ python core/atbs/test_v2.py
 6. **Lagged coupling** — ecological changes propagate with delay to knowledge dimensions
 7. **IPI gating** — knowledge transmission gated by structure, not energy surplus
 
+### PR workflow
+- Do not merge a PR until every CI check has finished, including
+  warn-only checks (chat_paste_check runs with continue-on-error; it
+  still has to complete). "In progress" is not "passed". Read each
+  check's result, report it, then merge only on the owner's go-ahead.
+  (Rule added 2026-11-05 after PR #58 was merged with checks still
+  running.)
+
 ### Audit Notes -- older entries archived
 
 Audit notes from 2026-03-24 through the original 2026-05-02
@@ -3143,6 +3151,24 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- M11 / M13 / M25 (2026-11-05, co-authored), branch
+  claude/misuse-m11-m13-m25 off main after PR #58. M11 (D-M13):
+  mergeprov.py (identical copy in misuse_guard, judgment_registry,
+  assembly_instrument) -- merge keeps provenance.origins (node +
+  original record hash; a body seen on both sides keeps both) and
+  provenance.merges (event with each input's node, count, head); hash
+  covers provenance; node labels must differ; ledger.py merge A B OUT
+  [NODE_A NODE_B]. Re-merge appends an event, so record-level
+  idempotence was replaced by body + origin idempotence in the old test.
+  M13 (D-M14): status rows split caution (instrument lines, no reporter
+  text) from field_notes; checkout / status print field notes last under
+  UNVERIFIED FIELD NOTES, lines "unverified field note -- ..."; the old
+  checkout test that expected reporter text above the divider was
+  inverted. M25 (D-M15): kind contact_path (id only) +
+  Withdrawal.confirmation (holder_contact_path | steward_two_person);
+  flag DISSENT_WITHDRAWAL_UNCONFIRMED (neutral text, covered by the
+  neutrality test); an unconfirmed withdrawal does not clear
+  DISSENT_DROPPED. Added "PR workflow" rule above.
 - S1-S3 (2026-11-05): money_labor Summary field case -> "winter 2026,
   upper Midwest interstate"; notes.md sample keeps n, drops date and
   states; assessment_first_principle -> "a northern forest region

@@ -11,11 +11,13 @@
 #   merge()    union of two ledgers BY body_hash (same report forwarded twice
 #              counts once). Output is a NEW file: a's records in order, then
 #              b's records not already present, re-chained onto a. Inputs are
-#              never touched.
+#              never touched. M11: each output record keeps its origin node(s)
+#              and the merge event in a provenance block (mergeprov.py).
 #
 #   python3 ledger.py add LEDGER "FR1|..."       append a compact report line
 #   python3 ledger.py verify LEDGER
-#   python3 ledger.py merge A B OUT              OUT must not exist
+#   python3 ledger.py merge A B OUT [NODE_A NODE_B]   OUT must not exist;
+#                                                nodes default to file names
 
 import hashlib
 import json
@@ -24,6 +26,7 @@ import sys
 
 import compact
 import headrec  # M10: head record per ledger
+import mergeprov  # M11: merge keeps origin node + merge event
 from refs import canonical
 
 GENESIS = "0" * 64
@@ -38,10 +41,8 @@ def _h(obj):
     return hashlib.sha256(canonical(obj)).hexdigest()
 
 
-def _record(kind, body, prev):
-    bh = _h(body)
-    return {"kind": kind, "body": body, "body_hash": bh, "prev_hash": prev,
-            "hash": _h({"kind": kind, "body_hash": bh, "prev_hash": prev})}
+def _record(kind, body, prev, provenance=None):
+    return mergeprov.make_record(_h, kind, body, prev, provenance)
 
 
 def read(path):
@@ -71,8 +72,7 @@ def verify(records):
             probs.append("record %d: prev_hash does not match record %d (deleted or reordered)" % (i, i - 1))
         if _h(r.get("body")) != r.get("body_hash"):
             probs.append("record %d: body edited (body_hash mismatch)" % i)
-        expect = _h({"kind": r.get("kind"), "body_hash": r.get("body_hash"), "prev_hash": r.get("prev_hash")})
-        if expect != r.get("hash"):
+        if not mergeprov.record_hash_ok(_h, r):     # covers provenance (M11)
             probs.append("record %d: hash mismatch" % i)
         prev = r.get("hash")
     return probs
@@ -103,23 +103,27 @@ def head_problems(path, records, head=None):
     return headrec.check(records, head if head is not None else headrec.read_head(path))
 
 
-def merge(a, b):
-    """Union by body_hash. Returns new records (a's order, then b's new ones), re-chained."""
+def merge(a, b, node_a="a", node_b="b"):
+    """Union by body_hash into NEW records, re-chained. M11: every output record
+    carries provenance.origins (each (node, record_hash) its body came from; a
+    body on both sides keeps both) and provenance.merges (this event appended)."""
     for name, recs in (("a", a), ("b", b)):
         probs = verify(recs)
         if probs:
             raise LedgerError("ledger %s broken: %s" % (name, probs[0]))
-    seen = set()
-    out = []
-    prev = GENESIS
-    for r in list(a) + list(b):
-        if r["body_hash"] in seen:
-            continue
-        seen.add(r["body_hash"])
-        nr = _record(r["kind"], r["body"], prev)
-        out.append(nr)
-        prev = nr["hash"]
-    return out
+    if node_a == node_b:
+        raise LedgerError("node labels must differ (both %r): origins would be indistinguishable" % node_a)
+    return mergeprov.merge(_h, [(node_a, a), (node_b, b)])
+
+
+def provenance(record):
+    """Origins + merge events of a record; a never-merged record has none."""
+    return record.get("provenance") or {"origins": [], "merges": []}
+
+
+def node_label(path):
+    """Default origin node for a merge input: the file name without extension."""
+    return os.path.splitext(os.path.basename(path))[0]
 
 
 def write_new(path, records):
@@ -152,15 +156,18 @@ def main(argv):
                 print("BROKEN " + p)
             print("intact" if not probs else "%d problems" % len(probs))
             return 1 if probs else 0
-        if len(argv) == 4 and argv[0] == "merge":
-            out = merge(read(argv[1]), read(argv[2]))
+        if len(argv) in (4, 6) and argv[0] == "merge":
+            na, nb = node_label(argv[1]), node_label(argv[2])
+            if len(argv) == 6:                       # merge A B OUT NODE_A NODE_B
+                na, nb = argv[4], argv[5]
+            out = merge(read(argv[1]), read(argv[2]), na, nb)
             write_new(argv[3], out)
             print("merged %d records -> %s" % (len(out), argv[3]))
             return 0
     except (LedgerError, compact.ReportError) as e:
         sys.stderr.write("REJECTED: %s\n" % e)
         return 1
-    sys.stderr.write("usage: ledger.py add LEDGER \"FR1|...\" | verify LEDGER | merge A B OUT\n")
+    sys.stderr.write("usage: ledger.py add LEDGER \"FR1|...\" | verify LEDGER | merge A B OUT [NODE_A NODE_B]\n")
     return 2
 
 
