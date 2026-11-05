@@ -448,7 +448,7 @@ None of this appears in institutional cost accounting. All of it is essential fo
 
 
 Case Study 2: Winter Thermal Regulation
-Date: January 2026Location: Northern Minnesota, I-90 corridorConditions: -22°F ambient, wind chill -45°FDuration: 10-hour shift
+Season: winter 2026Location: upper Midwest interstateConditions: -22°F ambient, wind chill -45°FDuration: 10-hour shift
 Institutional Assumption
 “Idle time is waste. Fuel burned with no miles moved reduces efficiency. Minimize idle to maximize profit.”
 Measured Reality

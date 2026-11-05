@@ -346,8 +346,6 @@ FIELD MEASUREMENT REPORT
 
 System Dysfunction (D_n) & Camouflage Score (C_cam)
 
-Date: April 7, 2026
-Location: Distributed — Minnesota, Wisconsin, Iowa (Upper Midwest, USA)
 Sample: 50 truck drivers + 5 back office personnel (n = 55)
 Collected by: Sovereign Node (on-the-ground telemetry)
 

@@ -3143,6 +3143,11 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- S1-S3 (2026-11-05): money_labor Summary field case -> "winter 2026,
+  upper Midwest interstate"; notes.md sample keeps n, drops date and
+  states; assessment_first_principle -> "a northern forest region
+  (operator observation)", key northern_forest_region. Rescan: only
+  generic / public hits remain (R7 class).
 - R-items + J10 flags (2026-11-05, co-authored), branch
   claude/misuse-register. R1 hydro leads -> "upper Midwest river systems"
   (method kept; city, rivers, plant name dropped); R2 framework.md
