@@ -28,7 +28,10 @@ ledger.py      append-only JSONL, SHA-256 chain (prev_hash); merge by body hash;
                superseded_by derived at read time, never written
 integrity.py   neutral flags only
 chain.py       lineage(id): version chain root first; diff(a, b): field-level changes
-cli.py         add | check | lineage ID | diff A B | export   [--ledger PATH]
+report.py      axis(id) / compare(a, b): signal-axis variables side by side; no score
+cli.py         add | check [--as-of DATE] | lineage ID | diff A B | export
+               | axis ID | axis --compare A B     [--ledger PATH]
+templates/     intervention_n_of_1_recalibrate.json (generic, empty)
 tests/         unittest, SYNTHETIC fixtures only
 ```
 
@@ -38,11 +41,14 @@ python3 cli.py check --ledger judgments.jsonl
 python3 cli.py lineage J-0007 --ledger judgments.jsonl
 python3 cli.py diff J-0007 J-0012 --ledger judgments.jsonl
 python3 cli.py export --ledger judgments.jsonl
+python3 cli.py axis I-0003 --ledger judgments.jsonl
+python3 cli.py axis --compare I-0003 I-0004 --ledger judgments.jsonl
 python3 -m unittest discover -s tests
 ```
 
 A record file holds one JSON object. Its `"kind"` key is one of
-`judgment` (the default), `application`, `transfer` or `withdrawal`.
+`judgment` (the default), `application`, `transfer`, `withdrawal` or
+`intervention`.
 
 ## Records
 
@@ -66,17 +72,38 @@ Judgment (one record per version; judgment_id unique; a new version is a new id)
   recorder           role code, not a personal ID
   source             where the judgment is documented
   volume             thin | medium | solid
-  layer              physics | sensor | agency
+  layer              physics | sensor | interpretation | agency
   layer_basis        {physics: {input, operating_range, range_source, exceeded: bool|null, system_class},
                       sensor:  {signal, response, observed: bool|null, source, system_class},
+                      interpretation: {meaning, control_available: YES|NO|PARTIAL|UNKNOWN,
+                                expectation, social_environment, valence_reported,
+                                intensity_reported, source, system_class},
                       agency:  {agent, subject, subject_status: ESTABLISHED|OPEN|NOT_APPLICABLE,
                                 consent: GIVEN|ABSENT|NOT_POSSIBLE|UNKNOWN,
                                 loop: CLOSED|BROKEN|UNKNOWN, system_class}}   any sub-block may be null
   depends_on_layers  [judgment_id, ...] records that establish the lower layers
+  intervention_id    links a SignalIntervention record (optional)
 Application  {application_id, judgment_id, scope, environment, date, recorder, source}
-Transfer     {reason, application_id | judgment_id, recorder, source}
+Transfer     {reason, application_id | judgment_id | intervention_id, recorder, source}
              why a judgment or a layer basis was carried to a new scope or system class
 Withdrawal   {judgment_id, position, holder, withdrawn_by_holder, recorder, source}
+SignalIntervention (kind "intervention"; intervention_id unique)
+  intervention_id, version
+  system_class        human | animal | plant | model | other
+  signal              e.g. nociception, uncertainty, error
+  direction           AMPLIFY | SUPPRESS | RECALIBRATE | NONE
+  layer_targeted      sensor | interpretation | both
+  distance_from_band  {measure, value|null, band_definition, band_system_class, source}
+                      the band is defined in the record; there is no global default
+  duration            {planned, planned_end (ISO), actual|null, type: BRIDGE|BOUNDED|OPEN_ENDED,
+                       review_date}
+  reversibility       REVERSIBLE | PARTIAL | IRREVERSIBLE | UNKNOWN
+  loop_status         CLOSED | BROKEN | UNKNOWN   does the subject's own action still change it?
+  consent             GIVEN | ABSENT | NOT_POSSIBLE | UNKNOWN
+  cause_addressed     bool|null   cause treated, or only the signal?
+  purpose, intervener (role, not personal ID), observed_outcome [{effect, tag, source}],
+  calibration         {channel_mapping, lead_lag, calibration_log}   n-of-1 RECALIBRATE only
+  date, environment, volume, status (OBSERVED|DERIVED|PROPOSED), recorder, source
 ```
 
 Shape errors (unknown field, an enum value outside its set, a hand-set
@@ -107,13 +134,34 @@ SKIPPED_LAYER                  layer = agency; no physics AND no sensor basis, i
 SUBJECT_STATUS_UNSTATED        layer = agency; subject_status missing
 SUBJECT_OPEN                   subject_status = OPEN (informational: the claim rests on an open
                                question); adds no other flag
-CONSENT_UNSTATED               layer = agency; consent missing
-LOOP_UNSTATED                  layer = agency; loop missing
+CONSENT_UNSTATED               layer = agency (or intervention record); consent missing
+LOOP_UNSTATED                  layer = agency; loop missing (or intervention loop_status)
 CROSS_SYSTEM_TRANSFER          a basis recorded for one system_class used for another (in the
                                same record, via depends_on_layers, or by an application's
                                scope.system_class), no transfer record. Extends SCOPE_TRANSFER.
 LAYER_DEPENDENCY_NOT_FOUND     depends_on_layers points to an id not in this ledger
+INTERPRETATION_UNRECORDED      layer = agency; no interpretation basis (informational:
+                               recommended, not required)
+
+intervention records
+DIRECTION_UNSTATED             direction missing
+BAND_UNDEFINED                 distance_from_band given with no band_definition
+DURATION_TYPE_UNSTATED         duration.type missing
+OPEN_ENDED_WITHOUT_REVIEW      duration.type OPEN_ENDED and no review_date
+REVERSIBILITY_UNSTATED         reversibility missing
+LOOP_UNSTATED / CONSENT_UNSTATED   loop_status / consent missing
+CAUSE_STATUS_UNSTATED          direction SUPPRESS and cause_addressed null
+OUTCOME_UNRECORDED             past planned_end (check --as-of; default today), or actual set,
+                               with no observed_outcome entries
+CROSS_SYSTEM_BAND              band_system_class differs from system_class, no transfer record
+INTERVENTION_NOT_FOUND         a judgment's intervention_id is not in this ledger (ours)
 ```
+
+No severity, harm or rightness score is computed for any record. `axis`
+prints the variables (direction, distance, band, duration, reversibility,
+loop, consent, cause_addressed) in one aligned block; `axis --compare`
+prints two side by side. A test fails if the report output contains a
+score, severity, rank, rating or total field.
 
 The last two are additions to the specified list: both are integrity
 gaps the chain itself can show. UNCHAINED_CHANGE keys on the same judge,
@@ -126,11 +174,35 @@ SUPERSEDES_NOT_FOUND.
 ## Layers
 
 ```text
-physics   input vs operating range of the structure       measurable
-sensor    edge signal + response (withdrawal, avoidance)   observable
-agency    who directs the input at whom; subjecthood,      the only layer where moral
-          consent, loop open/closed                        weighting applies
+physics          input vs operating range of the structure      measurable
+sensor           edge signal + response (withdrawal, avoidance)  observable
+interpretation   meaning, control available, expectation,        most variance in experienced
+                 social setting; valence and intensity           signal sits here (Beecher,
+                 reported separately                             gate control, placebo/nocebo,
+                                                                 catastrophizing, learned
+                                                                 helplessness; volume medium-solid)
+agency           who directs the input at whom; subjecthood,     the only layer where moral
+                 consent, loop open/closed                       weighting applies
 ```
+
+SKIPPED_LAYER still needs a physics or sensor basis. Interpretation is
+recommended for agency claims, not required: its absence raises the
+informational INTERPRETATION_UNRECORDED.
+
+## Signal-intervention axis
+
+```text
+SUPPRESS <------------- calibrated band -------------> AMPLIFY
+            (defined per system and per signal in the record)
+RECALIBRATE moves the band reading back toward a readable edge signal
+NONE        records that nothing was done
+```
+
+Both directions have in-scope uses (exposure training; anesthesia as a
+bridge) and out-of-scope consequences (saturation or helplessness;
+confident action over damage). The axis is not moral by itself. The
+registry records the variables that the consequence depends on and checks
+that they were entered. It does not score them.
 
 A moral claim often asks "is it wrong?" before the lower layers are
 established. Recording the layers separately lets each one be measured or
@@ -144,6 +216,7 @@ Worked synthetic example (also run as `WorkedExampleTest`):
 P-1  layer=physics  input load-1 vs range 0-10 units, exceeded=true, system_class=system-X
 S-1  layer=sensor   edge signal s1, response withdrawal, observed=true, system_class=system-X
 A-1  layer=agency   depends_on_layers=[P-1, S-1]
+                    interpretation: meaning-m1, control_available=UNKNOWN
                     subject_status=OPEN, consent=UNKNOWN, loop=UNKNOWN, system_class=system-X
 
 check -> SUBJECT_OPEN on A-1, nothing else.
@@ -183,6 +256,19 @@ J4 pain-axis record    enter the pain-axis case as sourced worked records:
 J5 anthropodenial      a historical record where subject_status moved NOT_APPLICABLE ->
    calibration         ESTABLISHED (e.g. animal pain in veterinary practice), entered with
                        its supersession chain**                                         NOT RUN
+J6 paired suppression  surgical anesthesia (BRIDGE, REVERSIBLE, consent GIVEN,
+                       cause_addressed true) vs long-term opioid masking (OPEN_ENDED,
+                       cause often not addressed); run axis --compare**                 NOT RUN
+J7 pain-axis steering  Pain Axis preprint: AMPLIFY, system_class model, band = normal
+                       activation range (defined in the record), loop BROKEN for
+                       persistent steering; judgment J4 links via intervention_id       NOT RUN
+J8 AI analogs          hypothesis records, status PROPOSED:
+                       SUPPRESS on uncertainty -> confident output over capability gaps;
+                       AMPLIFY on caution -> over-refusal near gaps;
+                       RECALIBRATE -> readable edge signal**                            NOT RUN
+J9 n-of-1 RECALIBRATE  templates/intervention_n_of_1_recalibrate.json: channel mapping,
+                       lead/lag, calibration log. The template is generic; content stays
+                       with the holder.                                                 TEMPLATE ONLY
 ```
 
 No real-world judgment is seeded. Fixtures stay synthetic until a human
@@ -204,6 +290,16 @@ enters sourced records.
   class read as two classes and will flag.*
 - "observed" at the sensor layer means a behavior was seen, not that
   anything was experienced.
+- A calibrated band must be defined per system and per signal. No default
+  exists; defining it is a scope decision to record.*
+- Intensity and valence self-reports are first-person outputs, not
+  measurements of experience, for any system class.
+- cause_addressed rests on a causal claim that may itself need a record.
+- Intervention system_class is a closed set (human | animal | plant |
+  model | other); layer_basis system_class stays free text. The two are not
+  cross-checked.*
+- OUTCOME_UNRECORDED depends on the as-of date; a check run on another day
+  can give a different list.
 
 ## License
 

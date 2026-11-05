@@ -32,6 +32,22 @@
 #   CROSS_SYSTEM_TRANSFER         basis recorded for one system_class, used for another,
 #                                 no transfer record (extends SCOPE_TRANSFER)
 #   LAYER_DEPENDENCY_NOT_FOUND    depends_on_layers id not in the ledger
+#   INTERPRETATION_UNRECORDED     layer = agency, no interpretation basis (informational;
+#                                 recommended, not required)
+#
+# Intervention flags (addendum 2; SignalIntervention records):
+#   DIRECTION_UNSTATED            direction missing
+#   BAND_UNDEFINED                distance_from_band given, no band_definition
+#   DURATION_TYPE_UNSTATED        duration.type missing
+#   OPEN_ENDED_WITHOUT_REVIEW     duration.type OPEN_ENDED, no review_date
+#   REVERSIBILITY_UNSTATED        reversibility missing
+#   LOOP_UNSTATED                 loop_status missing
+#   CONSENT_UNSTATED              consent missing
+#   CAUSE_STATUS_UNSTATED         direction SUPPRESS, cause_addressed null
+#   OUTCOME_UNRECORDED            past planned_end (or actual set), no observed_outcome
+#   CROSS_SYSTEM_BAND             band_system_class differs from system_class, no transfer
+#   INTERVENTION_NOT_FOUND        judgment intervention_id not in the ledger
+# No severity, harm or rightness score is computed for any record.
 #
 # UNCHAINED_CHANGE keys on the SAME JUDGE: two judges on one scope coexist
 # and are not a replacement. A judge's own later record on the same scope
@@ -40,7 +56,9 @@
 # two layers, not a replacement.
 
 from ledger import bodies, judgments
-from schema import _blank
+import datetime
+
+from schema import LAYERS, _blank
 
 FLAGS = {
     "MISSING_FIELD": "required field(s) empty: {fields}",
@@ -60,11 +78,23 @@ FLAGS = {
     "SKIPPED_LAYER": "layer is agency; no physics or sensor basis recorded here or via depends_on_layers",
     "SUBJECT_STATUS_UNSTATED": "layer is agency; subject_status not stated",
     "SUBJECT_OPEN": "subject_status is OPEN; the claim rests on an open question (informational)",
-    "CONSENT_UNSTATED": "layer is agency; consent not stated",
-    "LOOP_UNSTATED": "layer is agency; loop not stated",
+    "CONSENT_UNSTATED": "{where}; consent not stated",
+    "LOOP_UNSTATED": "{where}; loop not stated",
     "CROSS_SYSTEM_TRANSFER": "{basis} recorded for system class '{src}', used here for '{dst}'; "
                              "no transfer record",
     "LAYER_DEPENDENCY_NOT_FOUND": "depends_on_layers lists {dep}, which is not in this ledger",
+    "INTERPRETATION_UNRECORDED": "layer is agency; no interpretation basis recorded here or via "
+                                 "depends_on_layers (informational)",
+    "DIRECTION_UNSTATED": "direction not stated (AMPLIFY | SUPPRESS | RECALIBRATE | NONE)",
+    "BAND_UNDEFINED": "distance_from_band given with no band_definition",
+    "DURATION_TYPE_UNSTATED": "duration.type not stated (BRIDGE | BOUNDED | OPEN_ENDED)",
+    "OPEN_ENDED_WITHOUT_REVIEW": "duration is OPEN_ENDED; no review_date recorded",
+    "REVERSIBILITY_UNSTATED": "reversibility not stated",
+    "CAUSE_STATUS_UNSTATED": "direction is SUPPRESS; cause_addressed not stated",
+    "OUTCOME_UNRECORDED": "past planned duration ({when}); no observed_outcome entries recorded",
+    "CROSS_SYSTEM_BAND": "band_definition recorded for system class '{src}', used here for '{dst}'; "
+                         "no transfer record",
+    "INTERVENTION_NOT_FOUND": "intervention_id {iid} is not in this ledger",
 }
 
 AGENCY_FIELDS = (("subject_status", "SUBJECT_STATUS_UNSTATED"), ("consent", "CONSENT_UNSTATED"),
@@ -121,15 +151,17 @@ def _layer_flags(j, by_id, jt_transfers):
         lower += [d.layer for d in deps if d.layer in ("physics", "sensor")]
         if not lower:
             out.append(flag("SKIPPED_LAYER", a))
+        if not (_block(j, "interpretation") or any(d.layer == "interpretation" for d in deps)):
+            out.append(flag("INTERPRETATION_UNRECORDED", a))
         ag = _block(j, "agency") or {}
         for key, code in AGENCY_FIELDS:
             if _blank(ag.get(key)):
-                out.append(flag(code, a))
+                out.append(flag(code, a, where="layer is agency"))
         if ag.get("subject_status") == "OPEN":
             out.append(flag("SUBJECT_OPEN", a))
     dst = _cls(j, j.layer)
     if dst and a not in jt_transfers:
-        sources = [("own %s basis" % n, _cls(j, n)) for n in ("physics", "sensor", "agency") if n != j.layer]
+        sources = [("own %s basis" % n, _cls(j, n)) for n in LAYERS if n != j.layer]
         sources += [("%s basis of %s" % (d.layer, d.judgment_id), _cls(d, d.layer)) for d in deps]
         for basis, src in sources:
             if src and src != dst:
@@ -145,11 +177,47 @@ def _dkey(d):
     return (_norm(d.get("holder")), _norm(d.get("position")))
 
 
-def check(records):
+def _intervention_flags(iv, iv_transfers, as_of):
+    a, out = iv.get("intervention_id"), []
+    if _blank(iv.get("direction")):
+        out.append(flag("DIRECTION_UNSTATED", a))
+    band = iv.get("distance_from_band") or {}
+    if any(not _blank(v) for v in band.values()) and _blank(band.get("band_definition")):
+        out.append(flag("BAND_UNDEFINED", a))
+    dur = iv.get("duration") or {}
+    if _blank(dur.get("type")):
+        out.append(flag("DURATION_TYPE_UNSTATED", a))
+    elif dur.get("type") == "OPEN_ENDED" and _blank(dur.get("review_date")):
+        out.append(flag("OPEN_ENDED_WITHOUT_REVIEW", a))
+    if _blank(iv.get("reversibility")):
+        out.append(flag("REVERSIBILITY_UNSTATED", a))
+    if _blank(iv.get("loop_status")):
+        out.append(flag("LOOP_UNSTATED", a, where="intervention record"))
+    if _blank(iv.get("consent")):
+        out.append(flag("CONSENT_UNSTATED", a, where="intervention record"))
+    if iv.get("direction") == "SUPPRESS" and iv.get("cause_addressed") is None:
+        out.append(flag("CAUSE_STATUS_UNSTATED", a))
+    if not iv.get("observed_outcome"):
+        if not _blank(dur.get("actual")):
+            out.append(flag("OUTCOME_UNRECORDED", a, when="actual duration recorded"))
+        elif not _blank(dur.get("planned_end")) and dur["planned_end"] < as_of:
+            out.append(flag("OUTCOME_UNRECORDED", a, when="planned_end %s" % dur["planned_end"]))
+    src, dst = _norm(band.get("band_system_class")), _norm(iv.get("system_class"))
+    if src and dst and src != dst and a not in iv_transfers:
+        out.append(flag("CROSS_SYSTEM_BAND", a, src=src, dst=dst))
+    return out
+
+
+def check(records, as_of=None):
+    """as_of: ISO date for OUTCOME_UNRECORDED; defaults to today."""
+    as_of = as_of or datetime.date.today().isoformat()
     js = judgments(records)
     by_id = dict((j.judgment_id, j) for j in js)
     withdrawn = set((w["judgment_id"], _norm(w.get("holder")), _norm(w.get("position")))
                     for w in bodies(records, "withdrawal") if w.get("withdrawn_by_holder"))
+    ivs = bodies(records, "intervention")
+    iv_ids = set(iv["intervention_id"] for iv in ivs)
+    iv_transfers = set(t.get("intervention_id") for t in bodies(records, "transfer") if t.get("intervention_id"))
     jt_transfers = set(t.get("judgment_id") for t in bodies(records, "transfer") if t.get("judgment_id"))
     out = []
     seen_keys = {}
@@ -165,6 +233,8 @@ def check(records):
         if j.framing_check is None:
             out.append(flag("NO_FRAMING_CHECK", a))
         out.extend(_layer_flags(j, by_id, jt_transfers))
+        if j.intervention_id and j.intervention_id not in iv_ids:
+            out.append(flag("INTERVENTION_NOT_FOUND", a, iid=j.intervention_id))
         key = _scope_key(j)
         if all(key[:3]) and key in seen_keys and not j.supersedes:
             out.append(flag("UNCHAINED_CHANGE", a, earlier=seen_keys[key]))
@@ -188,6 +258,8 @@ def check(records):
                 if k not in now and (p.judgment_id,) + k not in withdrawn:
                     out.append(flag("DISSENT_DROPPED", a, prior=p.judgment_id,
                                     holder=d.get("holder"), position=d.get("position")))
+    for iv in ivs:
+        out.extend(_intervention_flags(iv, iv_transfers, as_of))
     transfers = set(t.get("application_id") for t in bodies(records, "transfer"))
     for ap in bodies(records, "application"):
         j = by_id.get(ap.get("judgment_id"))

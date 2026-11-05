@@ -19,7 +19,7 @@ import json
 import os
 from dataclasses import asdict
 
-from schema import KIND_CLASSES, Judgment, SchemaError
+from schema import KIND_CLASSES, Judgment, SchemaError, SignalIntervention
 
 GENESIS = "0" * 64
 
@@ -89,6 +89,10 @@ def build(kind, body):
         if probs:
             raise LedgerError("; ".join(probs))
         return obj.to_dict()
+    if cls is SignalIntervention:
+        probs = obj.shape_problems()
+        if probs:
+            raise LedgerError("; ".join(probs))
     return asdict(obj)    # defaults filled in, so stored bodies are complete
 
 
@@ -103,6 +107,11 @@ def append_records(records, kind, body):
         if clean["judgment_id"] in ids:
             raise LedgerError("judgment_id %s exists; a new version needs a new id that supersedes it"
                               % clean["judgment_id"])
+    if kind == "intervention":
+        ids = {r["body"]["intervention_id"] for r in records if r["kind"] == "intervention"}
+        if clean["intervention_id"] in ids:
+            raise LedgerError("intervention_id %s exists; a new version needs a new id"
+                              % clean["intervention_id"])
     rec = _record(kind, clean, records[-1]["hash"] if records else GENESIS)
     return list(records) + [rec]
 

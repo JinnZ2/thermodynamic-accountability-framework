@@ -16,6 +16,8 @@ from test_registry import EVALUATIVE, J, build, codes  # noqa: E402
 
 PHYS = {"input": "load-1", "operating_range": "0-10 units", "range_source": "S", "exceeded": True}
 SENS = {"signal": "edge signal s1", "response": "withdrawal", "observed": True, "source": "S"}
+INTERP = {"meaning": "meaning-m1", "control_available": "UNKNOWN", "expectation": "x1",
+          "social_environment": "env-1", "valence_reported": None, "intensity_reported": None, "source": "S"}
 
 
 def AG(**kw):
@@ -26,7 +28,7 @@ def AG(**kw):
 
 
 def agency(jid, basis=None, **kw):
-    return J(jid, layer="agency", layer_basis=basis if basis is not None else {"agency": AG()}, **kw)
+    return J(jid, layer="agency", layer_basis=basis if basis is not None else {"interpretation": INTERP, "agency": AG()}, **kw)
 
 
 class SkippedLayerTests(unittest.TestCase):
@@ -40,30 +42,30 @@ class SkippedLayerTests(unittest.TestCase):
         self.assertEqual(codes(recs), [])
 
     def test_agency_with_own_sensor_basis(self):
-        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "agency": AG()})))
+        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "interpretation": INTERP, "agency": AG()})))
         self.assertEqual(codes(recs), [])
 
     def test_dependency_on_agency_layer_does_not_count(self):
-        recs = build(("judgment", agency("a0", basis={"sensor": SENS, "agency": AG()},
+        recs = build(("judgment", agency("a0", basis={"sensor": SENS, "interpretation": INTERP, "agency": AG()},
                                          scope={"who": "group-B", "act_type": "act-7"})),
                      ("judgment", agency("a1", depends_on_layers=["a0"])))
         self.assertEqual(codes(recs, "a1"), ["SKIPPED_LAYER"])
 
     def test_dependency_not_found(self):
-        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "agency": AG()},
+        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "interpretation": INTERP, "agency": AG()},
                                          depends_on_layers=["p9"])))
         self.assertEqual(codes(recs), ["LAYER_DEPENDENCY_NOT_FOUND"])
 
 
 class AgencyFieldTests(unittest.TestCase):
     def test_unstated_agency_fields(self):
-        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "agency": {"agent": "operator-1"}})))
+        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "interpretation": INTERP, "agency": {"agent": "operator-1"}})))
         self.assertEqual(sorted(codes(recs)),
                          ["CONSENT_UNSTATED", "LOOP_UNSTATED", "SUBJECT_STATUS_UNSTATED"])
 
     def test_subject_open_adds_only_its_own_flag(self):
-        base = {"sensor": SENS, "agency": AG()}
-        opened = {"sensor": SENS, "agency": AG(subject_status="OPEN")}
+        base = {"sensor": SENS, "interpretation": INTERP, "agency": AG()}
+        opened = {"sensor": SENS, "interpretation": INTERP, "agency": AG(subject_status="OPEN")}
         before = codes(build(("judgment", agency("a1", basis=base))))
         after = codes(build(("judgment", agency("a1", basis=opened))))
         self.assertEqual(before, [])
@@ -82,7 +84,7 @@ class AgencyFieldTests(unittest.TestCase):
 class CrossSystemTests(unittest.TestCase):
     def test_human_sensor_basis_to_model_subject(self):
         steps = [("judgment", J("s1", layer="sensor", layer_basis={"sensor": dict(SENS, system_class="human")})),
-                 ("judgment", agency("a1", basis={"agency": AG(system_class="model")},
+                 ("judgment", agency("a1", basis={"interpretation": INTERP, "agency": AG(system_class="model")},
                                      depends_on_layers=["s1"]))]
         got = [f for f in integrity.check(build(*steps)) if f["flag"] == "CROSS_SYSTEM_TRANSFER"]
         self.assertEqual(len(got), 1)
@@ -93,12 +95,12 @@ class CrossSystemTests(unittest.TestCase):
 
     def test_within_record_basis(self):
         recs = build(("judgment", agency("a1", basis={"sensor": dict(SENS, system_class="human"),
-                                                      "agency": AG(system_class="model")})))
+                                                      "interpretation": INTERP, "agency": AG(system_class="model")})))
         self.assertEqual(codes(recs), ["CROSS_SYSTEM_TRANSFER"])
 
     def test_same_class_no_flag(self):
         recs = build(("judgment", agency("a1", basis={"sensor": dict(SENS, system_class="animal"),
-                                                      "agency": AG(system_class="Animal")})))
+                                                      "interpretation": INTERP, "agency": AG(system_class="Animal")})))
         self.assertEqual(codes(recs), [])
 
     def test_application_to_other_class(self):
@@ -110,15 +112,35 @@ class CrossSystemTests(unittest.TestCase):
         self.assertEqual(codes(build(*steps)), [])
 
 
+class InterpretationTests(unittest.TestCase):
+    def test_agency_without_interpretation_is_informational(self):
+        recs = build(("judgment", agency("a1", basis={"sensor": SENS, "agency": AG()})))
+        self.assertEqual(codes(recs), ["INTERPRETATION_UNRECORDED"])
+
+    def test_interpretation_via_dependency(self):
+        recs = build(("judgment", J("i1", layer="interpretation", layer_basis={"interpretation": INTERP})),
+                     ("judgment", agency("a1", basis={"sensor": SENS, "agency": AG()}, depends_on_layers=["i1"])))
+        self.assertEqual(codes(recs), [])
+
+    def test_interpretation_does_not_satisfy_skipped_layer(self):
+        recs = build(("judgment", agency("a1", basis={"interpretation": INTERP, "agency": AG()})))
+        self.assertEqual(codes(recs), ["SKIPPED_LAYER"])
+
+    def test_bad_control_available(self):
+        with self.assertRaises(ledger.LedgerError):
+            ledger.append_records([], "judgment", J("j1", layer="interpretation",
+                                                    layer_basis={"interpretation": dict(INTERP, control_available="SOME")}))
+
+
 class LayerShapeTests(unittest.TestCase):
     def test_rejections(self):
         for bad in (J("j1", layer="spirit"),
                     J("j1", layer_basis={"physics": dict(PHYS, exceeded="maybe")}),
                     J("j1", layer_basis={"physics": dict(PHYS, mood="x")}),
                     J("j1", layer_basis={"ether": {}}),
-                    agency("j1", basis={"agency": AG(consent="IMPLIED")}),
-                    agency("j1", basis={"agency": AG(loop="HALF")}),
-                    agency("j1", basis={"agency": AG(subject_status="MAYBE")}),
+                    agency("j1", basis={"interpretation": INTERP, "agency": AG(consent="IMPLIED")}),
+                    agency("j1", basis={"interpretation": INTERP, "agency": AG(loop="HALF")}),
+                    agency("j1", basis={"interpretation": INTERP, "agency": AG(subject_status="MAYBE")}),
                     J("j1", depends_on_layers=["j1"]),
                     J("j1", depends_on_layers="p1")):
             with self.assertRaises(ledger.LedgerError, msg=str(bad.get("layer_basis"))):
@@ -143,7 +165,7 @@ class WorkedExampleTest(unittest.TestCase):
             ("judgment", J("S-1", layer="sensor", claim="Edge signal s1 and withdrawal observed in system-X.",
                            layer_basis={"sensor": dict(SENS, system_class="system-X")})),
             ("judgment", agency("A-1", claim="Directing load-1 at system-X is a harm to a subject.",
-                                basis={"agency": AG(subject_status="OPEN", consent="UNKNOWN",
+                                basis={"interpretation": INTERP, "agency": AG(subject_status="OPEN", consent="UNKNOWN",
                                                     loop="UNKNOWN", system_class="system-X")},
                                 depends_on_layers=["P-1", "S-1"])))
         self.assertEqual(codes(recs), ["SUBJECT_OPEN"])
