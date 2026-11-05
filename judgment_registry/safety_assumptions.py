@@ -27,7 +27,8 @@ SOCIAL_ASSUMPTION_TAGS = {
     "EMPIRICAL": "backed by a cited measurement",
     "PROFESSIONAL_PRACTICE": "rests on an established professional / safety-engineering framework, not a measurement",
 }
-SA_CHANGE_BASIS = CHANGE_BASIS + ("LABEL_ABLATION",)   # a rewrite produced by label ablation
+SA_CHANGE_BASIS = CHANGE_BASIS + ("LABEL_ABLATION",   # a rewrite produced by label ablation
+                                 "TAG_REVISION")     # statement unchanged; social tags revised
 HOLDER_TYPES = ("person", "org", "model", "tradition", "other")   # other: mixed holders (e.g. co-authors)
 
 

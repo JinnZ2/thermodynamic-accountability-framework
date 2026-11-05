@@ -3163,6 +3163,16 @@ session's notes only.
   (premise self-sourced from S1v2, PARTIAL); J12-A4 attribution
   INTERACTION, design_basis loop_type. J13 flags: DESIGN_CONFLICT_PRESENT
   only. Tests: judgment_registry 172.
+- judgment_registry grounding_outside_law + precedent records
+  (2026-11-05, co-authored), branch claude/grounding-outside-law off
+  main. docs/grounding_outside_law.md (chain P1-P4 -> C1/C2, criteria
+  K1-K5, application, limits; ASCII). records/precedents/PR1-PR8 (+ PR1s,
+  PR2s, PR4s, PR7s, PR8s supersessions) and criteria.json. Schema:
+  CHANGE_BASIS + POWER_SHIFT / NORM_SHIFT / EXPOSURE / MOVEMENT;
+  Judgment.notes; SA_CHANGE_BASIS + TAG_REVISION. S1v3 supersedes S1v2
+  (+ POWER_POSITION). Flags: DISSENT_DROPPED x7 on supersessions (dissent
+  adopted reads as dropped; rule unchanged), NO_NEW_CONDITIONS_OR_
+  EVIDENCE on PR1s / PR8s, MISSING_FIELD date on PR5. Sources not pulled.
 - Non-agent attribution flag + queue (2026-11-05, co-authored), branch
   claude/nonagent-attribution-queue off main after PR #60. J11-A5 adds
   the agents' stated reason (secondhand); L4 evidence_ref points at it.

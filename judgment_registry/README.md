@@ -75,7 +75,7 @@ Judgment (one record per version; judgment_id unique; a new version is a new id)
   dissent            [{position, holder, reason, source}]   never deleted
   supersedes         judgment_id | null
   superseded_by      derived from the chain at read time; rejected if set by hand
-  change_basis       [CONDITIONS | EVIDENCE | NONE_STATED]
+  change_basis       [CONDITIONS | EVIDENCE | NONE_STATED | POWER_SHIFT | NORM_SHIFT | EXPOSURE | MOVEMENT]
   change_detail      what conditions or evidence changed
   framing_check      {done, variants_tried, result_text} | null
   recorder           role code, not a personal ID
@@ -279,6 +279,13 @@ Limits: tags are judgments, so who tagged is recorded. * The neutrality
 check on act descriptions catches word choice, not framing. A label's
 `attributes_to` is the recorder's reading of the label, not the
 labeler's own statement, unless the labeler stated it.
+
+## Grounding outside law (2026-11-05)
+
+`docs/grounding_outside_law.md`: chain P1-P4 -> C1, C2; checkable
+criteria K1-K5; precedent records in `records/precedents/` (PR1-PR8,
+supersession where a reversal is named; K assessments in
+`criteria.json`). Doc only plus records; no new flag.
 
 ## Label ablation (2026-11-05)
 

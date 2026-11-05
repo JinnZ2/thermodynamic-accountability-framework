@@ -1,0 +1,41 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR2s",
+  "version": "1",
+  "claim": "State-mandated school segregation is unconstitutional.",
+  "scope": {
+    "who": "Black Americans (U.S.)",
+    "act_type": "constitutionality of state-mandated segregation",
+    "conditions": "U.S., from 1954"
+  },
+  "environment": {
+    "other": "United States"
+  },
+  "date": "1954",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "U.S. Supreme Court (Brown v. Board of Education, 1954)",
+    "type": "court"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [
+    {
+      "item": "social-science evidence cited in the reversal",
+      "tag": "OBSERVED",
+      "source": "co-author summary 2026-11-05; primary source not pulled (TODO)"
+    }
+  ],
+  "dissent": [],
+  "supersedes": "PR2",
+  "change_basis": [
+    "MOVEMENT",
+    "EVIDENCE"
+  ],
+  "change_detail": "movement pressure + social-science evidence",
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": null
+}

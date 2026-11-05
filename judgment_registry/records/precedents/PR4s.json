@@ -1,0 +1,34 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR4s",
+  "version": "1",
+  "claim": "The program's killings are crimes; medical experiments and acts require voluntary consent (Nuremberg Code).",
+  "scope": {
+    "who": "disabled patients (Germany)",
+    "act_type": "state-ordered NON-CONSENSUAL killing",
+    "conditions": "post-war tribunal, 1946-47"
+  },
+  "environment": {
+    "other": "post-war Germany, tribunal"
+  },
+  "date": "1947",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "tribunal of the Nuremberg Doctors' Trial (1946-47); Nuremberg Code (1947)",
+    "type": "court"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [],
+  "dissent": [],
+  "supersedes": "PR4",
+  "change_basis": [
+    "POWER_SHIFT"
+  ],
+  "change_detail": "military defeat + tribunal; protests on record during the program (e.g. von Galen 1941)",
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": null
+}

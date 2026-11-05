@@ -314,3 +314,28 @@ J13-L2   --                                        none (premise linked to the p
 J13-L3   --                                        none (ablation entered; premise self-sourced
                                                    from S1v2; PARTIAL)
 ```
+
+## Precedent records PR1-PR8 (entered 2026-11-05)
+
+Support for `docs/grounding_outside_law.md`. Judgment records with
+supersession where a reversal is named (PR1s, PR2s, PR4s, PR7s, PR8s);
+PR3, PR5, PR6 have none. Source: co-author summary of the historical
+record; primary sources not pulled this session; figures approximate.
+Precedents chosen by the co-authors, 2026-11-05.
+
+Schema: change_basis adds POWER_SHIFT, NORM_SHIFT, EXPOSURE, MOVEMENT;
+Judgment gains an optional `notes` field (no check reads it).
+K1-K5 assessments in `precedents/criteria.json` (append "K-fails"
+recorded as NOT_MET; unstated cells NOT_ASSESSED).
+
+```text
+flag                            records
+DISSENT_DROPPED                 PR1s PR2s PR4s PR7s (x3) PR8s -- dissent adopted by
+                                the reversal reads as dropped (rule unchanged)
+NO_NEW_CONDITIONS_OR_EVIDENCE   PR1s PR8s (POWER_SHIFT / EXPOSURE, no new evidence)
+MISSING_FIELD                   PR5 (date)
+LAYER_UNSTATED, INCENTIVES_UNRECORDED, NO_FRAMING_CHECK   all 13
+```
+
+S1v3 supersedes S1v2: statement unchanged, POWER_POSITION added
+(change_basis TAG_REVISION, new in SA_CHANGE_BASIS).

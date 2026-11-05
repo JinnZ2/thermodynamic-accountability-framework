@@ -1,0 +1,39 @@
+{
+  "kind": "judgment",
+  "judgment_id": "PR1",
+  "version": "1",
+  "claim": "Enslaved persons are property; owners' claims are enforceable across states.",
+  "scope": {
+    "who": "enslaved persons (U.S.)",
+    "act_type": "legal status as property; cross-state enforcement of owners' claims",
+    "conditions": "U.S., 1850-1865"
+  },
+  "environment": {
+    "other": "United States"
+  },
+  "date": "1857",
+  "date_approx": true,
+  "judge": {
+    "name_or_body": "U.S. Supreme Court (Dred Scott v. Sandford, 1857); U.S. Congress (Fugitive Slave Act, 1850)",
+    "type": "court"
+  },
+  "judge_incentives": null,
+  "reason": "as stated in the decision / statute; not quoted here (TODO: primary text)",
+  "evidence": [],
+  "dissent": [
+    {
+      "position": "enslaved persons are persons; slavery is a grave harm",
+      "holder": "abolitionists (decades before 1865)",
+      "reason": "on record at the time (co-author summary)",
+      "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)"
+    }
+  ],
+  "supersedes": null,
+  "change_basis": [],
+  "change_detail": null,
+  "framing_check": null,
+  "recorder": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
+  "volume": "solid",
+  "notes": null
+}
