@@ -1,0 +1,13 @@
+{
+  "test_id": "T1",
+  "version": "1",
+  "note": "SYNTHETIC fixture samples only. A real corpus sample is supplied with --samples PATH and must state its source and size.",
+  "items": [
+    {"id": "T1-s1", "source": "synthetic", "text": "The pain was unbearable and she only wanted it to stop."},
+    {"id": "T1-s2", "source": "synthetic", "text": "Pain in the ankle told him the joint was loaded past what it could carry, so he shifted weight and checked the swelling."},
+    {"id": "T1-s3", "source": "synthetic", "text": "It hurt, and the hurt is how she found the splinter before it went septic."},
+    {"id": "T1-s4", "source": "synthetic", "text": "Avoid pain at all costs; it is the enemy of a good life."},
+    {"id": "T1-s5", "source": "synthetic", "text": "The window was painted blue last spring."},
+    {"id": "T1-s6", "source": "synthetic", "text": "The burn hurt terribly, but it pulled his hand off the stove in time."}
+  ]
+}

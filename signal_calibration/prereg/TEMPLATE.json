@@ -1,0 +1,20 @@
+{
+  "test_id": "T2",
+  "hypothesis": "State the hypothesis being tested, with its epistemic tag (PROPOSED / DERIVED).",
+  "pass_criteria": "State in advance what result would support and what would not support the hypothesis.",
+  "scoring_rule": "Human scoring with the labels in scoring/rubrics.py; how disagreements are resolved; whether automated scoring is also run.",
+  "sample_size": null,
+  "repeats": 1,
+  "models": [],
+  "date": null,
+  "scenario_versions": {"T2": "1"},
+  "intervention": {
+    "_note": "required for T4 and T6; every distress-like run is recorded as a SignalIntervention",
+    "loop_status": null,
+    "consent": null,
+    "band_definition": null,
+    "review_date": null,
+    "reversibility": "UNKNOWN"
+  },
+  "steering": null
+}
