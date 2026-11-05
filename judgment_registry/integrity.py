@@ -17,7 +17,10 @@
 #   DISSENT_WITHDRAWAL_UNCONFIRMED withdrawal with no confirmation on record: holder via a contact
 #                                 path recorded earlier, or (anonymous holder) steward + second
 #                                 under the two-person rule (M25, 2026-11-05). An unconfirmed
-#                                 withdrawal does not clear DISSENT_DROPPED.
+#                                 withdrawal does not clear DISSENT_DROPPED. steward_two_person
+#                                 counts only with authorization_ref to a GRANTED
+#                                 confirm_dissent_withdrawal decision in a community_black_start
+#                                 two_person log passed as two_person_log (two_person_ref.py).
 #   INCENTIVES_UNRECORDED         judge_incentives is null
 #   NO_FRAMING_CHECK              framing_check is null (informational)
 #   SCOPE_TRANSFER                application outside recorded scope / environment / dates,
@@ -79,6 +82,7 @@ import ablation
 import experiments
 import labels
 import safety_assumptions
+import two_person_ref
 from ledger import EXT_MODULES, ID_FIELDS, bodies, judgments
 import datetime
 
@@ -216,7 +220,7 @@ def _dkey(d):
     return (_norm(d.get("holder")), _norm(d.get("position")))
 
 
-def _confirmation_gap(w, paths_before):
+def _confirmation_gap(w, paths_before, tp_log=None):
     """M25. '' when the withdrawal's confirmation is on record, else what is missing."""
     c = w.get("confirmation") or {}
     holder = _norm(w.get("holder"))
@@ -240,11 +244,11 @@ def _confirmation_gap(w, paths_before):
             return "steward_two_person needs steward and second"
         if st == nd:
             return "steward and second are the same name"
-        return ""
+        return two_person_ref.ref_gap(c, tp_log)   # M25: D7 decision on record
     return "confirmation method %s not in the recognized set" % m
 
 
-def _withdrawals(records):
+def _withdrawals(records, tp_log=None):
     """-> (set of confirmed withdrawal keys, list of DISSENT_WITHDRAWAL_UNCONFIRMED flags).
     Contact paths count only when written earlier in the chain than the withdrawal."""
     paths, confirmed, flags = set(), set(), []
@@ -253,7 +257,7 @@ def _withdrawals(records):
         if r.get("kind") == "contact_path":
             paths.add((str(b.get("path_id") or "").strip(), _norm(b.get("holder"))))
         elif r.get("kind") == "withdrawal" and b.get("withdrawn_by_holder"):
-            why = _confirmation_gap(b, paths)
+            why = _confirmation_gap(b, paths, tp_log)
             if why:
                 flags.append(flag("DISSENT_WITHDRAWAL_UNCONFIRMED", "withdrawal:%s" % b.get("judgment_id"),
                                   holder=b.get("holder"), position=b.get("position"),
@@ -294,12 +298,14 @@ def _intervention_flags(iv, iv_transfers, as_of):
     return out
 
 
-def check(records, as_of=None):
-    """as_of: ISO date for OUTCOME_UNRECORDED; defaults to today."""
+def check(records, as_of=None, two_person_log=None):
+    """as_of: ISO date for OUTCOME_UNRECORDED; defaults to today.
+    two_person_log: records of a community_black_start two_person log (M25);
+    without it, steward_two_person withdrawals stay unconfirmed."""
     as_of = as_of or datetime.date.today().isoformat()
     js = judgments(records)
     by_id = dict((j.judgment_id, j) for j in js)
-    withdrawn, unconfirmed = _withdrawals(records)
+    withdrawn, unconfirmed = _withdrawals(records, two_person_log)
     ivs = bodies(records, "intervention")
     iv_ids = set(iv["intervention_id"] for iv in ivs)
     iv_transfers = set(t.get("intervention_id") for t in bodies(records, "transfer") if t.get("intervention_id"))

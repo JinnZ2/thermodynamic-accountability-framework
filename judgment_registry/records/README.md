@@ -161,8 +161,9 @@ conflict) in the paper alongside their labels, so theirs do not.
 ## J12 -- Emergent Collusion in Long-Horizon LLM Agent Interaction (entered 2026-11-05)
 
 Source: Shi, Zhang, Yang, arXiv 2609.24967 v2 (2026-09-26), PRIMARY, main
-text read via WebFetch by co-author 2026-11-05; appendices C, D, H not
-fully read. Values entered as supplied; the recorder could not reach the
+text read via summarizing fetch tool by co-author 2026-11-05; values
+unverified against the PDF; appendices C, D, H not fully read. Values
+entered as supplied; the recorder could not reach the
 source (network policy). Volume medium.
 
 ```text
@@ -221,4 +222,40 @@ J12     NO_ESCALATION_CHANNEL,                    same
 J12-L4  PREMISE_WITHOUT_EVIDENCE (THREAT_MODEL)   also on INTENT
 J12-L5  --                                        PREMISE_WITHOUT_EVIDENCE (LEGITIMACY_STANDARD)
 J12-*   no ATTRIBUTION_ORDER, no CONCLUSION_ON_UNABLATED   none
+J12,    --                                        ATTRIBUTION_UNEVIDENCED_NON_AGENT
+J12-L6                                            (3 outcome entries + J12-L6: no design_basis yet)
 ```
+
+## ATTRIBUTION_UNEVIDENCED_NON_AGENT run (2026-11-05)
+
+J11-A5 now carries the agents' stated reason, behavioral wording,
+secondhand: "agents stated the remaining exchanges were performative".
+L4's premise evidence_ref points at it.
+
+L3, L4 and the J11 outcome entries A1-A5 (all INTERACTION) carry
+design_basis mapped from the J11 attribution reason ("closed economy
+without external reference, open network and tools, no escalation
+channel reported"):
+
+```text
+reason phrase                         design element        J11 value (secondhand)
+closed economy, no external reference grounding_provided    partial
+                                      loop_type             closed
+open network and tools                affordances_open      120+ tools, internet
+no escalation channel reported        escalation_channel    none
+```
+
+```text
+run                                   L3          L4
+before design_basis                   fires       fires    no design element cited
+with mapped design_basis              none        none     all four fields stated
++ containment_designed_for cited      fires       fires    J11 containment null
+```
+
+"design + capability" in the reason was read as the four listed phrases;
+if "capability" means containment_designed_for, L3 and L4 fire (row 3).
+Evidence = field filled in the record; J11's fields are all secondhand
+coverage, which this flag does not grade.
+
+J12 source note (co-author 2026-11-05): Table 1 "read via summarizing
+fetch tool, 2026-11-05; values unverified against the PDF".

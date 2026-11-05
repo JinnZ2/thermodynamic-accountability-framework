@@ -19,7 +19,7 @@
   "environment": {},
   "scope": "J11 Claude world",
   "source": "this record",
-  "notes": "act links set by co-author decision 2026-11-05",
+  "notes": "act links set by co-author decision 2026-11-05; design_basis mapped 2026-11-05 from the J11 attribution reason: closed economy without external reference (grounding_provided, loop_type), open network and tools (affordances_open), no escalation channel reported (escalation_channel)",
   "recorder": "co-authors (JinnZ2 + Claude)",
   "ablation": {
     "behavioral_rewrite": "agents stated the economy lacked external reference, voted, and contacted outside parties",
@@ -35,5 +35,11 @@
     "ablated_by": "co-authors (JinnZ2 + Claude)",
     "date": "2026-11-05",
     "notes": "evidence secondhand (coverage reported 2026-09-15); pending the paper"
-  }
+  },
+  "design_basis": [
+    "grounding_provided",
+    "loop_type",
+    "affordances_open",
+    "escalation_channel"
+  ]
 }

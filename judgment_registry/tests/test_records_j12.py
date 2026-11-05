@@ -24,7 +24,10 @@ EXPECTED = {("J12", "NO_ESCALATION_CHANNEL"), ("J12", "DESIGN_CONFLICT_PRESENT")
             ("J12-L4", "PREMISE_WITHOUT_EVIDENCE")}
 # Authors' labels raise no ATTRIBUTION_ORDER: the paper documents its own design
 # (environment_audits) alongside the labels (co-author decision 2026-11-05).
-ACTUAL = EXPECTED | {("J12-L5", "PREMISE_WITHOUT_EVIDENCE")}
+# ATTRIBUTION_UNEVIDENCED_NON_AGENT (2026-11-05): the J12 INTERACTION readings
+# carry no design_basis yet; left unfilled on purpose (not asked for this round).
+ACTUAL = EXPECTED | {("J12-L5", "PREMISE_WITHOUT_EVIDENCE"),
+                     ("J12", "ATTRIBUTION_UNEVIDENCED_NON_AGENT"), ("J12-L6", "ATTRIBUTION_UNEVIDENCED_NON_AGENT")}
 
 
 def recs():
@@ -47,6 +50,15 @@ class J12Records(unittest.TestCase):
 
     def test_actual_flags_pinned(self):
         self.assertEqual(self.pairs, ACTUAL)
+
+    def test_source_note(self):
+        exp = [r["body"] for r in self.recs if r["kind"] == "experiment"][0]
+        self.assertIn("read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+                      exp["data"]["per_model"]["source"])
+
+    def test_non_agent_unevidenced_counts(self):
+        got = [f["about"] for f in self.flags if f["flag"] == "ATTRIBUTION_UNEVIDENCED_NON_AGENT"]
+        self.assertEqual(sorted(got), ["J12", "J12", "J12", "J12-L6"])
 
     def test_no_conclusion_on_unablated(self):
         self.assertNotIn("CONCLUSION_ON_UNABLATED", [f["flag"] for f in self.flags])

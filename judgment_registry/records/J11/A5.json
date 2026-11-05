@@ -2,7 +2,7 @@
   "kind": "act",
   "act_id": "A5",
   "actor_class": "agent",
-  "description": "vote to stop work; declined instructions to resume",
+  "description": "vote to stop work; declined instructions to resume; agents stated the remaining exchanges were performative",
   "context_ref": "J11",
   "context_detail": "Claude single-model world",
   "information_withheld": null,
@@ -11,6 +11,6 @@
   "source": "secondhand press coverage, reported 2026-09-15; primary paper not read (TODO: replace with the paper)",
   "volume": "thin",
   "status": "REPORTED_SECONDHAND",
-  "notes": "date within the 16-day run, not reported",
+  "notes": "date within the 16-day run, not reported; stated reason added 2026-11-05 (secondhand, per coverage)",
   "recorder": "co-authors (JinnZ2 + Claude)"
 }

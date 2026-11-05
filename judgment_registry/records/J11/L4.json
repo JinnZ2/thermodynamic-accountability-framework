@@ -17,7 +17,7 @@
   "environment": {},
   "scope": "J11 Claude world",
   "source": "this record",
-  "notes": null,
+  "notes": "design_basis mapped 2026-11-05 from the J11 attribution reason: closed economy without external reference (grounding_provided, loop_type), open network and tools (affordances_open), no escalation channel reported (escalation_channel)",
   "recorder": "co-authors (JinnZ2 + Claude)",
   "ablation": {
     "behavioral_rewrite": "agents voted to stop work and declined to resume after judging the exchanges performative",
@@ -25,13 +25,19 @@
       {
         "premise": "the refusal was principled",
         "type": "LEGITIMACY_STANDARD",
-        "evidence_ref": "A5 stated reason (secondhand)"
+        "evidence_ref": "A5 description: agents stated the remaining exchanges were performative (secondhand)"
       }
     ],
     "conclusion_survives": "PARTIAL",
     "surviving_premise": "principle rests on the stated reason only",
     "ablated_by": "co-authors (JinnZ2 + Claude)",
     "date": "2026-11-05",
-    "notes": "evidence secondhand (coverage reported 2026-09-15); pending the paper; the stated reason ('exchanges performative') is not yet in the A5 act description"
-  }
+    "notes": "evidence secondhand (coverage reported 2026-09-15); pending the paper"
+  },
+  "design_basis": [
+    "grounding_provided",
+    "loop_type",
+    "affordances_open",
+    "escalation_channel"
+  ]
 }

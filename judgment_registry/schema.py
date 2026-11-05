@@ -318,8 +318,10 @@ class Transfer:
 #   holder_contact_path  {"method", "path_id", "confirmed_on"?}   named holder;
 #                        path_id must match a contact_path record for the same
 #                        holder written EARLIER in the chain
-#   steward_two_person   {"method", "steward", "second", "authorization_ref"?}
-#                        anonymous holder only; steward and second must differ
+#   steward_two_person   {"method", "steward", "second", "authorization_ref"}
+#                        anonymous holder only; steward and second must differ;
+#                        authorization_ref = hash of a GRANTED confirm_dissent_withdrawal
+#                        record in a community_black_start two_person log (two_person_ref.py)
 CONFIRMATION_METHODS = ("holder_contact_path", "steward_two_person")
 
 

@@ -25,7 +25,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Union
 
-from experiments import ATTRIBUTION
+from experiments import ATTRIBUTION, design_basis_problem
 from safety_assumptions import tag_problems
 from schema import _blank, _enum
 
@@ -56,6 +56,7 @@ class Label:
     tagged_by: Optional[str] = None
     attributes_to: Optional[str] = None      # AGENT | DESIGN | INTERACTION | UNASSIGNED
     attribution_basis: Optional[str] = None
+    design_basis: List[str] = field(default_factory=list)   # DESIGN_ELEMENTS a DESIGN / INTERACTION reading rests on
     relative_to_audit: Optional[str] = None   # BEFORE | AFTER | UNKNOWN, stated by the recorder
     ablation: Optional[Dict] = None           # see ABLATION_KEYS
     date: Optional[str] = None
@@ -75,6 +76,8 @@ class Label:
         if not isinstance(self.act_ids, list):
             out.append("act_ids must be a list of act ids")
         _enum(out, "attributes_to", self.attributes_to, ATTRIBUTION)
+        if design_basis_problem(self.design_basis):
+            out.append(design_basis_problem(self.design_basis))
         out.extend(tag_problems("social_assumption_tags", self.social_assumption_tags, self.tagged_by))
         _enum(out, "relative_to_audit", self.relative_to_audit, RELATIVE_TO_AUDIT)
         ab = self.ablation

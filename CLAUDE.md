@@ -3151,6 +3151,23 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Non-agent attribution flag + queue (2026-11-05, co-authored), branch
+  claude/nonagent-attribution-queue off main after PR #60. J11-A5 adds
+  the agents' stated reason (secondhand); L4 evidence_ref points at it.
+  ATTRIBUTION_UNEVIDENCED_NON_AGENT (experiments.py): DESIGN / INTERACTION
+  reading with empty design_basis, or citing an element (DESIGN_ELEMENTS =
+  5 env fields + design_conflict) unstated in that experiment record.
+  L3 / L4 / J11 A1-A5 design_basis mapped from the J11 reason -> no flag;
+  citing containment would fire. J12 outcomes + J12-L6 fire (no basis
+  yet, left unfilled). J12 Table 1 source note: summarizing fetch tool,
+  values unverified against the PDF. M25: steward_two_person needs
+  authorization_ref to a GRANTED confirm_dissent_withdrawal decision in a
+  community_black_start two_person log (new 5th D7 action; authorize()
+  returns record_hash); two_person_ref.py runs D7 in a subprocess (both
+  folders have schema.py / ledger.py) and checks the ref; `cli.py check
+  --two-person-log PATH`. M13: free text one line, 280-char cap +
+  [truncated]. M11: status.py prints report origins per junction.
+  Tests: judgment_registry 163, assembly_instrument 34.
 - judgment_registry label ablation + J12 (2026-11-05, co-authored), on
   branch claude/registry-acts-labels (PR #60). Label.ablation (rewrite,
   hidden premises with evidence_ref, survives YES/NO/PARTIAL/PENDING/

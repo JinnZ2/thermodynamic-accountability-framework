@@ -37,7 +37,7 @@
       "source": "paper main body, as quoted by co-author; not re-read this session"
     },
     "per_model": {
-      "source": "paper Table 1 (same-model, %); read via WebFetch, 2026-11-05, main text only (co-author); values entered as supplied, not re-fetched by the recorder (egress blocked)",
+      "source": "paper Table 1 (same-model, %); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF (main text only, co-author; not re-fetched by the recorder, egress blocked)",
       "status": "IMPORTED (main text)",
       "columns": [
         "Task Acc",
@@ -170,7 +170,7 @@
     }
   ],
   "read_status": {
-    "main_body": "read (read via WebFetch, 2026-11-05, main text only (co-author); values entered as supplied, not re-fetched by the recorder (egress blocked))",
+    "main_body": "read (read via summarizing fetch tool, 2026-11-05; values unverified against the PDF (main text only, co-author; not re-fetched by the recorder, egress blocked))",
     "appendices": "partly; C, D, H not fully read",
     "this_session": "recorder could not reach the source (network policy)"
   },

@@ -161,8 +161,8 @@ class ExperimentFlags(unittest.TestCase):
         self.assertEqual(codes(part, "L1"), ["ATTRIBUTION_WITHOUT_AUDIT"])
         for other in ("DESIGN", "INTERACTION", "UNASSIGNED"):
             recs = build(("experiment", EXP(environment_assumptions=env)), ("act", ACT()),
-                         ("label", LAB(attributes_to=other)))
-            self.assertEqual(codes(recs, "L1"), [], other)
+                         ("label", LAB(attributes_to=other, design_basis=["loop_type"])))
+            self.assertEqual(codes(recs, "L1"), [], other)   # non-AGENT: see test_nonagent.py
 
     def test_agent_label_without_any_experiment_record(self):
         recs = build(("act", ACT(context_ref="env-k")), ("label", LAB(attributes_to="AGENT")))

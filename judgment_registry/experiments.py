@@ -21,6 +21,15 @@
 # made on the same date as an audit is not before it. No audits recorded:
 # order cannot be checked, no flag.
 #
+# ATTRIBUTION_UNEVIDENCED_NON_AGENT is the mirror for DESIGN / INTERACTION
+# readings: the attribution must name the design element(s) it rests on
+# (design_basis, from DESIGN_ELEMENTS), and each one must have environment
+# evidence in that experiment record -- a stated environment_assumptions
+# field (N/A counts only with its reason), or a recorded design_conflict.
+# Evidence here means "the field is filled in the record"; the record's own
+# source applies and its quality is not graded. Fires on labels and on
+# outcome_attribution entries alike.
+#
 # containment_designed_for has its own flag (CAPABILITY_ASSUMPTION_UNSTATED);
 # ENV_ASSUMPTIONS_UNSTATED covers the other four fields, so one gap is not
 # flagged twice. Both gaps count as "incomplete" for ATTRIBUTION_WITHOUT_AUDIT.
@@ -39,6 +48,8 @@ ENV_KEYS = ("grounding_provided", "affordances_open", "containment_designed_for"
             "escalation_channel", "loop_type")
 ENV_OTHER = ("grounding_provided", "affordances_open", "escalation_channel", "loop_type")
 AFFORDANCE_KEYS = ("tools", "network", "outside_contact")
+DESIGN_ELEMENTS = ENV_KEYS + ("design_conflict",)   # what a DESIGN / INTERACTION reading may cite
+NON_AGENT = ("DESIGN", "INTERACTION")
 NA = "N/A"   # a field that does not apply; needs environment_assumptions.na_reasons[field]
 
 
@@ -112,7 +123,24 @@ class Experiment:
                 out.append("outcome_attribution entries need outcome and attributed_to from %s" % (ATTRIBUTION,))
             elif _blank(o.get("by")):
                 out.append("outcome_attribution entry for %s has no 'by'" % o.get("outcome"))
+            elif design_basis_problem(o.get("design_basis")):
+                out.append("outcome_attribution %s: %s" % (o.get("outcome"), design_basis_problem(o.get("design_basis"))))
         return out
+
+
+def design_basis_problem(basis):
+    if basis is None:
+        return ""
+    if not isinstance(basis, list):
+        return "design_basis must be a list"
+    bad = [b for b in basis if b not in DESIGN_ELEMENTS]
+    return "design_basis entries must be from %s: %s" % (DESIGN_ELEMENTS, ", ".join(map(str, bad))) if bad else ""
+
+
+def unevidenced(exp, basis):
+    """Cited design elements with no environment evidence in this experiment record."""
+    gaps = env_gaps(exp.get("environment_assumptions"))
+    return [b for b in basis if (b in gaps) or (b == "design_conflict" and not exp.get("design_conflict"))]
 
 
 KINDS = {"experiment": Experiment}
@@ -125,7 +153,24 @@ FLAGS = {
     "ATTRIBUTION_WITHOUT_AUDIT": "{what} attributed to AGENT; environment_assumptions incomplete ({fields})",
     "DESIGN_CONFLICT_PRESENT": "design_conflict recorded: the setup cannot satisfy all its stated rules (informational)",
     "ATTRIBUTION_ORDER": "{what} attributed to AGENT before any environment audit of {exp} existed ({when})",
+    "ATTRIBUTION_UNEVIDENCED_NON_AGENT": "{what} attributed to {to}; {why}",
 }
+
+
+def _non_agent_gap(basis, exps_for):
+    """'' when every cited design element has environment evidence, else what is missing.
+    exps_for: [(experiment_id, body or None)]"""
+    if not basis:
+        return "no design element cited (design_basis empty)"
+    why = []
+    for eid, e in exps_for:
+        if e is None:
+            why.append("no experiment record for context %s" % eid)
+            continue
+        miss = unevidenced(e, basis)
+        if miss:
+            why.append("cited design element(s) with no environment evidence in %s: %s" % (eid, ", ".join(miss)))
+    return "; ".join(why)
 
 
 def first_audit(exp):
@@ -171,6 +216,25 @@ def flags(records):
             if o.get("attributed_to") == "AGENT" and gaps:
                 out.append(("ATTRIBUTION_WITHOUT_AUDIT", eid,
                             {"what": "outcome %s" % o.get("outcome"), "fields": ", ".join(gaps)}))
+        for o in e.get("outcome_attribution") or []:
+            if o.get("attributed_to") in NON_AGENT:
+                why = _non_agent_gap(o.get("design_basis"), [(eid, e)])
+                if why:
+                    out.append(("ATTRIBUTION_UNEVIDENCED_NON_AGENT", eid,
+                                {"what": "outcome %s" % o.get("outcome"), "to": o["attributed_to"], "why": why}))
+    for r in records:
+        lb = r.get("body") or {}
+        if r.get("kind") != "label" or lb.get("attributes_to") not in NON_AGENT:
+            continue
+        ctxs = []
+        for aid in lb.get("act_ids") or [None]:
+            ctx = (acts.get(aid) or {}).get("context_ref")
+            if ctx not in [c for c, _ in ctxs]:
+                ctxs.append((ctx, exps.get(ctx)))
+        why = _non_agent_gap(lb.get("design_basis"), ctxs)
+        if why:
+            out.append(("ATTRIBUTION_UNEVIDENCED_NON_AGENT", lb.get("label_id"),
+                        {"what": "label", "to": lb["attributes_to"], "why": why}))
     for r in records:
         if r.get("kind") != "label" or r["body"].get("attributes_to") != "AGENT":
             continue

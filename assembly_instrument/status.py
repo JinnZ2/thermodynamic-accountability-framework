@@ -26,6 +26,12 @@
 #
 # Triage order of output: UNSAFE > failed > partial > worked > no reports.
 #
+# M13: reporter free text is whitespace-collapsed (no line breaks) and capped
+# at FIELD_NOTE_MAX characters per field, with a visible [truncated] marker.
+# M11: each row lists where its reports came from -- provenance.origins node
+# labels of merged records (self-declared, recorded not verified), or
+# LOCAL_ORIGIN for records appended to this ledger directly.
+#
 #   python3 status.py LEDGER ENTRY.json [ENTRY.json ...] [--n 3]
 
 import json
@@ -35,9 +41,28 @@ import ledger
 from refs import index_entry
 
 DEFAULT_N = 3
+FIELD_NOTE_MAX = 280
+TRUNCATED = " [truncated]"
+LOCAL_ORIGIN = "this-ledger"
 OUTCOME_RANK = {"UNSAFE": 0, "failed": 1, "partial": 2, "worked": 3}
 STATE_RANK = ("CAUTION", "ENVIRONMENT_DEPENDENT", "ELIGIBLE_FOR_TESTED", "REPORTED",
               "UNCONFIRMED", "NOT_DISTRIBUTED")
+
+
+def cap_note(text, limit=FIELD_NOTE_MAX):
+    """M13: one line, at most `limit` characters of reporter text, marker if cut."""
+    t = " ".join(str(text or "").split())
+    return t if len(t) <= limit else t[:limit] + TRUNCATED
+
+
+def origin_nodes(record):
+    """M11: node labels a report record came from, in order, unique."""
+    p = record.get("provenance") or {}
+    out = []
+    for o in p.get("origins") or []:
+        if o.get("node") not in out:
+            out.append(o.get("node"))
+    return out or [LOCAL_ORIGIN]
 
 
 def _env_key(r):
@@ -46,7 +71,7 @@ def _env_key(r):
         e.get("climate", "?"), e.get("soil_water", "?"), e.get("temp", "?"), e.get("humidity", "?"))
 
 
-def junction_status(ref, info, reps, distributed, n_required=DEFAULT_N):
+def junction_status(ref, info, reps, distributed, n_required=DEFAULT_N, origins=None):
     j = info["junction"]
     cur = info["version"]
     irreversible = j.get("irreversible") is True
@@ -65,7 +90,7 @@ def junction_status(ref, info, reps, distributed, n_required=DEFAULT_N):
         elif r["outcome"] == "failed" and irreversible:
             caution.append("failed on an irreversible step [%s]%s" % (where, vnote))
         for k in ("failure_point", "as_built_vs_specified"):
-            t = (r.get(k) or "").strip()
+            t = cap_note(r.get(k))
             if t:
                 field_notes.append("%s (%s, %s) [%s]: %s" % (ref, r["outcome"], k, where, t))
     builds = set()
@@ -94,12 +119,14 @@ def junction_status(ref, info, reps, distributed, n_required=DEFAULT_N):
     return {"ref": ref, "branch": info["branch"], "step": j.get("step"), "irreversible": irreversible,
             "version": cur, "state": state, "flags": flags, "counts": counts,
             "independent_builds": len(builds), "builds_required": n_required,
-            "caution": caution, "field_notes": field_notes, "environment_groups": groups, "worst": worst}
+            "caution": caution, "field_notes": field_notes, "environment_groups": groups, "worst": worst,
+            "origins": origins or {}}
 
 
 def compute(entries, records, n_required=DEFAULT_N):
     """-> (rows sorted by triage, orphan reports)"""
-    reps = ledger.reports(records)
+    rep_recs = [r for r in records if r.get("kind") == "report"]
+    reps = [r["body"] for r in rep_recs]
     out_entries = set(c.get("entry") for c in ledger.checkouts(records))
     index = {}
     owner = {}
@@ -108,20 +135,26 @@ def compute(entries, records, n_required=DEFAULT_N):
             index[ref] = info
             owner[ref] = e.get("function_id")
     by_ref = {}
+    origins = {}
     orphans = []
-    for r in reps:
+    for rec, r in zip(rep_recs, reps):
         if r.get("junction_id") in index:
             by_ref.setdefault(r["junction_id"], []).append(r)
+            o = origins.setdefault(r["junction_id"], {})
+            for node in origin_nodes(rec):
+                o[node] = o.get(node, 0) + 1
         else:
             orphans.append(r)
-    rows = [junction_status(ref, info, by_ref.get(ref, []), owner[ref] in out_entries, n_required)
+    rows = [junction_status(ref, info, by_ref.get(ref, []), owner[ref] in out_entries, n_required,
+                            origins.get(ref))
             for ref, info in index.items()]
     rows.sort(key=lambda x: (x["worst"], STATE_RANK.index(x["state"]), x["ref"]))
     return rows, orphans
 
 
-FIELD_NOTE_HEADER = ("UNVERIFIED FIELD NOTES -- free text from field reports, as sent. "
-                     "Not checked; not part of the instrument's cautions above.")
+FIELD_NOTE_HEADER = ("UNVERIFIED FIELD NOTES -- free text from field reports, as sent "
+                     "(one line each, cut at %d characters). Not checked; not part of the "
+                     "instrument's cautions above." % FIELD_NOTE_MAX)
 
 
 def field_note_block(rows):
@@ -164,6 +197,9 @@ def main(argv):
             r["independent_builds"], r["builds_required"], ",".join(r["flags"])))
         for line in r["caution"]:
             print("    ! " + line)
+        if r["origins"]:
+            print("    origins (node labels self-declared): " + ", ".join(
+                "%s x%d" % (n, c) for n, c in sorted(r["origins"].items())))
         for g, gc in sorted(r["environment_groups"].items()):
             print("    env %s -> U%d F%d P%d W%d" % (g, gc["UNSAFE"], gc["failed"], gc["partial"], gc["worked"]))
     for o in orphans:

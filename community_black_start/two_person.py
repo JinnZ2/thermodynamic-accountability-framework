@@ -2,8 +2,10 @@
 # two_person.py -- CC0, stdlib only, python >= 3.7
 # Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #
-# D7 two-person rule (same principle as nuclear custody). Four actions need
-# two roles from different households:
+# D7 two-person rule (same principle as nuclear custody). Five actions need
+# two roles from different households (confirm_dissent_withdrawal added
+# 2026-11-05 for judgment_registry M25: an anonymous holder's dissent
+# withdrawal is confirmed by a steward + second through this rule):
 #
 #   authorize(action, role_a, role_b, ledger, networks, today)
 #     ├─ same holder ............................... DENIED
@@ -12,7 +14,9 @@
 #     │  on the other, or both in one network) ..... DENIED
 #     ├─ either role overdue / unknown rotation .... DENIED   (D10; unknown is never current)
 #     └─ else ...................................... GRANTED  (both persons still act)
-#   every decision, GRANTED or DENIED, is appended to the hash-chained ledger
+#   every decision, GRANTED or DENIED, is appended to the hash-chained ledger;
+#   authorize() returns the decision with record_hash (that log record's hash),
+#   which judgment_registry cites as authorization_ref
 #
 # networks: {household_id: network_id}. Households sharing a network_id are
 # treated as one dependency network: one depends on the other for food,
@@ -24,7 +28,8 @@ import sys
 import coordination as co
 import roles as rl
 
-ACTIONS = ("release_critical_stock", "energize_or_switch", "ledger_quarantine", "accept_flagged_aid")
+ACTIONS = ("release_critical_stock", "energize_or_switch", "ledger_quarantine", "accept_flagged_aid",
+           "confirm_dissent_withdrawal")
 
 
 def check(action, role_a, role_b, networks=None, today=None):
@@ -58,8 +63,8 @@ def authorize(action, role_a, role_b, ledger_path, networks=None, today=None):
     else:
         plain = "Two-person approval DENIED for %s: %s." % (action, "; ".join(res["why"]))
     body = dict(res, kind="two_person", plain=plain, schema_version=co.SCHEMA_VERSION)
-    co.append_log(ledger_path, body)
-    return res
+    rec = co.append_log(ledger_path, body)
+    return dict(res, record_hash=rec["hash"])
 
 
 def main(argv):
