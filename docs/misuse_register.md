@@ -343,6 +343,16 @@ residual         Partial: every edit is recorded (append-only, head record); dep
 volume           thin
 ```
 
+### M34  judgment_registry  (PROPOSED, co-authored (JinnZ2 + Claude), 2026-11-05)
+
+```text
+surface          internal-signal readout (activation readout, detector score; J15) used as a verdict on models or people
+adversarial use  Treat a readout as proof of intent; cite a detector outside its validated scope (J15 Transfer AUROC 0.519, near chance); drop the honest baseline (J15: 33/100 honest runs also held a flagged concept); same move on people as polygraph-style evidence.
+mitigations      D-M17
+residual         Doc + completeness flags only. Nothing stops a reader citing a readout off-registry; the flags cannot judge whether a stated scope is accurate.
+volume           thin
+```
+
 ## Mitigations
 
 | id | what | code | test |
@@ -363,6 +373,7 @@ volume           thin
 | D-M14 | Field-report free text never prints among caution lines: status rows split caution (instrument lines) from field_notes (reporter text); checkout and status print field notes last, in a separate block headed UNVERIFIED FIELD NOTES, each line 'unverified field note -- ...'. Free text is collapsed to one line and capped at 280 characters per field with a [truncated] marker. | `assembly_instrument/status.py field_note_block; checkout.py render; status.py cap_note` | assembly_instrument test_feedback CheckoutTests test_m13_*; test_m13_free_text_capped_with_marker, test_m13_short_text_unchanged_and_one_line |
 | D-M15 | Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ; authorization_ref to a GRANTED confirm_dissent_withdrawal decision in a community_black_start two_person log, checked when the log is supplied); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only. | `judgment_registry/schema.py Withdrawal.confirmation, ContactPath; integrity.py _withdrawals; two_person_ref.py (confirm_withdrawal, ref_gap); community_black_start/two_person.py action confirm_dissent_withdrawal; cli.py check --two-person-log` | judgment_registry test_registry M25WithdrawalTests, test_dissent_dropped_and_withdrawn; judgment_registry test_m25_two_person |
 | D-M16 | Weight-edit ledger: per edit -- target model + version, deployment_status, layers, direction hash, weight count, rationale, editor id + class, before/after checkpoint hashes, evals before/after, changed_tensors summary; append-only, hash-chained, head record (as D-M10); deployed / successor edits refused without a GRANTED weight_edit_deployed two-person decision (D7); independent diff audit by a second reader recomputes the diff from the checkpoints (EDIT_SUMMARY_MISMATCH, AUDIT_HASH_MISMATCH); human and model editors alike. Deploy gate (deploy.py): checkpoint hash must be a registered base (ledger kind base) or the after_hash at the end of an unbroken run of logged edits from one; otherwise UNLOGGED_EDIT_CHAIN_BREAK. Stdlib checkpoint readers (loaders.py): safetensors, .npz, .json; F64/F32/F16/BF16, tensor by tensor. (Appended as 'D-M10'; renamed: D-M10 is the head record.) | `weight_edit_ledger/ledger.py, audit.py, loaders.py, deploy.py, auth.py, headrec.py (copy); community_black_start/two_person.py action weight_edit_deployed` | weight_edit_ledger/tests/test_weight_edits.py (PlannedTests: missing hashes, summary vs diff, deployed edit refused; plus two-person, audit, chain); weight_edit_ledger/tests/test_loaders_deploy.py (synthetic safetensors / .npz written by loaders.py; deploy gate) |
+| D-M17 | Act.evidence_kind (behavioral | internal_readout); an internal_readout act carries honest_baseline + validated_scope (READOUT_CONTEXT_UNSTATED when missing); an AGENT attribution (label attributes_to, or experiment outcome_attribution) whose acts are all internal_readout -> READOUT_SOLE_EVIDENCE. Rule in the doc: every readout-based claim carries its honest baseline and validated scope. | `judgment_registry/acts.py (flags), integrity.py` | judgment_registry/tests/test_readout.py (synthetic); tests/test_records_j15.py |
 
 ## Independent pass
 

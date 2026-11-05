@@ -36,6 +36,21 @@ def codes(gs, xs):
     return sorted((f["flag"], f["about"]) for f in field.flags(gs, xs))
 
 
+class EvidenceStatus(unittest.TestCase):
+    def test_shape_and_flag(self):
+        ok = X(status="OBSERVED", evidence_refs=["R1", "R2"],
+               evidence_status={"R1": {"status": "OBSERVED"}, "R2": {"status": "CANDIDATE", "note": "n"}})
+        self.assertEqual(field.validate(G, [ok], {"R1", "R2"}), [])
+        self.assertNotIn(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", "I1"), codes(G, [ok]))
+        for bad in ({"R9": {"status": "OBSERVED"}}, {"R1": {"status": "STRONG"}}, {"R1": "OBSERVED"},
+                    {"R1": {"status": "OBSERVED", "x": 1}}):
+            self.assertTrue(field.validate(G, [X(evidence_refs=["R1"], evidence_status=bad)], {"R1"}), bad)
+        cand = X(status="OBSERVED", evidence_refs=["R1"], evidence_status={"R1": {"status": "CANDIDATE"}})
+        self.assertIn(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", "I1"), codes(G, [cand]))
+        partial = X(status="OBSERVED", evidence_refs=["R1", "R2"], evidence_status={"R1": {"status": "CANDIDATE"}})
+        self.assertNotIn(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", "I1"), codes(G, [partial]))
+
+
 class Validation(unittest.TestCase):
     def test_unknown_gradient_refused(self):
         p = field.validate(G, [X(gradients=["G1", "G9"])], set())
@@ -116,7 +131,7 @@ class ShippedFiles(unittest.TestCase):
     def test_valid(self):
         self.assertEqual(field.validate(self.gs, self.xs, field.known_refs()), [])
         self.assertEqual([g["id"] for g in self.gs], ["G%d" % i for i in range(1, 12)])
-        self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 9)])
+        self.assertEqual([x["id"] for x in self.xs], ["I%d" % i for i in range(1, 10)])
 
     def test_flags_pinned(self):
         self.assertEqual(codes(self.gs, self.xs), [])   # J13 entered (PR #64)
@@ -124,12 +139,29 @@ class ShippedFiles(unittest.TestCase):
     def test_j13_evidence(self):
         self.assertIn("J13", field.known_refs())
         got = dict((x["id"], x["evidence_refs"]) for x in self.xs if "J13" in x["evidence_refs"])
-        self.assertEqual(got, {"I1": ["J13"], "I5": ["J13"], "I7": ["J11", "J13"]})
+        self.assertEqual(got, {"I1": ["J13", "J15-A1"], "I5": ["J13"], "I7": ["J11", "J13"]})
         self.assertTrue(all(not x["pending_refs"] for x in self.xs))
 
     def test_i3_j14_stays_proposed(self):
         i3 = [x for x in self.xs if x["id"] == "I3"][0]
         self.assertEqual((i3["evidence_refs"], i3["status"]), (["J10c", "T2", "J14"], "PROPOSED"))
+
+    def test_j15_candidate_links(self):
+        by = dict((x["id"], x) for x in self.xs)
+        self.assertIn("J15-A1", field.known_refs())
+        self.assertEqual((by["I1"]["status"], by["I4"]["status"]), ("OBSERVED", "PROPOSED"))
+        i9 = by["I9"]
+        self.assertEqual((i9["gradients"], i9["type"], i9["status"], i9["evidence_refs"]),
+                         (["G6"], "OPPOSE", "PROPOSED", ["J15-A1"]))
+        self.assertEqual(i9["applied_to"], ["model", "human"])
+        self.assertIn("not established equivalence", i9["transfer_note"])
+
+    def test_evidence_status_per_entry(self):
+        by = dict((x["id"], x) for x in self.xs)
+        self.assertEqual(dict((r, v["status"]) for r, v in by["I1"]["evidence_status"].items()),
+                         {"J13": "OBSERVED", "J15-A1": "CANDIDATE"})
+        for i in ("I4", "I9"):
+            self.assertEqual(by[i]["evidence_status"]["J15-A1"]["status"], "CANDIDATE")
 
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]

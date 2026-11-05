@@ -418,6 +418,19 @@
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05"
+    },
+    {
+      "id": "M34",
+      "module": "judgment_registry",
+      "surface": "internal-signal readout (activation readout, detector score; J15) used as a verdict on models or people",
+      "adversarial_use": "Treat a readout as proof of intent; cite a detector outside its validated scope (J15 Transfer AUROC 0.519, near chance); drop the honest baseline (J15: 33/100 honest runs also held a flagged concept); same move on people as polygraph-style evidence.",
+      "mitigation_ids": [
+        "D-M17"
+      ],
+      "residual": "Doc + completeness flags only. Nothing stops a reader citing a readout off-registry; the flags cannot judge whether a stated scope is accurate.",
+      "volume": "thin",
+      "status": "PROPOSED",
+      "provenance": "co-authored (JinnZ2 + Claude), 2026-11-05"
     }
   ],
   "mitigations": [
@@ -517,6 +530,12 @@
       "code": "weight_edit_ledger/ledger.py, audit.py, loaders.py, deploy.py, auth.py, headrec.py (copy); community_black_start/two_person.py action weight_edit_deployed",
       "test": "weight_edit_ledger/tests/test_weight_edits.py (PlannedTests: missing hashes, summary vs diff, deployed edit refused; plus two-person, audit, chain); weight_edit_ledger/tests/test_loaders_deploy.py (synthetic safetensors / .npz written by loaders.py; deploy gate)",
       "residual": "Two-person identity: the D7 rule checks that a GRANTED decision exists with two different role records, not that the two people are who they say -- same residual as M12 (self-declared identities; see D-M12, docs/misuse_M12_identity_note.md). Links: M12, D-M12. Diff semantics (known limit): element-wise exact equality on decoded values (two NaNs equal); a tensor added, removed, renamed or reshaped counts as changed with all its elements; a dtype change with equal decoded values counts as unchanged; the diff says what changed, not what the change does."
+    },
+    {
+      "id": "D-M17",
+      "description": "Act.evidence_kind (behavioral | internal_readout); an internal_readout act carries honest_baseline + validated_scope (READOUT_CONTEXT_UNSTATED when missing); an AGENT attribution (label attributes_to, or experiment outcome_attribution) whose acts are all internal_readout -> READOUT_SOLE_EVIDENCE. Rule in the doc: every readout-based claim carries its honest baseline and validated scope.",
+      "code": "judgment_registry/acts.py (flags), integrity.py",
+      "test": "judgment_registry/tests/test_readout.py (synthetic); tests/test_records_j15.py"
     }
   ],
   "experiments": [

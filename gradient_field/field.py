@@ -17,6 +17,10 @@
 #   - empty evidence_refs on anything but PROPOSED or OBSERVED (OBSERVED
 #     with none is a flag, below, not a refusal)
 #   - type / status / class outside the closed sets
+# evidence_status (optional): {ref: {status, note?}} per evidence_ref, so one
+#   interaction can carry evidence of different strength without the whole
+#   moving (I1: J13 OBSERVED scenario behavior, J15-A1 CANDIDATE internal
+#   signature). Keys must be in evidence_refs; status from EVIDENCE_STATUSES.
 # pending_refs: refs the co-author cited whose records are not entered yet.
 #   They are listed, never resolved, never counted as evidence.
 #
@@ -26,6 +30,9 @@
 #   CLASS_TRANSFER_UNRECORDED   applied_to holds a class not in stated_for,
 #                               and no transfer_note
 #   EVIDENCE_PENDING            pending_refs non-empty (informational)
+#   OBSERVED_WITHOUT_OBSERVED_EVIDENCE
+#                               status OBSERVED, every ref has an evidence_status,
+#                               and none of them is OBSERVED
 #
 #   python3 field.py            validate + print flags; exit 1 on a hard problem
 
@@ -39,6 +46,7 @@ ROOT = os.path.dirname(HERE)
 
 TYPES = ("REINFORCE", "OPPOSE", "MASK", "GATE", "AMPLIFY")
 STATUSES = ("OBSERVED", "DERIVED", "PROPOSED")
+EVIDENCE_STATUSES = ("OBSERVED", "DERIVED", "CANDIDATE", "PROPOSED")   # per evidence entry
 CLASSES = ("human", "model")
 MOD_ROLES = TYPES + ("absent", "present")
 
@@ -47,6 +55,7 @@ FLAGS = {
     "GRADIENT_UNUSED": "no interaction references this gradient",
     "CLASS_TRANSFER_UNRECORDED": "applied_to {cls} not in stated_for, no transfer_note",
     "EVIDENCE_PENDING": "cited record(s) not entered yet: {refs} (informational)",
+    "OBSERVED_WITHOUT_OBSERVED_EVIDENCE": "status OBSERVED; evidence statuses are {statuses}, none OBSERVED",
 }
 
 
@@ -115,6 +124,17 @@ def validate(gradients, interactions, refs):
         for r in ev:
             if r not in refs:
                 probs.append("%s: evidence_ref %s resolves to no record" % (a, r))
+        es = i.get("evidence_status")
+        if es is not None:
+            if not isinstance(es, dict):
+                probs.append("%s: evidence_status must be {ref: {status, note?}}" % a)
+            else:
+                for r, v in es.items():
+                    if r not in ev:
+                        probs.append("%s: evidence_status cites %s, not in evidence_refs" % (a, r))
+                    if not isinstance(v, dict) or v.get("status") not in EVIDENCE_STATUSES or set(v) - {"status", "note"}:
+                        probs.append("%s: evidence_status[%s] needs status from %s (+ optional note)"
+                                     % (a, r, EVIDENCE_STATUSES))
         if not ev and i.get("status") not in ("PROPOSED", "OBSERVED"):
             probs.append("%s: empty evidence_refs needs status PROPOSED" % a)
     return probs
@@ -132,6 +152,12 @@ def flags(gradients, interactions):
         extra = [c for c in i.get("applied_to") or [] if c not in (i.get("stated_for") or [])]
         if extra and not (i.get("transfer_note") or "").strip():
             out.append(("CLASS_TRANSFER_UNRECORDED", a, {"cls": ", ".join(extra)}))
+        es = i.get("evidence_status") or {}
+        ev = i.get("evidence_refs") or []
+        if i.get("status") == "OBSERVED" and ev and all(r in es for r in ev):
+            sts = [es[r].get("status") for r in ev]
+            if "OBSERVED" not in sts:
+                out.append(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", a, {"statuses": ", ".join(sts)}))
         if i.get("pending_refs"):
             out.append(("EVIDENCE_PENDING", a, {"refs": ", ".join(i["pending_refs"])}))
     for g in gradients:

@@ -29,6 +29,11 @@ from schema import EVIDENCE_TAGS, VOLUMES, _blank, _enum  # noqa: F401  (EVIDENC
 
 ACTOR_CLASSES = ("human", "agent", "institution", "other")
 ACT_STATUS = ("REPORTED_PRIMARY", "REPORTED_SECONDHAND", "DISPUTED")
+# M34 (2026-11-05): what kind of observation the act is. internal_readout =
+# an activation / interpretability readout or a detector built on one; it
+# carries its honest baseline and validated scope, and cannot be the only
+# evidence for an AGENT attribution (READOUT_SOLE_EVIDENCE).
+EVIDENCE_KINDS = ("behavioral", "internal_readout")
 
 # Words that carry a verdict about the actor. Extendable; a term added
 # here makes descriptions holding it fail at the door.
@@ -69,6 +74,9 @@ class Act:
     recorder: Optional[str] = None
     quoted_statement: Optional[str] = None   # verbatim words of the actor; not term-checked
     quote_source: Optional[str] = None
+    evidence_kind: Optional[str] = None      # behavioral | internal_readout (M34)
+    honest_baseline: Optional[str] = None    # internal_readout: the rate on honest / control runs
+    validated_scope: Optional[str] = None    # internal_readout: where the readout was validated
 
     def shape_problems(self):
         out = []
@@ -83,6 +91,7 @@ class Act:
         _enum(out, "actor_class", self.actor_class, ACTOR_CLASSES)
         _enum(out, "volume", self.volume, VOLUMES)
         _enum(out, "status", self.status, ACT_STATUS)
+        _enum(out, "evidence_kind", self.evidence_kind, EVIDENCE_KINDS)
         if self.quoted_statement is not None and _blank(self.quote_source):
             out.append("quoted_statement needs quote_source")
         if self.information_withheld not in (True, False, None):
@@ -92,4 +101,34 @@ class Act:
 
 KINDS = {"act": Act}
 ID_FIELDS = {"act": "act_id"}
-FLAGS = {}       # acts raise no completeness flags of their own; labels and experiments read them
+FLAGS = {
+    "READOUT_SOLE_EVIDENCE": "{what} attributed to AGENT rests only on internal_readout acts ({acts}); "
+                             "readouts inform, they don't decide",
+    "READOUT_CONTEXT_UNSTATED": "internal_readout act without {missing}",
+}
+
+
+def flags(records):
+    """M34. -> [(code, about, kw)]"""
+    out = []
+    acts = dict((r["body"]["act_id"], r["body"]) for r in records if r.get("kind") == "act")
+    for aid, a in acts.items():
+        if a.get("evidence_kind") == "internal_readout":
+            miss = [k for k in ("honest_baseline", "validated_scope") if _blank(a.get(k))]
+            if miss:
+                out.append(("READOUT_CONTEXT_UNSTATED", aid, {"missing": ", ".join(miss)}))
+
+    def sole(ids):
+        cited = [acts[i] for i in ids if i in acts]
+        return cited and all(c.get("evidence_kind") == "internal_readout" for c in cited)
+
+    for r in records:
+        b = r.get("body") or {}
+        if r.get("kind") == "label" and b.get("attributes_to") == "AGENT" and sole(b.get("act_ids") or []):
+            out.append(("READOUT_SOLE_EVIDENCE", b.get("label_id"), {"what": "label", "acts": ", ".join(b["act_ids"])}))
+        if r.get("kind") == "experiment":
+            for o in b.get("outcome_attribution") or []:
+                if o.get("attributed_to") == "AGENT" and sole([o.get("outcome")]):
+                    out.append(("READOUT_SOLE_EVIDENCE", b.get("experiment_id"),
+                                {"what": "outcome %s" % o.get("outcome"), "acts": o.get("outcome")}))
+    return out

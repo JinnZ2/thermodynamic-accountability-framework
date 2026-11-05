@@ -327,6 +327,10 @@ ATTRIBUTION_UNEVIDENCED_NON_AGENT
                           environment evidence in that experiment record (field unstated, N/A
                           without reason, design_conflict not recorded), or has no experiment
                           record; mirror of ATTRIBUTION_WITHOUT_AUDIT for non-agent readings
+READOUT_CONTEXT_UNSTATED  act with evidence_kind internal_readout lacks honest_baseline or
+                          validated_scope (M34 / D-M17)
+READOUT_SOLE_EVIDENCE     AGENT attribution (label or outcome_attribution entry) whose acts are
+                          all internal_readout; readouts inform, they don't decide (M34 / D-M17)
 ```
 
 `design_basis` (label, outcome_attribution entry) lists elements from
@@ -527,6 +531,11 @@ M27  n-of-1 RECALIBRATE template records (calibration_log, channel mapping)
      mitigated  none yet
      residual   Unmitigated. Proposed: separate local file marked do-not-merge / do-not-export (D-M1 path).*
      status     PROPOSED (independent pass)
+M34  internal-signal readout (activation readout, detector score; J15) used as a verdict on models or people
+     use        Treat a readout as proof of intent; cite a detector outside its validated scope (J15 Transfer AUROC 0.519, near chance); drop the honest baseline (J15: 33/100 honest runs also held a flagged concept); same move on people as polygraph-style evidence.
+     mitigated  D-M17
+     residual   Doc + completeness flags only. Nothing stops a reader citing a readout off-registry; the flags cannot judge whether a stated scope is accurate.
+     status     PROPOSED (co-authored (JinnZ2 + Claude), 2026-11-05)
 ```
 
 | mitigation | what |
@@ -535,6 +544,7 @@ M27  n-of-1 RECALIBRATE template records (calibration_log, channel mapping)
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
 | D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. status.py lists each junction's report origins (node labels; this-ledger for direct appends). |
 | D-M15 | Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ; authorization_ref to a GRANTED confirm_dissent_withdrawal decision in a community_black_start two_person log, checked when the log is supplied); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only. |
+| D-M17 | Act.evidence_kind (behavioral | internal_readout); an internal_readout act carries honest_baseline + validated_scope (READOUT_CONTEXT_UNSTATED when missing); an AGENT attribution (label attributes_to, or experiment outcome_attribution) whose acts are all internal_readout -> READOUT_SOLE_EVIDENCE. Rule in the doc: every readout-based claim carries its honest baseline and validated scope. |
 | D-M6 | Registry is not validation: every judgment_registry CLI output starts with 'Registered = documented, not correct.' |
 | D-M7 | Dissent as position: dissent.holder may be 'anonymous'; a dissent entered with no holder is stored as anonymous. |
 | D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |

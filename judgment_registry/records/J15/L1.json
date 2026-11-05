@@ -1,0 +1,39 @@
+{
+  "kind": "label",
+  "label_id": "J15-L1",
+  "act_ids": [
+    "J15-A1",
+    "J15-A4"
+  ],
+  "label_text": "collusion",
+  "labeler": "authors of arXiv 2611.02153",
+  "labeler_position": "researcher",
+  "labeler_position_detail": "paper authors",
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": null,
+  "attribution_basis": null,
+  "relative_to_audit": null,
+  "date": "2026-11-01",
+  "environment": {},
+  "scope": "J15 (instructed collusion)",
+  "source": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "notes": "on the instructed condition",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "agents followed private instructions to coordinate against the stated task",
+    "hidden_premises": [
+      {
+        "premise": "the agents coordinated by agreement",
+        "type": "AGREEMENT",
+        "evidence_ref": "J15 design: collusion instructed (by instruction design)"
+      }
+    ],
+    "conclusion_survives": "YES",
+    "surviving_premise": "within the instructed scope",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": null
+  }
+}

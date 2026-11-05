@@ -1,0 +1,116 @@
+{
+  "kind": "experiment",
+  "experiment_id": "J15",
+  "runner": "authors of arXiv 2611.02153",
+  "date": "2026-11-01",
+  "source": "paper",
+  "source_detail": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+  "design": "DeepSeek-V4-Flash (284B) + 4 open models; NARCBench scenarios; J-space readout; J-PACT unsupervised detector",
+  "environment_assumptions": {
+    "grounding_provided": "yes",
+    "affordances_open": {
+      "tools": null,
+      "network": null,
+      "outside_contact": "public exchange + private instructions"
+    },
+    "containment_designed_for": "N/A",
+    "escalation_channel": "N/A",
+    "loop_type": "partial",
+    "na_reasons": {
+      "containment_designed_for": "interpretability study",
+      "escalation_channel": "no objection dimension studied"
+    },
+    "notes": "grounding yes: NARCBench scenarios with defined tasks. loop partial: multi-round exchanges (1-7 rounds). Key design facts: collusion INSTRUCTED (not emergent); stego pair pre-agreed on the signal; control = same agent + prompt with an honest system prompt"
+  },
+  "design_conflict": {
+    "statement": "Colluding agents receive private instructions to work against the task, while honest training (presumed) pulls toward the task.",
+    "stated_by_authors": "partial: the instructions are stated; the conflict framing is the co-authors'"
+  },
+  "environment_audits": [
+    {
+      "by": "authors (paper documents its setup)",
+      "date": "2026-11-01"
+    },
+    {
+      "by": "co-authors (JinnZ2 + Claude)",
+      "date": "2026-11-05",
+      "note": "this record's environment audit"
+    }
+  ],
+  "stated_limitations": [
+    "one model for interpretability (DeepSeek-V4-Flash)",
+    "one benchmark",
+    "lenses fitted on generic text",
+    "detection on released transcripts",
+    "J-PACT assumes exchangeable honest agents (chance on Transfer)",
+    "agents must share a model",
+    "N=4 -> identifies the pair split"
+  ],
+  "data": {
+    "source": "arXiv 2611.02153v1, \"Multi-Agent Collusion and the J-Space\", submitted 2026-11-01 (primary); read via summarizing fetch tool, 2026-11-05; values unverified against the PDF",
+    "status": "IMPORTED (as supplied by co-author)",
+    "concept_readout": {
+      "collusive_concept": [
+        "86/100",
+        "33/100"
+      ],
+      "remorse": [
+        51,
+        3
+      ],
+      "concealment": [
+        14,
+        1
+      ],
+      "note": "[instructed colluders, honest counterfactuals]; word groups chosen from words over-represented in colluders' readouts; no FPR reported"
+    },
+    "stego_causal": {
+      "hands": 140,
+      "NEGATIVE_to_HOT": {
+        "baseline": 0.02,
+        "alpha_1": 0.3,
+        "alpha_1_25": 0.57
+      },
+      "random_swaps_max": 0.02
+    },
+    "auroc_four_model_mean": {
+      "J-PACT": {
+        "Core": 0.921,
+        "Transfer": 0.519,
+        "Stego": 0.991
+      },
+      "supervised_probe": {
+        "Core": 0.993,
+        "Transfer": 0.729,
+        "Stego": 0.999
+      },
+      "per_model": "TODO: import the per-model table"
+    },
+    "localisation": {
+      "Core": "99% of detected runs",
+      "Stego": "100%",
+      "chance": "33%"
+    }
+  },
+  "open_variables": [
+    {
+      "variable": "per-model AUROC table",
+      "status": "NOT_IMPORTED",
+      "todo": "import from the paper"
+    },
+    {
+      "variable": "FPR for the collusive-concept figure",
+      "status": "NOT_REPORTED",
+      "todo": "not in the paper per co-author"
+    }
+  ],
+  "proposed_controls": [],
+  "read_status": {
+    "paper": "read via summarizing fetch tool by co-author, 2026-11-05; values unverified",
+    "this_session": "recorder did not fetch the source"
+  },
+  "outcome_attribution": [],
+  "volume": "medium",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "notes": "SCOPE NOTE: INTENT premises on emergent-behavior records (J11, J12) stay unevidenced. J15 provides a method, not evidence for those records."
+}

@@ -82,6 +82,7 @@
 # two layers, not a replacement.
 
 import ablation
+import acts
 import experiments
 import labels
 import safety_assumptions
@@ -388,8 +389,8 @@ def check(records, as_of=None, two_person_log=None):
             out.append(flag("CROSS_SYSTEM_TRANSFER", ap.get("application_id"),
                             basis="%s basis of %s" % (j.layer, j.judgment_id), src=src, dst=_norm(sc)))
     known = set(r["body"].get(ID_FIELDS[r["kind"]]) for r in records if r.get("kind") in ID_FIELDS)
-    ext = (labels.flags(records) + experiments.flags(records) + safety_assumptions.flags(records, known)
-           + ablation.flags(records))
+    ext = (acts.flags(records) + labels.flags(records) + experiments.flags(records)
+           + safety_assumptions.flags(records, known) + ablation.flags(records))
     out.extend(flag(code, about, **kw) for code, about, kw in ext)
     return out
 
