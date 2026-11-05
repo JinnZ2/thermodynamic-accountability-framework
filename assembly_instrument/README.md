@@ -226,7 +226,7 @@ M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coord
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
      mitigated  D-M13
-     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.* Queued (2026-11-05): status.py shows record origins.
+     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. status.py lists, per junction, the origin node labels of its reports (this-ledger for records appended directly). Node labels are self-declared, and a forged input file still merges in -- its origin is recorded and shown, not rejected.*
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
@@ -236,7 +236,7 @@ M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, 
 M13  field-report free text printed at the top of a checkout handout as a caution
      use        A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.
      mitigated  D-M14
-     residual   Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note'. No length cap; no human approval step before printing; the text itself is printed as sent.* Queued (2026-11-05): cap free text per field (e.g. 280 chars) with a visible [truncated] marker.
+     residual   Partial: caution lines carry only outcome word, region/date and version; reporter free text prints last, in a separate UNVERIFIED FIELD NOTES block, each line labelled 'unverified field note', collapsed to one line and cut at 280 characters per field with a visible [truncated] marker. No human approval step before printing; text under the cap is printed as sent.*
      status     PROPOSED (independent pass)
 M14  junction version hash (refs.py) excludes source and caution
      use        Source or caution text can change without the version changing, so a citation can be swapped silently.
@@ -264,7 +264,7 @@ M17  validate.py PASS
 |---|---|
 | D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
-| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. |
-| D-M14 | Field-report free text never prints among caution lines: status rows split caution (instrument lines) from field_notes (reporter text); checkout and status print field notes last, in a separate block headed UNVERIFIED FIELD NOTES, each line 'unverified field note -- ...'. |
+| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. status.py lists each junction's report origins (node labels; this-ledger for direct appends). |
+| D-M14 | Field-report free text never prints among caution lines: status rows split caution (instrument lines) from field_notes (reporter text); checkout and status print field notes last, in a separate block headed UNVERIFIED FIELD NOTES, each line 'unverified field note -- ...'. Free text is collapsed to one line and capped at 280 characters per field with a [truncated] marker. |
 | D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
 <!-- misuse-section:end -->

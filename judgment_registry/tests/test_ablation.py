@@ -93,7 +93,7 @@ class Ordering(unittest.TestCase):
                        ("label", LAB(attributes_to="AGENT", date="2026-02-01", relative_to_audit="BEFORE")))
         self.assertEqual(codes(stated, "L1"), ["ATTRIBUTION_ORDER"])
         other = build(("experiment", exp), ("act", ACT()),
-                      ("label", LAB(attributes_to="INTERACTION", date="2026-01-02")))
+                      ("label", LAB(attributes_to="INTERACTION", date="2026-01-02", design_basis=["loop_type"])))
         self.assertEqual(codes(other, "L1"), [])
 
     def test_experiment_outcome_before_audit(self):

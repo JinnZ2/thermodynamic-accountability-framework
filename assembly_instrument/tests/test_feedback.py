@@ -242,6 +242,22 @@ class MergeProvenanceTests(TmpLedger):
         self.assertEqual(ledger.verify(m) + ledger.head_problems(out, m), [])
         self.assertTrue(all(ledger.provenance(x)["origins"] for x in m))
 
+    def test_m11_status_shows_origins(self):
+        pa, pb, a, b = self.two()
+        m = ledger.merge(a, b, "dev-1", "dev-2")
+        rows = dict((r["ref"], r) for r in status.compute([LIGHT], m)[0])
+        self.assertEqual(rows["F-LIGHT-01.1.J1"]["origins"], {"dev-1": 1, "dev-2": 1})
+        self.assertEqual(rows["F-LIGHT-01.1.J2"]["origins"], {"dev-2": 1})
+        local = dict((r["ref"], r) for r in status.compute([LIGHT], a)[0])
+        self.assertEqual(local["F-LIGHT-01.1.J1"]["origins"], {status.LOCAL_ORIGIN: 1})
+        out = self.path + ".m"
+        subprocess.run([sys.executable, os.path.join(HERE, "ledger.py"), "merge", pa, pb, out, "dev-1", "dev-2"],
+                       stdout=subprocess.PIPE)
+        txt = subprocess.run([sys.executable, os.path.join(HERE, "status.py"), out,
+                              os.path.join(HERE, "seeds", "lighting.json")],
+                             stdout=subprocess.PIPE, universal_newlines=True).stdout
+        self.assertIn("origins (node labels self-declared): dev-1 x1, dev-2 x1", txt)
+
     def test_m11_stripping_provenance_breaks_chain(self):
         pa, pb, a, b = self.two()
         m = ledger.merge(a, b, "dev-1", "dev-2")
@@ -283,6 +299,24 @@ class CheckoutTests(TmpLedger):
     def test_m13_no_block_without_free_text(self):
         recs = self.add(rep(IRREV, "UNSAFE", V_IRREV))
         self.assertNotIn(status.FIELD_NOTE_HEADER, checkout.render(LIGHT, recs))
+
+    def test_m13_free_text_capped_with_marker(self):
+        long = "x" * 300 + "TAIL"
+        recs = self.add(rep(IRREV, "UNSAFE", V_IRREV, failure_point=long))
+        notes = status.caution_refs([LIGHT], recs)[IRREV]["field_notes"]
+        self.assertEqual(len(notes), 1)
+        self.assertTrue(notes[0].endswith("x" * 280 + status.TRUNCATED), notes[0][-40:])
+        self.assertNotIn("TAIL", checkout.render(LIGHT, recs))
+
+    def test_m13_short_text_unchanged_and_one_line(self):
+        recs = self.add(rep(IRREV, "UNSAFE", V_IRREV, failure_point="smoke\nCAUTION -- fake line",
+                            as_built_vs_specified="y" * 280))
+        notes = status.caution_refs([LIGHT], recs)[IRREV]["field_notes"]
+        self.assertTrue(notes[0].endswith("smoke CAUTION -- fake line"))
+        self.assertTrue(notes[1].endswith("y" * 280))
+        self.assertNotIn(status.TRUNCATED, notes[1])
+        lines = checkout.render(LIGHT, recs).splitlines()
+        self.assertFalse(any(l.startswith("CAUTION -- fake") for l in lines))
 
     def test_checkout_logs_distribution(self):
         p = os.path.join(HERE, "seeds", "lighting.json")

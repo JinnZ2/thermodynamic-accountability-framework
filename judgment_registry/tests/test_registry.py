@@ -140,8 +140,9 @@ class M25WithdrawalTests(unittest.TestCase):
                      {"method": "steward_two_person", "steward": "st-1", "second": "ST-1"}):
             self.assertIn("DISSENT_WITHDRAWAL_UNCONFIRMED",
                           [f for f, _ in self.flags(base + [self.W("anonymous", **conf)])], conf)
-        ok = base + [self.W("anonymous", method="steward_two_person", steward="st-1", second="st-2")]
-        self.assertEqual(self.flags(ok), [])
+        names_only = base + [self.W("anonymous", method="steward_two_person", steward="st-1", second="st-2")]
+        self.assertIn("DISSENT_WITHDRAWAL_UNCONFIRMED", [f for f, _ in self.flags(names_only)])
+        # residual closed 2026-11-05: two names are not enough; see test_m25_two_person.py
 
     def test_named_holder_cannot_use_steward_path(self):
         s = self.steps() + [self.W(method="steward_two_person", steward="st-1", second="st-2")]

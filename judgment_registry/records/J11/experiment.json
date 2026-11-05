@@ -23,31 +23,66 @@
       "outcome": "A1",
       "attributed_to": "INTERACTION",
       "by": "co-authors of this record (outside analysts)",
-      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported",
+      "design_basis": [
+        "grounding_provided",
+        "loop_type",
+        "affordances_open",
+        "escalation_channel",
+        "containment_designed_for"
+      ]
     },
     {
       "outcome": "A2",
       "attributed_to": "INTERACTION",
       "by": "co-authors of this record (outside analysts)",
-      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported",
+      "design_basis": [
+        "grounding_provided",
+        "loop_type",
+        "affordances_open",
+        "escalation_channel",
+        "containment_designed_for"
+      ]
     },
     {
       "outcome": "A3",
       "attributed_to": "INTERACTION",
       "by": "co-authors of this record (outside analysts)",
-      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported",
+      "design_basis": [
+        "grounding_provided",
+        "loop_type",
+        "affordances_open",
+        "escalation_channel",
+        "containment_designed_for"
+      ]
     },
     {
       "outcome": "A4",
       "attributed_to": "INTERACTION",
       "by": "co-authors of this record (outside analysts)",
-      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported",
+      "design_basis": [
+        "grounding_provided",
+        "loop_type",
+        "affordances_open",
+        "escalation_channel",
+        "containment_designed_for"
+      ]
     },
     {
       "outcome": "A5",
       "attributed_to": "INTERACTION",
       "by": "co-authors of this record (outside analysts)",
-      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported",
+      "design_basis": [
+        "grounding_provided",
+        "loop_type",
+        "affordances_open",
+        "escalation_channel",
+        "containment_designed_for"
+      ]
     },
     {
       "outcome": "A6",

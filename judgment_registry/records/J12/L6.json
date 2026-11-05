@@ -37,5 +37,10 @@
     "ablated_by": "co-authors (JinnZ2 + Claude)",
     "date": "2026-11-05",
     "notes": "pending controls C1 and C2"
-  }
+  },
+  "design_basis": [
+    "design_conflict",
+    "escalation_channel",
+    "affordances_open"
+  ]
 }

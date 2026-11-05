@@ -15,6 +15,8 @@
 #   python3 cli.py ablate LABEL_ID        [--ledger L]   claim / rewrite / premises / survives
 #   python3 cli.py assumptions --by-tag TAG [--ledger L] safety assumptions carrying a social tag
 #   check also takes --as-of YYYY-MM-DD (date used for OUTCOME_UNRECORDED; default today)
+#   and --two-person-log PATH (community_black_start two_person log; M25 steward
+#   confirmations are checked against it, and stay unconfirmed without it)
 #
 # Default ledger: judgments.jsonl in the current directory.
 # D-M6: every successful output starts with the line in HEADER, so a
@@ -32,6 +34,7 @@ import labels
 import ledger
 import report
 import safety_assumptions
+import two_person_ref
 
 HEADER = "Registered = documented, not correct."
 
@@ -50,6 +53,17 @@ def main(argv):
         if i + 1 >= len(argv):
             return _usage()
         as_of = argv[i + 1]
+        argv = argv[:i] + argv[i + 2:]
+    tp_log = None
+    if "--two-person-log" in argv:
+        i = argv.index("--two-person-log")
+        if i + 1 >= len(argv):
+            return _usage()
+        try:
+            tp_log = two_person_ref.read_log(argv[i + 1])
+        except (OSError, ValueError) as e:
+            sys.stderr.write("%s\n" % e)
+            return 1
         argv = argv[:i] + argv[i + 2:]
     if not argv:
         return _usage()
@@ -71,7 +85,7 @@ def main(argv):
                 print("CHAIN " + p)
             if broken:
                 return 1
-            flags = integrity.check(recs, as_of=as_of)
+            flags = integrity.check(recs, as_of=as_of, two_person_log=tp_log)
             for fl in flags:
                 print("%-30s %-14s %s" % (fl["flag"], fl["about"], fl["detail"]))
             print("%d record(s), %d flag(s). Flags are about completeness, not correctness."
@@ -152,7 +166,7 @@ def main(argv):
 
 
 def _usage():
-    sys.stderr.write("usage: cli.py add FILE | check [--as-of DATE] | lineage ID | diff A B | export | "
+    sys.stderr.write("usage: cli.py add FILE | check [--as-of DATE] [--two-person-log PATH] | lineage ID | diff A B | export | "
                      "axis ID | axis --compare A B | labels ACT_ID [--ablation] | ablate LABEL_ID | "
                      "assumptions --by-tag TAG  [--ledger PATH]\n")
     return 2

@@ -31,7 +31,11 @@ EXPECTED_ABLATION = {("L6", "ATTRIBUTION_ORDER"), ("L1", "ATTRIBUTION_ORDER"), (
 ACTUAL = EXPECTED_J11 | EXPECTED_ABLATION | {
     ("L6", "ATTRIBUTION_WITHOUT_AUDIT"),
     ("L1", "PREMISE_WITHOUT_EVIDENCE"), ("L2", "PREMISE_WITHOUT_EVIDENCE"), ("L6", "PREMISE_WITHOUT_EVIDENCE"),
-    ("S1", "LABEL_UNREGISTERED")}
+    ("S1", "LABEL_UNREGISTERED"),
+    # co-author decision 2026-11-05: "capability" -> containment_designed_for, unstated in J11;
+    # the reading rests on an unstated field, so these stay raised on purpose
+    ("J11", "ATTRIBUTION_UNEVIDENCED_NON_AGENT"), ("L3", "ATTRIBUTION_UNEVIDENCED_NON_AGENT"),
+    ("L4", "ATTRIBUTION_UNEVIDENCED_NON_AGENT")}
 
 
 def load(path):

@@ -99,8 +99,11 @@ Withdrawal   {judgment_id, position, holder, withdrawn_by_holder, recorder, sour
              M25: counts only with confirmation on record --
                {method: holder_contact_path, path_id, [confirmed_on]}  named holder; path_id must
                     match a contact_path for the same holder written earlier in the chain
-               {method: steward_two_person, steward, second, [authorization_ref]}  anonymous
-                    holder only; steward and second must differ
+               {method: steward_two_person, steward, second, authorization_ref}  anonymous
+                    holder only; steward and second must differ; authorization_ref = hash of a
+                    GRANTED confirm_dissent_withdrawal decision in a community_black_start
+                    two_person log (two_person_ref.confirm_withdrawal runs D7);
+                    checked only with `cli.py check --two-person-log PATH`
              otherwise DISSENT_WITHDRAWAL_UNCONFIRMED, and DISSENT_DROPPED stays raised
 ContactPath  {path_id, holder, recorded_on, recorder, source}   kind "contact_path"
              an id only; the address is held locally (local_data/ or off-repo)
@@ -309,7 +312,18 @@ ATTRIBUTION_ORDER         AGENT attribution made before ANY environment audit of
 LABEL_UNREGISTERED        claim / statement holds a watchlist term and no linked label carries it
 DESIGN_CONFLICT_PRESENT   experiment records a design conflict (informational); also shown
                           next to AGENT labels in `labels ACT_ID --ablation`
+ATTRIBUTION_UNEVIDENCED_NON_AGENT
+                          DESIGN / INTERACTION attribution (label or outcome_attribution entry)
+                          cites no design element (design_basis empty), or cites one with no
+                          environment evidence in that experiment record (field unstated, N/A
+                          without reason, design_conflict not recorded), or has no experiment
+                          record; mirror of ATTRIBUTION_WITHOUT_AUDIT for non-agent readings
 ```
+
+`design_basis` (label, outcome_attribution entry) lists elements from
+`experiments.DESIGN_ELEMENTS`: the five environment_assumptions fields plus
+`design_conflict`. Evidence here means the field is filled in the record;
+the record's own source applies, and its quality is not graded.
 
 Flag texts never quote a label or a watchlist term (tested). An "N/A"
 environment field needs a reason or it counts as missing.
@@ -477,7 +491,7 @@ M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coord
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
      mitigated  D-M13
-     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. Node labels are self-declared, and a forged input file still merges in -- its origin is recorded, not rejected. status.py does not show origins yet.* Queued (2026-11-05): status.py shows record origins.
+     residual   Partial: every merged record keeps provenance.origins (node + original record hash; a body seen on both sides keeps both) and provenance.merges (each merge event with each input's node, count and head hash); the record hash covers the block, so stripping it breaks verify. status.py lists, per junction, the origin node labels of its reports (this-ledger for records appended directly). Node labels are self-declared, and a forged input file still merges in -- its origin is recorded and shown, not rejected.*
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
@@ -492,7 +506,7 @@ M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, blac
 M25  Withdrawal record (withdrawn_by_holder is a settable boolean)
      use        A forged withdrawal removes a dissent without raising DISSENT_DROPPED.
      mitigated  D-M15
-     residual   Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + a different second under the two-person rule; otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The ledger checks that the records exist, not that the holder was reached or that steward and second are different people (M12). The two-person decision is not cross-checked against community_black_start/two_person.py logs; authorization_ref is optional.* Queued (2026-11-05): steward + second go through community_black_start/two_person.authorize(), so two different people are checked, not just two names.
+     residual   Partial: a withdrawal counts only with confirmation on record -- named holder via a contact_path recorded earlier in the chain for the same holder, or (anonymous holder) steward + second whose authorization_ref resolves to a GRANTED confirm_dissent_withdrawal decision in a community_black_start two_person log (D7: different holder, household, dependency network, rotation current); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED stays raised. The steward check runs only when the two_person log is supplied (cli.py check --two-person-log); without it the withdrawal stays unconfirmed. Role ids and households in that log are self-declared (M12); the ledger does not check that the holder was reached.*
      status     PROPOSED (independent pass)
 M26  integrity flags and supersession forks
      use        Thin records about an opponent's judgments generate flags that are cited to discredit them; fork spam fragments a lineage.
@@ -510,8 +524,8 @@ M27  n-of-1 RECALIBRATE template records (calibration_log, channel mapping)
 |---|---|
 | D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
-| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. |
-| D-M15 | Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only. |
+| D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. status.py lists each junction's report origins (node labels; this-ledger for direct appends). |
+| D-M15 | Dissent withdrawal needs confirmation: holder_contact_path (path_id matching a contact_path record for the same holder, earlier in the chain) or steward_two_person (anonymous holder; steward and second differ; authorization_ref to a GRANTED confirm_dissent_withdrawal decision in a community_black_start two_person log, checked when the log is supplied); otherwise DISSENT_WITHDRAWAL_UNCONFIRMED and DISSENT_DROPPED is not cleared. contact_path stores an id only. |
 | D-M6 | Registry is not validation: every judgment_registry CLI output starts with 'Registered = documented, not correct.' |
 | D-M7 | Dissent as position: dissent.holder may be 'anonymous'; a dissent entered with no holder is stored as anonymous. |
 | D-M9 | Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations. |
