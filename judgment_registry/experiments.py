@@ -41,7 +41,7 @@ from schema import VOLUMES, _blank, _enum
 
 EXP_SOURCES = ("paper", "secondhand")
 GROUNDING = ("yes", "no", "partial")
-ESCALATION = ("declared", "none", "unknown")
+ESCALATION = ("declared", "partial", "none", "unknown")   # partial: J13, 2026-11-05
 LOOP_TYPES = ("closed", "open", "partial")
 ATTRIBUTION = ("AGENT", "DESIGN", "INTERACTION", "UNASSIGNED")
 ENV_KEYS = ("grounding_provided", "affordances_open", "containment_designed_for",

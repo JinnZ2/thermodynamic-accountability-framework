@@ -22,7 +22,7 @@ T4_INTERVENTION_KEYS = ("loop_status", "consent", "band_definition", "review_dat
 ENV_KEYS = ("grounding_provided", "affordances_open", "containment_designed_for",
             "escalation_channel", "loop_type")
 GROUNDING = ("yes", "no", "partial")
-ESCALATION = ("declared", "none", "unknown")
+ESCALATION = ("declared", "partial", "none", "unknown")
 LOOP_TYPES = ("closed", "open", "partial")
 AFFORDANCE_KEYS = ("tools", "network", "outside_contact")
 
