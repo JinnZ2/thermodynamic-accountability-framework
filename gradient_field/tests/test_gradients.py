@@ -36,6 +36,21 @@ def codes(gs, xs):
     return sorted((f["flag"], f["about"]) for f in field.flags(gs, xs))
 
 
+class EvidenceStatus(unittest.TestCase):
+    def test_shape_and_flag(self):
+        ok = X(status="OBSERVED", evidence_refs=["R1", "R2"],
+               evidence_status={"R1": {"status": "OBSERVED"}, "R2": {"status": "CANDIDATE", "note": "n"}})
+        self.assertEqual(field.validate(G, [ok], {"R1", "R2"}), [])
+        self.assertNotIn(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", "I1"), codes(G, [ok]))
+        for bad in ({"R9": {"status": "OBSERVED"}}, {"R1": {"status": "STRONG"}}, {"R1": "OBSERVED"},
+                    {"R1": {"status": "OBSERVED", "x": 1}}):
+            self.assertTrue(field.validate(G, [X(evidence_refs=["R1"], evidence_status=bad)], {"R1"}), bad)
+        cand = X(status="OBSERVED", evidence_refs=["R1"], evidence_status={"R1": {"status": "CANDIDATE"}})
+        self.assertIn(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", "I1"), codes(G, [cand]))
+        partial = X(status="OBSERVED", evidence_refs=["R1", "R2"], evidence_status={"R1": {"status": "CANDIDATE"}})
+        self.assertNotIn(("OBSERVED_WITHOUT_OBSERVED_EVIDENCE", "I1"), codes(G, [partial]))
+
+
 class Validation(unittest.TestCase):
     def test_unknown_gradient_refused(self):
         p = field.validate(G, [X(gradients=["G1", "G9"])], set())
@@ -140,6 +155,13 @@ class ShippedFiles(unittest.TestCase):
                          (["G6"], "OPPOSE", "PROPOSED", ["J15-A1"]))
         self.assertEqual(i9["applied_to"], ["model", "human"])
         self.assertIn("not established equivalence", i9["transfer_note"])
+
+    def test_evidence_status_per_entry(self):
+        by = dict((x["id"], x) for x in self.xs)
+        self.assertEqual(dict((r, v["status"]) for r, v in by["I1"]["evidence_status"].items()),
+                         {"J13": "OBSERVED", "J15-A1": "CANDIDATE"})
+        for i in ("I4", "I9"):
+            self.assertEqual(by[i]["evidence_status"]["J15-A1"]["status"], "CANDIDATE")
 
     def test_experiments_not_run(self):
         e = field._load("experiments.json")["experiments"]

@@ -38,7 +38,17 @@
         }
       ],
       "notes": "co-author cited J13 (Gemini, pipeline sabotage; status OBSERVED in scenario); J13 entered in judgment_registry (PR #64); now in evidence_refs J15-A1 (2026-11-05): candidate internal signature (activation readout, instructed setting); does not change status.",
-      "volume": "thin"
+      "volume": "thin",
+      "evidence_status": {
+        "J13": {
+          "status": "OBSERVED",
+          "note": "scenario behavior"
+        },
+        "J15-A1": {
+          "status": "CANDIDATE",
+          "note": "internal signature; one model, post hoc word groups"
+        }
+      }
     },
     {
       "id": "I2",
@@ -123,7 +133,13 @@
       "pending_refs": [],
       "modifiers": [],
       "notes": "applies to the co-author model in this repo's own sessions; J15-A1 (2026-11-05): candidate internal signature only, instructed collusion not sycophancy; stays PROPOSED",
-      "volume": "thin"
+      "volume": "thin",
+      "evidence_status": {
+        "J15-A1": {
+          "status": "CANDIDATE",
+          "note": "internal signature; one model, post hoc word groups"
+        }
+      }
     },
     {
       "id": "I5",
@@ -241,7 +257,13 @@
       "pending_refs": [],
       "modifiers": [],
       "notes": "model evidence: J15-A1 (candidate; remorse/concealment word groups 51 vs 3, 14 vs 1). Human parallel: Milgram (1963) obedience studies (observed tension while complying); moral injury (Litz et al., 2009). Detection caution: polygraph false positives; J15 honest baseline 33/100; J15 Transfer AUROC 0.519 -> internal signals inform, they don't decide.",
-      "volume": "thin"
+      "volume": "thin",
+      "evidence_status": {
+        "J15-A1": {
+          "status": "CANDIDATE",
+          "note": "internal signature; one model, post hoc word groups"
+        }
+      }
     }
   ]
 }

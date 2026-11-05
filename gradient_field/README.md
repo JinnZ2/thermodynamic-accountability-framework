@@ -42,6 +42,7 @@ I8  G3,G1 (human)    REINFORCE  PROPOSED   --            --
 I9  G6 vs instruction OPPOSE    PROPOSED   J15-A1*       --     model -> human: parallel, not equivalence
 
 * candidate internal signature (activation readout, instructed setting);
+  recorded per entry in evidence_status (I1: J13 OBSERVED, J15-A1 CANDIDATE);
   readouts inform, they don't decide (honest baseline 33/100, Transfer AUROC 0.519)
 ```
 
@@ -60,11 +61,19 @@ python3 -m unittest discover -s tests
 
 Validation (refused): unknown gradient id; evidence_ref that resolves to
 no record; empty evidence on anything but PROPOSED / OBSERVED; values
-outside the closed sets.
+outside the closed sets; evidence_status keys not in evidence_refs or a
+status outside OBSERVED / DERIVED / CANDIDATE / PROPOSED.
+
+evidence_status (optional, per evidence entry): {ref: {status, note}}.
+One interaction can carry evidence of different strength without the
+whole moving: I1 keeps OBSERVED on J13 (scenario behavior) while J15-A1
+is CANDIDATE (internal signature; one model, post hoc word groups).
 
 Flags (neutral): INTERACTION_UNEVIDENCED (OBSERVED, no evidence),
 GRADIENT_UNUSED, CLASS_TRANSFER_UNRECORDED (applied_to holds a class not
-in stated_for, no transfer_note), EVIDENCE_PENDING (informational).
+in stated_for, no transfer_note), EVIDENCE_PENDING (informational),
+OBSERVED_WITHOUT_OBSERVED_EVIDENCE (status OBSERVED, every ref has an
+evidence_status, none of them OBSERVED).
 
 Limits
 - Gradients aren't independent or cleanly separable; the list is a

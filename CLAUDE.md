@@ -3160,7 +3160,12 @@ session's notes only.
   DESIGN_CONFLICT_PRESENT, PREMISE_WITHOUT_EVIDENCE (L2). gradient_field:
   J15-A1 candidate evidence on I1 (stays OBSERVED) and I4 (stays PROPOSED);
   I9 G6 OPPOSE instruction, PROPOSED, model -> human transfer noted.
-  Tests: judgment_registry 205, gradient_field 19.
+  Tests: judgment_registry 205, gradient_field 21.
+  Follow-up (co-author answers): J15-L2 keeps PREMISE_WITHOUT_EVIDENCE (A1
+  is the readout; citing it would be circular). I1 stays OBSERVED;
+  gradient_field evidence_status per entry (OBSERVED / DERIVED / CANDIDATE /
+  PROPOSED): I1 J13 OBSERVED + J15-A1 CANDIDATE; I4, I9 J15-A1 CANDIDATE;
+  flag OBSERVED_WITHOUT_OBSERVED_EVIDENCE.
 - #67 follow-up (co-author answers, 2026-11-05): weight_edit_ledger/
   loaders.py (stdlib safetensors + .npz + .json readers, F64/F32/F16/BF16,
   tensor by tensor; writers for synthetic tests; .npz output cross-checked
