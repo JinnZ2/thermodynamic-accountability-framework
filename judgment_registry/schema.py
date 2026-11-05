@@ -10,11 +10,17 @@
 #   Transfer     the record that says why an application outside the recorded
 #                scope was made
 #   Withdrawal   a dissent withdrawn by its own holder
+#   SignalIntervention  a recorded move along the signal axis (AMPLIFY /
+#                SUPPRESS / RECALIBRATE / NONE) relative to a band the
+#                record itself defines; a Judgment links to it by
+#                intervention_id. No severity is computed anywhere.
 #
 # Layers (addendum 2026-11-04): a judgment states which layer it sits on.
-#   physics   input vs operating range of the structure (measurable)
-#   sensor    edge signal + response (withdrawal, avoidance; observable)
-#   agency    who directs the input at whom; subjecthood, consent, loop
+#   physics         input vs operating range of the structure (measurable)
+#   sensor          edge signal + response (withdrawal, avoidance; observable)
+#   interpretation  meaning, control available, expectation, social setting,
+#                   reported valence and intensity (recorded separately)
+#   agency          who directs the input at whom; subjecthood, consent, loop
 # Each layer basis can be recorded on its own, so an OPEN agency layer does
 # not block recording the physics and sensor layers under it.
 #
@@ -29,7 +35,8 @@ JUDGE_TYPES = ("person", "body", "tradition", "court", "other")
 EVIDENCE_TAGS = ("OBSERVED", "DERIVED", "PROPOSED")
 CHANGE_BASIS = ("CONDITIONS", "EVIDENCE", "NONE_STATED")
 VOLUMES = ("thin", "medium", "solid")
-LAYERS = ("physics", "sensor", "agency")
+LAYERS = ("physics", "sensor", "interpretation", "agency")
+CONTROL = ("YES", "NO", "PARTIAL", "UNKNOWN")
 SUBJECT_STATUS = ("ESTABLISHED", "OPEN", "NOT_APPLICABLE")
 CONSENT = ("GIVEN", "ABSENT", "NOT_POSSIBLE", "UNKNOWN")
 LOOP = ("CLOSED", "BROKEN", "UNKNOWN")
@@ -38,11 +45,25 @@ LOOP = ("CLOSED", "BROKEN", "UNKNOWN")
 BASIS_KEYS = {
     "physics": ("input", "operating_range", "range_source", "exceeded", "system_class"),
     "sensor": ("signal", "response", "observed", "source", "system_class"),
+    "interpretation": ("meaning", "control_available", "expectation", "social_environment",
+                       "valence_reported", "intensity_reported", "source", "system_class"),
     "agency": ("agent", "subject", "subject_status", "consent", "loop", "system_class"),
 }
-BASIS_ENUMS = {("agency", "subject_status"): SUBJECT_STATUS, ("agency", "consent"): CONSENT,
+BASIS_ENUMS = {("interpretation", "control_available"): CONTROL,
+               ("agency", "subject_status"): SUBJECT_STATUS, ("agency", "consent"): CONSENT,
                ("agency", "loop"): LOOP}
 BASIS_BOOLS = (("physics", "exceeded"), ("sensor", "observed"))
+
+# Signal-intervention axis (addendum 2)
+SYSTEM_CLASSES = ("human", "animal", "plant", "model", "other")
+DIRECTIONS = ("AMPLIFY", "SUPPRESS", "RECALIBRATE", "NONE")
+LAYER_TARGETED = ("sensor", "interpretation", "both")
+DURATION_TYPES = ("BRIDGE", "BOUNDED", "OPEN_ENDED")
+REVERSIBILITY = ("REVERSIBLE", "PARTIAL", "IRREVERSIBLE", "UNKNOWN")
+STATUS = EVIDENCE_TAGS
+BAND_KEYS = ("measure", "value", "band_definition", "band_system_class", "source")
+DURATION_KEYS = ("planned", "planned_end", "actual", "type", "review_date")
+CALIBRATION_KEYS = ("channel_mapping", "lead_lag", "calibration_log")
 
 # Required for completeness (MISSING_FIELD). `source` is checked separately
 # as NO_SOURCE so one gap is not counted twice.
@@ -90,6 +111,7 @@ class Judgment:
     layer: Optional[str] = None                 # physics | sensor | agency
     layer_basis: Optional[Dict] = None          # {physics: {...}|None, sensor: {...}|None, agency: {...}|None}
     depends_on_layers: List[str] = field(default_factory=list)   # judgment_ids for lower layers
+    intervention_id: Optional[str] = None       # links a SignalIntervention record
 
     def get(self, dotted):
         cur = asdict(self)
@@ -170,6 +192,74 @@ class Judgment:
         return Judgment(**d)
 
 
+def _enum(out, name, v, allowed):
+    if v is not None and v not in allowed:
+        out.append("%s must be one of %s" % (name, allowed))
+
+
+def _subkeys(out, name, block, allowed):
+    if block is None:
+        return {}
+    if not isinstance(block, dict):
+        out.append("%s must be null or an object" % name)
+        return {}
+    extra = set(block) - set(allowed)
+    if extra:
+        out.append("%s unknown field(s): %s" % (name, ", ".join(sorted(extra))))
+    return block
+
+
+@dataclass
+class SignalIntervention:
+    """One move along the signal axis. Records variables; scores nothing."""
+    intervention_id: str
+    version: Optional[str] = None
+    system_class: Optional[str] = None          # human | animal | plant | model | other
+    signal: Optional[str] = None                # e.g. nociception, uncertainty, error
+    direction: Optional[str] = None             # AMPLIFY | SUPPRESS | RECALIBRATE | NONE
+    layer_targeted: Optional[str] = None        # sensor | interpretation | both
+    distance_from_band: Optional[Dict] = None   # {measure, value, band_definition, band_system_class, source}
+    duration: Optional[Dict] = None             # {planned, planned_end, actual, type, review_date}
+    reversibility: Optional[str] = None
+    loop_status: Optional[str] = None           # does the subject's own action still change the signal?
+    consent: Optional[str] = None
+    cause_addressed: Optional[bool] = None      # cause treated, or only the signal?
+    purpose: Optional[str] = None               # as stated by whoever intervened
+    intervener: Optional[str] = None            # role / body, not a personal ID
+    observed_outcome: List[Dict] = field(default_factory=list)   # [{effect, tag, source}]
+    calibration: Optional[Dict] = None          # n-of-1 RECALIBRATE: {channel_mapping, lead_lag, calibration_log}
+    date: Optional[str] = None
+    environment: Dict = field(default_factory=dict)
+    volume: Optional[str] = None
+    status: Optional[str] = None                # OBSERVED | DERIVED | PROPOSED
+    recorder: Optional[str] = None
+    source: Optional[str] = None
+
+    def shape_problems(self):
+        out = []
+        if _blank(self.intervention_id):
+            out.append("intervention_id required")
+        _enum(out, "system_class", self.system_class, SYSTEM_CLASSES)
+        _enum(out, "direction", self.direction, DIRECTIONS)
+        _enum(out, "layer_targeted", self.layer_targeted, LAYER_TARGETED)
+        _enum(out, "reversibility", self.reversibility, REVERSIBILITY)
+        _enum(out, "loop_status", self.loop_status, LOOP)
+        _enum(out, "consent", self.consent, CONSENT)
+        _enum(out, "volume", self.volume, VOLUMES)
+        _enum(out, "status", self.status, STATUS)
+        if self.cause_addressed not in (True, False, None):
+            out.append("cause_addressed must be true, false or null")
+        band = _subkeys(out, "distance_from_band", self.distance_from_band, BAND_KEYS)
+        _enum(out, "distance_from_band.band_system_class", band.get("band_system_class"), SYSTEM_CLASSES)
+        dur = _subkeys(out, "duration", self.duration, DURATION_KEYS)
+        _enum(out, "duration.type", dur.get("type"), DURATION_TYPES)
+        _subkeys(out, "calibration", self.calibration, CALIBRATION_KEYS)
+        for o in self.observed_outcome or []:
+            if not isinstance(o, dict) or o.get("tag") not in EVIDENCE_TAGS:
+                out.append("observed_outcome entries need a tag from %s" % (EVIDENCE_TAGS,))
+        return out
+
+
 @dataclass
 class Application:
     application_id: str
@@ -186,12 +276,13 @@ class Transfer:
     reason: str                  # why the judgment / basis is carried to the new scope or class
     application_id: Optional[str] = None   # clears SCOPE_TRANSFER / CROSS_SYSTEM_TRANSFER on an application
     judgment_id: Optional[str] = None      # clears CROSS_SYSTEM_TRANSFER on a judgment's layer basis
+    intervention_id: Optional[str] = None  # clears CROSS_SYSTEM_BAND on an intervention
     recorder: Optional[str] = None
     source: Optional[str] = None
 
     def __post_init__(self):
-        if not (self.application_id or self.judgment_id):
-            raise TypeError("transfer needs application_id or judgment_id")
+        if not (self.application_id or self.judgment_id or self.intervention_id):
+            raise TypeError("transfer needs application_id, judgment_id or intervention_id")
 
 
 @dataclass
@@ -205,4 +296,5 @@ class Withdrawal:
 
 
 KIND_CLASSES = {"judgment": Judgment, "application": Application,
-                "transfer": Transfer, "withdrawal": Withdrawal}
+                "transfer": Transfer, "withdrawal": Withdrawal,
+                "intervention": SignalIntervention}

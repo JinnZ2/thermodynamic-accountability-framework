@@ -8,6 +8,9 @@
 #   python3 cli.py lineage ID             [--ledger L]
 #   python3 cli.py diff A B               [--ledger L]
 #   python3 cli.py export                 [--ledger L]   JSON with superseded_by derived
+#   python3 cli.py axis ID                [--ledger L]   signal-axis variables of one intervention
+#   python3 cli.py axis --compare A B     [--ledger L]   two interventions side by side
+#   check also takes --as-of YYYY-MM-DD (date used for OUTCOME_UNRECORDED; default today)
 #
 # Default ledger: judgments.jsonl in the current directory.
 # Exit: 0 ok | 1 chain broken / rejected | 2 usage
@@ -18,6 +21,7 @@ import sys
 import chain
 import integrity
 import ledger
+import report
 
 
 def main(argv):
@@ -27,6 +31,13 @@ def main(argv):
         if i + 1 >= len(argv):
             return _usage()
         path = argv[i + 1]
+        argv = argv[:i] + argv[i + 2:]
+    as_of = None
+    if "--as-of" in argv:
+        i = argv.index("--as-of")
+        if i + 1 >= len(argv):
+            return _usage()
+        as_of = argv[i + 1]
         argv = argv[:i] + argv[i + 2:]
     if not argv:
         return _usage()
@@ -46,7 +57,7 @@ def main(argv):
                 print("CHAIN " + p)
             if broken:
                 return 1
-            flags = integrity.check(recs)
+            flags = integrity.check(recs, as_of=as_of)
             for fl in flags:
                 print("%-30s %-14s %s" % (fl["flag"], fl["about"], fl["detail"]))
             print("%d record(s), %d flag(s). Flags are about completeness, not correctness."
@@ -61,6 +72,12 @@ def main(argv):
         if cmd == "diff" and len(args) == 2:
             print(json.dumps(chain.diff(recs, args[0], args[1]), indent=2, ensure_ascii=False))
             return 0
+        if cmd == "axis" and len(args) == 1:
+            print(report.axis(recs, args[0]))
+            return 0
+        if cmd == "axis" and len(args) == 3 and args[0] == "--compare":
+            print(report.compare(recs, args[1], args[2]))
+            return 0
         if cmd == "export" and not args:
             out = []
             for j in ledger.judgments(recs):
@@ -70,7 +87,8 @@ def main(argv):
             print(json.dumps({"judgments": out,
                               "applications": ledger.bodies(recs, "application"),
                               "transfers": ledger.bodies(recs, "transfer"),
-                              "withdrawals": ledger.bodies(recs, "withdrawal")},
+                              "withdrawals": ledger.bodies(recs, "withdrawal"),
+                              "interventions": ledger.bodies(recs, "intervention")},
                              indent=2, ensure_ascii=False))
             return 0
     except (OSError, ValueError, KeyError) as e:
@@ -80,7 +98,8 @@ def main(argv):
 
 
 def _usage():
-    sys.stderr.write("usage: cli.py add FILE | check | lineage ID | diff A B | export  [--ledger PATH]\n")
+    sys.stderr.write("usage: cli.py add FILE | check [--as-of DATE] | lineage ID | diff A B | export | "
+                     "axis ID | axis --compare A B  [--ledger PATH]\n")
     return 2
 
 

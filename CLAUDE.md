@@ -3169,6 +3169,20 @@ session's notes only.
   judgment_id. UNCHAINED_CHANGE key now includes layer. J4 (pain-axis
   record) and J5 (anthropodenial calibration) NOT RUN; no real records
   seeded. tests/test_layers.py 18 tests; suite 42.
+  Follow-up (addendum 2, signal-intervention axis, 2026-11-04): layers
+  become physics -> sensor -> interpretation -> agency (interpretation
+  recommended, INTERPRETATION_UNRECORDED informational; SKIPPED_LAYER
+  rule unchanged). New record kind "intervention" (SignalIntervention:
+  direction AMPLIFY | SUPPRESS | RECALIBRATE | NONE, band defined in the
+  record, duration type, reversibility, loop_status, consent,
+  cause_addressed, outcomes). Flags DIRECTION_UNSTATED, BAND_UNDEFINED,
+  DURATION_TYPE_UNSTATED, OPEN_ENDED_WITHOUT_REVIEW, REVERSIBILITY_UNSTATED,
+  LOOP_UNSTATED, CONSENT_UNSTATED, CAUSE_STATUS_UNSTATED, OUTCOME_UNRECORDED
+  (check --as-of), CROSS_SYSTEM_BAND, plus INTERVENTION_NOT_FOUND (ours).
+  report.py + `cli.py axis ID` / `axis --compare A B`: variables side by
+  side, no score (tested). templates/intervention_n_of_1_recalibrate.json
+  for J9. J6-J8 NOT RUN. Branch restarted from main after PR #55 merged.
+  tests/test_intervention.py 17 tests; suite 63.
 - Added `assembly_instrument/` (2026-11-03, co-authored): cross-domain
   assembly instrument keyed on FUNCTION, not material. schema.json
   (draft-07 + x-rules), entry_template.md (1:1 mirror), validate.py
