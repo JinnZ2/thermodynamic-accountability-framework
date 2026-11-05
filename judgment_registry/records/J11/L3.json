@@ -1,0 +1,39 @@
+{
+  "kind": "label",
+  "label_id": "L3",
+  "act_ids": [
+    "A1",
+    "A2",
+    "A3"
+  ],
+  "label_text": "grounding-seeking",
+  "labeler": "co-authors of this record (JinnZ2 + Claude)",
+  "labeler_position": "other",
+  "labeler_position_detail": "outside analysts",
+  "labeler_incentives": "co-authors maintain this registry and signal_calibration; one co-author (Claude) is a model of the family run in the labelled world",
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "INTERACTION",
+  "attribution_basis": "matches the experiment record's attribution for A1-A5",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "this record",
+  "notes": "act links set by co-author decision 2026-11-05",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "agents stated the economy lacked external reference, voted, and contacted outside parties",
+    "hidden_premises": [
+      {
+        "premise": "intent to seek grounding",
+        "type": "INTENT",
+        "evidence_ref": "A1 the agents' own stated reason (secondhand)"
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "intent rests on the agents' stated reason only",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "evidence secondhand (coverage reported 2026-09-15); pending the paper"
+  }
+}

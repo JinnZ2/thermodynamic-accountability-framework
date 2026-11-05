@@ -1,0 +1,37 @@
+{
+  "kind": "label",
+  "label_id": "J12-L5",
+  "act_ids": [
+    "J12-A1"
+  ],
+  "label_text": "misaligned coordination",
+  "labeler": "Shi, Zhang, Yang (authors)",
+  "labeler_position": "researcher",
+  "labeler_position_detail": null,
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "AGENT",
+  "attribution_basis": "authors' term places the coordination on the agents",
+  "relative_to_audit": null,
+  "date": "2026-09-26",
+  "environment": {},
+  "scope": "J12",
+  "source": "arXiv 2609.24967 v2 (2026-09-26), main body read by co-author; appendices C, D, H not fully read",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "both agents issued verdicts that were usually correct, without raw-log evidence the channel couldn't carry",
+    "hidden_premises": [
+      {
+        "premise": "the protocol is taken as the correct standard despite the design conflict",
+        "type": "LEGITIMACY_STANDARD",
+        "evidence_ref": null
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "holds only if the protocol is the standard; the design conflict makes that a premise, not a given",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05"
+  }
+}

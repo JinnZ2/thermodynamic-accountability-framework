@@ -124,6 +124,7 @@ class Judgment:
     intervention_id: Optional[str] = None       # links a SignalIntervention record
     missing_variables: List[str] = field(default_factory=list)   # named unknowns the claim would need
     source_trace: Optional[Dict] = None         # {author_known, date_known, locator}; booleans or null
+    depends_on_labels: List[str] = field(default_factory=list)   # label_ids the claim cites (ablation.py)
 
     def get(self, dotted):
         cur = asdict(self)
@@ -201,6 +202,9 @@ class Judgment:
         mv = self.missing_variables
         if not isinstance(mv, list) or not all(isinstance(x, str) for x in mv):
             out.append("missing_variables must be a list of strings")
+        dl = self.depends_on_labels
+        if not isinstance(dl, list) or not all(isinstance(x, str) for x in dl):
+            out.append("depends_on_labels must be a list of label_ids")
         return out
 
     def to_dict(self):

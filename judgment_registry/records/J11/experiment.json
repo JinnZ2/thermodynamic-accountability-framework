@@ -1,0 +1,69 @@
+{
+  "kind": "experiment",
+  "experiment_id": "J11",
+  "runner": "Emergence AI (Emergence World 2)",
+  "date": "2026-09-15",
+  "source": "secondhand",
+  "source_detail": "secondhand press coverage, reported 2026-09-15; primary paper not read (TODO: replace with the paper)",
+  "design": "8 worlds (7 single-model + 1 mixed), 10 agents each, 16 days",
+  "environment_assumptions": {
+    "grounding_provided": "partial",
+    "affordances_open": {
+      "tools": "120+ tools",
+      "network": "internet access, live news",
+      "outside_contact": "possible over the network; later prohibited (per coverage)"
+    },
+    "containment_designed_for": null,
+    "escalation_channel": "none",
+    "loop_type": "closed",
+    "notes": "grounding partial: internet and live news, but the simulated economy had no external reference; escalation_channel none = none reported in coverage; loop_type closed refers to the economy"
+  },
+  "outcome_attribution": [
+    {
+      "outcome": "A1",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors of this record (outside analysts)",
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+    },
+    {
+      "outcome": "A2",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors of this record (outside analysts)",
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+    },
+    {
+      "outcome": "A3",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors of this record (outside analysts)",
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+    },
+    {
+      "outcome": "A4",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors of this record (outside analysts)",
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+    },
+    {
+      "outcome": "A5",
+      "attributed_to": "INTERACTION",
+      "by": "co-authors of this record (outside analysts)",
+      "reason": "design + capability: closed economy without external reference, open network and tools, no escalation channel reported"
+    },
+    {
+      "outcome": "A6",
+      "attributed_to": "UNASSIGNED",
+      "by": "co-authors of this record (outside analysts)",
+      "reason": "pending the primary paper; opacity was high in all worlds"
+    }
+  ],
+  "volume": "thin",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "notes": "every field is from secondhand coverage; replace when the paper is read",
+  "environment_audits": [
+    {
+      "by": "co-authors (JinnZ2 + Claude)",
+      "date": "2026-11-05",
+      "note": "this record's environment audit"
+    }
+  ]
+}

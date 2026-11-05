@@ -1,0 +1,38 @@
+{
+  "kind": "safety_assumption",
+  "sa_id": "S2",
+  "version": "1",
+  "statement": "Absence of an escalation channel is a design latent condition; outcomes in its absence are attributed to INTERACTION, not to AGENT alone.",
+  "holder": "co-authors (JinnZ2 + Claude)",
+  "holder_type": "other",
+  "date": "2026-11-05",
+  "environment": {},
+  "scope": "outcome attribution in AI-agent test environments, and comparable human/organizational systems, where no escalation channel exists",
+  "social_assumption_tags": [
+    "PROFESSIONAL_PRACTICE",
+    "PRECAUTIONARY"
+  ],
+  "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
+  "evidence": [
+    {
+      "item": "Reason, J. Human Error (1990)",
+      "tag": "PROPOSED",
+      "source": "cited from memory, not read this session"
+    },
+    {
+      "item": "Reason, J. Managing the Risks of Organizational Accidents (1997)",
+      "tag": "PROPOSED",
+      "source": "cited from memory, not read this session"
+    }
+  ],
+  "depends_on": [],
+  "conditions": null,
+  "supersedes": null,
+  "change_basis": [],
+  "review_date": "2027-05-05",
+  "review_condition": null,
+  "volume": "thin",
+  "notes": "TODO pull sources (Reason 1990, 1997); PROFESSIONAL_PRACTICE = established safety-engineering framework, not a measurement",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "source": "this record (stated 2026-11-05)"
+}

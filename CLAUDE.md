@@ -3151,6 +3151,46 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- judgment_registry label ablation + J12 (2026-11-05, co-authored), on
+  branch claude/registry-acts-labels (PR #60). Label.ablation (rewrite,
+  hidden premises with evidence_ref, survives YES/NO/PARTIAL/PENDING/
+  UNTESTED, ablated_by), relative_to_audit; Judgment / SafetyAssumption
+  depends_on_labels; Experiment design_conflict, audit_completed_at, N/A
+  fields with na_reasons, stated_limitations / data / open_variables /
+  proposed_controls / read_status; SA change_basis LABEL_ABLATION; social
+  tag PROFESSIONAL_PRACTICE. ablation.py + labels_watchlist.json. Flags
+  ABLATION_UNTESTED, PREMISE_WITHOUT_EVIDENCE, CONCLUSION_ON_UNABLATED,
+  CONCLUSION_ON_FAILED, ATTRIBUTION_ORDER, LABEL_UNREGISTERED,
+  DESIGN_CONFLICT_PRESENT; flag texts quote no label / watchlist term
+  (tested). CLI `ablate LABEL_ID`, `labels ACT_ID --ablation`. Records:
+  J11 L5, L6, S1v2 (supersedes S1); J12 (primary, partly read, arXiv
+  unreachable this session; per-model table not imported). Ids renamed
+  to avoid collisions (addendum L1-L3 -> L5, L6, S1v2; J12 -> J12-
+  prefix). Follow-up (co-author answers): L5 retired, its ablation moved
+  to L2 (original_claim); L1, L3, L4 ablated (all secondhand);
+  premise types + VERIFIABILITY, AGREEMENT, CHANGE_IN_KIND (migrated);
+  ATTRIBUTION_ORDER measured against any environment audit that existed
+  (environment_audits, the authors' own included); J12 Table 1 imported
+  as supplied (main text, co-author WebFetch), accept-on-wrong
+  NOT_REPORTED. Tests: judgment_registry 140.
+- judgment_registry acts / labels / experiment audits / safety
+  assumptions (2026-11-05, co-authored), branch claude/registry-acts-labels
+  off main, rebased onto main after PR #59 merged. acts.py (Act;
+  evaluative terms in the description refused at the door), labels.py
+  (Label = a judgment per labeler; LABEL_POSITION_UNSTATED,
+  LABEL_ON_ACT_MISSING; `cli.py labels ACT_ID`), experiments.py
+  (environment_assumptions + outcome_attribution; ENV_ASSUMPTIONS_UNSTATED,
+  NO_ESCALATION_CHANNEL, CAPABILITY_ASSUMPTION_UNSTATED,
+  ATTRIBUTION_WITHOUT_AUDIT on experiment entries and on labels via
+  attributes_to), safety_assumptions.py (controlled social tags,
+  tagged_by required; SOCIAL_TAGS_UNSTATED, SCOPE_UNSTATED, NO_REVIEW_DATE,
+  ASSUMPTION_DEPENDENCY_NOT_FOUND; `cli.py assumptions --by-tag TAG`).
+  ledger.build runs shape_problems for any kind that has it; id
+  uniqueness per kind via ID_FIELDS. Records: records/J11/ (secondhand,
+  thin; TODO primary paper), S1 (holder Claude, entered against own
+  co-author), S2. signal_calibration prereg now requires
+  environment_assumptions (vocab pinned to experiments.py by test).
+  Tests: judgment_registry 104, signal_calibration 24.
 - Paste-check workflow + in_progress cleanup (2026-11-05, co-authored),
   branch claude/paste-check-warn-only off main after PR #59. Workflow:
   the step reports findings (log, job summary, warning annotation) and

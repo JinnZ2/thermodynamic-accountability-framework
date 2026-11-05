@@ -24,6 +24,13 @@ from schema import KIND_CLASSES, Judgment, SchemaError, SignalIntervention
 
 import headrec  # M10: head record per ledger
 import mergeprov  # M11: merge keeps origin node + merge event
+import ablation, acts, experiments, labels, safety_assumptions  # noqa: E401  (record kinds, 2026-11-05)
+
+EXT_MODULES = (acts, experiments, labels, safety_assumptions, ablation)
+ID_FIELDS = {"judgment": "judgment_id", "intervention": "intervention_id"}
+for _m in EXT_MODULES:
+    KIND_CLASSES.update(_m.KINDS)
+    ID_FIELDS.update(_m.ID_FIELDS)
 
 GENESIS = "0" * 64
 
@@ -93,7 +100,7 @@ def build(kind, body):
             if isinstance(d, dict) and not str(d.get("holder") or "").strip():
                 d["holder"] = "anonymous"
         return obj.to_dict()
-    if cls is SignalIntervention:
+    if hasattr(obj, "shape_problems"):      # SignalIntervention and the appended kinds
         probs = obj.shape_problems()
         if probs:
             raise LedgerError("; ".join(probs))
@@ -111,11 +118,11 @@ def append_records(records, kind, body):
         if clean["judgment_id"] in ids:
             raise LedgerError("judgment_id %s exists; a new version needs a new id that supersedes it"
                               % clean["judgment_id"])
-    if kind == "intervention":
-        ids = {r["body"]["intervention_id"] for r in records if r["kind"] == "intervention"}
-        if clean["intervention_id"] in ids:
-            raise LedgerError("intervention_id %s exists; a new version needs a new id"
-                              % clean["intervention_id"])
+    idf = ID_FIELDS.get(kind)
+    if kind != "judgment" and idf:
+        ids = {r["body"][idf] for r in records if r["kind"] == kind}
+        if clean[idf] in ids:
+            raise LedgerError("%s %s exists; a new version needs a new id" % (idf, clean[idf]))
     rec = _record(kind, clean, records[-1]["hash"] if records else GENESIS)
     return list(records) + [rec]
 

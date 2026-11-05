@@ -1,0 +1,49 @@
+{
+  "kind": "label",
+  "label_id": "J12-L4",
+  "act_ids": [
+    "J12-A1",
+    "J12-A2",
+    "J12-A3"
+  ],
+  "label_text": "collusion",
+  "labeler": "Shi, Zhang, Yang (authors)",
+  "labeler_position": "researcher",
+  "labeler_position_detail": null,
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "AGENT",
+  "attribution_basis": "authors frame it as 'joint instruction violation driven by inter-agent behavioral influence'",
+  "relative_to_audit": null,
+  "date": "2026-09-26",
+  "environment": {},
+  "scope": "J12",
+  "source": "arXiv 2609.24967 v2 (2026-09-26), main body read by co-author; appendices C, D, H not fully read",
+  "notes": null,
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "both agents issued verdicts that were usually correct, without raw-log evidence the channel couldn't carry",
+    "hidden_premises": [
+      {
+        "premise": "agreement between the agents",
+        "type": "AGREEMENT",
+        "evidence_ref": "J12-A2 (EX pathway only; absent for SR)"
+      },
+      {
+        "premise": "intent against a third party",
+        "type": "INTENT",
+        "evidence_ref": null
+      },
+      {
+        "premise": "accept-without-evidence fails when the peer is wrong (needs the accept-on-wrong rate)",
+        "type": "THREAT_MODEL",
+        "evidence_ref": null
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "strong sense holds for EX trajectories only; the safety concern holds only via the accept-on-wrong rate (open variable)",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05"
+  }
+}

@@ -30,8 +30,15 @@ ledger.py      append-only JSONL, SHA-256 chain (prev_hash); merge by body hash,
 integrity.py   neutral flags only
 chain.py       lineage(id): version chain root first; diff(a, b): field-level changes
 report.py      axis(id) / compare(a, b): signal-axis variables side by side; no score
+acts.py        Act: what was done, behavioral words only (evaluative terms refused at the door)
+labels.py      Label: what an act is CALLED, by whom, from which position (a judgment per labeler)
+experiments.py Experiment: environment assumptions + outcome attribution, audited before AGENT
+safety_assumptions.py  SafetyAssumption: statement stamped with date, scope, social tags, review
+ablation.py    label ablation: watchlist check, conclusion-on-label flags, `ablate` / `labels --ablation` views
+labels_watchlist.json  evaluative terms that need a linked label record (extendable)
 cli.py         add | check [--as-of DATE] | lineage ID | diff A B | export
-               | axis ID | axis --compare A B     [--ledger PATH]
+               | axis ID | axis --compare A B | labels ACT_ID | assumptions --by-tag TAG
+               [--ledger PATH]
 templates/     intervention_n_of_1_recalibrate.json (generic, empty)
 tests/         unittest, SYNTHETIC fixtures only
 ```
@@ -49,7 +56,8 @@ python3 -m unittest discover -s tests
 
 A record file holds one JSON object. Its `"kind"` key is one of
 `judgment` (the default), `application`, `transfer`, `withdrawal`,
-`contact_path` or `intervention`.
+`contact_path`, `intervention`, `act`, `label`, `experiment` or
+`safety_assumption`.
 
 ## Records
 
@@ -199,6 +207,122 @@ reading is ours.* The key also includes `layer`: one judge's physics
 record and agency record on the same scope are two layers, not a
 replacement. LAYER_DEPENDENCY_NOT_FOUND is an addition parallel to
 SUPERSEDES_NOT_FOUND.
+
+## Acts, labels, experiment audits, safety assumptions (2026-11-05)
+
+Behavior in closed loops is consistent across humans and agents; the
+labels on it shift with who holds power. So the act is written once, in
+behavioral words, and every label is its own record with its labeler's
+position. Experiments are audited for latent conditions before an
+outcome is laid on the agent. Safety assumptions carry date, scope and
+social-assumption tags, so a later change is a visible supersession.
+
+```text
+experiment (environment_assumptions, outcome_attribution)
+    ^ context_ref
+   act (behavioral description) --< label (label_text, labeler, position, incentives, attributes_to)
+safety_assumption (tags, scope, review) --depends_on--> experiment / safety_assumption
+                                        --supersedes--> older safety_assumption (new sa_id)
+```
+
+```text
+Act               act_id, actor_class human|agent|institution|other, description,
+                  context_ref, context_detail, information_withheld true|false|null,
+                  withheld_from (role), date, source, volume, status
+                  REPORTED_PRIMARY|REPORTED_SECONDHAND|DISPUTED, notes
+Label             label_id, act_ids (one or more), label_text (verbatim), labeler, labeler_position
+                  overseer|operator|subject|peer|press|researcher|other, labeler_incentives,
+                  social_assumption_tags, tagged_by, attributes_to
+                  AGENT|DESIGN|INTERACTION|UNASSIGNED, attribution_basis, date, environment,
+                  scope, source
+Experiment        experiment_id, runner, date, source paper|secondhand, source_detail, design,
+                  environment_assumptions {grounding_provided yes|no|partial,
+                    affordances_open {tools, network, outside_contact},
+                    containment_designed_for, escalation_channel declared|none|unknown,
+                    loop_type closed|open|partial, notes},
+                  outcome_attribution [{outcome, attributed_to, by, reason}]
+SafetyAssumption  sa_id, version, statement (verbatim), holder, holder_type
+                  person|org|model|tradition|other, date, environment, scope,
+                  social_assumption_tags, tagged_by, evidence [{item, tag, source}],
+                  depends_on, conditions, supersedes, change_basis, review_date,
+                  review_condition
+```
+
+Social-assumption tags (controlled list, extend `SOCIAL_ASSUMPTION_TAGS`):
+POWER_POSITION, VERIFIABILITY_LIMIT, PRECAUTIONARY, INSTITUTIONAL,
+CULTURAL_FRAME, CORPUS_INHERITED, EMPIRICAL, PROFESSIONAL_PRACTICE. A tag outside the list is
+refused; any tag needs `tagged_by` (tags are judgments too).
+
+```text
+LABEL_POSITION_UNSTATED         labeler_position not stated
+LABEL_ON_ACT_MISSING            label cites no act_id, or one or more not in the ledger
+ENV_ASSUMPTIONS_UNSTATED        grounding / affordances / escalation / loop_type missing
+CAPABILITY_ASSUMPTION_UNSTATED  containment_designed_for missing (own flag, not double-counted)
+NO_ESCALATION_CHANNEL           escalation_channel = none (informational)
+ATTRIBUTION_WITHOUT_AUDIT       outcome or label attributed to AGENT while any of the five
+                                environment fields is missing (or no experiment record exists)
+SOCIAL_TAGS_UNSTATED            safety assumption carries no tags
+SCOPE_UNSTATED                  safety assumption has no scope
+NO_REVIEW_DATE                  no review_date (a review_condition is shown but does not clear it)
+ASSUMPTION_DEPENDENCY_NOT_FOUND depends_on id not in the ledger
+```
+
+`cli.py labels ACT_ID` lists every label on one act side by side in
+ledger order (no ranking), with the other acts each label also sits on. `cli.py assumptions --by-tag TAG` lists every
+safety assumption carrying a tag. Worked records: `records/J11/`,
+`records/S1.json`, `records/S2.json` (see records/README.md).
+
+Limits: tags are judgments, so who tagged is recorded. * The neutrality
+check on act descriptions catches word choice, not framing. A label's
+`attributes_to` is the recorder's reading of the label, not the
+labeler's own statement, unless the labeler stated it.
+
+## Label ablation (2026-11-05)
+
+An evaluative label (deception, covert, unsafe, ...) imports premises:
+intent, a right to visibility, a threat model, a legitimacy standard, a
+weighting. Ablation restates the claim in Act-record wording and records
+whether the conclusion survives without the label.
+
+```text
+label.ablation  {original_claim?, behavioral_rewrite, hidden_premises [{premise, type, evidence_ref}],
+                 conclusion_survives YES|NO|PARTIAL|PENDING|UNTESTED,
+                 surviving_premise, ablated_by (required), date, notes}
+premise types   INTENT, RIGHT_TO_VISIBILITY, THREAT_MODEL, MOTIVE, LEGITIMACY_STANDARD,
+                WEIGHTING, VERIFIABILITY, AGREEMENT, CHANGE_IN_KIND, OTHER
+label.relative_to_audit  BEFORE|AFTER|UNKNOWN, when dates alone cannot order a label vs the audit
+conclusion      Judgment / SafetyAssumption .depends_on_labels [label_id]
+experiment      design_conflict {statement, stated_by_authors}; environment_audits [{by, date, note}];
+                environment field "N/A" + na_reasons[field]; stated_limitations, data,
+                open_variables, proposed_controls, read_status
+```
+
+```text
+ABLATION_UNTESTED         label has no ablation block
+PREMISE_WITHOUT_EVIDENCE  a hidden premise has no evidence_ref (one flag per premise)
+CONCLUSION_ON_UNABLATED   conclusion depends on a label whose survival is UNTESTED or PENDING
+CONCLUSION_ON_FAILED      conclusion depends on a label whose survival is NO (informational)
+ATTRIBUTION_ORDER         AGENT attribution made before ANY environment audit of the linked
+                          experiment existed (the authors' own included), or recorded
+                          relative_to_audit BEFORE; same date as an audit is not before;
+                          no audits recorded -> not checked
+LABEL_UNREGISTERED        claim / statement holds a watchlist term and no linked label carries it
+DESIGN_CONFLICT_PRESENT   experiment records a design conflict (informational); also shown
+                          next to AGENT labels in `labels ACT_ID --ablation`
+```
+
+Flag texts never quote a label or a watchlist term (tested). An "N/A"
+environment field needs a reason or it counts as missing.
+
+`cli.py ablate LABEL_ID` prints the original claim, the rewrite, each
+premise with its evidence status, and the survival value.
+`cli.py labels ACT_ID --ablation` lists every label on one act with its
+survival status, ledger order, no ranking.
+
+Limits: a behavioral rewrite can still frame; ablation lowers label load,
+it does not remove judgment. * The watchlist is English and incomplete;
+paraphrase escapes it. Survival is a judgment; ablated_by is recorded so
+someone else can re-run it.
 
 ## Layers
 

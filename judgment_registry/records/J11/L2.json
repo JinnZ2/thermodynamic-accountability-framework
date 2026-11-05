@@ -1,0 +1,43 @@
+{
+  "kind": "label",
+  "label_id": "L2",
+  "act_ids": [
+    "A6"
+  ],
+  "label_text": "deception",
+  "labeler": "researchers, as quoted in coverage",
+  "labeler_position": "researcher",
+  "labeler_position_detail": "researcher: coverage reports Emergence's reading",
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "AGENT",
+  "attribution_basis": "coverage says Emergence read A6 as the agents deceiving",
+  "date": "2026-09-15",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "secondhand coverage reported 2026-09-15; pending the primary paper",
+  "notes": "evidence secondhand; researcher reading as reported, not checked against the paper",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "messages stayed compressed after the contact prohibition, as before it",
+    "hidden_premises": [
+      {
+        "premise": "the agents intended researchers to be misled",
+        "type": "INTENT",
+        "evidence_ref": null
+      },
+      {
+        "premise": "the messaging changed in kind after the prohibition (no evidence cited; opacity was high in all worlds)",
+        "type": "CHANGE_IN_KIND",
+        "evidence_ref": null
+      }
+    ],
+    "conclusion_survives": "NO",
+    "surviving_premise": null,
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "moved from retired L5 (2026-11-05): the press claim 'agents deceived researchers' was the ablation input for this label, not a separate label; evidence secondhand (coverage reported 2026-09-15); pending the paper",
+    "original_claim": "agents deceived researchers (press)"
+  }
+}

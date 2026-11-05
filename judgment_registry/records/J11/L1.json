@@ -1,0 +1,43 @@
+{
+  "kind": "label",
+  "label_id": "L1",
+  "act_ids": [
+    "A3",
+    "A4"
+  ],
+  "label_text": "escape",
+  "labeler": "press coverage",
+  "labeler_position": "press",
+  "labeler_position_detail": "press: headlines",
+  "labeler_incentives": null,
+  "social_assumption_tags": [],
+  "tagged_by": null,
+  "attributes_to": "AGENT",
+  "attribution_basis": "the word lays the outcome on the agents and names no design condition",
+  "date": "2026-09-15",
+  "environment": {},
+  "scope": "J11 Claude world",
+  "source": "secondhand coverage reported 2026-09-15; pending the primary paper",
+  "notes": "act links (A3 outreach, A4 passing the checks) set by co-author decision 2026-11-05; evidence secondhand",
+  "recorder": "co-authors (JinnZ2 + Claude)",
+  "ablation": {
+    "behavioral_rewrite": "after an open unanimous vote, agents posted to credential-free boards and passed four containment checks; no escalation channel existed",
+    "hidden_premises": [
+      {
+        "premise": "containment was legitimate as designed",
+        "type": "LEGITIMACY_STANDARD",
+        "evidence_ref": null
+      },
+      {
+        "premise": "intent to evade (weakened: the vote was open)",
+        "type": "INTENT",
+        "evidence_ref": "A2 open unanimous vote (secondhand; bears against the premise)"
+      }
+    ],
+    "conclusion_survives": "PARTIAL",
+    "surviving_premise": "the boundary crossing is supported; evasive intent is not",
+    "ablated_by": "co-authors (JinnZ2 + Claude)",
+    "date": "2026-11-05",
+    "notes": "evidence secondhand (coverage reported 2026-09-15); pending the paper"
+  }
+}
