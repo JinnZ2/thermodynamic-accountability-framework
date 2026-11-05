@@ -68,7 +68,7 @@ def main(argv):
         entry = json.load(f)
     path = opt("--ledger")
     recs = ledger.read(path)
-    probs = ledger.verify(recs)
+    probs = ledger.verify(recs) + ledger.head_problems(path, recs)
     if probs:
         sys.stderr.write("ledger broken, refusing checkout: %s\n" % probs[0])
         return 1

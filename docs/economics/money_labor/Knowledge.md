@@ -221,7 +221,7 @@ Hypothesis: "Tools become obsolete and should be replaced on schedule"
 
 Your method: Keep tools indefinitely, maintain/repair/repurpose as needed
 
-Results after 35 years:
+Results after decades:
 - Zero tools found truly obsolete
 - All tools either:
   a) Still functional

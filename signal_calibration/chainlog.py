@@ -16,6 +16,8 @@ import hashlib
 import json
 import os
 
+import headrec  # M10: head record per ledger
+
 KINDS = ("prereg", "result", "score", "field_report")
 GENESIS = "0" * 64
 
@@ -72,13 +74,20 @@ def append(path, kind, body):
     if kind not in KINDS:
         raise ChainError("kind must be one of %s" % (KINDS,))
     recs = read(path)
-    probs = verify(recs)
+    probs = verify(recs) + head_problems(path, recs)
     if probs:
         raise ChainError("chain broken, refusing to append: " + probs[0])
     rec = _record(kind, body, recs[-1]["hash"] if recs else GENESIS)
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(rec, sort_keys=True, ensure_ascii=False) + "\n")
+    headrec.write_head(path, recs + [rec])
     return rec
+
+
+def head_problems(path, records, head=None):
+    """M10: chain vs head. head=None reads the sidecar; pass a PUBLISHED head
+    (headrec.parse("COUNT:HASH")) to check against a copy held elsewhere."""
+    return headrec.check(records, head if head is not None else headrec.read_head(path))
 
 
 def bodies(records, kind):

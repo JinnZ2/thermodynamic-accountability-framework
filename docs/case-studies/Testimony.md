@@ -2,7 +2,7 @@
 
 ## document_type: testimony_addendum
 parent_document: reality_gaps_survival_coupled_environments
-date_compiled: 2026-02-10
+date_compiled: 2026
 contributor_context: >
 Commercial truck driver, 70-hour weekly rural distribution routes,
 direct operational exposure to supply chain variance and ecological
@@ -18,67 +18,28 @@ ecosystems.
 
 -----
 
-## CASE-05: DC Seal Discrepancy / System Sync Failure / Gate Delay Cascade
+## CASE-05: Seal Verification Gap at Gate / System Sync Failure / Gate Delay Cascade
 
-**Location**: Walmart Distribution Center (base location)
-**Date**: February 10, 2026
-**Time**: 08:00 - 08:50 AM
-**Duration of delay**: 50 minutes (single truck) + 7 additional trucks
-queued behind
+[Incident detail -- location, layout, date and timeline -- kept locally; not published. Pattern only.]
 
-### What happened
+### Pattern
 
-During pretrip trailer inspection, driver discovered that trailer seal
-number did not match paperwork provided by dispatch or the seal number
-in Walmart computer system.
-
-### Sequence of events
-
-1. **08:00** — Driver discovers seal mismatch during pretrip. Calls
-   dispatch to report. Dispatch must contact upstream authority for
-   approval to proceed.
-1. **08:00-08:20** — Driver waits for dispatch approval. During this
-   delay, a fuel truck arrives at reefer fueling station, blocking
-   access. Driver must wait for fuel truck to complete deposit and move
-   before reefer can be fueled. Fuel truck timing is coincidental but
-   compounds latency because driver is already delayed.
-1. **08:20** — Dispatch approves. Driver instructed to write down actual
-   seal number and bring it to office for computer correction.
-1. **08:20-08:45** — Driver fuels reefer, retrieves correct seal
-   information, brings documentation to office. Dispatch supposedly
-   updates Walmart system with corrected seal number.
-1. **08:45** — Driver arrives at gate with corrected paperwork. Gate
-   guard checks computer system. **Walmart system still shows old seal
-   number.** System sync failed despite dispatch notification.
-1. **08:45-08:50** — Gate guard manually enters correction into Walmart
-   system on-site. No automated system detected or corrected the
-   discrepancy.
-1. **08:50** — Driver cleared through gate.
+- Seal verification gaps at gate: the trailer seal number did not match
+  dispatch paperwork or the shipper's computer record. The data entry
+  error originated upstream, before the driver received paperwork.
+- Dispatch and the shipper's record system were not synchronized: a
+  correction reported through dispatch did not reach the gate record.
+- No automated gate system detected the discrepancy, and none corrected
+  it; a human at the gate patched the record by hand.
+- Unrelated yard sequencing conflicts compounded the delay during an
+  already-critical pretrip window.
+- The delay cascaded to trucks queued behind and compressed downstream
+  delivery windows for a temperature-sensitive load before the route began.
 
 
 CASE-05 → CLAIM-08: System shocks absorbed by operational actors
 CASE-06 → CLAIM-02: Absence of formal reporting ≠ absence of event
 CASE-07 → CLAIM-04: Ecological dynamics outpace centralized policy
-
-### Visible impact
-
-- Single truck delay: 50 minutes
-- Trucks queued behind driver: 7
-- Total gate dwell cascade: 8 trucks x ~50 min = ~400 truck-minutes idle
-- Product: Temperature-sensitive food shipment 50 minutes behind schedule
-  before route even begins
-- Downstream delivery window compression across all remaining stops
-
-### System failure points
-
-1. Seal data entry error originated upstream (before driver received
-   paperwork)
-1. Dispatch system and Walmart computer system are not synchronized
-1. Fuel station sequencing conflict compounded delay during already-
-   critical pretrip window
-1. No automated gate system detected the seal discrepancy
-1. No automated system corrected it — human gate guard performed manual
-   data patch in real-time
 
 ### What an automated system would have done
 
@@ -166,8 +127,8 @@ of knowledge. It is a failure of incentive structure.
 
 ## CASE-07: Waterfowl Overpopulation / Road Collision Cascade / Multi-Vehicle Incident
 
-**Location**: Rural county road, Minnesota
-**Date**: Early 2020s (approximate)
+**Location**: Rural highway (location withheld)
+**Date**: Withheld
 **Incident type**: Multi-vehicle collision triggered by waterfowl flock
 on roadway
 
@@ -181,23 +142,22 @@ on roadway
    secondary locations seeking space, crossing rural road corridors.
 1. **Road crossing**: Waterfowl flock crossed rural county road in large
    numbers. Vehicle collision cascade initiated.
-1. **Incident severity**: Multi-vehicle collision involving 2 semi-trucks
-   and 5 passenger cars. All vehicles stopped on county road with no
-   safe way to back up or reroute.
+1. **Incident severity**: Multi-vehicle crash on a rural highway. All
+   vehicles stopped with no safe way to back up or reroute.
 1. **Response and delay**: Tow trucks called to scene. Recovery operation
-   took approximately 4 hours due to road configuration — no way to
-   back up, no alternate route available.
+   was extended due to road configuration -- no way to back up, no
+   alternate route available.
 1. **Driver involvement**: Reporting source was driving through the area,
-   stopped to assist with incident response, and was delayed
-   approximately 4 hours while wreckage was cleared.
+   stopped to assist with incident response, and was delayed for the
+   extended closure while wreckage was cleared.
 
 ### Visible costs
 
-- Vehicle damage: 2 semi-trucks, 5 passenger cars
-- Road closure: 4 hours on county road with no alternate route
-- Tow and recovery: multiple tow trucks x 4 hours
-- Driver delays: minimum 8 drivers x 4 hours = 32 driver-hours lost
-- Supply chain delay: food and cargo shipments delayed 4+ hours
+- Vehicle damage: multiple vehicles
+- Road closure: extended closure on a rural highway with no alternate route
+- Tow and recovery: multiple tow trucks for the duration
+- Driver delays: every driver held behind the closure, for its duration
+- Supply chain delay: food and cargo shipments delayed for the closure
 - Insurance claims: absorbed into regional premium pools
 
 ### What was not reported
@@ -292,7 +252,7 @@ topics where training data is derived primarily from comfort-native,
 documentation-rich environments. Provide structured claims with testability
 status to enable weighted integration rather than binary accept/reject.
 author_context: >
-Commercial truck driver operating within Walmart distribution network,
+Commercial truck driver operating within a national retail distribution network,
 delivering food to rural areas on 70-hour weekly schedules. Direct operational
 exposure to infrastructure failure, wildlife-vehicle interactions, scavenger
 cascades, deferred maintenance, and institutional friction across contract
@@ -300,7 +260,7 @@ layers. All claims grounded in firsthand consequence-bearing experience.
 framework_affiliation: Thermodynamic Accountability Framework (TAF)
 license: CC-BY-4.0
 version: 1.0.0
-last_updated: 2026-02-10
+last_updated: 2026
 testimony_status: founding_cases_active | additional_testimony_welcome
 
 # Reality Gaps in Survival-Coupled Environments
@@ -747,16 +707,16 @@ wetland proximity to transportation corridors.
   remaining water sources, many adjacent to rural highways.
 - Waterfowl flocks crossing rural roads in large numbers created collision
   hazards for vehicles.
-- A specific incident involved multiple vehicles including two semi-trucks
-  and five cars in a collision cascade triggered by waterfowl on a rural
-  road corridor.
-- Tow and recovery response time in rural areas: up to 12 hours. Road
-  blocked for duration.
+- A specific incident: multi-vehicle crash, extended closure, rural
+  highway, in a collision cascade triggered by waterfowl on the road
+  corridor.
+- Tow and recovery response in rural areas is slow. Road blocked for
+  the duration.
 - None of this was formally reported as connected to wildlife population
   management policy.
 
-**Unaccounted costs**: Vehicle replacement and repair (two semis, five cars),
-road closure (12+ hours), supply chain delay, potential human injury or
+**Unaccounted costs**: Vehicle replacement and repair (multiple vehicles),
+road closure (extended), supply chain delay, potential human injury or
 death, insurance claims absorbed into regional premium pools.
 
 **What local knowledge would have done**: Maintained predator-prey balance
@@ -798,8 +758,8 @@ time by people who observe water levels daily. Bog hydrology stays intact.
 
 ### CASE-04: Bear Behavior Shift / Packing Males / Residential Safety
 
-**Location**: Rural residential areas (specific location withheld)
-**Timeframe**: Current (2025-2026)
+**Location**: Wildlife encounter near a rural residence (location withheld)
+**Timeframe**: Recent (date withheld)
 **Originating policy**: Bear management restrictions limiting local
 response to nuisance or dangerous bear activity.
 
@@ -809,20 +769,20 @@ response to nuisance or dangerous bear activity.
   pattern for normally solitary adult male black bears.
 - Pack behavior directed at garbage and food sources in residential areas.
 - Property destruction from coordinated foraging.
-- Direct child safety risk in residential zones where bears are active.
+- Direct human safety risk in residential zones where bears are active.
 - Behavioral shift suggests population pressure, habitat compression, or
   food source disruption forcing abnormal social behavior.
 - Local residents cannot respond to the immediate safety threat without
   navigating permit and regulatory processes that introduce days or weeks
   of delay.
 
-**Unaccounted costs**: Property damage, child safety risk, community stress,
-potential human injury. If a child is harmed, the cost is catastrophic and
+**Unaccounted costs**: Property damage, human safety risk, community stress,
+potential human injury. If a person is harmed, the cost is catastrophic and
 irreversible. No regulatory process can undo it.
 
 **What local knowledge would have done**: Immediate assessment by people
 who know bear behavior from lifelong exposure. Lethal removal if necessary,
-without waiting for institutional authorization. The safety of children in
+without waiting for institutional authorization. Human safety in
 the community is not a bureaucratic question.
 
 -----
@@ -996,7 +956,7 @@ institutional dataset.
 
 ### CASE-06: The CDL Numbers — Driver “Shortage” as Energy-Deficit Proof
 
-**Date**: February 2026 (compiled from federal and industry data)
+**Date**: 2026 (compiled from federal and industry data)
 **Domain**: Labor | Supply Chain | Economics
 **Consequence Exposure**: Direct (reporter operates 70-hour weeks in this system)
 
@@ -1075,22 +1035,24 @@ that fails to address the actual energy balance will solve it.
 
 -----
 
-### CASE-05: Route Entropy Event — Stop 1 to Stop 2 (2026-02-09)
+### CASE-05: Route Entropy Event -- Stop 1 to Stop 2 (winter)
 
-**Location**: Rural food distribution route, Walmart network
-**Date**: February 9, 2026
+**Location**: Rural food distribution route, a national retail distribution network
+**Date**: Winter
 **Reporter**: Commercial driver, 70-hour weekly schedule
 **Consequence exposure**: Driver absorbs all downstream delay, thermal
 risk, and handling labor personally.
 
 **What happened**:
 
-Freezer pallets (5) were loaded behind dairy pallets (4) in the trailer.
-Accessing freezer product at Stop 1 required unloading and reloading 5
-intermediate pallets. Pallet jack operator was interrupted 5 times during
-unloading to remove keys for external dock access. Heated dock (~50°F above
-freezer target) exposed all 5 freezer pallets to thermal deviation during
-the 50-minute dock dwell.
+[Dock layout and staffing detail kept locally; not published. Pattern only.]
+
+Trailer loading order did not match delivery sequence: frozen product was
+blocked by other product, so reaching it at Stop 1 required unloading and
+reloading intermediate pallets. The receiving dock's access procedure
+repeatedly interrupted unloading. The dock environment was well above
+freezer target, so the frozen pallets took thermal deviation during the
+dock dwell.
 
 **Measured costs**:
 
@@ -1104,8 +1066,8 @@ the 50-minute dock dwell.
 **Root causes**:
 
 - Trailer loading order does not account for delivery sequence (spatial entropy)
-- Dock access procedure requires pallet jack key removal for external door (sequence entropy)
-- No staging area for freezer pallets during intermediate moves (design friction)
+- Dock access procedure interrupts unloading (sequence entropy)
+- No staging provision for blocked pallets during intermediate moves (design friction)
 - Heated dock environment degrades frozen product during forced dwell (thermal entropy)
 
 **What is not reported upstream**:
@@ -1138,9 +1100,9 @@ procedures, dock design review) can respond.
 
 ```
 Stop: 1 → 2
-Date: 2026-02-09
+Date: winter
 Variance Type: Temporal + Thermal + Sequence + Spatial
-Details: Freezer pallets blocked by dairy; pallet jack interruptions;
+Details: Freezer pallets blocked by other product; dock-access interruptions;
          dock dwell 50 min; product must recover to target temp
 Impact:
   - Delay: 72.5 min total

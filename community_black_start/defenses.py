@@ -123,23 +123,32 @@ def aid_status(a):
 # B6 quarantine (local, no network consensus)
 # ---------------------------------------------------------------
 class Quarantine:
-    """A community's own block list of nodes / sources. Adding or removing
-    needs only that community's human role. Nobody else votes."""
+    """A community's own block list of nodes / sources. Nobody outside the
+    community votes. Adding or lifting needs TWO roles from different
+    households via two_person.authorize("ledger_quarantine", ...) (D7, M18,
+    2026-11-05); the decision, GRANTED or DENIED, is written to the
+    hash-chained ledger before anything changes."""
 
     def __init__(self, community, entries=None):
         self.community = community
-        self.entries = dict(entries or {})        # source_id -> {"by", "reason"}
+        self.entries = dict(entries or {})        # source_id -> {"by": [a, b], "reason"}
 
-    def add(self, source_id, by, reason):
-        if not str(by).startswith("human:"):
-            raise ValueError("only a human role can quarantine (human:<role>)")
+    @staticmethod
+    def _two_person(role_a, role_b, ledger_path, networks, today):
+        import two_person as tp   # local import: two_person -> coordination
+        res = tp.authorize("ledger_quarantine", role_a, role_b, ledger_path, networks, today)
+        if res["decision"] != "GRANTED":
+            raise ValueError("quarantine needs two-person approval: " + "; ".join(res["why"]))
+        return [role_a.id, role_b.id]
+
+    def add(self, source_id, role_a, role_b, reason, ledger_path, networks=None, today=None):
         if not plain_ok(reason):
             raise ValueError("quarantine needs a plain-language reason")
+        by = self._two_person(role_a, role_b, ledger_path, networks, today)
         self.entries[source_id] = {"by": by, "reason": reason}
 
-    def remove(self, source_id, by):
-        if not str(by).startswith("human:"):
-            raise ValueError("only a human role can lift a quarantine")
+    def remove(self, source_id, role_a, role_b, ledger_path, networks=None, today=None):
+        self._two_person(role_a, role_b, ledger_path, networks, today)
         self.entries.pop(source_id, None)
 
     def blocks(self, source_id):

@@ -303,7 +303,7 @@ What was said. What actually happened. Energy cost of the difference.
 
 **A. Logistics Yards / Distribution Centers**
 
-Search time is visible. Variance is constant. Automation is already half-failing. Unions benefit because the data proves the system — not the worker — is broken. Founding case study: 33-minute trailer search at a Walmart distribution center — infrastructure failure absorbed as unpaid operator labor.
+Search time is visible. Variance is constant. Automation is already half-failing. Unions benefit because the data proves the system — not the worker — is broken. Founding case study: 33-minute trailer search at a national retail distribution center — infrastructure failure absorbed as unpaid operator labor.
 
 **B. Infrastructure Maintenance (Bridges, Roads, Ports)**
 

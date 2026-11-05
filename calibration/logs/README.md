@@ -8,7 +8,9 @@ The two 2026-05-04 logs (a calibration report for the AI system and an
 architectural profile of the user) now live in `local_data/calibration_logs/`,
 which is gitignored. Their field layout is in
 [`FORMAT_profile_logs.md`](FORMAT_profile_logs.md). The two 2026-05-05 session
-logs remain here.
+logs (an audit record and a correction log) moved there too (N12, 2026-11-05);
+they share the same top-level shape: session_id, timestamp, ai_model,
+user_id, context, audit_dimensions / corrections.
 
 ## Context
 

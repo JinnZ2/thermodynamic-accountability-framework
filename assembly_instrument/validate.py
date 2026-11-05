@@ -438,7 +438,7 @@ def main(argv):
             import ledger as _ledger
             import status as _status
             recs = _ledger.read(ledger_path)
-            lp = _ledger.verify(recs)
+            lp = _ledger.verify(recs) + _ledger.head_problems(ledger_path, recs)
             if lp:
                 sys.stderr.write("ledger broken: %s\n" % lp[0])
                 return 1

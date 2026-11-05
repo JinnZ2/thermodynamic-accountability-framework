@@ -1,16 +1,35 @@
 # tests/test_defenses.py -- CC0, stdlib unittest
 # Provenance: co-authored (JinnZ2 + Claude).
 
+import datetime as dt
 import json
 import os
+import shutil
 import sys
+import tempfile
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
 import chain  # noqa: E402
+import coordination as co  # noqa: E402
 import defenses as d  # noqa: E402
+import roles as rl  # noqa: E402
+
+TODAY = dt.date(2026, 12, 15)
+A = rl.Role("q1", "council", "H1", True, 30, "2026-12-01")
+B = rl.Role("q2", "council", "H2", True, 30, "2026-12-01")
+_TMP = tempfile.mkdtemp()
+LOG = os.path.join(_TMP, "log.jsonl")
+
+
+def tearDownModule():
+    shutil.rmtree(_TMP, ignore_errors=True)
+
+
+def qadd(q, src, reason):
+    q.add(src, A, B, reason, LOG, today=TODAY)
 
 PLAIN = "County offers two pallets of drinking water for the clinic."
 
@@ -61,7 +80,7 @@ class ClaimTests(unittest.TestCase):
 
     def test_quarantined_source_not_counted(self):
         q = d.Quarantine("A")
-        q.add("r2", "human:council", "sent three false reports about the bridge last week")
+        qadd(q, "r2", "sent three false reports about the bridge last week")
         c = d.Claim("A", "The well on the north road is contaminated, do not drink.", ["r1", "r2"])
         s = d.claim_status(c, "A", q, "ids")
         self.assertEqual(s["state"], "CAUTION_ONLY")
@@ -96,7 +115,7 @@ class SybilTests(unittest.TestCase):
 
     def test_quarantined_path_not_counted(self):
         q = d.Quarantine("A")
-        q.add("r2", "human:council", "sent three false reports about the bridge last week")
+        qadd(q, "r2", "sent three false reports about the bridge last week")
         c = d.Claim("A", WELL, ["r1", "r2"],
                     contact_paths={"r1": "in person at the fire hall", "r2": "radio ch 3 north farm"})
         s = d.claim_status(c, "A", q, "contact_paths")
@@ -166,22 +185,44 @@ class ThresholdTests(unittest.TestCase):
 
 
 class QuarantineTests(unittest.TestCase):
-    def test_local_human_only_and_needs_reason(self):
+    """M18: quarantine add / lift go through two_person.authorize."""
+    REASON = "node proposed exchanges nobody in either town asked for"
+
+    def test_two_roles_needed_and_reason(self):
         q = d.Quarantine("A")
         with self.assertRaises(ValueError):
-            q.add("ai:n9", "ai:n1", "it seems suspicious to me today")
+            q.add("ai:n9", A, A, self.REASON, LOG, today=TODAY)       # one holder
+        same_house = rl.Role("q3", "council", "H1", True, 30, "2026-12-01")
         with self.assertRaises(ValueError):
-            q.add("ai:n9", "human:council", "bad")
-        q.add("ai:n9", "human:council", "node proposed exchanges nobody in either town asked for")
+            q.add("ai:n9", A, same_house, self.REASON, LOG, today=TODAY)
+        with self.assertRaises(ValueError):
+            q.add("ai:n9", A, B, "bad", LOG, today=TODAY)              # reason not plain
+        self.assertFalse(q.blocks("ai:n9"))
+        q.add("ai:n9", A, B, self.REASON, LOG, today=TODAY)
         self.assertTrue(q.blocks("ai:n9"))
+        self.assertEqual(q.entries["ai:n9"]["by"], ["q1", "q2"])
         recs = [{"source": "ai:n9", "x": 1}, {"source": "ai:n1", "x": 2}]
         self.assertEqual(q.filter(recs), [{"source": "ai:n1", "x": 2}])
-        q.remove("ai:n9", "human:council")
+        with self.assertRaises(ValueError):
+            q.remove("ai:n9", A, A, LOG, today=TODAY)
+        self.assertTrue(q.blocks("ai:n9"))
+        q.remove("ai:n9", A, B, LOG, today=TODAY)
         self.assertFalse(q.blocks("ai:n9"))
+
+    def test_every_decision_logged(self):
+        log = os.path.join(_TMP, "decisions.jsonl")
+        q = d.Quarantine("A")
+        with self.assertRaises(ValueError):
+            q.add("ai:n9", A, A, self.REASON, log, today=TODAY)
+        q.add("ai:n9", A, B, self.REASON, log, today=TODAY)
+        with open(log, encoding="utf-8") as f:
+            recs = [json.loads(x) for x in f if x.strip()]
+        decisions = [r.get("body", r).get("decision") for r in recs]
+        self.assertEqual(decisions, ["DENIED", "GRANTED"])
 
     def test_quarantine_is_per_community(self):
         qa, qb = d.Quarantine("A"), d.Quarantine("B")
-        qa.add("ai:n9", "human:council", "node proposed exchanges nobody in either town asked for")
+        qadd(qa, "ai:n9", self.REASON)
         self.assertFalse(qb.blocks("ai:n9"))
 
 

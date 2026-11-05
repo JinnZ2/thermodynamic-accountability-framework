@@ -131,7 +131,7 @@ def main(argv):
         sys.stderr.write("usage: status.py LEDGER ENTRY.json [...] [--n 3]\n")
         return 2
     recs = ledger.read(argv[0])
-    probs = ledger.verify(recs)
+    probs = ledger.verify(recs) + ledger.head_problems(argv[0], recs)
     if probs:
         sys.stderr.write("ledger broken: %s\n" % probs[0])
         return 1

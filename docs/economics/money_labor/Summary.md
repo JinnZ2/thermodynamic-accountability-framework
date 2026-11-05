@@ -134,7 +134,7 @@ Proxy measurement (at scale):
 	∙	Workers’ comp claims (injury = E_h tolerance exceeded)
 	∙	Turnover patterns (knowledge loss = system consuming operators)
 Transfer Functions:Build statistical relationships between cheap sensors (accelerometers) and expensive full-spectrum measurement, then deploy cheap sensors at scale with validated estimation.
-Example - Trucking (I-94 Spring Thaw):
+Example - Trucking (interstate, spring thaw):
 
 
 E_h = G-force_compensation + thermal_regulation + cognitive_load + proprioceptive_adjustment
@@ -143,7 +143,7 @@ Measured:
 - Z-axis loading: -1.796G continuous
 - Fore-aft shear: -1.346G 
 - Peak events: ~6G
-- No baseline recovery across 64 minutes
+- No baseline recovery across ~1 h
 - Core temp maintenance: 15% metabolic overhead in -20°F
 - Route adaptation: continuous real-time decision load
 
@@ -230,7 +230,7 @@ Novice driver, same route:
 - Incident rate: 1.2 per 100k miles
 - Equipment lifespan: 300k miles
 
-Experienced driver (35 years):
+Experienced driver (decades of experience):
 - Fuel efficiency: +15% (route knowledge, optimal RPM management)
 - Incident rate: 0.25 per 100k miles
 - Equipment lifespan: 500k miles
@@ -250,7 +250,7 @@ Where:
 
 
 Example Comparison:
-Truck driver (35 years, 6M miles):
+Truck driver (decades / millions of safe miles; T_exp = 35 is an illustrative value):
 
 C = 10 (seconds to consequence - crash, injury, death)
 V = 1000 (corrections per hour - steering, braking, speed, positioning)
@@ -366,11 +366,11 @@ This is exponential starvation. Systems cannot sustain complexity that exceeds j
 
 
 Complete Equation Application Example
-Commercial Trucking - I-94 Winter Corridor
+Commercial Trucking - Upper Midwest Interstate, Winter
 Given:
 	∙	Route: 500 miles, loaded trailer
 	∙	Conditions: -20°F, spring thaw road degradation
-	∙	Operator: 35 years experience
+	∙	Operator: decades of experience
 Calculation:
 
 
@@ -401,8 +401,8 @@ Measured Evidence of Hidden Labor
 Overview
 This section contains real-world measurements demonstrating that hidden labor (E_h) exists, is measurable, and dominates system function in consequence-exposed operations. These are not theoretical predictions. These are sensor readings, physiological measurements, and outcome data from actual operations.
 
-Case Study 1: I-94 Northern Wisconsin - Spring Thaw
-Date: February 2026Route: I-94 westbound, northern WisconsinVehicle: Loaded tractor-trailer, 40,000 lbs grossConditions: Post-winter road degradationOperator: 35 years experience, 6 million safe milesMeasurement: Tri-axis accelerometer, cab-mounted, 64-minute continuous sample
+Case Study 1: Interstate, Upper Midwest - Winter
+Season: winterRoute: interstate, upper MidwestVehicle: Loaded tractor-trailer, 40,000 lbs grossConditions: Post-winter road degradationOperator: decades / millions of safe milesMeasurement: Tri-axis accelerometer, cab-mounted, ~1 h continuous sample
 Institutional Assumption
 “Interstate highways provide smooth, continuous surface within design specifications. Operators experience minimal G-force loading beyond normal vehicle dynamics.”
 Measured Reality
@@ -420,7 +420,7 @@ Lateral (Side-to-Side):
 Temporal Pattern:
 	∙	Zero periods of static 1G baseline
 	∙	Continuous stochastic impulse environment
-	∙	64 minutes of uninterrupted multi-axis loading
+	∙	~1 h of uninterrupted multi-axis loading
 Analysis
 What this proves:
 The institutional model assumes “highway = smooth surface.”
@@ -618,7 +618,7 @@ Where:
 
 
 Complete K_cred Calculation Examples
-Truck Driver (35 years, 6M miles)
+Truck Driver (decades / millions of safe miles; T_exp = 35 is an illustrative value)
 
 
 C = 0.1 (seconds to consequence if wrong)
@@ -628,7 +628,7 @@ T_exp = 35 years
 K_cred = 0.1 × 1000 × 35 = 3,500
 
 
-Interpretation: Every hour of driving provides ~1000 opportunities for reality to verify or falsify operator judgment. Over 35 years, this accumulates massive validated knowledge.
+Interpretation: Every hour of driving provides ~1000 opportunities for reality to verify or falsify operator judgment. Over decades, this accumulates massive validated knowledge.
 
 
 
@@ -1873,7 +1873,7 @@ Energy accounting: Incomplete until E_h measured
 
 
 The exhaustion proves E_h exists. You cannot be exhausted if you performed zero work. The body consumed ATP. That ATP expenditure is real energy. The institution just doesn’t measure it.
-TAF’s strength here: Accelerometer data converts “I’m tired” (dismissed as anecdote) into “Continuous -1.796G to +6G multi-axis loading for 64 minutes” (physics measurement).
+TAF’s strength here: Accelerometer data converts “I’m tired” (dismissed as anecdote) into “Continuous -1.796G to +6G multi-axis loading for ~1 h” (physics measurement).
 This shifts the burden of proof. Institution must now explain how driver absorbed that loading with zero energy cost, which violates thermodynamics.
 
 2. K_cred Epistemic Validity - Survival Proof vs. Social Proof
@@ -1899,7 +1899,7 @@ Source A: Physics simulation (low K_cred)
 	∙	No consequence testing (simulation errors don’t kill anyone)
 	∙	K_cred ≈ 0.001
 Source B: Operator sensor data (high K_cred)
-	∙	6 million miles, 35 years, zero fatal incidents
+	∙	decades / millions of safe miles, zero fatal incidents
 	∙	Contains actual variance (spring thaw, black ice, equipment degradation)
 	∙	Consequence tested continuously (wrong judgment = crash)
 	∙	K_cred = 3,500

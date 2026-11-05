@@ -169,7 +169,7 @@
     {
       "id": "B6",
       "text": "Any community can quarantine a node or source from its ledger without network-wide consensus",
-      "in_code": "defenses.Quarantine (human role + plain reason to add or lift)"
+      "in_code": "defenses.Quarantine (two roles via two_person.authorize + plain reason to add or lift; M18)"
     },
     {
       "id": "B7",
@@ -179,7 +179,7 @@
     {
       "id": "B8",
       "text": "Insider confirmed: quarantine the role (B6 logic), rotate in a backup, publish the fact in the next bulletin. No secrecy about the breach itself; details limited to what does not expose holdings.",
-      "in_code": "defenses.Quarantine (human role + plain reason), roles rotation; the bulletin notice is policy, not checked by bulletins.py"
+      "in_code": "defenses.Quarantine (two roles via two_person.authorize + plain reason), roles rotation; the bulletin notice is policy, not checked by bulletins.py"
     }
   ],
   "experiments": [

@@ -72,9 +72,12 @@ def main(argv):
             chainlog.append(log, "field_report", body)
             print("field report appended")
         elif cmd == "report" and not args:
-            print(report.build(chainlog.read(log)))
+            recs = chainlog.read(log)
+            hp = chainlog.head_problems(log, recs)
+            print("HEAD " + hp[0] if hp else report.build(recs))
         elif cmd == "verify" and not args:
-            probs = chainlog.verify(chainlog.read(log))
+            recs = chainlog.read(log)
+            probs = chainlog.verify(recs) + chainlog.head_problems(log, recs)
             for p in probs:
                 print("CHAIN " + p)
             return 1 if probs else 0

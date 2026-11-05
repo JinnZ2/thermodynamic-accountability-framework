@@ -139,7 +139,7 @@ trust_transfer_stream = RelationshipStream(
             (10,  "contract", 8),
         ]
     ],
-    local_context={"region": "Carlton_MN", "type": "Fond_du_Lac_Reservation"}
+    local_context={"region": "rural_upper_midwest", "type": "rural_community"}
 )
 
 tr_result = detector.detect(trust_transfer_stream)

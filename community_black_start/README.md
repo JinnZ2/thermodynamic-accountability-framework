@@ -202,7 +202,7 @@ D4 aid provenance  AidRecord: source category, verbatim conditions, plain line;
 D5 direct contact  a claim ABOUT another community -> DO_NOT_ACT until confirmed
                    with that community itself (counters engineered distrust)
 B6 quarantine      Quarantine: one community blocks a node or source from its own
-                   ledger; human role + plain reason; no network vote
+                   ledger; two roles (two_person.authorize) + plain reason; no network vote
 E7 pattern library historical exploitation cases -> entry channels**     NOT RUN
 E8 early signals   red-team tabletop; can vetters tell?**                 NOT RUN
 E10 Sybil test     same false claim under two ids; ids vs contact_paths**  NOT RUN
@@ -422,18 +422,18 @@ M6  scheduled bulletins (D8)
      status     DERIVED (first pass)
 M10  sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)
      use        The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: anchor head hash + record count outside the file on a schedule (paper, radio log, a neighbour) and compare.*
+     mitigated  D-M10
+     residual   Partial: the sidecar head sits next to the ledger, so someone who can rewrite both still passes the local check. Defense is a PUBLISHED head (headrec.py show -> bulletin / radio / paper / another node) checked with headrec.py check LEDGER COUNT:HASH; publishing on a schedule is policy, not code.*
      status     PROPOSED (independent pass)
 M11  merge() of two ledgers
      use        Records imported from a forged second file come out with a fresh valid chain; origin is lost.
      mitigated  none yet
-     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.*
+     residual   Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).
      status     PROPOSED (independent pass)
 M12  self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)
      use        Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: mark these as unverified labels in every output; out-of-band confirmation for any record that gates an action.*
+     mitigated  D-M12
+     residual   Cannot be fully closed without identity infrastructure. Partial mitigations and the logged residual: docs/misuse_M12_identity_note.md.*
      status     PROPOSED (independent pass)
 M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, black-start to_paper lines)
      use        Clear-text broadcast of who holds what or what failed; the PII guard is pattern-only and misses call signs and place names.
@@ -442,8 +442,8 @@ M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, blac
      status     PROPOSED (independent pass)
 M18  Quarantine add / remove (defenses.py)
      use        One insider role can cut a community off from honest sources; the two-person rule is listed for this action but not enforced in code.
-     mitigated  none yet
-     residual   Unmitigated. Proposed: route quarantine changes through two_person.authorize() and announce them in the next bulletin.*
+     mitigated  D-M11
+     residual   Partial: add and lift now need two roles via two_person.authorize (different households, different dependency networks, rotation current), decision hash-chained. One person holding two roles still passes (M12). The bulletin announcement is policy, not code.*
      status     PROPOSED (independent pass)
 M19  self-entered role records (networks, household, last_rotated)
      use        An insider omits a link or backdates a rotation to pass D7, or blanks dates so every release is denied during an emergency.
@@ -480,6 +480,9 @@ M24  red-team case libraries in coordination_register.json (E7, E10, E11)
 | mitigation | what |
 |---|---|
 | D-M1 | Method, not data: committed fixtures synthetic only; real registries live in local_data/ (gitignored); the loader refuses real data from inside the repo tree. |
+| D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
+| D-M11 | Quarantine add / lift go through two_person.authorize('ledger_quarantine', ...); DENIED raises, every decision is logged. |
+| D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
 | D-M2 | Aggregate outward: export gives need/surplus booleans and counts per item; no quantities by site, no holder names; full detail stays local. |
 | D-M3 | Holder protection: KnowledgeHolder = skill, coarse region, availability, contact_via steward role code; identity fields refused. |
 | D-M4 | Trigger ranges: published thresholds are {low, high} ranges (all null in the seed); exact values only in local config. |

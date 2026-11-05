@@ -132,7 +132,7 @@ Physics first. Narrative second. Always.
 
 ---
 
-**Developed from 35 years of operational experience, 6 million miles of consequence exposure, and continuous thermodynamic analysis of institutional failure modes.**
+**Developed from decades of operational experience, millions of safe miles of consequence exposure, and continuous thermodynamic analysis of institutional failure modes.**
 
 **Version:** 1.0  
 **Date:** February 2026  

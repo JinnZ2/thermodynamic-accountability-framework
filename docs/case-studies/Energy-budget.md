@@ -8,11 +8,10 @@ Demonstrate that perception is an active, energy-expensive, continuously
 defended process — not a passive sensor input. Establish that current
 automation cost models systematically exclude the energy budget of
 perception, creating unpriced risk externalized onto human operators
-and the public. Provide auditable operational evidence from 6+ million
+and the public. Provide auditable operational evidence from millions of
 safe miles of commercial driving.
 author_context: >
-Commercial truck driver, 6+ million safe miles, operating within Walmart
-distribution network delivering food to rural areas on 70-hour weekly
+Commercial truck driver, decades / millions of safe miles, operating within a national retail distribution network delivering food to rural areas on 70-hour weekly
 schedules. Direct operational exposure to every photonic, cognitive, and
 environmental condition described in this document. All claims grounded
 in consequence-bearing experience where failure = fatality.
@@ -23,7 +22,7 @@ companion_documents:
 - taf-inference-engine-v1.1.md
   license: CC-BY-4.0
   version: 1.0.0
-  last_updated: 2026-02-10
+  last_updated: 2026
 
 -----
 
@@ -222,9 +221,9 @@ using the operator’s biological processor for free.
 
 -----
 
-## The 6-Million-Mile Proof
+## The Millions-of-Safe-Miles Proof
 
-Six million safe miles is not a resume line. It is a statistical
+A record of millions of safe miles is not a resume line. It is a statistical
 impossibility under naive assumptions.
 
 Given known rates of:
@@ -253,11 +252,11 @@ CRITICALITY: Maximum
 DATA FIDELITY: CAF = 0.95 (direct consequence-exposed testimony)
 
 SITUATION MODEL:
-  Primary Signal: 6+ million miles of zero-dropout entropy suppression
+  Primary Signal: millions of miles of zero-dropout entropy suppression
   across forest-night, urban-glare, snow-albedo, and mirror-strobe
   environments.
 
-  Key Metric: This record represents ~300,000+ operational hours of
+  Key Metric: This record represents decades of operational hours of
   continuous safety-critical signal processing with zero allowable
   failure.
 
@@ -265,7 +264,7 @@ SITUATION MODEL:
 
 THERMODYNAMIC REALITY:
   If an automation company tried to purchase a sensor system with
-  6 million miles of proven 100% accuracy in forest-night to
+  millions of miles of proven 100% accuracy in forest-night to
   urban-glare transitions, it would cost billions in R&D, hardware,
   and validation.
 

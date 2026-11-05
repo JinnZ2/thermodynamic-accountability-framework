@@ -21,14 +21,14 @@ Co-authored (JinnZ2 + Claude), 2026-11-03. CC0. Tags: OBSERVED / DERIVED / PROPO
 
 - RECS-based analysis: rural household electricity \~50% higher than urban (15,258 vs 10,290 kWh/yr). Scope: national average includes the electrically heated Southeast; annual consumption is not restart peak.
 - Same label, different boundary: a rural household may carry a farm, shop or repair work on the house meter; a suburban one does not. Farm accounts on separate meters fall outside.
-- Rural classification conflicts: Census urban = 5,000+ (2,500 before 2020), so Cloquet is urban and Carlton is rural; OMB by county and commuting; RUCA by tract; USDA thresholds up to 20,000-35,000. Boondock acreage and small towns land in the same bin.
+- Rural classification conflicts: Census urban = 5,000+ (2,500 before 2020), so a town above 5,000 is urban and a nearby town below it is rural (illustrative sizes); OMB by county and commuting; RUCA by tract; USDA thresholds up to 20,000-35,000. Boondock acreage and small towns land in the same bin.
 
 ## 3. Mandated electrification of passive systems
 
 Pattern: a requirement removes a passive or non-electric function, metered load rises, and the no-power fallback is deleted.
 
 - HEAT, by code: coal, fuel-oil and wood furnaces replaced with grid heat in uninsulated old buildings. Efficiency gain on paper, kWh real.
-- SANITATION, by municipal mandate: Superior requires sewer connection even with working well and septic. Gravity septic needs no power; sewer adds pumps at the house and plant draw utility-side.
+- SANITATION, by municipal mandate: a northern city requires sewer connection even with working well and septic. Gravity septic needs no power; sewer adds pumps at the house and plant draw utility-side.
 - FIRE, by insurance and lending: wood stoves and cook stoves restricted. On record: air-district install rules, burn bans, sole-source exemptions. Through the loan: FHA/VA/USDA appraisals require a permanent non-wood primary heat source. Carrier practice not public.\*
 - Incentive gradient: the loan selects for households with least margin. Converts a labor-paid input into a cash-paid one, and the resilience loss rides along.
 
@@ -46,7 +46,7 @@ Pattern: a requirement removes a passive or non-electric function, metered load 
 
 ### Latent assets inventory
 
-- Dormant or disconnected hydro along the Mississippi, St. Louis, St. Croix, Cloquet area, Green Bay area. Per site: facility type, output, horsepower, tooling, old parts.
+- Dormant or disconnected hydro along the Mississippi, St. Louis, St. Croix, Green Bay area. Per site: facility type, output, horsepower, tooling, old parts.
 - Industrial on-site generation (e.g. USG and local mills) able to island nearby feeders.
 - Data leads: USACE National Inventory of Dams; ORNL/DOE non-powered dam assessment (\~12 GW national potential\*\*); FERC license history; Historic American Engineering Record drawings; state historical societies.
 - "Nobody makes it anymore" describes the supply chain, not what is physically possible. Local foundries are the only supply chain left in a black start.

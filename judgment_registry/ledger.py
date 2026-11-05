@@ -21,6 +21,8 @@ from dataclasses import asdict
 
 from schema import KIND_CLASSES, Judgment, SchemaError, SignalIntervention
 
+import headrec  # M10: head record per ledger
+
 GENESIS = "0" * 64
 
 
@@ -119,10 +121,21 @@ def append_records(records, kind, body):
     return list(records) + [rec]
 
 
+def head_problems(path, records, head=None):
+    """M10: chain vs head. head=None reads the sidecar; pass a PUBLISHED head
+    (headrec.parse("COUNT:HASH")) to check against a copy held elsewhere."""
+    return headrec.check(records, head if head is not None else headrec.read_head(path))
+
+
 def append(path, kind, body):
-    recs = append_records(read(path), kind, body)
+    old = read(path)
+    probs = head_problems(path, old)
+    if probs:
+        raise LedgerError("head check failed, refusing to append: " + probs[0])
+    recs = append_records(old, kind, body)
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(recs[-1], sort_keys=True, ensure_ascii=False) + "\n")
+    headrec.write_head(path, recs)
     return recs[-1]
 
 
@@ -148,6 +161,7 @@ def write_new(path, records):
     with open(path, "w", encoding="utf-8") as f:
         for r in records:
             f.write(json.dumps(r, sort_keys=True, ensure_ascii=False) + "\n")
+    headrec.write_head(path, records)
 
 
 def bodies(records, kind):

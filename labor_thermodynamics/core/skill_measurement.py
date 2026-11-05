@@ -168,7 +168,7 @@ def make_mid_career_credentialed(rng: Optional[random.Random] = None) -> SkillPr
 def make_salvage_engineer(years: int, dyslexic: bool = False,
                            rng: Optional[random.Random] = None) -> SkillProfile:
     """
-    The 'Mighty Atom' type.
+    The cross-plant maintenance generalist type.
     Very high embodied + cognitive from having to work with
     broken/incomplete systems. Domain transferability high
     because the skill is 'make it work from what's there'

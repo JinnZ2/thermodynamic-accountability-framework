@@ -986,7 +986,7 @@ def differential_cascade_step(
 if __name__ == "__main__":
     # Example: rural WI/MN freight corridor, food distribution
     gps = GPSReliability(
-        corridor_id="tomah_superior",
+        corridor_id="rural_wi_mn_corridor",
         canopy_obstruction_pct=35.0,
         canyon_effect_zones=12,
         seasonal_solar_disruption_days=8,
@@ -996,7 +996,7 @@ if __name__ == "__main__":
         map_data_lag_days_max=180.0,
     )
     infra = InfrastructureStability(
-        corridor_id="tomah_superior",
+        corridor_id="rural_wi_mn_corridor",
         frost_heave_events_per_year=22,
         annual_construction_zones=47,
         construction_zone_avg_duration_days=32.0,
@@ -1030,7 +1030,7 @@ if __name__ == "__main__":
         years_deployed=4.0,
     )
     edge = EdgeCaseEnvironment(
-        corridor_id="tomah_superior",
+        corridor_id="rural_wi_mn_corridor",
         cold_extreme_days_below_neg20F=22,
         mud_season_days=35,
         ash_smoke_event_days=14,
@@ -1050,7 +1050,7 @@ if __name__ == "__main__":
         cascading_production_loss_per_hr=850.0,
     )
     traffic = TrafficThermodynamics(
-        corridor_id="tomah_superior",
+        corridor_id="rural_wi_mn_corridor",
         fairness_encoded_drivers_pct=8.0,
         aggressive_driver_pct=42.0,
         automation_following_distance_ft=15.0,
@@ -1070,7 +1070,7 @@ if __name__ == "__main__":
         annual_miles=130000,
     )
     backlash = SocialBacklash(
-        corridor_id="tomah_superior",
+        corridor_id="rural_wi_mn_corridor",
         induced_collision_attempts_per_yr_aggressive=4.5,
         induced_collision_attempts_per_yr_smooth=0.4,
         avg_claim_per_incident=38000.0,
@@ -1078,7 +1078,7 @@ if __name__ == "__main__":
         public_anti_automation_sentiment=0.55,
     )
     longdur = InfrastructureLongDuration(
-        corridor_id="tomah_superior",
+        corridor_id="rural_wi_mn_corridor",
         concrete_fatigue_baseline_yrs=25.0,
         shock_wave_acceleration_factor=1.7,
         pavement_thermal_stress_amplifier=1.3,

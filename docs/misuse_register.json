@@ -146,8 +146,10 @@
       "module": "cross-cutting",
       "surface": "sha256 chain logs (assembly ledger, judgment ledger, signal chainlog, coordination log)",
       "adversarial_use": "The newest records can be dropped, or the whole file rebuilt, and the chain still verifies; a warning, denial or dissent can vanish without trace.",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: anchor head hash + record count outside the file on a schedule (paper, radio log, a neighbour) and compare.*",
+      "mitigation_ids": [
+        "D-M10"
+      ],
+      "residual": "Partial: the sidecar head sits next to the ledger, so someone who can rewrite both still passes the local check. Defense is a PUBLISHED head (headrec.py show -> bulletin / radio / paper / another node) checked with headrec.py check LEDGER COUNT:HASH; publishing on a schedule is policy, not code.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -158,7 +160,7 @@
       "surface": "merge() of two ledgers",
       "adversarial_use": "Records imported from a forged second file come out with a fresh valid chain; origin is lost.",
       "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.*",
+      "residual": "Unmitigated. Proposed: keep each record's origin file and original hash through merge and show it in status output.* Queued for the next round (2026-11-05).",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -168,8 +170,10 @@
       "module": "cross-cutting",
       "surface": "self-declared identity strings (human:/ai: roles, recorder, scorer, judge, SIGCAL_MODEL_ID)",
       "adversarial_use": "Anyone who writes a record can claim any role, node, scorer or model, faking consent, corroboration, coder agreement or the model tested.",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: mark these as unverified labels in every output; out-of-band confirmation for any record that gates an action.*",
+      "mitigation_ids": [
+        "D-M12"
+      ],
+      "residual": "Cannot be fully closed without identity infrastructure. Partial mitigations and the logged residual: docs/misuse_M12_identity_note.md.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -180,7 +184,7 @@
       "surface": "field-report free text printed at the top of a checkout handout as a caution",
       "adversarial_use": "A report's author controls text printed with the instrument's apparent authority, which can carry misleading instructions.",
       "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.*",
+      "residual": "Unmitigated. Proposed: label as unverified report, cap length, human approval before handout printing.* Queued for the next round (2026-11-05).",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -234,8 +238,10 @@
       "module": "community_black_start",
       "surface": "Quarantine add / remove (defenses.py)",
       "adversarial_use": "One insider role can cut a community off from honest sources; the two-person rule is listed for this action but not enforced in code.",
-      "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: route quarantine changes through two_person.authorize() and announce them in the next bulletin.*",
+      "mitigation_ids": [
+        "D-M11"
+      ],
+      "residual": "Partial: add and lift now need two roles via two_person.authorize (different households, different dependency networks, rotation current), decision hash-chained. One person holding two roles still passes (M12). The bulletin announcement is policy, not code.*",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -312,7 +318,7 @@
       "surface": "Withdrawal record (withdrawn_by_holder is a settable boolean)",
       "adversarial_use": "A forged withdrawal removes a dissent without raising DISSENT_DROPPED.",
       "mitigation_ids": [],
-      "residual": "Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.*",
+      "residual": "Unmitigated. Proposed: require a holder source and a recorder other than the one who dropped the dissent; flag mismatches.* Queued for the next round (2026-11-05).",
       "volume": "thin",
       "status": "PROPOSED",
       "provenance": "independent pass"
@@ -449,6 +455,24 @@
       "description": "Misuse section per module: each README has 'How this could be used against its purpose' listing its M-entries and mitigations.",
       "code": "assembly_instrument, community_black_start, judgment_registry, signal_calibration READMEs",
       "test": "test_misuse: ReadmeSectionTests"
+    },
+    {
+      "id": "D-M10",
+      "description": "Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH.",
+      "code": "headrec.py (identical copy in judgment_registry, assembly_instrument, signal_calibration, community_black_start, misuse_guard)",
+      "test": "test_headrec: HeadLogic, CopiesIdentical, LedgersRefuse"
+    },
+    {
+      "id": "D-M11",
+      "description": "Quarantine add / lift go through two_person.authorize('ledger_quarantine', ...); DENIED raises, every decision is logged.",
+      "code": "community_black_start/defenses.py Quarantine",
+      "test": "community_black_start tests/test_defenses.py QuarantineTests"
+    },
+    {
+      "id": "D-M12",
+      "description": "Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual.",
+      "code": "none (docs/misuse_M12_identity_note.md)",
+      "test": "none"
     }
   ],
   "experiments": [

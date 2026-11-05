@@ -1,6 +1,8 @@
 # Serpentine grade -- ESP rollover trigger, notes in progress
 
-Opened 2026-09-24. Live-scoping notes, not a module. Status tags follow
+Opened 2026-09-24. Live-scoping notes, not a module. Route, crossings,
+region table, drop site and alternate route are kept in local_data/
+(N8, 2026-11-05). Status tags follow
 `labor_thermodynamics/driver_hours_evidence_register.py` (OBSERVED /
 SECONDARY / DERIVED / PROPOSED / UNMEASURED / UNREAD).
 
@@ -126,13 +128,13 @@ axis check                                                     DERIVED
 
 
 "not compensated"
-  documented:  no grade/pitch sensor in the Bendix set; sensor zeroed level;
+  documented:  no grade/pitch sensor in the Class 8 stability-control sensor set; sensor zeroed level;
                bank contamination is a known false-trigger source;
                compensation exists in patents
-  unknown:     whether the EC-80 algorithm estimates bank/grade from
+  unknown:     whether the stability-control algorithm estimates bank/grade from
                wheel speed + yaw + lateral                      [UNREAD —
                proprietary]
-  checkable:   event logs via ACom diagnostics — does a logged roll
+  checkable:   event logs via the OEM diagnostic tool — does a logged roll
                intervention carry a bank or grade estimate, or only raw
                lateral accel?
                the two-phone test from before, plus phone GPS elevation
@@ -190,28 +192,28 @@ ORDER 1  sensor false trigger → docked as a driver event
 ORDER 2  truck at 25–35 → queue → impatient passes
 ORDER 3  passer pulls out from behind the truck
          truck = occluder: blocks the passer's view of the road ahead
-         buggy ahead or oncoming: slowest, least protected vehicle
+         slow road user ahead or oncoming: slowest, least protected vehicle
          closing speed high, sight distance cut by the truck
-         → near-miss or crash, the buggy absorbing the energy
+         → near-miss or crash, the slow road user absorbing the energy
                                                     [OBSERVED → DERIVED chain]
 
 
 passer car      ~1.5 t   accelerating to clear the truck
-buggy           horse + light frame, walking pace, no crush structure
+slow user      light frame, walking pace, no crush structure
 truck           80,000 lb blind wall between them
 → the interaction happens where the passer has the least information
-  and the buggy has no mass to absorb it
+  and the slow road user has no mass to absorb it
 
 
 crash report → passing driver: unsafe pass           (recorded)
-            → buggy: visibility/lighting             (often recorded)
+            → slow user: visibility/lighting         (often recorded)
             → truck: slow vehicle, lawful            (maybe noted)
             → ESP trigger + scoring rule             (never recorded)
 the root input has no field in the crash form        [DERIVED]
 
 
-GAP  buggy crash / near-miss locations  ×  truck grades where speed drops
-     buggy crash data: exists at state level (WI, PA, OH)   [not searched]
+GAP  slow-road-user crash / near-miss locations  ×  truck grades where speed drops
+     slow-road-user crash data: state level              [not searched]
      truck slowdown locations: your recordings + telematics
      join: UNMEASURED
 
@@ -233,7 +235,7 @@ LOOP CLOSURE
 
 
 where the cost lands               in the safety score?
-  third parties (passer, buggy)    no
+  third parties (passer, slow user) no
   load / delivery                  no  (logged as delay)
   equipment wear, brake heat       no  (maintenance line)
   company liability                no  (claims line)
@@ -242,7 +244,7 @@ where the cost lands               in the safety score?
 the score still reads: no event                             [DERIVED]
 
 
-INTERSTATE INCIDENT                 TWO-LANE (DRIFTLESS) INCIDENT
+INTERSTATE INCIDENT                 TWO-LANE (HILLY RURAL) INCIDENT
   lanes left open: often 1+           lanes left: 0, both directions blocked
   shoulder: yes                       shoulder: little or none on grades
   detour: parallel routes             detour: ridge/valley terrain, few
@@ -291,10 +293,9 @@ closure duration on a two-lane grade ≫ interstate (single access, no detour)
 
 
 ROUTE REDUNDANCY TO THE DROP
-  access roads          1–2                             OBSERVED
-  alternate             ~3 h out of route               OBSERVED
-  N_eff (routes)        ≈1: both roads cross the same terrain,
-                        often the same grade class      DERIVED
+  access count, alternate-route time and drop site: kept locally
+  (local_data/), not published                    OBSERVED
+  N_eff (routes)        ≈1 on the observed approach  DERIVED
   → one closure = every company truck on that approach
     trapped or diverted together
 
@@ -303,32 +304,27 @@ independent delays:   trucks fail one at a time; the fleet absorbs it
 correlated closure:   k trucks × same hours × same drop
                       → the drop's receiving window missed by several
                         loads at once
-                      → reroutes at +3 h each, burning HOS; some drivers
+                      → reroutes of hours each, burning HOS; some drivers
                         run out of hours before delivery
                       → dispatch reshuffles the next day's loads
                                                         [DERIVED]
 
 
 single truck         ~ hours × (fuel + wear + HOS)
-fleet on the route   ~ k × that, all simultaneous, plus a 3 h reroute each,
+fleet on the route   ~ k × that, all simultaneous, plus an hours-long reroute each,
                        plus a receiver backlog
 scoring view         0 events recorded for any of them
 
 
-REGION               TERRAIN DRIVER            NETWORK SHAPE              STATUS
-UP (Michigan)        snowbelt, long gaps       sparse, long single        general knowledge,
-                     between towns             corridors                    not searched
-Driftless            unglaciated steep         serpentine grades, valley  OBSERVED (operator)
-                     valleys                   roads, buggy traffic
-St. Croix riverway   river valley, bluffs      few crossings → funnels    general knowledge
-Upper MN / WI        lakes, forest, wetland    roads route around water   general knowledge
-                                               → few parallel links
+REGION TABLE          kept locally (local_data/); public pattern:
+                      hilly rural two-lane roads, few river crossings,
+                      water-bounded road networks   OBSERVED (operator)
 
 
 V1  grade × curvature       serpentine descents              → trigger envelope
 V2  access count            1–2 roads to many drops          → closure traps
 V3  alternate distance      hours, not minutes               → reroute cost
-V4  slow/vulnerable users   buggies, farm equipment,          → passing hazard
+V4  slow/vulnerable users   slow road users, farm equipment,          → passing hazard
                             snowmobile crossings
 V5  winter duration         ice on the same grades           → sensor degradation
                                                               + margin gone
@@ -350,10 +346,11 @@ STATUS UPDATE
 
 # PROPOSED — one row per descent
 DESCENT_RECORD = dict(
-    region, road_id, grade_pct, curve_reversals,     # V1
+    region, road_id, grade_pct,   # region / road_id: keep in local_data/, not here
+                                   curve_reversals,     # V1
     access_count_to_drop,                            # V2
     alternate_route_hours,                           # V3
-    slow_users_present,        # buggy/farm/sled      V4
+    slow_users_present,        # slow/farm/sled       V4
     surface_state,             # dry/wet/snow/ice     V5
     speed_mph, esp_event_ts,   # trigger timing
     gyro_file,                 # your cab trace

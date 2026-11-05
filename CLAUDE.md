@@ -2844,7 +2844,7 @@ thermodynamic-accountability-framework/
 │   │                             #   (flat single turn rated;
 │   │                             #   serpentine x downgrade unrated),
 │   │                             #   driver-correction window, scoring
-│   │                             #   -> slowdown -> pass -> buggy chain,
+│   │                             #   -> slowdown -> pass -> slow-road-user chain,
 │   │                             #   two-lane closure + trapped-rig
 │   │                             #   cost, regional V1-V5 stack,
 │   │                             #   PROPOSED DESCENT_RECORD. Companion
@@ -3143,6 +3143,21 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- N-items + M10/M18/M12 (2026-11-05, co-authored), branch
+  claude/misuse-register. Forward fixes only, no history rewrite. N1-N13
+  applied per the owner's decisions (employer -> "a national retail
+  distribution network"; incident / dock / route / drop details and quoted
+  session text moved verbatim to gitignored local_data/ with pattern-only
+  public text; crash, wildlife, career, accelerometer run, place names,
+  nickname coarsened; 2-9-26.md -> winter-dock-incident.md; 2026-05-05
+  session logs -> local_data/). One C1 log had been committed under
+  local_data/ in 66ac463; untracked, and misuse_guard now tests that git
+  tracks nothing under local_data/. M18: Quarantine add / lift go through
+  two_person.authorize (D-M11). M10: headrec.py head record (count + head
+  hash) per ledger, identical copy in 5 folders; append / verify refuse a
+  truncated or rebuilt chain; published head check via
+  `headrec.py check LEDGER COUNT:HASH` (D-M10). M12: design note
+  docs/misuse_M12_identity_note.md (D-M12, no code). M11, M13, M25 queued.
 - judgment_registry worked record J10 (2026-11-05, co-authored), branch
   claude/misuse-register. records/J10a.json (agency, "Maya" loop, secondhand
   Substack 2026-05-03), J10b.json (physics, "Stochastic Collapse", YouTube

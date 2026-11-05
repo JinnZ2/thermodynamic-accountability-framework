@@ -57,7 +57,7 @@ def main(argv):
             print("appended %s %s" % (kind, rec["hash"][:12]))
             return 0
         recs = ledger.read(path)
-        broken = ledger.verify(recs)
+        broken = ledger.verify(recs) + ledger.head_problems(path, recs)   # M10
         if cmd == "check" and not args:
             print(HEADER)
             for p in broken:

@@ -35,6 +35,8 @@ import community
 SCHEMA_VERSION = "coord-0.1"
 DECISIONS = ("accept", "refuse")
 CONCENTRATION_THRESHOLD = 0.5      # PROPOSED*: no node should broker most exchanges
+import headrec  # M10: head record per ledger
+
 GENESIS = "0" * 64
 
 
@@ -199,7 +201,13 @@ def verify_log(path):
         if _h({"body": r.get("body"), "prev_hash": r.get("prev_hash")}) != r.get("hash"):
             probs.append("record %d: content changed" % i)
         prev = r.get("hash")
-    return probs
+    return probs + headrec.check(_read(path), headrec.read_head(path))   # M10
+
+
+def verify_log_against(path, published):
+    """M10: check against a head held elsewhere ("COUNT:HASH" from a bulletin,
+    radio log or another node), not only the sidecar next to the file."""
+    return headrec.check(_read(path), headrec.parse(published))
 
 
 def append_log(path, body):
@@ -213,6 +221,7 @@ def append_log(path, body):
     rec = {"body": body, "prev_hash": prev, "hash": _h({"body": body, "prev_hash": prev})}
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(rec, sort_keys=True, ensure_ascii=False) + "\n")
+    headrec.write_head(path, recs + [rec])
     return rec
 
 
