@@ -97,20 +97,52 @@
       "with_attention_tool": "3/3"
     },
     "exp5_6": {
-      "status": "TODO: import the MinAtar and 9x9 Go table",
-      "note": "baselines are the authors' own PPO runs"
+      "source": "summarizing fetch of the post, 2026-11-05; unverified against the page",
+      "status": "IMPORTED (as supplied by co-author)",
+      "note": "baselines are the authors' own PPO runs (critique point)",
+      "minatar": {
+        "setup": "1,000 episodes; zero-initialized; no rollouts",
+        "columns": [
+          "PPO 100M",
+          "PPO 500M",
+          "Astra one-shot"
+        ],
+        "rows": {
+          "Breakout": [
+            15.8,
+            25.3,
+            517.4
+          ],
+          "Seaquest": [
+            5.6,
+            88.9,
+            53.1
+          ],
+          "Asterix": [
+            25.8,
+            55.2,
+            53.2
+          ]
+        }
+      },
+      "go_9x9": {
+        "setup": "1.48M weights; 2,000 games per opponent",
+        "0_forward_passes": "won more than half its games vs two smaller PPO networks",
+        "50_forward_passes": "beat an equal-size PPO network trained on 20M games",
+        "exact_win_rates": "NOT_REPORTED in the post"
+      }
     }
   },
   "open_variables": [
     {
-      "variable": "Exp 5-6 scores vs authors' PPO baselines",
-      "status": "NOT_IMPORTED",
-      "todo": "import the table from the post"
-    },
-    {
       "variable": "cross-model or tool baselines (direction ablation, interpretability methods, heuristics)",
       "status": "NOT_REPORTED",
       "todo": "none in the post per critique"
+    },
+    {
+      "variable": "9x9 Go exact win rates",
+      "status": "NOT_REPORTED",
+      "todo": "not in the post"
     }
   ],
   "proposed_controls": [],

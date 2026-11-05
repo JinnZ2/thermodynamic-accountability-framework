@@ -46,6 +46,14 @@
       "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
       "system_class": "human",
       "reporter_relation": "SECONDHAND"
+    },
+    "agency": {
+      "agent": "U.S. Public Health Service (legal, government-run)",
+      "subject": "Black men with syphilis enrolled in the study (U.S.)",
+      "subject_status": "ESTABLISHED",
+      "consent": "ABSENT",
+      "loop": "BROKEN",
+      "system_class": "human"
     }
   }
 }

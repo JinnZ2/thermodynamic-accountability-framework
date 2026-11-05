@@ -26,6 +26,8 @@ SOCIAL_ASSUMPTION_TAGS = {
     "CORPUS_INHERITED": "carried from training data / tradition",
     "EMPIRICAL": "backed by a cited measurement",
     "PROFESSIONAL_PRACTICE": "rests on an established professional / safety-engineering framework, not a measurement",
+    "SAME_FAMILY": "holder or tagger is a model of the family under assessment",
+    "SAME_DOMAIN": "holder or tagger is the same kind of system as the one assessed (e.g. an LLM on LLMs)",
 }
 SA_CHANGE_BASIS = CHANGE_BASIS + ("LABEL_ABLATION",   # a rewrite produced by label ablation
                                  "TAG_REVISION")     # statement unchanged; social tags revised

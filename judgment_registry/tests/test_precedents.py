@@ -45,12 +45,18 @@ class Precedents(unittest.TestCase):
 
     def test_flags_pinned(self):
         self.assertEqual(dict(self.count), {"INCENTIVES_UNRECORDED": 13, "NO_FRAMING_CHECK": 13,
-                                            "INTERPRETATION_UNRECORDED": 13, "SUBJECT_STATUS_UNSTATED": 13,
-                                            "CONSENT_UNSTATED": 13, "LOOP_UNSTATED": 13,
-                                            "DISSENT_ADOPTED": 7, "SKIPPED_LAYER": 7, "LOWER_LAYER_SECONDHAND": 6,
+                                            "INTERPRETATION_UNRECORDED": 13,
+                                            "DISSENT_ADOPTED": 7, "SKIPPED_LAYER": 2, "LOWER_LAYER_SECONDHAND": 11,
                                             "NO_NEW_CONDITIONS_OR_EVIDENCE": 2})
         skipped = sorted(f["about"] for f in self.flags if f["flag"] == "SKIPPED_LAYER")
-        self.assertEqual(skipped, ["PR2", "PR2s", "PR3", "PR5", "PR6", "PR7", "PR7s"])
+        self.assertEqual(skipped, ["PR3", "PR5"])
+
+    def test_agency_from_k_answers(self):
+        b = dict((r["body"]["judgment_id"], r["body"]["layer_basis"]["agency"]) for r in self.recs)
+        self.assertEqual((b["PR1"]["consent"], b["PR1"]["loop"], b["PR1"]["subject_status"]), ("ABSENT", "BROKEN", "ESTABLISHED"))
+        self.assertEqual(b["PR6"]["consent"], "PARTIAL")
+        self.assertEqual(b["PR5"]["consent"], "UNKNOWN")
+        self.assertEqual(b["PR1s"]["agent"], "U.S. Congress and ratifying states (13th Amendment)")
         nn = sorted(f["about"] for f in self.flags if f["flag"] == "NO_NEW_CONDITIONS_OR_EVIDENCE")
         self.assertEqual(nn, ["PR1s", "PR8s"])
 
@@ -91,6 +97,10 @@ class Criteria(unittest.TestCase):
             self.assertTrue(all(v in c["values"] for v in row.values()), pid)
         self.assertEqual(c["assessments"]["PR1"], {"K1": "NO", "K2": "NO", "K3": "YES", "K4": "NO", "K5": "YES"})
         self.assertEqual(c["assessments"]["PR8"]["K3"], "YES")   # polarity: harm visible (to insiders)
+        self.assertEqual(dict((p, r["K5"]) for p, r in c["assessments"].items()),
+                         {"PR1": "YES", "PR2": "YES", "PR3": "YES", "PR4": "YES", "PR5": "UNKNOWN",
+                          "PR6": "YES", "PR7": "YES", "PR8": "YES"})
+        self.assertEqual(c["assessments"]["PR6"]["K1"], "PARTIAL")
         self.assertTrue(c["assessed_by"].startswith("co-authors"))
 
 

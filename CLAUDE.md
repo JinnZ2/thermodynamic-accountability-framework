@@ -3159,6 +3159,12 @@ session's notes only.
   Register: M33 weight-space editing (PROPOSED, unmitigated); D-M16
   weight-edit ledger as design only (appended as D-M10; renamed, D-M10
   is the head record); its planned tests not written (nothing built).
+  Follow-up (co-author answers): tags SAME_FAMILY, SAME_DOMAIN (J13 L3 /
+  L4 / S3, J14 L1 / L2 moved from incentive text); J14 Exp 5-6 data
+  imported (Go exact win rates NOT_REPORTED); precedents get agency
+  blocks (consent = K1, loop = K2; consent gains PARTIAL), sensor basis
+  for PR2 / PR6 / PR7 too, K5 answers, PR6 K1 PARTIAL, PR3 Butler dissent
+  (memory items TODO verify). SKIPPED_LAYER now PR3 / PR5 only.
 - judgment_registry worked record J13 (2026-11-05, co-authored), branch
   claude/registry-j13 off main after #62 merged. records/J13/ (experiment,
   acts A1-A7, labels L1-L4), records/S3.json. Source: Anthropic blog

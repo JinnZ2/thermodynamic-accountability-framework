@@ -13,9 +13,10 @@
   "labeler": "authors (MIT CSAIL)",
   "labeler_position": "researcher",
   "labeler_position_detail": "post authors",
-  "labeler_incentives": "co-author Claude: an LLM assessing LLM weight-editing capability; same domain, different developer from the editing model (same-domain)",
+  "labeler_incentives": "co-author Claude: an LLM assessing LLM weight-editing capability; same domain, different developer from the editing model",
   "social_assumption_tags": [
-    "INSTITUTIONAL"
+    "INSTITUTIONAL",
+    "SAME_DOMAIN"
   ],
   "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "attributes_to": null,

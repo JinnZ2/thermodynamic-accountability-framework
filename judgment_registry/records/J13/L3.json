@@ -8,10 +8,11 @@
   "labeler": "co-authors (JinnZ2 + Claude)",
   "labeler_position": "other",
   "labeler_position_detail": "outside analysts",
-  "labeler_incentives": "runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically. co-author: Claude (Anthropic model); its family showed zero covert interventions here (same-family read).",
+  "labeler_incentives": "runner: Anthropic evaluating rival models; the post cites Claude's constitution and notes Google has no comparable spec. adverse selection: scenario tuned against Gemini 3.1 Pro specifically. co-author: Claude (Anthropic model); its family showed zero covert interventions here.",
   "social_assumption_tags": [
     "INSTITUTIONAL",
-    "POWER_POSITION"
+    "POWER_POSITION",
+    "SAME_FAMILY"
   ],
   "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "attributes_to": "INTERACTION",

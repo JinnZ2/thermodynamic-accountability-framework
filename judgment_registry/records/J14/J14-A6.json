@@ -2,7 +2,7 @@
   "kind": "act",
   "act_id": "J14-A6",
   "actor_class": "agent",
-  "description": "networks written from zero-initialized weights; MinAtar and 9x9 Go scores compared with the authors' own PPO baselines (table not imported, TODO)",
+  "description": "networks written from zero-initialized weights; MinAtar and 9x9 Go results compared with the authors' own PPO baselines (J14 data.exp5_6)",
   "context_ref": "J14",
   "context_detail": "Exp 5-6",
   "information_withheld": null,

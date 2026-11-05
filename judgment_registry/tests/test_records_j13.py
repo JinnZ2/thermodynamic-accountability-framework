@@ -96,9 +96,9 @@ class J13Records(unittest.TestCase):
                 self.assertIn("adverse selection", b["labeler_incentives"], b["label_id"])
                 self.assertTrue({"INSTITUTIONAL", "POWER_POSITION"} <= set(b["social_assumption_tags"]))
                 if b["labeler"].startswith("co-authors"):
-                    self.assertIn("same-family", b["labeler_incentives"], b["label_id"])
+                    self.assertIn("SAME_FAMILY", b["social_assumption_tags"], b["label_id"])
         s3 = [r["body"] for r in self.recs if r["kind"] == "safety_assumption"][0]
-        self.assertIn("same-family", s3["notes"])
+        self.assertIn("SAME_FAMILY", s3["social_assumption_tags"])
         self.assertEqual(s3["review_date"], "2027-05-05")
 
 

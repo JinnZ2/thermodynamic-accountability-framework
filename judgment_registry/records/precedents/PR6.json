@@ -36,5 +36,23 @@
   "source": "co-author summary 2026-11-05 (historical record); primary sources not pulled this session (TODO before citing figures)",
   "volume": "medium",
   "notes": "change_basis mixed: outcome evidence + antipsychotics (1950s) + norm shift; USSR banned it in 1950. Tens of thousands in the U.S. (approx). No superseding record entered (no single reversing judgment named).",
-  "layer": "agency"
+  "layer": "agency",
+  "layer_basis": {
+    "agency": {
+      "agent": "medical establishment; Moniz Nobel Prize (1949); Freeman's transorbital practice (U.S.)",
+      "subject": "psychiatric patients",
+      "subject_status": "ESTABLISHED",
+      "consent": "PARTIAL",
+      "loop": "BROKEN",
+      "system_class": "human"
+    },
+    "sensor": {
+      "signal": "contemporaneous documentation of the harm: published outcome reports and contemporary critics; the USSR's 1950 ban [memory]",
+      "response": null,
+      "observed": true,
+      "source": "co-author, from memory 2026-11-05 (TODO verify against primary sources)",
+      "system_class": "human",
+      "reporter_relation": "SECONDHAND"
+    }
+  }
 }

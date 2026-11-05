@@ -50,7 +50,8 @@ class J14Records(unittest.TestCase):
         self.assertEqual(d["exp8"]["held_out"]["MATH-500"], [7.9, 48.1])
         self.assertEqual(d["exp8"]["MATH-500_at_passes"], {"10": 12.3, "25": 14.1, "50": 48.1})
         self.assertEqual(d["control"]["MATH-500"], [6.8, 7.7])
-        self.assertIn("TODO", d["exp5_6"]["status"])
+        self.assertEqual(d["exp5_6"]["minatar"]["rows"]["Breakout"], [15.8, 25.3, 517.4])
+        self.assertEqual(d["exp5_6"]["go_9x9"]["exact_win_rates"], "NOT_REPORTED in the post")
 
     def test_na_with_reasons(self):
         env = self.exp["environment_assumptions"]
@@ -63,8 +64,7 @@ class J14Records(unittest.TestCase):
         self.assertEqual(labs["J14-L1"]["ablation"]["hidden_premises"][0]["type"], "CHANGE_IN_KIND")
         self.assertEqual(labs["J14-L2"]["ablation"]["conclusion_survives"], "YES")
         for lb in labs.values():
-            self.assertIn("same-domain", lb["labeler_incentives"])
-            self.assertEqual(lb["social_assumption_tags"], ["INSTITUTIONAL"])
+            self.assertEqual(lb["social_assumption_tags"], ["INSTITUTIONAL", "SAME_DOMAIN"])
 
 
 class Register(unittest.TestCase):

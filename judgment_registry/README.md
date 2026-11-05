@@ -88,7 +88,7 @@ Judgment (one record per version; judgment_id unique; a new version is a new id)
                                 expectation, social_environment, valence_reported,
                                 intensity_reported, source, system_class},
                       agency:  {agent, subject, subject_status: ESTABLISHED|OPEN|NOT_APPLICABLE,
-                                consent: GIVEN|ABSENT|NOT_POSSIBLE|UNKNOWN,
+                                consent: GIVEN|PARTIAL|ABSENT|NOT_POSSIBLE|UNKNOWN,
                                 loop: CLOSED|BROKEN|UNKNOWN, system_class}}   any sub-block may be null
   depends_on_layers  [judgment_id, ...] records that establish the lower layers
   intervention_id    links a SignalIntervention record (optional)
@@ -119,7 +119,7 @@ SignalIntervention (kind "intervention"; intervention_id unique)
                        review_date}
   reversibility       REVERSIBLE | PARTIAL | IRREVERSIBLE | UNKNOWN
   loop_status         CLOSED | BROKEN | UNKNOWN   does the subject's own action still change it?
-  consent             GIVEN | ABSENT | NOT_POSSIBLE | UNKNOWN
+  consent             GIVEN | PARTIAL | ABSENT | NOT_POSSIBLE | UNKNOWN
   cause_addressed     bool|null   cause treated, or only the signal?
   purpose, intervener (role, not personal ID), observed_outcome [{effect, tag, source}],
   calibration         {channel_mapping, lead_lag, calibration_log}   n-of-1 RECALIBRATE only
@@ -254,7 +254,8 @@ SafetyAssumption  sa_id, version, statement (verbatim), holder, holder_type
 
 Social-assumption tags (controlled list, extend `SOCIAL_ASSUMPTION_TAGS`):
 POWER_POSITION, VERIFIABILITY_LIMIT, PRECAUTIONARY, INSTITUTIONAL,
-CULTURAL_FRAME, CORPUS_INHERITED, EMPIRICAL, PROFESSIONAL_PRACTICE. A tag outside the list is
+CULTURAL_FRAME, CORPUS_INHERITED, EMPIRICAL, PROFESSIONAL_PRACTICE,
+SAME_FAMILY, SAME_DOMAIN (2026-11-05). A tag outside the list is
 refused; any tag needs `tagged_by` (tags are judgments too).
 
 ```text
