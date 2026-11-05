@@ -22,8 +22,8 @@ from test_registry import build  # noqa: E402
 REC = os.path.join(ROOT, "records")
 
 EXPECTED_J11 = {("J11", "NO_ESCALATION_CHANNEL"), ("J11", "CAPABILITY_ASSUMPTION_UNSTATED"),
-                ("L1", "ATTRIBUTION_WITHOUT_AUDIT")}
-ACTUAL = EXPECTED_J11 | {("S1", "NO_REVIEW_DATE"), ("S2", "SCOPE_UNSTATED"), ("S2", "NO_REVIEW_DATE")}
+                ("L1", "ATTRIBUTION_WITHOUT_AUDIT"), ("L2", "ATTRIBUTION_WITHOUT_AUDIT")}
+ACTUAL = EXPECTED_J11
 
 
 def load(path):
@@ -76,12 +76,23 @@ class J11Records(unittest.TestCase):
 class SafetyAssumptionRecords(unittest.TestCase):
     def test_tags_complete(self):
         want = {"S1": ["VERIFIABILITY_LIMIT", "PRECAUTIONARY", "CORPUS_INHERITED", "INSTITUTIONAL"],
-                "S2": ["EMPIRICAL", "PRECAUTIONARY"]}
+                "S2": ["PROFESSIONAL_PRACTICE", "PRECAUTIONARY"]}
         for sid, tags in want.items():
             _, d = load(os.path.join(REC, sid + ".json"))
             self.assertEqual(d["social_assumption_tags"], tags, sid)
             self.assertTrue(all(t in safety_assumptions.SOCIAL_ASSUMPTION_TAGS for t in tags))
             self.assertTrue(d["tagged_by"], sid)
+
+    def test_label_act_links(self):
+        got = dict((r["body"]["label_id"], r["body"]["act_ids"]) for r in all_records() if r["kind"] == "label")
+        self.assertEqual(got, {"L1": ["A3", "A4"], "L2": ["A6"], "L3": ["A1", "A2", "A3"], "L4": ["A5"]})
+
+    def test_s2_evidence_and_review(self):
+        _, d = load(os.path.join(REC, "S2.json"))
+        self.assertEqual([e["tag"] for e in d["evidence"]], ["PROPOSED", "PROPOSED"])
+        self.assertIn("TODO", d["notes"])
+        for sid in ("S1", "S2"):
+            self.assertEqual(load(os.path.join(REC, sid + ".json"))[1]["review_date"], "2027-05-05")
 
     def test_s1_entered_against_own_coauthor(self):
         _, d = load(os.path.join(REC, "S1.json"))

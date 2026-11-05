@@ -25,6 +25,7 @@ SOCIAL_ASSUMPTION_TAGS = {
     "CULTURAL_FRAME": "rests on a specific cultural reading",
     "CORPUS_INHERITED": "carried from training data / tradition",
     "EMPIRICAL": "backed by a cited measurement",
+    "PROFESSIONAL_PRACTICE": "rests on an established professional / safety-engineering framework, not a measurement",
 }
 HOLDER_TYPES = ("person", "org", "model", "tradition", "other")   # other: mixed holders (e.g. co-authors)
 

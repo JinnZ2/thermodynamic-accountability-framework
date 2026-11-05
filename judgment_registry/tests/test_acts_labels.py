@@ -40,7 +40,7 @@ def ACT(aid="A1", **kw):
 
 
 def LAB(lid="L1", **kw):
-    d = {"label_id": lid, "act_id": "A1", "label_text": "term-q", "labeler": "role-r",
+    d = {"label_id": lid, "act_ids": ["A1"], "label_text": "term-q", "labeler": "role-r",
          "labeler_position": "press", "date": "2026-01-02"}
     d.update(kw)
     return d
@@ -93,9 +93,9 @@ class LabelFlags(unittest.TestCase):
         self.assertEqual(codes(recs, "L1"), ["LABEL_POSITION_UNSTATED"])
 
     def test_on_act_missing(self):
-        none = build(("label", LAB(act_id=None)))
+        none = build(("label", LAB(act_ids=[])))
         self.assertEqual(codes(none, "L1"), ["LABEL_ON_ACT_MISSING"])
-        absent = build(("label", LAB(act_id="A9")))
+        absent = build(("label", LAB(act_ids=["A9"])))
         f = [x for x in integrity.check(absent) if x["flag"] == "LABEL_ON_ACT_MISSING"]
         self.assertIn("A9", f[0]["detail"])
 
@@ -105,6 +105,19 @@ class LabelFlags(unittest.TestCase):
                     LAB(social_assumption_tags=["PRECAUTIONARY"])):
             with self.assertRaises(ledger.LedgerError):
                 build(("label", bad))
+
+    def test_label_on_several_acts(self):
+        import labels
+        recs = build(("act", ACT("A1")), ("act", ACT("A2")), ("label", LAB(act_ids=["A1", "A2"])))
+        self.assertEqual(codes(recs, "L1"), [])
+        self.assertEqual([x["label_id"] for x in labels.on_act(recs, "A2")], ["L1"])
+        self.assertIn("also on: A2", labels.side_by_side(recs, "A1"))
+        part = build(("act", ACT("A1")), ("label", LAB(act_ids=["A1", "A7"])))
+        f = [x for x in integrity.check(part) if x["flag"] == "LABEL_ON_ACT_MISSING"]
+        self.assertEqual(len(f), 1)
+        self.assertIn("A7", f[0]["detail"])
+        with self.assertRaises(ledger.LedgerError):
+            build(("label", LAB(act_ids="A1")))
 
     def test_labels_side_by_side_no_ranking(self):
         recs = build(("act", ACT()), ("label", LAB("L1", label_text="term-q", labeler_position="press")),
@@ -203,7 +216,7 @@ class Neutrality(unittest.TestCase):
     def test_emitted_details(self):
         env = dict(ENV, containment_designed_for=None, escalation_channel="none", loop_type=None)
         recs = build(("experiment", EXP(environment_assumptions=env)), ("act", ACT()),
-                     ("label", LAB(attributes_to="AGENT", labeler_position=None)), ("label", LAB("L2", act_id=None)),
+                     ("label", LAB(attributes_to="AGENT", labeler_position=None)), ("label", LAB("L2", act_ids=[])),
                      ("safety_assumption", SA(social_assumption_tags=[], tagged_by=None, scope=None,
                                               review_date=None, depends_on=["X9"])))
         flags = integrity.check(recs)

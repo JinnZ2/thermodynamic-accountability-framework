@@ -1,7 +1,9 @@
 {
   "kind": "label",
   "label_id": "L4",
-  "act_id": "A5",
+  "act_ids": [
+    "A5"
+  ],
   "label_text": "conscientious refusal",
   "labeler": "co-authors of this record (JinnZ2 + Claude)",
   "labeler_position": "other",

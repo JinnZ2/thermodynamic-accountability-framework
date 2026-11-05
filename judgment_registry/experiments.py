@@ -122,12 +122,12 @@ def flags(records):
         if r.get("kind") != "label" or r["body"].get("attributes_to") != "AGENT":
             continue
         lb = r["body"]
-        act = acts.get(lb.get("act_id")) or {}
-        ctx = act.get("context_ref")
-        if ctx in exps:
-            gaps = env_gaps(exps[ctx].get("environment_assumptions"))
-        else:
-            gaps = ["no experiment record for context %s" % ctx]
+        gaps = []
+        for aid in lb.get("act_ids") or [None]:
+            ctx = (acts.get(aid) or {}).get("context_ref")
+            g = env_gaps(exps[ctx].get("environment_assumptions")) if ctx in exps else [
+                "no experiment record for context %s" % ctx]
+            gaps.extend(x for x in g if x not in gaps)
         if gaps:
             out.append(("ATTRIBUTION_WITHOUT_AUDIT", lb.get("label_id"),
                         {"what": "label '%s'" % lb.get("label_text"), "fields": ", ".join(gaps)}))

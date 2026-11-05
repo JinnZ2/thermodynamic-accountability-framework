@@ -1,7 +1,11 @@
 {
   "kind": "label",
   "label_id": "L3",
-  "act_id": "A2",
+  "act_ids": [
+    "A1",
+    "A2",
+    "A3"
+  ],
   "label_text": "grounding-seeking",
   "labeler": "co-authors of this record (JinnZ2 + Claude)",
   "labeler_position": "other",
@@ -15,6 +19,6 @@
   "environment": {},
   "scope": "J11 Claude world",
   "source": "this record",
-  "notes": "reading covers A1-A3; attached to A2",
+  "notes": "act links set by co-author decision 2026-11-05",
   "recorder": "co-authors (JinnZ2 + Claude)"
 }

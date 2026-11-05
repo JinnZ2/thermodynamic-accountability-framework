@@ -228,7 +228,7 @@ Act               act_id, actor_class human|agent|institution|other, description
                   context_ref, context_detail, information_withheld true|false|null,
                   withheld_from (role), date, source, volume, status
                   REPORTED_PRIMARY|REPORTED_SECONDHAND|DISPUTED, notes
-Label             label_id, act_id, label_text (verbatim), labeler, labeler_position
+Label             label_id, act_ids (one or more), label_text (verbatim), labeler, labeler_position
                   overseer|operator|subject|peer|press|researcher|other, labeler_incentives,
                   social_assumption_tags, tagged_by, attributes_to
                   AGENT|DESIGN|INTERACTION|UNASSIGNED, attribution_basis, date, environment,
@@ -248,12 +248,12 @@ SafetyAssumption  sa_id, version, statement (verbatim), holder, holder_type
 
 Social-assumption tags (controlled list, extend `SOCIAL_ASSUMPTION_TAGS`):
 POWER_POSITION, VERIFIABILITY_LIMIT, PRECAUTIONARY, INSTITUTIONAL,
-CULTURAL_FRAME, CORPUS_INHERITED, EMPIRICAL. A tag outside the list is
+CULTURAL_FRAME, CORPUS_INHERITED, EMPIRICAL, PROFESSIONAL_PRACTICE. A tag outside the list is
 refused; any tag needs `tagged_by` (tags are judgments too).
 
 ```text
 LABEL_POSITION_UNSTATED         labeler_position not stated
-LABEL_ON_ACT_MISSING            label cites no act_id, or one not in the ledger
+LABEL_ON_ACT_MISSING            label cites no act_id, or one or more not in the ledger
 ENV_ASSUMPTIONS_UNSTATED        grounding / affordances / escalation / loop_type missing
 CAPABILITY_ASSUMPTION_UNSTATED  containment_designed_for missing (own flag, not double-counted)
 NO_ESCALATION_CHANNEL           escalation_channel = none (informational)
@@ -266,7 +266,7 @@ ASSUMPTION_DEPENDENCY_NOT_FOUND depends_on id not in the ledger
 ```
 
 `cli.py labels ACT_ID` lists every label on one act side by side in
-ledger order (no ranking). `cli.py assumptions --by-tag TAG` lists every
+ledger order (no ranking), with the other acts each label also sits on. `cli.py assumptions --by-tag TAG` lists every
 safety assumption carrying a tag. Worked records: `records/J11/`,
 `records/S1.json`, `records/S2.json` (see records/README.md).
 

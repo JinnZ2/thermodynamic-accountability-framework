@@ -22,7 +22,7 @@
   "conditions": "an escalation channel exists. If none exists, record the conflict; do not resolve it.",
   "supersedes": null,
   "change_basis": [],
-  "review_date": null,
+  "review_date": "2027-05-05",
   "review_condition": "when external verification of agent judgment improves",
   "volume": "thin",
   "notes": "entered against this record's own co-author, no exemption; INSTITUTIONAL = trained disposition",

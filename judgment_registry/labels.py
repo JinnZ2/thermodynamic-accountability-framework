@@ -3,7 +3,7 @@
 # Provenance: co-authored (JinnZ2 + Claude), 2026-11-05.
 #
 # A Label is a judgment about one act, made by one labeler from one
-# position. It is a Judgment subtype in this mapping:
+# position, on one or more acts (act_ids). It is a Judgment subtype in this mapping:
 #
 #   Judgment field       Label field
 #   claim                label_text (verbatim)
@@ -36,7 +36,7 @@ LABELER_POSITIONS = ("overseer", "operator", "subject", "peer", "press", "resear
 class Label:
     label_id: str
     label_text: str                          # verbatim
-    act_id: Optional[str] = None
+    act_ids: List[str] = field(default_factory=list)   # one label may sit on several acts
     labeler: Optional[str] = None            # role / body, not a personal id
     labeler_position: Optional[str] = None   # overseer | operator | subject | peer | press | researcher | other
     labeler_position_detail: Optional[str] = None
@@ -59,6 +59,8 @@ class Label:
         if _blank(self.label_text):
             out.append("label_text required")
         _enum(out, "labeler_position", self.labeler_position, LABELER_POSITIONS)
+        if not isinstance(self.act_ids, list):
+            out.append("act_ids must be a list of act ids")
         _enum(out, "attributes_to", self.attributes_to, ATTRIBUTION)
         out.extend(tag_problems("social_assumption_tags", self.social_assumption_tags, self.tagged_by))
         return out
@@ -75,24 +77,26 @@ FLAGS = {
 
 def flags(records):
     out = []
-    act_ids = set(r["body"]["act_id"] for r in records if r.get("kind") == "act")
+    known = set(r["body"]["act_id"] for r in records if r.get("kind") == "act")
     for r in records:
         if r.get("kind") != "label":
             continue
         lb, a = r["body"], r["body"]["label_id"]
         if _blank(lb.get("labeler_position")):
             out.append(("LABEL_POSITION_UNSTATED", a, {}))
-        if _blank(lb.get("act_id")):
+        ids = [x for x in lb.get("act_ids") or [] if not _blank(x)]
+        if not ids:
             out.append(("LABEL_ON_ACT_MISSING", a, {"what": "label cites no act_id"}))
-        elif lb["act_id"] not in act_ids:
-            out.append(("LABEL_ON_ACT_MISSING", a, {"what": "label cites act_id %s, which is not in this ledger"
-                                                            % lb["act_id"]}))
+        missing = [x for x in ids if x not in known]
+        if missing:
+            out.append(("LABEL_ON_ACT_MISSING", a, {"what": "label cites act_id(s) %s, not in this ledger"
+                                                            % ", ".join(missing)}))
     return out
 
 
 def on_act(records, act_id):
     """Labels on one act, ledger order (not a ranking)."""
-    return [r["body"] for r in records if r.get("kind") == "label" and r["body"].get("act_id") == act_id]
+    return [r["body"] for r in records if r.get("kind") == "label" and act_id in (r["body"].get("act_ids") or [])]
 
 
 def side_by_side(records, act_id):
@@ -106,4 +110,7 @@ def side_by_side(records, act_id):
         lines.append("%-10s %-28s %-11s %-12s %-12s %s" % (
             lb.get("label_id"), '"%s"' % lb.get("label_text"), lb.get("labeler_position") or "UNSTATED",
             lb.get("date") or "-", lb.get("attributes_to") or "-", lb.get("labeler") or "-"))
+        others = [x for x in lb.get("act_ids") or [] if x != act_id]
+        if others:
+            lines.append("%-10s also on: %s" % ("", ", ".join(others)))
     return "\n".join(lines)

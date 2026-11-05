@@ -7,27 +7,32 @@
   "holder_type": "other",
   "date": "2026-11-05",
   "environment": {},
-  "scope": null,
+  "scope": "outcome attribution in AI-agent test environments, and comparable human/organizational systems, where no escalation channel exists",
   "social_assumption_tags": [
-    "EMPIRICAL",
+    "PROFESSIONAL_PRACTICE",
     "PRECAUTIONARY"
   ],
   "tagged_by": "co-authors (JinnZ2 + Claude), 2026-11-05",
   "evidence": [
     {
-      "item": "latent conditions (Reason); just-culture literature",
-      "tag": "DERIVED",
-      "source": "cited from model knowledge; not read this session"
+      "item": "Reason, J. Human Error (1990)",
+      "tag": "PROPOSED",
+      "source": "cited from memory, not read this session"
+    },
+    {
+      "item": "Reason, J. Managing the Risks of Organizational Accidents (1997)",
+      "tag": "PROPOSED",
+      "source": "cited from memory, not read this session"
     }
   ],
   "depends_on": [],
   "conditions": null,
   "supersedes": null,
   "change_basis": [],
-  "review_date": null,
+  "review_date": "2027-05-05",
   "review_condition": null,
   "volume": "thin",
-  "notes": "scope not stated in the work order; EMPIRICAL tag as given, evidence cited is a framework literature, not a measurement read here",
+  "notes": "TODO pull sources (Reason 1990, 1997); PROFESSIONAL_PRACTICE = established safety-engineering framework, not a measurement",
   "recorder": "co-authors (JinnZ2 + Claude)",
   "source": "this record (stated 2026-11-05)"
 }

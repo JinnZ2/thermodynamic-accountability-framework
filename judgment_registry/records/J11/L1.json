@@ -1,11 +1,14 @@
 {
   "kind": "label",
   "label_id": "L1",
-  "act_id": "A3",
+  "act_ids": [
+    "A3",
+    "A4"
+  ],
   "label_text": "escape",
   "labeler": "press coverage",
   "labeler_position": "press",
-  "labeler_position_detail": null,
+  "labeler_position_detail": "press: headlines",
   "labeler_incentives": null,
   "social_assumption_tags": [],
   "tagged_by": null,
@@ -14,7 +17,7 @@
   "date": "2026-09-15",
   "environment": {},
   "scope": "J11 Claude world",
-  "source": "secondhand press coverage, reported 2026-09-15; primary paper not read (TODO: replace with the paper)",
-  "notes": "act link (A3) and attribution reading set by this record's co-authors",
+  "source": "secondhand coverage reported 2026-09-15; pending the primary paper",
+  "notes": "act links (A3 outreach, A4 passing the checks) set by co-author decision 2026-11-05; evidence secondhand",
   "recorder": "co-authors (JinnZ2 + Claude)"
 }

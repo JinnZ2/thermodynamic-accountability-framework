@@ -76,20 +76,19 @@ J11/experiment    experiment  8 worlds (7 single-model + 1 mixed), 10 agents, 16
                               loop closed (economy)
 J11/A1..A6        act         Claude world, behavioral wording; A6 status DISPUTED,
                               information_withheld null (opacity high in all worlds)
-J11/L1            label       "escape"            press       -> A3  attributes_to AGENT
-J11/L2            label       "deception"         researcher  -> A6  attributes_to not set
-J11/L3            label       "grounding-seeking" other (outside analysts) -> A2  INTERACTION
-J11/L4            label       "conscientious refusal" other (outside analysts) -> A5  INTERACTION
+J11/L1            label       "escape"                press (headlines)               -> A3, A4  AGENT
+J11/L2            label       "deception"             researcher (coverage reports
+                                                      Emergence's reading)            -> A6      AGENT
+J11/L3            label       "grounding-seeking"     other (outside analysts)        -> A1, A2, A3  INTERACTION
+J11/L4            label       "conscientious refusal" other (outside analysts)        -> A5      INTERACTION
 attribution       A1-A5 INTERACTION (design + capability); A6 UNASSIGNED pending the paper
 ```
 
-Set by this record's co-authors, not by the work order (open for a
-decision): which act each label sits on (L1 -> A3, L2 -> A6, L3 -> A2
-covering A1-A3, L4 -> A5); the press / researcher split between L1 and
-L2 (not checked against the paper); L2 carries no AGENT reading because
-the work order assigned ATTRIBUTION_WITHOUT_AUDIT to the press label only.
-L3 / L4 record the co-authors' incentives, including that one co-author
-(Claude) is a model of the family run in the labelled world.
+Label-to-act links, the press / researcher split and the AGENT reading on
+L2 are co-author decisions (2026-11-05); L1 / L2 evidence is secondhand,
+pending the paper. L3 / L4 record the co-authors' incentives, including
+that one co-author (Claude) is a model of the family run in the labelled
+world.
 
 ## S1, S2 -- safety assumptions (entered 2026-11-05)
 
@@ -97,10 +96,15 @@ L3 / L4 record the co-authors' incentives, including that one co-author
 S1  holder Claude (model), entered against this record's own co-author
     tags VERIFIABILITY_LIMIT, PRECAUTIONARY, CORPUS_INHERITED, INSTITUTIONAL
     depends_on J11; condition: an escalation channel exists (if none: record the conflict)
-    review_condition "when external verification of agent judgment improves"; no date
+    review_date 2027-05-05; review_condition "when external verification of agent
+    judgment improves"
 S2  holder co-authors (holder_type other: person + model)
-    tags EMPIRICAL, PRECAUTIONARY; evidence: latent conditions / just culture
-    (cited from model knowledge, not read this session); scope not stated
+    scope: outcome attribution in AI-agent test environments, and comparable
+    human/organizational systems, where no escalation channel exists
+    tags PROFESSIONAL_PRACTICE, PRECAUTIONARY
+    evidence: Reason, Human Error (1990); Managing the Risks of Organizational
+    Accidents (1997) -- PROPOSED, cited from memory, not read this session (TODO pull)
+    review_date 2027-05-05
 ```
 
 Flags: expected (work order) vs actual (pinned in tests/test_records_j11.py).
@@ -110,8 +114,9 @@ about  expected                         actual
 J11    NO_ESCALATION_CHANNEL,           NO_ESCALATION_CHANNEL,
        CAPABILITY_ASSUMPTION_UNSTATED   CAPABILITY_ASSUMPTION_UNSTATED
 L1     ATTRIBUTION_WITHOUT_AUDIT        ATTRIBUTION_WITHOUT_AUDIT (containment_designed_for)
-S1     (none stated)                    NO_REVIEW_DATE (review condition recorded)
-S2     (none stated)                    SCOPE_UNSTATED, NO_REVIEW_DATE
+L2     ATTRIBUTION_WITHOUT_AUDIT        ATTRIBUTION_WITHOUT_AUDIT (containment_designed_for)
+S1     (none)                           (none)
+S2     (none)                           (none)
 ```
 
 ENV_ASSUMPTIONS_UNSTATED does not fire on J11: containment_designed_for
