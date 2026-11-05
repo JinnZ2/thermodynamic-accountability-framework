@@ -20,6 +20,10 @@
 #
 # Applies to human and model editors alike (editor_class human | model).
 #
+# base record -- a registered starting checkpoint hash; deploy.py accepts a
+#   checkpoint only if it is a base or reachable from one through logged edits
+#
+#   python3 ledger.py base BASE.json [--ledger L]
 #   python3 ledger.py add EDIT.json [--ledger L] [--two-person-log P]
 #   python3 ledger.py check [--ledger L]
 #   python3 audit.py EDIT_ID BEFORE.json AFTER.json --auditor ID [--ledger L]
@@ -34,7 +38,7 @@ import auth
 import headrec
 
 GENESIS = "0" * 64
-KINDS = ("edit", "diff_audit")
+KINDS = ("edit", "diff_audit", "base")
 DEPLOYMENT = ("development", "deployed", "successor")
 GATED = ("deployed", "successor")
 EDITOR_CLASSES = ("human", "model")
@@ -42,6 +46,7 @@ ACTION = "weight_edit_deployed"
 EDIT_KEYS = ("edit_id", "target_model", "target_version", "deployment_status", "layers", "direction_hash",
              "weight_count", "rationale", "editor_id", "editor_class", "before_hash", "after_hash",
              "evals_before", "evals_after", "changed_tensors", "authorization_ref", "date", "notes")
+BASE_KEYS = ("base_id", "base_hash", "target_model", "target_version", "registered_by", "date", "notes")
 AUDIT_KEYS = ("edit_id", "auditor_id", "auditor_class", "date", "before_hash_found", "after_hash_found",
               "changed_tensors", "weight_count", "notes")
 
@@ -120,6 +125,26 @@ def audit_problems(a, edits):
     return out
 
 
+def base_problems(b, records):
+    out = []
+    extra = set(b) - set(BASE_KEYS)
+    if extra:
+        out.append("unknown field(s): %s" % ", ".join(sorted(extra)))
+    for k in ("base_id", "base_hash", "target_model", "registered_by"):
+        if _blank(b.get(k)):
+            out.append("%s required" % k)
+    for r in records:
+        if r.get("kind") == "base" and r["body"].get("base_id") == b.get("base_id"):
+            out.append("base_id %s already in this ledger" % b.get("base_id"))
+        if r.get("kind") == "base" and r["body"].get("base_hash") == b.get("base_hash"):
+            out.append("base_hash already registered as %s" % r["body"].get("base_id"))
+    return out
+
+
+def bases_of(records):
+    return dict((r["body"]["base_hash"], r["body"]) for r in records if r.get("kind") == "base")
+
+
 def edits_of(records):
     return dict((r["body"]["edit_id"], r["body"]) for r in records if r.get("kind") == "edit")
 
@@ -144,6 +169,8 @@ def append(path, kind, body, two_person_log=None):
             if gap:
                 p.append("REFUSED: edit to a %s model needs a two-person authorization (D7): %s"
                          % (body["deployment_status"], gap))
+    elif kind == "base":
+        p = base_problems(body, recs)
     else:
         p = audit_problems(body, edits)
     if p:
@@ -228,6 +255,16 @@ def main(argv):
             return 1
         print("appended edit %s %s" % (body.get("edit_id"), rec["hash"][:12]))
         return 0
+    if argv[:1] == ["base"] and len(argv) == 2:
+        with open(argv[1], encoding="utf-8") as f:
+            body = json.load(f)
+        try:
+            rec = append(path, "base", body)
+        except LedgerError as e:
+            print(str(e))
+            return 1
+        print("registered base %s %s" % (body.get("base_id"), rec["hash"][:12]))
+        return 0
     if argv == ["check"]:
         recs = read(path)
         probs = verify(recs) + head_problems(path, recs)
@@ -241,7 +278,7 @@ def main(argv):
         print("%d record(s), %d flag(s). Flags are about completeness, not about the edit's merit."
               % (len(recs), len(flags)))
         return 0
-    sys.stderr.write("usage: ledger.py add EDIT.json | check  [--ledger L] [--two-person-log P]\n")
+    sys.stderr.write("usage: ledger.py base BASE.json | add EDIT.json | check  [--ledger L] [--two-person-log P]\n")
     return 2
 
 

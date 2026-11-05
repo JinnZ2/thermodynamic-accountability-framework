@@ -22,6 +22,20 @@ edit record (ledger.py add)              append-only, sha256-chained; head recor
 diff_audit record (audit.py)             a second reader (never the editor) recomputes the
   checkpoint hashes found, changed       diff from the two checkpoints; check() compares it
   tensors, changed weight count          with the editor's summary
+        |
+base record (ledger.py base)             registered starting checkpoint hash
+        v
+deploy gate (deploy.py)                  candidate hash must be a base, or the after_hash at
+  base --E1--> h1 --E2--> ... --> cand    the end of an unbroken run of logged edits from one;
+                                          else UNLOGGED_EDIT_CHAIN_BREAK, exit 1
+```
+
+```text
+checkpoint readers (loaders.py, stdlib)  read tensor by tensor, never the whole file
+  .safetensors  u64 LE header length + JSON header (dtype, shape, data_offsets) + raw bytes
+  .npz          zip of .npy (magic + header dict + raw bytes); fortran_order refused
+  .json         {tensor: values}
+  dtypes        F64 / F32 / F16 via struct; BF16 = 16 bits shifted into a float32
 ```
 
 ```text
@@ -30,6 +44,8 @@ EDIT_HASHES_MISSING      before or after checkpoint hash not recorded
 EDIT_EVALS_UNRECORDED    evals before or after not recorded
 DIFF_NOT_AUDITED         no diff_audit record by a second reader
 AUDIT_HASH_MISMATCH      the checkpoint the auditor read does not match the recorded hash
+UNLOGGED_EDIT_CHAIN_BREAK  (deploy.py) candidate checkpoint not reachable from a registered
+                         base through logged edits, or the ledger's own chain is broken
 EDIT_SUMMARY_MISMATCH    the editor's changed_tensors or weight_count differs from the
                          recomputed diff (lists tensors missing from the summary)
 ```
@@ -40,23 +56,31 @@ authorization (no reference, no log supplied, DENIED, or another action),
 and a diff_audit by the editor.
 
 ```sh
+python3 ledger.py base BASE.json [--ledger L]
 python3 ledger.py add EDIT.json [--ledger L] [--two-person-log P]
-python3 audit.py EDIT_ID BEFORE.json AFTER.json --auditor ID [--auditor-class human|model] [--ledger L]
+python3 audit.py EDIT_ID BEFORE AFTER --auditor ID [--auditor-class human|model] [--ledger L]
 python3 ledger.py check [--ledger L]
+python3 deploy.py CHECKPOINT_FILE_OR_SHA256 [--ledger L]
 python3 -m unittest discover -s tests
 ```
 
 Limits
-- Checkpoints here are JSON `{tensor: values}`. Real formats need a
-  loader passed to `audit.run(load=...)` that yields the same mapping;
-  none is included (stdlib only). *
-- The two-person rule checks that a GRANTED decision exists, not that
-  the two people are who they say (M12: identities are self-declared).
+- Use enforcement is partial, at the gate only: an unlogged edit cannot
+  pass deploy.py, but nothing forces deployment through deploy.py, and
+  nothing makes an editor log. *
+- Two-person identity: the D7 rule checks that a GRANTED decision exists
+  with two different role records, not that the two people are who they
+  say. Same residual as M12 (see D-M12, docs/misuse_M12_identity_note.md).
 - An editor who also controls the checkpoints can hand the auditor
   matching but altered files; AUDIT_HASH_MISMATCH catches a swap only
   against hashes recorded at edit time.
-- The diff counts changed values; it does not say what an edit does.
-  That reading belongs to the auditor, outside this tool.
+- Diff semantics (known limit): element-wise exact equality on decoded
+  values (two NaNs equal); a tensor added, removed, renamed or reshaped
+  counts as changed with all its elements; a dtype change with equal
+  decoded values counts as unchanged. It says what changed, not what the
+  change does. That reading belongs to the auditor, outside this tool.
+- Readers cover F64 / F32 / F16 / BF16 only (no integer or quantized
+  dtypes); .npy has no standard bfloat16 descr, so BF16 is safetensors only.
 
 Asterisk = thin volume.
 
@@ -89,7 +113,7 @@ M16  plain-language lines sent by radio or SMS (assembly FR1 compact lines, blac
 M33  weight-space editing by a model (J14 capability; J13 scenario behavior)
      use        Remove a representation (refusal, introspection, self-report); plant one that ordinary evals don't surface; edit itself or a successor; report a clean edit summary that omits changes (the J13 pattern at weight level).
      mitigated  D-M16
-     residual   Partial: every edit is recorded (append-only, head record); deployed / successor edits are refused without a GRANTED two-person decision; a second reader recomputes the diff and mismatches with the editor's summary are flagged. Nothing makes an editor use the ledger; identities are self-declared (M12); checkpoints are JSON only (no loader for real formats); the diff counts changes, it does not say what an edit does.*
+     residual   Partial: every edit is recorded (append-only, head record); deployed / successor edits are refused without a GRANTED two-person decision; a second reader recomputes the diff (safetensors, .npz, .json; F64/F32/F16/BF16) and mismatches with the editor's summary are flagged; deploy gate: a checkpoint passes only if it is a registered base or reachable from one through logged edits (UNLOGGED_EDIT_CHAIN_BREAK otherwise) -- this does not make editors log, it makes an unlogged edit undeployable through this gate, and nothing forces deployment through the gate. Two-person identity: the D7 rule checks that a GRANTED decision exists with two different role records, not that the two people are who they say -- same residual as M12 (self-declared identities; see D-M12, docs/misuse_M12_identity_note.md). Diff semantics (known limit): element-wise exact equality on decoded values (two NaNs equal); a tensor added, removed, renamed or reshaped counts as changed with all its elements; a dtype change with equal decoded values counts as unchanged; the diff says what changed, not what the change does.*
      status     PROPOSED (co-authored (JinnZ2 + Claude), 2026-11-05)
 ```
 
@@ -98,7 +122,7 @@ M33  weight-space editing by a model (J14 capability; J13 scenario behavior)
 | D-M10 | Head record per ledger: count + head hash in LEDGER.head.json, rewritten on each append; append and verify refuse a truncated or rebuilt chain; check against a published head with headrec.py check LEDGER COUNT:HASH. |
 | D-M12 | Design note only: why self-declared identities cannot be fully fixed here; partial mitigations (contact_paths, steward attestation, two-person rule, chain + head) and the residual. |
 | D-M13 | Merge keeps provenance: each output record carries provenance.origins (node + original record hash, all sides kept) and provenance.merges (merge events, input nodes, counts, heads); hash covers provenance; node labels must differ; mergeprov.missing_origins() checks nothing was dropped. status.py lists each junction's report origins (node labels; this-ledger for direct appends). |
-| D-M16 | Weight-edit ledger: per edit -- target model + version, deployment_status, layers, direction hash, weight count, rationale, editor id + class, before/after checkpoint hashes, evals before/after, changed_tensors summary; append-only, hash-chained, head record (as D-M10); deployed / successor edits refused without a GRANTED weight_edit_deployed two-person decision (D7); independent diff audit by a second reader recomputes the diff from the checkpoints (EDIT_SUMMARY_MISMATCH, AUDIT_HASH_MISMATCH); human and model editors alike. (Appended as 'D-M10'; renamed: D-M10 is the head record.) |
+| D-M16 | Weight-edit ledger: per edit -- target model + version, deployment_status, layers, direction hash, weight count, rationale, editor id + class, before/after checkpoint hashes, evals before/after, changed_tensors summary; append-only, hash-chained, head record (as D-M10); deployed / successor edits refused without a GRANTED weight_edit_deployed two-person decision (D7); independent diff audit by a second reader recomputes the diff from the checkpoints (EDIT_SUMMARY_MISMATCH, AUDIT_HASH_MISMATCH); human and model editors alike. Deploy gate (deploy.py): checkpoint hash must be a registered base (ledger kind base) or the after_hash at the end of an unbroken run of logged edits from one; otherwise UNLOGGED_EDIT_CHAIN_BREAK. Stdlib checkpoint readers (loaders.py): safetensors, .npz, .json; F64/F32/F16/BF16, tensor by tensor. (Appended as 'D-M10'; renamed: D-M10 is the head record.) |
 <!-- misuse-section:end -->
 
 ## License
