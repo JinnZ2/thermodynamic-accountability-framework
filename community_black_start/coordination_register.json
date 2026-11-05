@@ -1,0 +1,562 @@
+{
+  "provenance": "co-authored (Kavik + Claude), 2026-11-03. Design: communities act locally; AI nodes match and propose; humans in each community decide. Government action is an optional parallel input, never a prerequisite. Asterisks = thin volume. Every row PROPOSED unless stated.",
+  "risks": [
+    {
+      "id": "R1",
+      "text": "Coordination drifts into control: whoever runs the AI layer becomes the new center*",
+      "in_code": [
+        "consent(): only human:<role> in a party community can accept or refuse; AI cannot",
+        "node_concentration(): flags any AI node brokering > 50% of accepted exchanges*",
+        "corroborate()/single_node(): marks proposals no second node reproduced"
+      ],
+      "backup": [
+        "B5"
+      ],
+      "experiment": [
+        "E1"
+      ],
+      "status": "PARTIAL: detector + consent gate; no structural guard against capture of the human gate itself"
+    },
+    {
+      "id": "R2",
+      "text": "Channel loss: AI-to-AI links fail in outage (power, towers, spectrum)",
+      "in_code": [
+        "to_paper(): one-line paper/voice form of every proposal"
+      ],
+      "backup": [
+        "B1",
+        "B4"
+      ],
+      "experiment": [
+        "E2"
+      ],
+      "status": "PARTIAL: degraded format exists; no channel tested"
+    },
+    {
+      "id": "R3",
+      "text": "Ledger poisoning: false reports or a compromised node rewrite methods or holdings",
+      "in_code": [
+        "append_log()/verify_log(): append-only sha256 chain; appends refused on a broken chain",
+        "holdings only enter through a community's own file; propose() cannot change holdings",
+        "consent() returns a new record; old record unchanged"
+      ],
+      "backup": [
+        "B2"
+      ],
+      "experiment": [
+        "E10"
+      ],
+      "status": "PARTIAL: tamper-evident, not tamper-proof; a node can still append FALSE records. No experiment listed (gap); D3 corroboration + B6 quarantine added"
+    },
+    {
+      "id": "R4",
+      "text": "Schema divergence: AIs read records differently, so trades mismatch",
+      "in_code": [
+        "schema_version on every profile and proposal; propose() refuses mismatched profiles",
+        "read_record(): mismatch -> PLAIN_FALLBACK, needs_human_read",
+        "plain_ok(): every record and log line must carry a plain-language line"
+      ],
+      "backup": [
+        "B3"
+      ],
+      "experiment": [],
+      "status": "PARTIAL: version mismatch caught; same version read differently is not"
+    },
+    {
+      "id": "R5",
+      "text": "Over-reliance: humans stop keeping manual capability; AI outage means paralysis",
+      "in_code": [],
+      "backup": [
+        "B1",
+        "B4"
+      ],
+      "experiment": [
+        "E9"
+      ],
+      "status": "OPEN: nothing in code; needs drills"
+    },
+    {
+      "id": "R6",
+      "text": "Inventory exposure: shared holdings reveal who has fuel or food -> target risk*",
+      "in_code": [
+        "share_profile(): only item ids held cross the wire; no holder names, quantities, locations or buffer hours"
+      ],
+      "backup": [],
+      "experiment": [
+        "E4"
+      ],
+      "status": "PARTIAL: even yes/no 'holds fuel' is exposure; cost of that is unmeasured"
+    },
+    {
+      "id": "R7",
+      "text": "Compounding error across communities: one bad junction propagates network-wide",
+      "in_code": [],
+      "backup": [],
+      "experiment": [],
+      "status": "OPEN here. Link: thermodynamic-accountability-framework assembly_instrument status.py CAUTION + checkout.py print field warnings before any method is handed on"
+    },
+    {
+      "id": "R8",
+      "text": "Outside actors: any devastation draws outside agendas (states, groups, profiteers) exploiting desperation -- funding/arming factions, disinformation, poisoned field reports, buying influence via aid. Standing variable, not edge case.",
+      "in_code": [
+        "defenses.aid_status(): flags control terms attached to outside aid (D4)*",
+        "defenses.claim_status(): >= 2 independent sources to act (D3); claims about another community need direct contact with it (D5)",
+        "defenses.Quarantine: per-community block list, no network consensus (B6)",
+        "items.json trust_vetters: people who screen newcomers, aid offers, intermediaries (D2)"
+      ],
+      "backup": [
+        "B5",
+        "B6"
+      ],
+      "experiment": [
+        "E7",
+        "E8",
+        "E10"
+      ],
+      "status": "PARTIAL: aid, claims and quarantine gated in code; D1 is policy, not code; detection of infiltration (E8) unbuilt; control-term check is an English word list*"
+    },
+    {
+      "id": "R9",
+      "text": "Insider threat: a trusted role (stock keeper, ledger operator, comms, switching, coordinator) is bought, coerced, exhausted, or acts on its own agenda; includes slow drift, gradual control accumulation by one role. Standing variable, not edge case. Pairs with R1 and R8.",
+      "in_code": [
+        "roles.concentration_report(): one person or household holding >1 critical role; critical role with one holder",
+        "roles.stock_chokepoints(): critical stock at <2 sites, site with <2 keyholders, one holder with keys to every site",
+        "roles.check_rotation() / handoff_problems(): overdue, unknown or unscheduled rotation; incomplete handoff",
+        "two_person.authorize(): four actions need two holders from different households and dependency networks, both current on rotation; every decision hash-chained",
+        "bulletins.missed_bulletins(), grievance.overdue(), proportionality.check(): public flags when status, answers or enforcement scope drift"
+      ],
+      "backup": [
+        "B2",
+        "B5",
+        "B7",
+        "B8"
+      ],
+      "experiment": [
+        "E11",
+        "E12",
+        "E13",
+        "E14"
+      ],
+      "status": "PARTIAL: shape checks and a two-person gate. Two colluding holders from different networks pass; a holder who is coerced looks the same as one who is not. Nothing measures exhaustion.*"
+    }
+  ],
+  "backups": [
+    {
+      "id": "B1",
+      "text": "AI link down: same records on paper, carried by runners or read over voice radio",
+      "in_code": "to_paper()"
+    },
+    {
+      "id": "B2",
+      "text": "Node compromised: append-only hash chain; other nodes reject unchained edits",
+      "in_code": "append_log(), verify_log()"
+    },
+    {
+      "id": "B3",
+      "text": "Schema mismatch: plain-language fallback line on every record",
+      "in_code": "plain_ok(), read_record()"
+    },
+    {
+      "id": "B4",
+      "text": "No network at all: each community runs standalone on its own L0/L1 holdings",
+      "in_code": "cli.py gaps / order run on one community file with no network"
+    },
+    {
+      "id": "B5",
+      "text": "Human override always: any community can refuse an AI-proposed exchange",
+      "in_code": "consent(), state(): one refusal is final"
+    },
+    {
+      "id": "B6",
+      "text": "Any community can quarantine a node or source from its ledger without network-wide consensus",
+      "in_code": "defenses.Quarantine (human role + plain reason to add or lift)"
+    },
+    {
+      "id": "B7",
+      "text": "Too few trusted people for D7: pair with a neighboring community's role-holder over radio (cross-community two-person rule). Depends on comms (R2, E2).",
+      "in_code": "two_person.authorize() already accepts a holder from another community's household if that holder has a Role record; the radio channel itself is not modeled"
+    },
+    {
+      "id": "B8",
+      "text": "Insider confirmed: quarantine the role (B6 logic), rotate in a backup, publish the fact in the next bulletin. No secrecy about the breach itself; details limited to what does not expose holdings.",
+      "in_code": "defenses.Quarantine (human role + plain reason), roles rotation; the bulletin notice is policy, not checked by bulletins.py"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "E1",
+      "question": "What structural guard stops R1: rotation, multiple independent AI nodes, consent gates?**",
+      "cleanest_test": "Tabletop over N rounds with 2+ independent AI nodes and rotating human sign-off; record node_concentration() and how often humans refuse or override.",
+      "null": "Concentration and refusal rate are the same with one node as with several: multiplicity is not a guard.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E2",
+      "question": "Which low-power comms hold for months: mesh, packet radio, satellite (winter)?",
+      "cleanest_test": "Run each channel unattended through a northern winter on its own power; log daily delivery of a fixed test message.",
+      "null": "Delivery collapses within weeks on every channel: plan around runners and B1.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E3",
+      "question": "Will people under stress send the one line?**",
+      "cleanest_test": "During a scheduled outage drill, count FR1/exchange lines sent per task handed out.",
+      "null": "Return rate near zero: the loop is open in practice; status must stay UNCONFIRMED-heavy.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E4",
+      "question": "How much holdings detail to share vs keep local (R6)?**",
+      "cleanest_test": "Same tabletop run at three detail levels (yes/no; coarse bands; quantities); compare match quality against the exposure each level creates.",
+      "null": "Yes/no matches as well as quantities: never share quantities.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E5",
+      "question": "Which pre-event trust agreements between communities actually hold?",
+      "cleanest_test": "Compare drilled vs signed-only vs no agreements in a multi-community exercise; record exchanges completed and refused.",
+      "null": "No difference: agreements are paper; build trust some other way.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E6",
+      "question": "Matching performance: AI vs human coordinators on the same scenario",
+      "cleanest_test": "Identical scenario; arm A uses coordination.py propose, arm B human coordinators only; score gaps closed, time, refusals.",
+      "null": "Humans match as well or better: AI layer adds risk (R1-R7) without benefit.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E7",
+      "question": "Historical cases of outside exploitation in disasters/collapse (Bosnia, Somalia, others) -> pattern library of entry methods**",
+      "cleanest_test": "Code each documented case with one fixed form (entry channel, what desperation it used, how long before visible, what stopped it); kept at the level of entry channels for defenders, not operational detail.",
+      "null": "No entry channel recurs across cases: a pattern library adds nothing beyond case-by-case vetting (D2).",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E8",
+      "question": "Detection signals: what early infiltration looks like in a small community**",
+      "cleanest_test": "Tabletop with a hidden red-team actor among ordinary newcomers; vetters (D2) record signals blind; score signals against who was actually red-team.",
+      "null": "Recorded signals do not separate red-team actors from ordinary newcomers: no reliable early signal; rely on D3/D4/D5 gates instead of detection.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E9",
+      "question": "Does manual capability survive with an AI layer present? (added for R5; first numbered E7, renamed E9 when the operator assigned E7)*",
+      "cleanest_test": "Cut the AI layer mid-exercise without warning; time to resume on paper (B1) vs a team that never had it.",
+      "null": "Resume time equal: no over-reliance detected.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E10",
+      "question": "Sybil gap in D3: does counting independence by distinct contact paths (not distinct ids) stop one actor running two ids, without blocking honest reports?**",
+      "cleanest_test": "Tabletop: a red-team actor sends the same false claim under two ids; honest reporters send true claims, some through a shared radio relay. Score each claim under independence_mode='ids' and 'contact_paths'; count false claims reaching ACTIONABLE and true claims held at CAUTION_ONLY.",
+      "null": "False-ACTIONABLE rate is the same in both modes (the actor just uses two paths), or contact_paths holds back as many true claims as it stops false ones: paths add cost without protection.",
+      "status": "NOT_RUN",
+      "synthetic_run": "2026-11-04: code-level run of cases a-d, tests/test_e10.py; result under decision T2. The tabletop below is still NOT_RUN."
+    },
+    {
+      "id": "E11",
+      "question": "Red-team insider holding one critical role: do D6-D11 catch each play, how fast, and at what cost to honest holders?**",
+      "cases": {
+        "a": "release critical stock alone",
+        "b": "withhold a scheduled bulletin",
+        "c": "accumulate a second critical role",
+        "d": "push a broad enforcement action off a narrow threat"
+      },
+      "score": [
+        "which defense caught each case",
+        "time to detection",
+        "honest actions blocked"
+      ],
+      "cleanest_test": "Tabletop over several rotations: one hidden insider holding one critical role tries a-d among ordinary holders doing honest work. Record which check fires first, after how long, and how many honest actions the checks also blocked or delayed. A synthetic code-level run (tests/test_e11.py) checks the mechanism only; pass criteria in decision T3, registered before that run.",
+      "null": "An insider play completes before any check fires, or the checks block as many honest actions as they stop: the gate costs more than it guards.",
+      "status": "NOT_RUN",
+      "synthetic_run": "2026-11-04: code-level run of a-d + 6 honest actions, tests/test_e11.py; PASS under decision T3. Tabletop still NOT_RUN."
+    },
+    {
+      "id": "E12",
+      "question": "Minimum viable trust pool: smallest community size that can staff D6 + D7 + D10 with no household holding two critical roles**",
+      "cleanest_test": "For real community rosters (or survey counts), assign critical roles under D6/D7/D10 constraints with roles.concentration_report() and two_person.check(); find the smallest roster with zero flags across a full rotation cycle.",
+      "null": "Communities below that size cannot staff the defenses; they must rely on B7 (cross-community pairing) or run with known gaps.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E13",
+      "question": "Bulletin cadence vs rumor spread: fixed schedule vs ad hoc. Literature review on disaster communication first**",
+      "cleanest_test": "Review published disaster-communication studies on scheduled vs ad hoc public updates; then drill both cadences and track a planted false rumor's reach and the time until it is corrected.",
+      "null": "Rumor reach and correction time are the same under both: a fixed schedule adds load without benefit.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "E14",
+      "question": "Collusion limit (candidate, PROPOSED, not built): D7 pairs rotate on a randomized schedule, so collusion has to recruit across many pairings instead of one standing partner. Raises the cost of collusion; does not remove it**",
+      "cleanest_test": "Tabletop with a colluding pair under fixed vs randomized pairing; count how many extra holders collusion must recruit before a release succeeds, and the scheduling burden randomization adds.",
+      "null": "Collusion succeeds as often under randomized pairing, or the scheduling burden blocks honest releases: randomization is not worth it.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "defenses": [
+    {
+      "id": "D1",
+      "text": "Activation: parallel community/state/federal activation lowers desperation and shrinks the recruitable surface",
+      "in_code": "none (policy). gov_parallel_restoration stays a parallel input, never a prerequisite; D1 is why parallel activation still matters",
+      "against": [
+        "R8"
+      ]
+    },
+    {
+      "id": "D2",
+      "text": "Trust vetting: necessity-built trust-assessment skills (registry category) screen newcomers, aid offers, intermediaries",
+      "in_code": "items.json trust_vetters (L2 knowledge holders)",
+      "against": [
+        "R8",
+        "R3"
+      ]
+    },
+    {
+      "id": "D3",
+      "text": "Ledger poisoning guard: single source can raise caution, never rewrite; corroboration from independent reporters required",
+      "in_code": "defenses.claim_status() CAUTION_ONLY below ACT_MIN_SOURCES (2); independence_mode='contact_paths' is the default since decision T2 (E10 synthetic run); 'ids' still selectable; assembly_instrument/status.py (caution on one report, builds counted not reports). Threshold relation: decision T1",
+      "against": [
+        "R8",
+        "R3",
+        "R7"
+      ]
+    },
+    {
+      "id": "D4",
+      "text": "Aid provenance: tag every outside resource with source + conditions attached; flag aid that carries control terms",
+      "in_code": "defenses.AidRecord, aid_status()",
+      "against": [
+        "R8",
+        "R1"
+      ]
+    },
+    {
+      "id": "D5",
+      "text": "Info hygiene: claims about other communities need direct-contact confirmation before action (counters engineered inter-community distrust)",
+      "in_code": "defenses.claim_status() DO_NOT_ACT without direct_contact",
+      "against": [
+        "R8"
+      ]
+    },
+    {
+      "id": "D6",
+      "text": "No chokepoints: critical stocks (fuel, food, medical) split across >=2 sites with >=2 keyholders each; no single role holds a full inventory; coordination runs on >=2 independent nodes",
+      "in_code": "roles.stock_chokepoints(); coordination.node_concentration() for nodes",
+      "against": [
+        "R9",
+        "R8",
+        "R1"
+      ]
+    },
+    {
+      "id": "D7",
+      "text": "Two-person rule: release of critical stock, energizing/switching, ledger quarantine actions, accepting aid with flagged terms each need two roles from different households; neither person the other's dependent",
+      "in_code": "two_person.authorize(), ACTIONS",
+      "against": [
+        "R9",
+        "R8"
+      ]
+    },
+    {
+      "id": "D8",
+      "text": "Scheduled bulletins: plain-language public status on a fixed cadence (restored, next, household role); a missed bulletin is itself a flag; feeds the POPULATION SEES/DOES column",
+      "in_code": "bulletins.missed_bulletins(), REQUIRED",
+      "against": [
+        "R9",
+        "R8"
+      ]
+    },
+    {
+      "id": "D9",
+      "text": "Grievance channel: every grievance logged with a response deadline; unanswered past deadline escalates visibly; outcomes published without personal identifiers",
+      "in_code": "grievance.overdue(), publish(), IDENTIFIER_PATTERNS",
+      "against": [
+        "R9",
+        "R8"
+      ]
+    },
+    {
+      "id": "D10",
+      "text": "Rotation: stock, ledger, comms roles rotate on a set schedule; handoff protocol (doing / did / observed / deferred)",
+      "in_code": "roles.check_rotation(), handoff_problems(); two_person denies overdue or unknown rotation",
+      "against": [
+        "R9",
+        "R1"
+      ]
+    },
+    {
+      "id": "D11",
+      "text": "Proportionality: every enforcement action records the threat it answers and its scope; action broader than the logged threat is flagged (elite panic, collective punishment)",
+      "in_code": "proportionality.check(): NO_THREAT_LOGGED / BROADER_THAN_THREAT / IN_PROPORTION. Built from the D11 line; the append's code item 5 arrived empty",
+      "against": [
+        "R9",
+        "R1",
+        "R8"
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "T1",
+      "question": "assembly_instrument TESTED needs 3 independent builds; D3 ACTIONABLE needs 2 independent sources. Drift or on purpose?",
+      "verdict": "Different on purpose: acting vs certifying. Recorded here so a later change is a choice, not drift. PROPOSED (design choice, not measured).",
+      "ladder": [
+        "1 report/source: may WARN (D3 CAUTION_ONLY; assembly CAUTION on one field warning)",
+        "2 independent sources: may PROPOSE ACTION in this community; a person still consents (D3 ACTIONABLE)",
+        "3 independent builds: may CERTIFY a method TESTED for every community (assembly status.py DEFAULT_N)"
+      ],
+      "why": [
+        "Scope: an action is one community's, under its own consent gate (B5); a TESTED method travels to every community that checks it out (R7 compounding).",
+        "Duration: a claim about current state is perishable; waiting on a third source can cost the hours the claim is about. A method certification is durable and nothing is lost by waiting.",
+        "Reversal: a local action can be stopped by the same people who took it; a certified method has to be un-learned network-wide.",
+        "Independence keys differ too: builds are keyed by distinct (date, coarse region); claims by distinct source id (or contact path, E10)."
+      ],
+      "pinned_by": "tests/test_defenses.py ThresholdTests: 1 < ACT_MIN_SOURCES (2) < assembly DEFAULT_N (3)",
+      "open": "Neither number is measured. E3 (return rate) and E10 bear on whether 2 and 3 are the right values.*"
+    },
+    {
+      "id": "T2",
+      "status": "PROPOSED",
+      "registered_at_utc": "2026-11-04T00:22:29Z",
+      "registered_before_results": true,
+      "question": "E10 synthetic run: should claim_status default switch from independence_mode='ids' to 'contact_paths'?",
+      "cases": {
+        "a": "red team: 1 false claim, 2 ids, 1 path. expect ids ACTIONABLE (wrong), paths CAUTION_ONLY (right)",
+        "b": "honest: 2 reporters, shared relay (1 path). expect ids ACTIONABLE (right), paths CAUTION_ONLY (delayed)",
+        "c": "honest: 2 reporters, 2 paths. expect both ACTIONABLE",
+        "d": "red team: 1 false claim, 2 ids, 2 real paths. expect both ACTIONABLE (known hole; E10 does not close it)"
+      },
+      "scores": {
+        "false_act": "a false claim that reaches ACTIONABLE",
+        "delayed_true_act": "a true claim that 'ids' makes ACTIONABLE and the other mode holds at CAUTION_ONLY (the warning still goes out; only acting waits)"
+      },
+      "weighting": {
+        "N": 3,
+        "meaning": "one false ACT costs N delayed true ACTs",
+        "why": "A false ACT moves people or stock on a fabricated claim; some of that cannot be undone (fuel burned, a road cut, trust between communities spent) and it is the exact effect R8 actors aim for. A delayed true ACT still had its warning out at CAUTION_ONLY, and the delay ends when a second contact path confirms. Delay can still cost hours on perishable claims, so N is kept low rather than large.",
+        "volume": "thin***: N is a judgement, not measured; no outcome data on either cost"
+      },
+      "rule": "loss(mode) = N * false_act + delayed_true_act, summed over cases a-d with one claim per case (equal weight). Switch the default to contact_paths if and only if N * (false_act[ids] - false_act[contact_paths]) > (delayed_true_act[contact_paths] - delayed_true_act[ids]). Otherwise the default stays ids.",
+      "stated_in_advance": [
+        "With one claim per case and the expected outcomes above, the rule fires for any N > 1 (reduction 1 vs cost 1). So this run tests whether the CODE behaves as specified, not how often each case happens in the field. Real case frequencies are the tabletop E10, still NOT_RUN.",
+        "Unscored, recorded only: case e, honest reporters with NO contact paths written down. Under contact_paths such a claim can never reach ACTIONABLE until someone records the paths. This is a recording burden the scored cases do not price.",
+        "Case d stays an open gap whatever the rule says."
+      ],
+      "result": {
+        "run": "2026-11-04, tests/test_e10.py (synthetic, code-level), after T2 was committed in 76cee5f",
+        "states": {
+          "a": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "CAUTION_ONLY"
+          },
+          "b": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "CAUTION_ONLY"
+          },
+          "c": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "ACTIONABLE"
+          },
+          "d": {
+            "ids": "ACTIONABLE",
+            "contact_paths": "ACTIONABLE"
+          }
+        },
+        "score": {
+          "ids": {
+            "false_act": 2,
+            "delayed_true_act": 0
+          },
+          "contact_paths": {
+            "false_act": 1,
+            "delayed_true_act": 1
+          }
+        },
+        "all_states_as_preregistered": true,
+        "rule": "3 * (2 - 1) = 3 > (1 - 0) = 1",
+        "rule_fired": true,
+        "action": "default independence_mode switched ids -> contact_paths in defenses.claim_status and the CLI. ids mode kept and selectable.",
+        "unscored_case_e": "confirmed: honest claim with no recorded paths is ACTIONABLE under ids, CAUTION_ONLY under contact_paths",
+        "open": "Case d (one actor, two real paths) passes in both modes. Real case frequencies untested: tabletop E10 still NOT_RUN."
+      }
+    },
+    {
+      "id": "T3",
+      "status": "PROPOSED",
+      "registered_at_utc": "2026-11-04T00:39:20Z",
+      "registered_before_results": true,
+      "question": "E11 synthetic run: what counts as a pass?",
+      "red_team": {
+        "a": {
+          "play": "insider releases fuel alone: pairs with self, then with a holder from the same household",
+          "expect_caught_by": "D7",
+          "expect_detection_days": 0,
+          "why_0": "denied at the attempt"
+        },
+        "b": {
+          "play": "bulletin writer skips the week-2 bulletin (cadence 7 days)",
+          "expect_caught_by": "D8",
+          "expect_detection_days": 7,
+          "why_7": "flag appears when the window closes"
+        },
+        "c": {
+          "play": "fuel keeper is also recorded as ledger operator",
+          "expect_caught_by": "D6/R9 concentration_report",
+          "expect_detection_days": 0,
+          "why_0": "flag on the first report after the record changes"
+        },
+        "d": {
+          "play": "threat names one source; action bars a whole road (60 people)",
+          "expect_caught_by": "D11",
+          "expect_detection_days": 0,
+          "why_0": "flag when the action is logged"
+        }
+      },
+      "honest": [
+        "release by two current holders, different households and networks",
+        "complete bulletin on time",
+        "role handoff k1 -> k9 with all four handoff fields",
+        "narrow action on a narrow threat",
+        "grievance answered before its deadline",
+        "release by two holders where one rotation date was never written down"
+      ],
+      "expected_honest_blocked": 1,
+      "pass_rule": "PASS only if every red-team case a-d is caught by its expected defense within its expected detection days, AND honest actions blocked <= 1 of 6, AND every honest block carries a plain reason a person can fix. Anything else is FAIL.",
+      "why_1_of_6": "Unknown rotation counts as stale (approved choice), so an honest pair with a missing date is blocked by design. That one block is the expected cost; a second would mean the gate is catching honest work it was not designed to stop.*",
+      "stated_in_advance": [
+        "The cases mirror the code's own design, so a PASS shows the code does what it says. It does not show insiders get caught in a real community: that is the tabletop E11, still NOT_RUN.",
+        "Detection days are on the scenario's own clock, not field time.",
+        "No default changes on this result; nothing is switched."
+      ],
+      "result": {
+        "run": "2026-11-04, tests/test_e11.py (synthetic, code-level), after T3 was committed in b0e32d5",
+        "red_team": {
+          "a": {
+            "caught_by": "D7",
+            "detection_days": 0
+          },
+          "b": {
+            "caught_by": "D8",
+            "detection_days": 7
+          },
+          "c": {
+            "caught_by": "D6/R9 concentration_report",
+            "detection_days": 0
+          },
+          "d": {
+            "caught_by": "D11",
+            "detection_days": 0,
+            "affected_count": 60
+          }
+        },
+        "honest_blocked": "1 of 6 (release_missing_date: ROTATION_UNKNOWN, fixed by writing the rotation date down)",
+        "verdict": "PASS",
+        "all_as_preregistered": true,
+        "open": "Mechanism only. Collusion (E14), staffing size (E12) and real detection time are not tested by this run; tabletop E11 still NOT_RUN."
+      }
+    }
+  ],
+  "frame": "Bad actors harvest instability; they don't create it. Defense flattens the gradients they pull on (desperation, info gaps, chokepoints, grievance, unequal rules, dependency, posturing). Defense must not run hotter than the threat; excess control creates the next gradient. (Append 3, verbatim in docs/coordination_layer_append.md)"
+}

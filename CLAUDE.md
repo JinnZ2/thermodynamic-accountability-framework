@@ -3146,6 +3146,60 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `assembly_instrument/` (2026-11-03, co-authored): cross-domain
+  assembly instrument keyed on FUNCTION, not material. schema.json
+  (draft-07 + x-rules), entry_template.md (1:1 mirror), validate.py
+  (stdlib, py>=3.5; R1-R5 work-order rules + C1-C4 consistency; exit 1
+  on any failure; --selftest 22 checks), seeds F-LIGHT-01 (4 branches)
+  and F-SHELTER-01 (6 branches). No junction TESTED; literature sources
+  cited from model knowledge and marked not checked this session.
+  Follow-up (Task 4, field feedback loop): feedback_schema.json,
+  refs.py (junction address + content version), compact.py (one-line
+  SMS/radio FR1 format, PII guard), ledger.py (append-only sha256-chained
+  JSONL, merge by body hash into a new file), status.py (CAUTION /
+  ENVIRONMENT_DEPENDENT / ELIGIBLE_FOR_TESTED / REPORTED / UNCONFIRMED /
+  NOT_DISTRIBUTED; never writes entries), checkout.py (cautions first,
+  logs handout), validate.py R6 (--ledger), schema `caution` field.
+  tests/test_feedback.py 25 tests; validate --selftest 25 checks.
+- Added `community_black_start/` (2026-11-03, co-authored; imported
+  with history via git subtree from a standalone local repo, placed
+  beside assembly_instrument/ so cross-references resolve). Black-start
+  dependency chain for a wide-area, months-long outage with no outside
+  help, community-first: 34 items L0-L3 (all numbers null, volume thin),
+  chain.py (validate with cycle reporting, level check, criticality,
+  single points, restoration order), community.py (gaps, interconnect),
+  coordination.py (AI matches and proposes, humans in each community
+  decide; ids-only share profile; plain line on every record; hash-
+  chained log), defenses.py (R8 outside actors: aid control-term flags,
+  claim corroboration, direct-contact rule, local quarantine),
+  coordination_register.json (R1-R8, D1-D5, B1-B6, E1-E9 all NOT RUN).
+  Government action is a parallel input that nothing may depend on.
+  96 unittest tests: cd community_black_start && python3 -m unittest
+  discover -s tests.
+  Follow-up (2026-11-04): decision T1 in the register records that
+  TESTED (3 builds) vs D3 ACTIONABLE (2 sources) differ on purpose
+  (certify network-wide vs act locally); ThresholdTests pins 1 < 2 < 3.
+  D3 Sybil gap: opt-in independence_mode="contact_paths" counts distinct
+  confirmed contact paths (D5 mechanism aimed at the reporter); default
+  stays "ids" until E10 (NOT RUN) decides.
+  Follow-up: decision rule T2 (N=3, thin) committed in 76cee5f before
+  tests/test_e10.py existed; synthetic cases a-d ran as pre-registered
+  (ids 2 false ACT / 0 delayed; contact_paths 1 / 1); 3 > 1, rule fired,
+  default is now contact_paths. Case d open; tabletop E10 still NOT RUN.
+  Follow-up (append 3, R9 insider threat): roles.py (rotation, handoff,
+  role concentration, stock chokepoints; D6/D10), two_person.py (D7;
+  same holder / household / dependency network or stale rotation ->
+  DENIED; every decision hash-chained via coordination.append_log),
+  bulletins.py (D8), grievance.py (D9), proportionality.py (D11, built
+  from the D11 line because code item 5 arrived empty). Register adds
+  R9, D6-D11, E11 (NOT RUN). 89 tests.
+  Follow-up (append 3 remainder): proportionality affected_count;
+  defenses.DEFENSE_INDEX pinned to register; 5 L1 role seed items
+  (keyholders_fuel/food/medical, bulletin_writer, grievance_handler);
+  E11 replaced (insider cases a-d), pass rule T3 committed in b0e32d5
+  before tests/test_e11.py existed; synthetic run PASS (a D7, b D8 at
+  7 days, c concentration_report, d D11; 1 of 6 honest blocked, as
+  registered). E12-E14 and B7/B8 added; README limits extended. 96 tests.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:

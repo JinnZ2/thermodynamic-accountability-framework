@@ -1,0 +1,17 @@
+{
+  "name": "example_community_A",
+  "_provenance": "ILLUSTRATIVE ONLY (PROPOSED, thin). Not a real place. Replace holders with names/roles from a local survey.",
+  "holders": {
+    "heat_space": "most households on wood heat",
+    "fuel_stock": "farm co-op bulk tanks",
+    "pumps_fuel_transfer_nongrid": "co-op hand rotary pumps",
+    "gen_hydro_dormant": "old mill dam (condition not surveyed)",
+    "knowledge_holders": "two retired dam operators",
+    "comms_offgrid": "ham club",
+    "sync_equipment": "manual synchroscope at the mill"
+  },
+  "buffer_hours": {
+    "households_wood_heat": null,
+    "clinic": null
+  }
+}

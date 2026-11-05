@@ -1,0 +1,223 @@
+{
+  "schema_version": "0.1.0",
+  "status": "co-authored",
+  "function_id": "F-SHELTER-01",
+  "function": "Shelter envelope without dimensional lumber",
+  "requirement_note": "Span a distance and carry a load (roof, snow, wind, the wall's own weight) while keeping weather out. Old-growth timber was one local answer, not the requirement. Each branch below names what carries the walls and, separately, what does the spanning; most wall branches still need a span solution from another branch.",
+  "safety_scope": {
+    "results_return": "After any build, add a junction record to the branch: what was built, at which junction it held or failed, how it failed (crack, lean, sag, collapse, damp, rot), local conditions, date. Provenance TESTED, source = whoever built it. Failures are added, never deleted or overwritten.",
+    "irreversibility": true,
+    "compounding_error": true,
+    "local_validity": {
+      "climate": "Branch-specific; see each climate_window. No branch here is established for permafrost, flood plains or earthquake zones.*",
+      "soil": "Earth branches need a subsoil with enough clay to bind; tested on site per branch J1, never assumed.",
+      "water_chemistry": "Not examined. Salty ground water or sea spray may damage earth and lime walls; not established here.**",
+      "altitude": "Not examined here."
+    },
+    "reader_state": true
+  },
+  "branches": [
+    {
+      "name": "clay and cob",
+      "inputs": {
+        "materials": ["clay-bearing subsoil", "sand", "straw or other long fiber", "water", "stone or rubble for the footing"],
+        "tools": ["shovel", "tarp or bare feet for mixing"],
+        "skills": ["simple soil tests (shake in a jar of water, roll a ribbon of wet soil)", "building in lifts and judging when a lift is firm enough to build on"]
+      },
+      "climate_window": {
+        "works": "Moderate or dry-summer climates with a wide roof overhang and a footing that keeps the wall base dry.*",
+        "fails": "Wet walls that then freeze; standing water at the base; long driving rain on unplastered walls.*"
+      },
+      "output": {
+        "delivers": "Thick load-bearing earth wall that stores heat. Does not span by itself; span comes from J4.",
+        "quantities": [
+          {"quantity": "wall thickness", "value": "NOT MEASURED", "units": "m", "provenance": "INFERRED_BY_ASSEMBLY", "source": null},
+          {"quantity": "load capacity", "value": "NOT MEASURED", "units": "kN/m", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Test the subsoil for clay content before anything else.", "provenance": "DOCUMENTED", "source": "Minke, G., Building with Earth (Birkhauser); Evans, Smith & Smiley, The Hand-Sculpted House (Chelsea Green, 2002). Cited from model knowledge, not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Mix subsoil, sand, straw and water by treading.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Build on a raised stone or rubble footing, in lifts, letting each lift firm up.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Span the room: earth vault or dome, or a laminated small-wood beam (see that branch).", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J5", "step": "Put the full roof and snow load onto the walls.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "A wall or roof can look solid and still fall without warning, crushing anyone under it. Load it with heavy things before people, stand clear while loading, and do not sleep under it until it has held through a full wet season and a freeze.*"}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "moderate to dry-summer", "soil": "clay-bearing subsoil, tested on site", "water_chemistry": "not examined", "altitude": "not stated in sources"},
+        "conditions": "Assembled from cited earth-building literature plus inference. Nothing built or measured by this instrument."
+      },
+      "chain_length": 5,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 5 > threshold 3; irreversible J5; J4-J5 consecutive INFERRED"}
+    },
+    {
+      "name": "rammed earth",
+      "inputs": {
+        "materials": ["sandy-gravelly subsoil with some clay", "water", "stone for footing"],
+        "tools": ["forms to hold the soil while it is packed (boards or panels, reusable)", "heavy hand tamper"],
+        "skills": ["soil tests", "judging moisture by squeezing and dropping a ball of soil", "tamping thin layers evenly"]
+      },
+      "climate_window": {
+        "works": "Arid and semi-arid climates best; elsewhere with a cap, plinth and overhang.*",
+        "fails": "Uncapped walls in heavy rain; frost on a wet wall.*"
+      },
+      "output": {
+        "delivers": "Dense load-bearing wall that stores heat. Does not span by itself; span comes from J6.",
+        "quantities": [
+          {"quantity": "load capacity", "value": "NOT MEASURED", "units": "kN/m", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Test the subsoil mix.", "provenance": "DOCUMENTED", "source": "Easton, D., The Rammed Earth House (Chelsea Green); Minke, Building with Earth. Cited from model knowledge, not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Set forms on the footing.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Bring soil to the right moisture.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Tamp in thin layers until the full wall height is reached.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J5", "step": "Strip forms; add a cap and a raised plinth against water.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J6", "step": "Span the room (vault, corbel, or laminated small-wood beam from another branch).", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J7", "step": "Put the full roof and snow load onto the walls.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "A wall or roof can look solid and still fall without warning, crushing anyone under it. Load it with heavy things before people, stand clear while loading, and do not sleep under it until it has held through a full wet season and a freeze.*"}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "arid to semi-arid; temperate with cap and overhang", "soil": "sandy-gravelly subsoil with some clay, tested on site", "water_chemistry": "not examined", "altitude": "not stated in sources"},
+        "conditions": "Assembled from cited literature plus inference. Nothing built or measured by this instrument."
+      },
+      "chain_length": 7,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 7 > threshold 3; irreversible J7; J6-J7 consecutive INFERRED"},
+      "notes": "Forms are usually boards; the branch may still need some sawn wood, reused. Woven or earth-bag forms as a substitute are not established here.***"
+    },
+    {
+      "name": "fieldstone",
+      "inputs": {
+        "materials": ["field or river stone, sorted by shape", "optional clay or lime mortar"],
+        "tools": ["pry bar or lever pole", "string line"],
+        "skills": ["sorting stone into face, through and filler stones", "laying so each stone crosses the joint below"]
+      },
+      "climate_window": {
+        "works": "Most climates; dry-laid walls drain and survive frost.*",
+        "fails": "Heaving ground; poor footing; clay mortar left exposed to rain.*"
+      },
+      "output": {
+        "delivers": "Load-bearing wall. Spans only as far as one long stone (lintel) or by corbelling stone inward to close a roof.",
+        "quantities": [
+          {"quantity": "max opening span", "value": "length of the longest sound lintel stone available", "units": "m", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Gather and sort stone by shape.", "provenance": "DOCUMENTED", "source": "Dry-stone walling practice (e.g. dry-stone walling association guidance). Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Lift and place heavy stones.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": true, "hazard": "Heavy stones can crush fingers and feet and injure your back for life. Roll or lever big stones instead of lifting them, keep hands out from under them, and never stand on the downhill side of a stone being moved."},
+        {"id": "J3", "step": "Lay with the wall leaning slightly inward, joints crossed, long stones through the wall.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Span with a single lintel stone, or corbel stone inward to close the roof.", "provenance": "DOCUMENTED", "source": "Corbelled dry-stone huts (e.g. Irish clochan): archaeological record. Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J5", "step": "Put the full roof and snow load onto the walls.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "A wall or roof can look solid and still fall without warning, crushing anyone under it. Load it with heavy things before people, stand clear while loading, and do not sleep under it until it has held through a full wet season and a freeze.*"}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "most climates", "soil": "firm, non-heaving ground for the footing", "water_chemistry": "not examined", "altitude": "not stated in sources"},
+        "conditions": "Assembled from cited practice plus inference. Nothing built or measured by this instrument."
+      },
+      "chain_length": 5,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 5 > threshold 3; two irreversible junctions"}
+    },
+    {
+      "name": "straw/grass with lignin binding",
+      "inputs": {
+        "materials": ["dry straw or tall grass", "twine or plant cord", "clay for plaster"],
+        "tools": ["hand press or tamping frame for bales or bundles"],
+        "skills": ["keeping material dry from harvest to plaster", "packing bundles tight and even"]
+      },
+      "climate_window": {
+        "works": "Climates where walls can stay dry behind plaster and under overhangs.*",
+        "fails": "Any wall that stays damp: straw rots inside, unseen.*"
+      },
+      "output": {
+        "delivers": "Thick insulating wall infill or load-bearing bale wall. Spans nothing by itself.",
+        "quantities": [
+          {"quantity": "insulation value", "value": "NOT MEASURED", "units": "m2K/W", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Harvest and fully dry straw or tall grass.", "provenance": "DOCUMENTED", "source": "Straw-bale building, Nebraska sandhills houses from c. 1890s: building history record. Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Compress into tied bales or tight bundles.", "provenance": "DOCUMENTED", "source": "Same as J1.*", "irreversible": true, "hazard": "Loose dry straw catches fire in seconds and the fire spreads faster than a person can run. Keep flames, sparks and smoking far from the work, and clear loose straw away every day."},
+        {"id": "J3", "step": "Bind the fibers by their own lignin, as named in the work order.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Plaster both faces with clay.", "provenance": "DOCUMENTED", "source": "Clay-plastered straw-bale walls: straw-bale building record. Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J5", "step": "Span the room (from another branch).", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J6", "step": "Put the full roof and snow load onto the walls.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "A wall or roof can look solid and still fall without warning, crushing anyone under it. Load it with heavy things before people, stand clear while loading, and do not sleep under it until it has held through a full wet season and a freeze.*"}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "dry to moderate, walls kept dry", "soil": "n/a (footing per stone or rubble branch)", "water_chemistry": "not examined", "altitude": "not stated in sources"},
+        "conditions": "Straw-bale practice documented; the lignin-binding junction is carried from the work order and not established anywhere in this entry."
+      },
+      "chain_length": 6,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 6 > threshold 3; two irreversible junctions; J5-J6 consecutive INFERRED"},
+      "notes": "J3 is the thinnest claim in this file.*** How lignin binds fibers without heat, pressure or an added binder is not established here. Treat it as an open question to test, not a method."
+    },
+    {
+      "name": "laminated small-dimension wood",
+      "inputs": {
+        "materials": ["small poles, saplings or hand-split thin wood", "glue (hide glue or casein) or wooden pegs or lashing"],
+        "tools": ["axe or knife", "drawknife or shaving tool", "bending form (posts in the ground)"],
+        "skills": ["seasoning wood", "gluing or pegging layers tight", "proof loading before use"]
+      },
+      "climate_window": {
+        "works": "Under a roof and kept dry; hide and casein glues lose strength when wet.*",
+        "fails": "Damp or exposed beams: glue lets go and layers slide apart.*"
+      },
+      "output": {
+        "delivers": "Beams or bent arches made from many thin pieces: the branch that SPANS for the earth, stone and straw wall branches.",
+        "quantities": [
+          {"quantity": "span", "value": "NOT MEASURED", "units": "m", "provenance": "INFERRED_BY_ASSEMBLY", "source": null},
+          {"quantity": "load capacity", "value": "NOT MEASURED", "units": "kN", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Cut small wood and let it dry.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Split or shave into thin, even layers.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Join layers with hide or casein glue, pegs, or lashing.", "provenance": "DOCUMENTED", "source": "Hide and casein glues: historical woodworking record; casein used in early laminated timber. Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Build up a straight beam or bend layers over a form into an arch.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J5", "step": "Proof load the beam or arch before anyone goes under it.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "A beam made from many thin pieces can look strong and still break all at once. Load it first with heavy things, not people, and keep everyone out from under it until it has held for days without sagging further."}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "any, if beams stay dry", "soil": "n/a", "water_chemistry": "n/a", "altitude": "n/a"},
+        "conditions": "The laminating principle is documented industrially with modern glues; the hand-made version is assembled here. Nothing built or measured by this instrument."
+      },
+      "chain_length": 5,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 5 > threshold 3; irreversible J5; J1-J2 and J4-J5 consecutive INFERRED"}
+    },
+    {
+      "name": "cattail interwoven with clay, lime exterior",
+      "inputs": {
+        "materials": ["cattail leaves and stems", "clay-bearing subsoil", "lime (burned limestone or shell, slaked; or bought)", "water"],
+        "tools": ["knife or sickle", "containers for slaking and mixing", "eye and skin cover for lime work"],
+        "skills": ["weaving or bundling cattail", "working clay into fiber", "slaking and applying lime"]
+      },
+      "climate_window": {
+        "works": "Practitioner-reported to regulate indoor temperature in both directions; region and climate of the report not recorded.*",
+        "fails": "Fresh lime damaged by frost before it hardens;** clay washes out wherever the lime skin is breached.*"
+      },
+      "output": {
+        "delivers": "Fiber gives structure and insulation, clay binds, lime is a weather skin that lets water vapor pass. Span method NOT REPORTED in the practitioner material.",
+        "quantities": [
+          {"quantity": "temperature regulation (both directions)", "value": "reported, NOT MEASURED", "units": "K", "provenance": "DOCUMENTED", "source": "Practitioner report, relayed in operator work order 2026-11-03."}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Harvest cattail leaves and stems.", "provenance": "DOCUMENTED", "source": "Practitioner report, relayed in operator work order 2026-11-03.", "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Interweave cattail as the structural fiber and insulating layer.", "provenance": "DOCUMENTED", "source": "Practitioner report, relayed in operator work order 2026-11-03.", "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Work clay into and over the woven fiber as binder.", "provenance": "DOCUMENTED", "source": "Practitioner report, relayed in operator work order 2026-11-03.", "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Make or obtain lime and slake it with water.", "provenance": "DOCUMENTED", "source": "Traditional lime burning and slaking: building-conservation record. Specific citation not checked this session.*", "irreversible": true, "hazard": "Lime made from burned stone or shell gets very hot when water hits it and can blind you or burn skin. Cover your eyes and skin, add it to water slowly, and keep children and animals away from wet lime."},
+        {"id": "J5", "step": "Apply lime as the exterior weather skin.", "provenance": "DOCUMENTED", "source": "Practitioner report, relayed in operator work order 2026-11-03.", "irreversible": false, "hazard": null},
+        {"id": "J6", "step": "Span the room (not reported; from another branch).", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J7", "step": "Put the full roof and snow load onto the walls.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "A wall or roof can look solid and still fall without warning, crushing anyone under it. Load it with heavy things before people, stand clear while loading, and do not sleep under it until it has held through a full wet season and a freeze.*"}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "NOT REPORTED in practitioner material", "soil": "wetland present (cattail); clay-bearing subsoil", "water_chemistry": "not examined", "altitude": "NOT REPORTED"},
+        "conditions": "DOCUMENTED by practitioner report only; not TESTED by this instrument. Lime slaking from general record."
+      },
+      "chain_length": 7,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 7 > threshold 3; two irreversible junctions; J6-J7 consecutive INFERRED"},
+      "notes": "Provenance as instructed: DOCUMENTED-by-practitioner, not TESTED by this instrument. The both-directions temperature claim has no measurement attached."
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "schema_version": "0.1.0",
+  "status": "co-authored",
+  "function_id": "F-LIGHT-01",
+  "function": "Interior lighting without batteries or grid power",
+  "requirement_note": "Enough light, for long enough, to see and work indoors after dark, from material present in the environment. Every flame branch also adds heat, smoke and an invisible poison gas to the room; the one non-flame branch gives almost no light.",
+  "safety_scope": {
+    "results_return": "After any build or burn, add a junction record to the branch: what was done, at which junction it worked or failed, what happened, local conditions, date. Provenance TESTED, source = whoever built it. Failures are added, never deleted or overwritten.",
+    "irreversibility": true,
+    "compounding_error": true,
+    "local_validity": {
+      "climate": "Indoor use, any outdoor climate, ONLY with outside air entering the room. Fuel supply depends on local animals, conifers, birch or bees.",
+      "soil": "n/a",
+      "water_chemistry": "n/a",
+      "altitude": "Not examined here. Flame behaviour and gas build-up at high altitude are not established by this entry.*"
+    },
+    "reader_state": true
+  },
+  "branches": [
+    {
+      "name": "rendered-fat oil lamp",
+      "inputs": {
+        "materials": ["animal fat, fish oil or sea-mammal blubber", "dry plant fiber for a wick (moss, cottongrass or cattail down, cotton)", "a vessel that does not burn (stone, fired clay, shell, metal)"],
+        "tools": ["pot for rendering", "heat source", "cloth or fiber strainer"],
+        "skills": ["rendering fat without scorching it", "trimming a wick so it burns without heavy smoke"]
+      },
+      "climate_window": {
+        "works": "Indoors, still air, outside air supply. Liquid oils burn in cold rooms; hard fats (tallow) burn best where the vessel stays warm.*",
+        "fails": "Drafts gutter the flame; rancid or scorched fat smokes heavily; hard fat in a very cold room may stiffen and starve the wick.**"
+      },
+      "output": {
+        "delivers": "Small open flame, roughly candle-scale light per wick, plus soot, smell and heat.",
+        "quantities": [
+          {"quantity": "luminous flux per wick", "value": "on the order of a candle (~10 lm)**", "units": "lm", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Render raw fat or blubber by slow heating; strain out solids.", "provenance": "DOCUMENTED", "source": "Household tallow rendering and the Inuit qulliq seal-oil lamp: ethnographic and household record. Specific citation not checked this session.*", "irreversible": true, "hazard": "Hot fat can burst into flame and burns skin deeply. Never pour water on burning fat; cover the pot with a lid to smother it, and keep children back from the pot."},
+        {"id": "J2", "step": "Pack a wick of dry moss or cottongrass along the edge of a shallow stone or clay dish holding the fat.", "provenance": "DOCUMENTED", "source": "Inuit qulliq: moss or cottongrass wick in a soapstone dish. Ethnographic record; specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Substitute the fat, fiber and vessel actually present for the documented ones.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Burn indoors for light.", "provenance": "DOCUMENTED", "source": "Indoor use of fat and oil lamps: same record as J1/J2.*", "irreversible": true, "hazard": "Burning anything indoors makes carbon monoxide, a gas you cannot see or smell. It can kill people while they sleep. Keep outside air coming into the room, never burn it in a closed space, and put the flame out before anyone sleeps."}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "indoor, outside air supply; source records are Arctic and temperate households", "soil": "n/a", "water_chemistry": "n/a", "altitude": "not stated in sources"},
+        "conditions": "Assembled from records named in junction sources plus inference. Nothing built or measured by this instrument."
+      },
+      "chain_length": 4,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 4 > threshold 3; two irreversible junctions"}
+    },
+    {
+      "name": "pitch / birch tar",
+      "inputs": {
+        "materials": ["resin-rich conifer wood (fatwood, pine knots) or birch bark", "splints or fiber for a torch"],
+        "tools": ["a container that can be closed and heated (for tar)", "fire"],
+        "skills": ["judging when bark is fully cooked to tar", "handling hot, sticky, burning material"]
+      },
+      "climate_window": {
+        "works": "Fatwood and birch bark keep for years dry. Tar making is done outdoors.*",
+        "fails": "Wet bark or wood smokes and will not yield tar; indoor torch burning drips burning tar and fills the room with smoke.*"
+      },
+      "output": {
+        "delivers": "Bright, very smoky flame from a resin splint or tar-soaked torch. Short burn per splint.",
+        "quantities": [
+          {"quantity": "luminous flux", "value": "NOT MEASURED", "units": "lm", "provenance": "INFERRED_BY_ASSEMBLY", "source": null},
+          {"quantity": "burn time per splint", "value": "NOT MEASURED", "units": "min", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Collect resin-soaked conifer wood or strip birch bark.", "provenance": "DOCUMENTED", "source": "Pine-knot / fatwood splint lighting: North American household record. Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J2", "step": "Make birch tar by heating bark with air shut out.", "provenance": "DOCUMENTED", "source": "Kozowyk, Soressi, Pomstra & Langejans (2017), Experimental methods for the Palaeolithic dry distillation of birch bark, Scientific Reports 7. Cited from model knowledge, not checked this session; about tar as adhesive, not as light.*", "irreversible": true, "hazard": "A closed pot of heated bark builds pressure and can burst, throwing burning tar onto skin and clothes. Work outdoors, away from anything that can catch fire, and keep your face and body away from the pot while it heats."},
+        {"id": "J3", "step": "Load tar or pitch onto a splint or fiber wick to make a torch or lamp fuel.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J4", "step": "Burn indoors for light.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": true, "hazard": "Burning tar or pitch indoors makes thick smoke and carbon monoxide, a gas you cannot see or smell that can kill people while they sleep. Burning drips can set floors and bedding on fire. Keep outside air coming in, set the torch over stone or bare earth, and put it out before anyone sleeps."}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "boreal to temperate forest (birch, conifers present)", "soil": "n/a", "water_chemistry": "n/a", "altitude": "not stated in sources"},
+        "conditions": "Tar production documented as an adhesive process; its use as indoor light is assembled here, not documented."
+      },
+      "chain_length": 4,
+      "verification_required": {"level": "TEST_EACH_JUNCTION_THEN_FULL_TRIAL", "reason": "chain_length 4 > threshold 3; two irreversible junctions; J3-J4 consecutive INFERRED"}
+    },
+    {
+      "name": "beeswax",
+      "inputs": {
+        "materials": ["beeswax comb (needs access to a hive)", "plant-fiber or cotton wick"],
+        "tools": ["pot and water for melting", "mold or dipping vessel"],
+        "skills": ["melting wax without overheating", "dipping or pouring evenly around a wick"]
+      },
+      "climate_window": {
+        "works": "Finished candles store for years; burn cleanly in still indoor air.*",
+        "fails": "Hot rooms soften candles; drafts make them drip and gutter. Supply fails where no bees are kept or found.*"
+      },
+      "output": {
+        "delivers": "Steady small flame, cleaner than fat or tar.",
+        "quantities": [
+          {"quantity": "luminous intensity of a standard candle", "value": "~1", "units": "cd", "provenance": "DOCUMENTED", "source": "The candela unit descends from the standard candle; 1 cd radiated evenly in all directions = 4*pi lm (~12.6 lm). Definition-level, not a measurement of any candle made here."},
+          {"quantity": "luminous flux of one candle", "value": "~12.6 (if 1 cd in all directions)*", "units": "lm", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Melt comb in hot water; let the wax float, harden, and scrape off dirt.", "provenance": "DOCUMENTED", "source": "Standard beekeeping wax rendering. Specific citation not checked this session.*", "irreversible": true, "hazard": "Wax heated straight over a flame can catch fire all at once and sticks to skin while it burns. Melt it over hot water, never leave it alone, and smother a wax fire with a lid, never water."},
+        {"id": "J2", "step": "Dip a wick repeatedly, or pour wax around it in a mold.", "provenance": "DOCUMENTED", "source": "Hand candle dipping and molding: household record. Specific citation not checked this session.*", "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Burn indoors for light.", "provenance": "DOCUMENTED", "source": "Indoor candle use: household record.*", "irreversible": true, "hazard": "A candle burning indoors makes carbon monoxide, a gas you cannot see or smell. In a closed room it can kill people while they sleep. Keep outside air coming in and put the flame out before anyone sleeps."}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "indoor, outside air supply; bees present locally", "soil": "n/a", "water_chemistry": "n/a", "altitude": "not stated in sources"},
+        "conditions": "Assembled from household record. Nothing built or measured by this instrument."
+      },
+      "chain_length": 3,
+      "verification_required": {"level": "TEST_EACH_JUNCTION", "reason": "chain_length 3; two irreversible junctions"}
+    },
+    {
+      "name": "bioluminescent fungi",
+      "inputs": {
+        "materials": ["decaying wood colonized by glowing fungi (foxfire)", "water", "clear container"],
+        "tools": ["none beyond a container"],
+        "skills": ["finding glowing wood at night with eyes adjusted to the dark", "keeping it damp and alive"]
+      },
+      "climate_window": {
+        "works": "Damp forest with rotting wood, warm-to-mild season.*",
+        "fails": "Dries out and stops glowing; cold or dry seasons; any lit room drowns it out.*"
+      },
+      "output": {
+        "delivers": "Faint glow seen only by eyes adjusted to darkness. Marker or orientation light, not reading or work light.**",
+        "quantities": [
+          {"quantity": "luminous flux", "value": "<<1 (far below one candle)**", "units": "lm", "provenance": "INFERRED_BY_ASSEMBLY", "source": null}
+        ]
+      },
+      "junctions": [
+        {"id": "J1", "step": "Find glowing wood or fungi at night after letting eyes adjust to the dark.", "provenance": "DOCUMENTED", "source": "Foxfire (luminous fungi on decaying wood): natural-history record, including reported use on gauges of the 1775 'Turtle' submersible. Specific citation not checked this session.*", "irreversible": false, "hazard": "Do not eat glowing mushrooms; some are poisonous."},
+        {"id": "J2", "step": "Keep the glowing material damp and cool in a clear container.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null},
+        {"id": "J3", "step": "Place as a marker (doorway, path edge, object locator) in an otherwise dark room.", "provenance": "INFERRED_BY_ASSEMBLY", "source": null, "irreversible": false, "hazard": null}
+      ],
+      "scope_stamp": {
+        "date": "2026-11-03",
+        "environment": {"climate": "humid temperate forest", "soil": "forest litter with decaying hardwood or conifer", "water_chemistry": "n/a", "altitude": "not stated in sources"},
+        "conditions": "Glow documented in natural history; indoor marker use assembled here. Nothing built or measured by this instrument."
+      },
+      "chain_length": 3,
+      "verification_required": {"level": "TEST_EACH_JUNCTION", "reason": "chain_length 3; J2-J3 consecutive INFERRED"},
+      "notes": "The only branch with no flame and no indoor poison gas; also the only one that cannot serve as working light.**"
+    }
+  ]
+}

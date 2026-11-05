@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "assembly_instrument/schema.json",
+  "title": "Cross-domain assembly instrument: function entry",
+  "description": "Status: co-authored (Kavik + Claude), 2026-11-03. CC0. One entry per FUNCTION (what is needed), never per material. Each branch is one candidate way to meet the function; each junction is one joining step and carries its own provenance. validate.py enforces this file's structure plus the rules in x-rules.",
+  "x-schema-version": "0.1.0",
+  "x-rules": {
+    "chain_length": "chain_length == len(junctions). Integer count of joining steps in the branch.",
+    "verification_threshold": 3,
+    "verification_required": "Rises with chain_length. 0-1 -> SINGLE_BUILD_CHECK; 2-3 -> TEST_EACH_JUNCTION; > 3 (above threshold) -> TEST_EACH_JUNCTION_THEN_FULL_TRIAL. Any irreversible junction raises the floor to TEST_EACH_JUNCTION. PROPOSED***: the levels are an ordering rule, not calibrated against build-failure data.",
+    "compounding_error": "Entry-level flag. true iff any branch has chain_length above verification_threshold OR two or more consecutive INFERRED_BY_ASSEMBLY junctions. Each untested join multiplies the chance the whole chain fails.",
+    "irreversibility": "Entry-level flag. true iff any junction in any branch has irreversible: true.",
+    "reader_state": "Entry-level flag. true iff every irreversible junction's hazard line passes the legibility check in validate.py (plain words, not jargon-only).",
+    "provenance": "TESTED = built and checked by the named source under the stamped conditions. DOCUMENTED = recorded in a named source, not built by this instrument. INFERRED_BY_ASSEMBLY = joined here by function; nobody has recorded this join working. A claim never moves up this ladder without a new source.",
+    "thin_volume": "Trailing asterisks on any claim string mark thin evidence; more asterisks = thinner."
+  },
+  "type": "object",
+  "required": ["schema_version", "status", "function_id", "function", "safety_scope", "branches"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["0.1.0"]},
+    "status": {"type": "string", "enum": ["co-authored"]},
+    "function_id": {"type": "string", "minLength": 1},
+    "function": {"type": "string", "minLength": 1, "description": "What is needed, stated as a requirement, not as a material."},
+    "requirement_note": {"type": "string", "description": "Optional: what the requirement is underneath the familiar answer."},
+    "safety_scope": {"$ref": "#/definitions/safety_scope"},
+    "branches": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/branch"}}
+  },
+  "definitions": {
+    "provenance": {"type": "string", "enum": ["TESTED", "DOCUMENTED", "INFERRED_BY_ASSEMBLY"]},
+    "safety_scope": {
+      "type": "object",
+      "required": ["results_return", "irreversibility", "compounding_error", "local_validity", "reader_state"],
+      "properties": {
+        "results_return": {"type": "string", "minLength": 1, "description": "How a build failure (or success) gets reported back into the entry."},
+        "irreversibility": {"type": "boolean"},
+        "compounding_error": {"type": "boolean"},
+        "local_validity": {"$ref": "#/definitions/environment"},
+        "reader_state": {"type": "boolean"}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["climate", "soil", "water_chemistry", "altitude"],
+      "properties": {
+        "climate": {"type": "string", "minLength": 1},
+        "soil": {"type": "string", "minLength": 1},
+        "water_chemistry": {"type": "string", "minLength": 1},
+        "altitude": {"type": "string", "minLength": 1}
+      }
+    },
+    "branch": {
+      "type": "object",
+      "required": ["name", "inputs", "climate_window", "output", "junctions", "scope_stamp", "chain_length", "verification_required"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "inputs": {
+          "type": "object",
+          "required": ["materials", "tools", "skills"],
+          "properties": {
+            "materials": {"type": "array", "items": {"type": "string"}},
+            "tools": {"type": "array", "items": {"type": "string"}},
+            "skills": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "climate_window": {
+          "type": "object",
+          "required": ["works", "fails"],
+          "properties": {
+            "works": {"type": "string", "minLength": 1},
+            "fails": {"type": "string", "minLength": 1}
+          }
+        },
+        "output": {
+          "type": "object",
+          "required": ["delivers", "quantities"],
+          "properties": {
+            "delivers": {"type": "string", "minLength": 1},
+            "quantities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["quantity", "value", "units", "provenance"],
+                "properties": {
+                  "quantity": {"type": "string"},
+                  "value": {"type": "string", "description": "String so ranges, '<<1' and NOT MEASURED stay honest."},
+                  "units": {"type": "string"},
+                  "provenance": {"$ref": "#/definitions/provenance"},
+                  "source": {"type": ["string", "null"]}
+                }
+              }
+            }
+          }
+        },
+        "junctions": {"type": "array", "items": {"$ref": "#/definitions/junction"}},
+        "scope_stamp": {
+          "type": "object",
+          "required": ["date", "environment", "conditions"],
+          "properties": {
+            "date": {"type": "string", "minLength": 10},
+            "environment": {"$ref": "#/definitions/environment"},
+            "conditions": {"type": "string", "minLength": 1}
+          }
+        },
+        "chain_length": {"type": "integer", "minimum": 0},
+        "verification_required": {
+          "type": "object",
+          "required": ["level", "reason"],
+          "properties": {
+            "level": {"type": "string", "enum": ["SINGLE_BUILD_CHECK", "TEST_EACH_JUNCTION", "TEST_EACH_JUNCTION_THEN_FULL_TRIAL"]},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "junction": {
+      "type": "object",
+      "required": ["id", "step", "provenance", "source", "irreversible", "hazard"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "step": {"type": "string", "minLength": 1},
+        "provenance": {"$ref": "#/definitions/provenance"},
+        "source": {"type": ["string", "null"]},
+        "irreversible": {"type": "boolean"},
+        "hazard": {"type": ["string", "null"], "description": "Required, plain language, when irreversible is true. No method vocabulary."},
+        "caution": {"type": ["string", "null"], "description": "Plain-language field caution. validate.py --ledger requires it (R6) when the ledger puts this irreversible junction in CAUTION. Added by a person; status.py never writes it."}
+      }
+    }
+  }
+}
