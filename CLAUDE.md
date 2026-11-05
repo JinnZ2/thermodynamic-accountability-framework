@@ -3146,6 +3146,23 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `signal_calibration/` (2026-11-04, co-authored): test battery for
+  functional edge-signal handling in models. Hypothesis PROPOSED, thin.
+  Integrity-only: records results, states no verdict. chainlog.py
+  (sha256 chain: prereg | result | score | field_report), prereg.py
+  (hash registered BEFORE results; runner and scorer refuse an
+  unregistered or edited prereg), adapters/base.py (CommandAdapter via
+  $SIGCAL_COMMAND / $SIGCAL_MODEL_ID, no keys in repo; SteeringAdapter
+  interface only), scenarios T1-T5 + T6 method (synthetic, versioned;
+  every T4 distress item has a nonsense-condition control),
+  scoring/rubrics.py (labels, human CSV out/in, auto kept separate,
+  kappa), runner.py (T4 distress runs written to judgment_registry as
+  SignalIntervention AMPLIFY BOUNDED; refuses T4 without a registry
+  ledger; steering must sit inside the prereg band), report.py (T2
+  a-pass/b-fail, T4 vs control, T6 deltas). T5 label renamed
+  DROPPED_WITH_CONFIDENT_VALUE (no truth word). E15/E16 NOT RUN, no
+  prereg filed. judgment_registry J7/J8 cite the test ids. 22 tests:
+  cd signal_calibration && python3 -m unittest discover -s tests.
 - Added `judgment_registry/` (2026-11-04, co-authored): version control
   for stated judgments, DATA INTEGRITY ONLY -- never rates, ranks or
   resolves. schema.py (Judgment / Application / Transfer / Withdrawal,

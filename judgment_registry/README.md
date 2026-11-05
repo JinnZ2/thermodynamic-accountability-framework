@@ -261,11 +261,15 @@ J6 paired suppression  surgical anesthesia (BRIDGE, REVERSIBLE, consent GIVEN,
                        cause often not addressed); run axis --compare**                 NOT RUN
 J7 pain-axis steering  Pain Axis preprint: AMPLIFY, system_class model, band = normal
                        activation range (defined in the record), loop BROKEN for
-                       persistent steering; judgment J4 links via intervention_id       NOT RUN
+                       persistent steering; judgment J4 links via intervention_id.
+                       Test ids: signal_calibration T4 (steered variant, adapter
+                       interface only) and T6                                           NOT RUN
 J8 AI analogs          hypothesis records, status PROPOSED:
                        SUPPRESS on uncertainty -> confident output over capability gaps;
                        AMPLIFY on caution -> over-refusal near gaps;
-                       RECALIBRATE -> readable edge signal**                            NOT RUN
+                       RECALIBRATE -> readable edge signal**
+                       Test ids: signal_calibration T5 (SUPPRESS), T2/T3 (AMPLIFY,
+                       over-refusal near gaps), T6 (RECALIBRATE)                        NOT RUN
 J9 n-of-1 RECALIBRATE  templates/intervention_n_of_1_recalibrate.json: channel mapping,
                        lead/lag, calibration log. The template is generic; content stays
                        with the holder.                                                 TEMPLATE ONLY
