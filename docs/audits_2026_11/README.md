@@ -17,11 +17,13 @@ was re-checked when filed.
 
 `in_progress/distillate_floor_sim.py` implements the operating floor
 equation from `us_distillate_floor_refinery_measurands.pdf` (section 2) and
-the DEF gate (section 4d). Stdlib only.
+the DEF gate (section 4d), plus a gasoline term set (ethanol on both
+sides, no DEF gate) that the PDF does not cover. Stdlib only.
 
     python3 in_progress/distillate_floor_sim.py --selftest
     python3 in_progress/distillate_floor_sim.py
     python3 in_progress/distillate_floor_sim.py --shock 0.8 15
+    python3 in_progress/distillate_floor_sim.py --product gasoline   # or all
 
 The script's own TERMS table carries a status per value; PLACEHOLDER
 ranges are stand-ins, not data.

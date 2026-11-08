@@ -26,6 +26,7 @@ Usage:
   python3 distillate_floor_sim.py              # default run
   python3 distillate_floor_sim.py --shock 0.8 15   # lose 0.8 M b/d for 15 days
   python3 distillate_floor_sim.py --runs 50000 --seed 7
+  python3 distillate_floor_sim.py --product gasoline   # or diesel / all
   python3 distillate_floor_sim.py --selftest
 
 Co-authored. CC0.
@@ -74,6 +75,53 @@ TERMS = {
             "(CENSORED precedent, not a US value)",
         date=None),
 }
+
+DIESEL = TERMS
+
+# Gasoline: same term structure. No DEF gate. Ethanol added on both sides
+# because product supplied is measured AFTER ethanol is blended in, while
+# "total gasoline" stocks exclude fuel ethanol tanks (basis weld, closed here).
+GASOLINE = {
+    "stock_total": dict(
+        v=209.0, unit="M bbl", status="MEASURED",
+        src="EIA WPSR total motor gasoline stocks, week ending", date="2026-10-30"),
+    "ethanol_stock": dict(
+        v=24.558, unit="M bbl", status="MEASURED",
+        src="EIA weekly fuel ethanol ending stocks (DATE MISMATCH: 2 weeks "
+            "earlier than gasoline stock)", date="2026-10-16"),
+    "demand": dict(
+        v=8.639, unit="M b/d", status="MEASURED",
+        src="EIA WPSR motor gasoline product supplied, 4-wk avg (includes ethanol)",
+        date="2026-10-30"),
+    "pipeline_fill": dict(
+        lo=46.5, hi=47.0, unit="M bbl", status="DERIVED",
+        src="EIA finished gasoline + blending components stocks in pipelines, "
+            "year-end 2022-2025", date="2025-12"),
+    "tank_bottoms": dict(
+        lo=19.0, hi=57.0, unit="M bbl", status="UNMEASURED",
+        src="upper bound = 2016 shell-in-operation minus working (refineries 21.9 + "
+            "terminals 35.0); gap includes top contingency; lower bound = 1/3, "
+            "same convention as diesel", date="2016-09-30"),
+    "ethanol_floor": dict(
+        lo=0.0, hi=10.0, unit="M bbl", status="PLACEHOLDER",
+        src="no open source: ethanol tank bottoms + rail/terminal working stock",
+        date=None),
+    "terminal_working_min": dict(
+        lo=0.0, hi=50.0, unit="M bbl", status="PLACEHOLDER",
+        src="no open source; range scaled ~2x diesel by throughput, stand-in only",
+        date=None),
+    "process_holdup": dict(
+        lo=0.0, hi=15.0, unit="M bbl", status="PLACEHOLDER",
+        src="no open source: gasoline/blendstock held in reformers, alky, FCC",
+        date=None),
+    "net_draw": dict(
+        lo=-0.3, hi=0.5, unit="M b/d", status="PLACEHOLDER",
+        src="anchor: last week -0.2 M bbl (EIA WPSR 10/23->10/30); production "
+            "9.482 vs supplied 8.639 M b/d, exports not pulled; stand-in range",
+        date="2026-10-30"),
+}
+
+PRODUCTS = {"diesel": DIESEL, "gasoline": GASOLINE}
 
 NON_POINT = ("DERIVED", "UNMEASURED", "PLACEHOLDER")
 
@@ -131,16 +179,20 @@ def days_to_floor(usable, draw, shock_loss=0.0, shock_days=0.0):
 
 def evaluate(x, shock_loss=0.0, shock_days=0.0):
     """x: dict name -> number. Returns dict of outputs."""
-    static_floor = x["pipeline_fill"] + x["tank_bottoms"] + x["process_holdup"]
+    static_floor = (x["pipeline_fill"] + x["tank_bottoms"] + x["process_holdup"]
+                    + x.get("ethanol_floor", 0.0))
     operating_floor = static_floor + x["terminal_working_min"]
-    usable = x["stock_total"] - operating_floor
+    usable = x["stock_total"] + x.get("ethanol_stock", 0.0) - operating_floor
     cover = max(0.0, usable) / x["demand"] if x["demand"] > 0 else CAP_DAYS
     dtf = days_to_floor(usable, x["net_draw"], shock_loss, shock_days)
     # Gate compares SAME BASIS: both sides with resupply stopped.
     # (DEF days on hand is a no-resupply figure; comparing it to fuel days
     #  with production still running would be a mixed basis.)
-    gate_days = min(cover, x["def_days_on_hand"])
-    gate = "FUEL FLOOR" if cover <= x["def_days_on_hand"] else "DEF"
+    if "def_days_on_hand" in x:
+        gate_days = min(cover, x["def_days_on_hand"])
+        gate = "FUEL FLOOR" if cover <= x["def_days_on_hand"] else "DEF"
+    else:
+        gate_days, gate = cover, "FUEL FLOOR"
     return dict(static_floor=static_floor, operating_floor=operating_floor,
                 usable=usable, cover_days_no_inflow=cover,
                 days_to_floor=dtf, first_gate=gate, first_gate_days=gate_days)
@@ -242,7 +294,8 @@ def report(terms, runs, seed, shock_loss, shock_days):
     print(f"  first gate to close: FUEL FLOOR {mc['gates']['FUEL FLOOR']}  "
           f"DEF {mc['gates']['DEF']}")
     print("\nNOT IN MODEL: regional split (PADD 1 floor), heating-oil competition,"
-          "\n  waiver fuel usable only by pre-2007 fleet, cold-flow, allocation order.")
+          "\n  waiver fuel usable only by pre-2007 fleet, cold-flow, allocation order,"
+          "\n  crude/SPR upstream cushion, exports as a lever.")
     return 0
 
 
@@ -292,6 +345,15 @@ def selftest():
     b = monte_carlo(TERMS, 500, 3)["gate_days"]
     check(a == b, "seeded runs reproduce")
 
+    check(validate(GASOLINE) == [], "gasoline terms validate")
+    g = evaluate(point_inputs(GASOLINE))
+    check(g["first_gate"] == "FUEL FLOOR", "gasoline has no DEF gate")
+    gx = point_inputs(GASOLINE)
+    exp = (gx["stock_total"] + gx["ethanol_stock"]
+           - (gx["pipeline_fill"] + gx["tank_bottoms"] + gx["process_holdup"]
+              + gx["ethanol_floor"] + gx["terminal_working_min"]))
+    check(abs(g["usable"] - exp) < 1e-9, "ethanol enters stock and floor")
+
     print(f"selftest {ok}/{total}")
     return 0 if ok == total else 1
 
@@ -301,10 +363,13 @@ def main(argv):
     if "--selftest" in argv:
         return selftest()
     runs, seed, shock_loss, shock_days = 20000, 1, 0.0, 0.0
+    product = "diesel"
     i = 0
     while i < len(argv):
         a = argv[i]
-        if a == "--runs":
+        if a == "--product":
+            product = argv[i + 1]; i += 2
+        elif a == "--runs":
             runs = int(argv[i + 1]); i += 2
         elif a == "--seed":
             seed = int(argv[i + 1]); i += 2
@@ -312,7 +377,15 @@ def main(argv):
             shock_loss = float(argv[i + 1]); shock_days = float(argv[i + 2]); i += 3
         else:
             print("unknown arg:", a); return 2
-    return report(TERMS, runs, seed, shock_loss, shock_days)
+    names = list(PRODUCTS) if product == "all" else [product]
+    rc = 0
+    for name in names:
+        if name not in PRODUCTS:
+            print("unknown product:", name, "choose", list(PRODUCTS), "or all")
+            return 2
+        print(f"\n================ {name.upper()} ================")
+        rc |= report(PRODUCTS[name], runs, seed, shock_loss, shock_days)
+    return rc
 
 
 if __name__ == "__main__":
