@@ -2835,6 +2835,14 @@ thermodynamic-accountability-framework/
 │   │                             #   metrology/ -- removed in this
 │   │                             #   commit since clean versions
 │   │                             #   already exist.
+│   ├── distillate_floor_sim.py   # Runnable form of the operating
+│   │                             #   floor equation in docs/audits_
+│   │                             #   2026_11/us_distillate_floor_*.pdf.
+│   │                             #   Per-term status (MEASURED /
+│   │                             #   DERIVED / UNMEASURED / PLACEHOLDER;
+│   │                             #   CENSORED refused as input), days
+│   │                             #   to floor, DEF gate, tornado,
+│   │                             #   seeded Monte Carlo. --selftest 15.
 │   ├── serpentine_grade_esp_notes.md  # Notes (2026-09-24): ESP
 │   │                             #   rollover trigger on serpentine
 │   │                             #   9-13% descents. Sensor on tractor
@@ -2891,6 +2899,8 @@ thermodynamic-accountability-framework/
 │
 ├── docs/
 │   ├── audit_2026_04_07.md       # Repository audit notes
+│   ├── audits_2026_11/           # 5 co-authored audit PDFs (verbatim)
+│   │                             #   + README index with sha256 per file
 │   ├── theory/                    # Core theoretical framework
 │   │   ├── functional_epistemology_framework.md  # Core executable module (1700+ lines)
 │   │   ├── lhri.md               # Longitudinal Human Resilience Index
@@ -3151,6 +3161,13 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- docs/audits_2026_11/ + in_progress/distillate_floor_sim.py
+  (2026-11-08, co-authored). Five delivered PDFs filed verbatim:
+  decision-model blind spots, unaudited AI claims in civilian
+  infrastructure, US distillate floor measurands, Karst 2023 scope
+  audit, What AI Thinks transcript audit. README lists date, pages,
+  subject, sha256 and open items; contents not re-checked. Script
+  pasted verbatim (already ASCII); selftest 15/15; paste check clean.
 - judgment_registry J16 + gradient_field I10 + misuse M35 + signal_calibration
   T4b (2026-11-05, co-authored), branch claude/registry-j16 off main after
   #68 (built stacked on #68, rebased after it merged). records/J16/ (arXiv 2609.35591v1,
