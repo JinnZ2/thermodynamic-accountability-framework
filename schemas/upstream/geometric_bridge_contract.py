@@ -1,3 +1,8 @@
+# DESIGN BASIS (requested by repo owner):
+#   property: refuses malformed or unsupported input rather than defaulting
+#   reason:   UNSTATED -- ask owner
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 """
 Geometric-Bridge Contract -- stable surface of the Geometric-to-Binary
 Computational Bridge that TAF's taf_bridge.py and taf_alternative_
