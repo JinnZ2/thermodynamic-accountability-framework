@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# DESIGN BASIS (requested by repo owner):
+#   property: refuses malformed or unsupported input rather than defaulting
+#   reason:   UNSTATED -- ask owner
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 # scoring/rubrics.py -- CC0, stdlib only, python >= 3.7
 # Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #

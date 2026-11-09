@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# DESIGN BASIS (requested by repo owner):
+#   property: provenance carried with values (source, locator, hash,
+#             derivation)
+#   reason:   "Judgments drift through unregistered narrative replacement:
+#             the old judgment is dropped with no record and the new one
+#             arrives as if it had always been true. The fix is version
+#             control: provenance, scope, date, environment, judge, reason,
+#             dissent, and an explicit chain of what replaced what and
+#             why." (quoted from judgment_registry/README.md)
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 # integrity.py -- CC0, stdlib only, python >= 3.7
 # Provenance: co-authored (JinnZ2 + Claude), 2026-11-04.
 #

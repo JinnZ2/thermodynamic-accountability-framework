@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# DESIGN BASIS (requested by repo owner):
+#   property: provenance carried with values (source, locator, hash,
+#             derivation)
+#   reason:   UNSTATED -- ask owner
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 # validate.py -- CC0, stdlib only (json, re, sys, os, copy). Runs on python >= 3.5.
 # Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #

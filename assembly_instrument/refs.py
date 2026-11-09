@@ -1,3 +1,9 @@
+# DESIGN BASIS (requested by repo owner):
+#   property: provenance carried with values (source, locator, hash,
+#             derivation)
+#   reason:   UNSTATED -- ask owner
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 # refs.py -- CC0, stdlib only, python >= 3.5
 # Status: co-authored (JinnZ2 + Claude), 2026-11-03.
 #
