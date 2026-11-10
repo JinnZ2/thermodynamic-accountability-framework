@@ -1,7 +1,7 @@
 # audits_2026_11
 
-Co-authored (JinnZ2 + Claude) audit documents, delivered as PDFs and kept
-verbatim. CC0. Status tags inside each file are the file's own
+Co-authored (JinnZ2 + Claude) audit documents, delivered as PDFs (one .docx) and
+kept verbatim. CC0. Status tags inside each file are the file's own
 (OBSERVED / DERIVED / PROPOSED / MEASURED / UNMEASURED); nothing here
 was re-checked when filed.
 
@@ -12,6 +12,7 @@ was re-checked when filed.
 | us_distillate_floor_refinery_measurands.pdf | 2026-11-07 | 10 | Separated definitions (utilization U1-U3, inventory I1-I4, storage C1-C3); operating floor equation; DEF and sulfur branches; censored thresholds; data gaps | ecac803d785b4fa535689f061e99018a85837b2d1dbdf2f38aeba81313ba65fb |
 | scope_audit_karst_2023_mycorrhizal_networks.pdf | 2026-11-07 | 5 | Scope audit of Karst, Jones & Hoeksema 2023: what the paper reports vs "debunked"; definition and covariate gaps; one DeepSeek test run | 4e2544a4769b9a2de0df02e57d1ae2dcc7135b4ff0fa8f14ebc6a7bb02eb2336 |
 | what_ai_thinks_transcript_audit.pdf | 2026-11-06 | 10 | Audit of a partial panel transcript (six AI voices on extinction scenarios): welded terms, unlabeled gaps, slips, viability reframe | 3bf41d8a5938e8530228e82dca0bf2fc368d483c86a73c18cf1725a04d46e754 |
+| label_welds_pickaxe_mountain_to_training_data.docx | 2026-11-08 | Node 1 only | PARTIAL: file ends after Node 1 (physics: surface / shallow burst vs halls 80-100 m in granite; cube-root depth scaling; fallout transport). Title, purpose and the referenced "Model errors caught" section indicate further nodes not in this copy | 684d86b8e94d36100944d055704fa4d4dedf444e858bc80cc8ae1f91f5d5c1b4 |
 
 ## Runnable companion
 
@@ -35,4 +36,6 @@ ranges are stand-ins, not data.
 - Distillate: EIA terminal storage file for Mar 2024 not yet read;
   process holdup and terminal working minimum never collected.
 - Transcript audit: chapter 3 missing; failure-order timings not sourced.
+- Label welds: copy ends after Node 1; later nodes and the "Model errors caught"
+  section are not in the filed copy. Sources inside are mostly search snippets (its own caveat).
 - Decision-model audit: vendor logging of out-of-frame decisions not checked.

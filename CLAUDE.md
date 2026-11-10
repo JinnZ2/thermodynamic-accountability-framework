@@ -2902,7 +2902,8 @@ thermodynamic-accountability-framework/
 │
 ├── docs/
 │   ├── audit_2026_04_07.md       # Repository audit notes
-│   ├── audits_2026_11/           # 5 co-authored audit PDFs (verbatim)
+│   ├── audits_2026_11/           # 5 co-authored audit PDFs + 1 partial
+│   │                             #   .docx (verbatim)
 │   │                             #   + README index with sha256 per file
 │   ├── theory/                    # Core theoretical framework
 │   │   ├── functional_epistemology_framework.md  # Core executable module (1700+ lines)
@@ -3164,6 +3165,9 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- docs/audits_2026_11/label_welds_pickaxe_mountain_to_training_data.docx
+  (2026-11-08, co-authored): filed verbatim, PARTIAL -- the copy ends
+  after Node 1; README row and open item say so. sha256 in README.
 - docs/audits_2026_11/ + in_progress/distillate_floor_sim.py
   (2026-11-08, co-authored). Five delivered PDFs filed verbatim:
   decision-model blind spots, unaudited AI claims in civilian
