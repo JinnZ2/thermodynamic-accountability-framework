@@ -3165,6 +3165,14 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
+  `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
+  that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:
+  an undeclared intent is read as one that still applies. Simulators `law-audit-card/`
+  imports this module and reads that same case as VOID (no information) instead. The
+  candidate: make undeclared intent a third state (e.g. `intent_applicable = None`,
+  summary `[OUT OF SCOPE -- INTENT UNDECLARED]`) rather than defaulting to True. Not
+  applied; the two readings differ on exactly this case until TAF decides.
 - docs/audits_2026_11/label_welds_pickaxe_mountain_to_training_data.docx
   (2026-11-08, co-authored): filed verbatim, PARTIAL -- the copy ends
   after Node 1; README row and open item say so. sha256 in README.
