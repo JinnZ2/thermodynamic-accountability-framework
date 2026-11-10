@@ -3549,6 +3549,16 @@ session's notes only.
   before tests/test_e11.py existed; synthetic run PASS (a D7, b D8 at
   7 days, c concentration_report, d D11; 1 of 6 honest blocked, as
   registered). E12-E14 and B7/B8 added; README limits extended. 96 tests.
+- README.md rewritten 2026-11-03 as a node map (purpose, DCEA rules, full tree
+  with run-status tags, run commands, conventions, worked cases, gaps); prior
+  README kept verbatim at docs/readme_archive/README_before_2026-11-03.md.
+- Added `docs/DCEA_v0.1.md` and `docs/worker_side_ledger_road_driver.md`
+  (2026-11-03), verbatim, sha256-pinned in `docs/DCEA_checks.md`; added
+  `core/dcea.py` (spec section 6 calculator, Python 3.9 repair, pending_count,
+  duplicate_names) with a selftest that recomputes the ledger. Recompute: daily
+  $86.49-131.91 from raw inputs vs stated $86-133 (rounded rows); annual
+  $22,403-34,231 vs stated $22,300-34,600; share 38.2%-58.4%. Floor only:
+  filters PENDING. Findings in DCEA_checks.md; the delivered docs are unedited.
 - Added `labor_thermodynamics/driver_hours_evidence_register.py`
   (2026-09-23): register of what the record can and cannot answer
   about driver hours, fatigue, and tenure. Gaps are the product:
