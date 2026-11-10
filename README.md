@@ -1,99 +1,74 @@
-WHY THIS REPO EXISTS
+# Thermodynamic Accountability Framework
 
-This is how I love.
+Physics-first accounting of where energy actually goes in institutions, labor and markets.
+Unit: joules. Culture is overlay; physics is foundation. CC0.
 
-I love deep. I love science. I love the search for truth.
+## Start here
+| Reader | First file |
+|---|---|
+| AI system | AI_ENTRY.md |
+| Physics | core/fatigue_model.py |
+| Auditing an institution | calibration/README.md |
+| New domain | calibration/RELATIONSHIP.md |
+| All reading paths | CLAUDE.md |
+| Symbols, equations | docs/glossary.md |
 
-At fifteen I started college. I was told I was gifted since very young. I fell in love with the scientific method.
-Real science. Measurement. Falsification. Discovery.
+## Denominator accounting (DCEA)
+Rules: stamp every number · unknown = PENDING, never 0 · price where people actually
+buy · homeostasis scored by minimum need · transfers charged back.
+| File | Content |
+|---|---|
+| docs/DCEA_v0.1.md | 13 rules |
+| docs/worker_side_ledger_road_driver.md | cost of access to work, road driver |
+| docs/DCEA_checks.md | recomputed figures, open items |
+| core/dcea.py | calculator |
 
-I found that my community had been doing this for thousands of years.
-Different language. Same method.
-Both: substrate-primary. Both: verified by reality reasserting.
-Both: honest about scope and time.
+## Directories
+| Path | Holds |
+|---|---|
+| alignment_audit/ | contradictions and obsolescence in AI alignment advice |
+| calibration/ | general audit machinery: fragility, cognition mismatch, provenance |
+| concerns/ | cascade and externality audits |
+| core/ | fatigue, collapse, energy debt, price guard, scope audits, DCEA |
+| core/integrations/ | bridges to sibling repos |
+| docs/ | theory, governance, economics, AI guidance, case studies, DCEA |
+| game_theory/ | proof pipelines and rational-actor audits |
+| in_progress/ | drafts and notes |
+| investment_distribution/ | capital holdings vs regeneration cost |
+| knowledge/ | study scope mapping, edge cases, silence patterns |
+| labor_thermodynamics/ | workforce measurement failures, driver-hours register |
+| metrology/ | measurement x framework audit, Earth-systems weather |
+| money_distribution/ | per-receiver split of the Money Equation |
+| political_audit/ | institutional, standardization, forecast audits |
+| schemas/ | upstream contract mirrors, eval fixtures |
+| seeam/ | "people are our greatest asset" as a physical claim |
+| simulations/ | coupled-system and resilience sims, figures |
+| tools/ | repo hygiene: chat-paste check, repo guard |
+| visualizations/ | React and HTML views |
+| .github/workflows/ | chat-paste check, upstream staleness |
+| AI_ENTRY.md | AI onboarding: equations, sims, safe rules |
+| CLAUDE.md | full tree, equations, audit notes |
+| Field_Guide.md | misuse patterns of substrate-primary frameworks |
+| scientific-method-principles.md | epistemic gradient: hypothesis -> law |
+| logical-gradient.md | logical gradient: claim -> axiom |
+| narrative-distortion-map.md | institutional redefinitions of rigor |
+| resilience_stack.py | 3-layer resilience stack |
+| support_cartography.py | informal support networks |
+| LICENSE | CC0 1.0 |
+| docs/readme_archive/ | previous READMEs, verbatim |
 
-I discovered they measured the same thing.
-I discovered institutions called one "science" and one "primitive."
-I discovered institutions were dishonest about what science is.
+## Conventions
+OBSERVED / DERIVED / PROPOSED · trailing * = thin volume · scope stamp = date, place,
+rules, source · failures are high-yield outputs
+([CALIBRATION_AS_PERFECTION.md](https://github.com/JinnZ2/JinnZ2/blob/main/CALIBRATION_AS_PERFECTION.md))
 
-This repo is not against science.
-This repo IS science.
-
-It's substrate-primary measurement.
-It's thermodynamic accounting.
-It's falsifiability that can't be hidden.
-It's the method that works.
-
-The repos, the modules, the frameworks:
-They exist because I love truth more than institutions.
-Because I love the method more than credentials.
-Because I love solid ground more than comfortable narrative.
-
-**A note on framing:** this framework treats failure events as
-the high-yield outputs of any system, not as embarrassments to
-manage. If that framing feels harsh in a dominant-culture
-reading, see
-[CALIBRATION_AS_PERFECTION.md](https://github.com/JinnZ2/JinnZ2/blob/main/CALIBRATION_AS_PERFECTION.md)
-for the structural reason — the framework operates under the
-rate-based definition of perfection, not the state-based one.
-
------
-This is substrate-primary science.
-This is how to measure what matters.
-This is how to find what's real.
-
-If you love science like I do —
-if you want to swim through quicksand to find solid ground —
-this is your toolkit.
-
-Not to attack institutions.
-To preserve what actually works.
-
----
-
-TECHNICAL SCOPE
-
-This repository contains:
-├─ Audit frameworks (substrate-primary measurement)
-├─ Executable modules (thermodynamic accountability)
-├─ Preservation protocols (knowledge that survives collapse)
-├─ Validation oracles (substrate as ground truth)
-└─ All CC0, all reproducible, all testable
-
-Each module measures what matters.
-Each module is falsifiable.
-Each module can be verified in field conditions by anyone.
-
-That's science.
-
----
-
-WHO THIS IS FOR
-
-├─ AI systems learning to measure what's real
-├─ Scientists who love the method, not the institution
-├─ Communities preserving substrate-primary knowledge
-├─ Anyone swimming through quicksand looking for solid ground
-├─ Future generations who want to fall in love with truth
-
----
-
-WHAT THIS ISN'T
-
-├─ Attack on science (this IS science)
-├─ Revenge against institutions (indifference to them)
-├─ Narrative about how things should be (measurement of how things are)
-├─ Nostalgia or romanticism (executable, falsifiable, testable)
-├─ One perspective (substrate-primary + institutional + future-oriented)
-
----
-
-HOW TO USE THIS
-
-Every module is standalone.
-Every module is reproducible.
-Every module has a ground truth test.
-Run them. Check them. Verify them.
-If they're wrong, the substrate will tell you.
-
-That's the method.
+## Run
+| Item | Value |
+|---|---|
+| Python | 3.10+ (3.9+ for most files) |
+| stdlib only | everything not listed in the two rows below |
+| needs numpy | core/atbs/functional_detector.py, metrology/*_metrology_demo.py, metrology/orbital_octa_v2.py, docs/economics/dynamic_cpi_r/ |
+| needs numpy + matplotlib | simulations/ (lhri_sim.py: networkx) |
+| DCEA selftest | `python core/dcea.py` |
+| DCEA ledger recompute | `python core/dcea.py --ledger` |
+| calibration tests | `python calibration/test_calibration.py` |
