@@ -1,0 +1,98 @@
+UNDECLARED-INTENT A/B/C  (A void | B assumed+PROPOSED | C baseline = main)
+No winner is picked. OBSERVED = printed by this run; DERIVED = follows from code.
+
+demo stdout, lines differing from C [OBSERVED]:
+  A: [4, 11, 21, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, ('len', 69, 71)]
+  B: [4, 21, 31, 50]
+  C: none
+
+demo-1 septic x homestead   (demo a1; intent declared: None)
+  A  OUT OF SCOPE -- INTENT UNDECLARED  intent=None  label=VOID     preserved=0 undeclared=['MN_7080_subpart_X_legacy']
+  B  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=PROPOSED preserved=1 undeclared=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  diverge A/B: 6 of 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | A/C: 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | B/C: 3 ['intent_label', 'record.intent_preserved', 'summary']
+  summary chars A/B/C: 297 / 402 / 340
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+demo-2 bridge x footbridge   (demo a2; intent declared: None)
+  A  OUT OF SCOPE -- INTENT UNDECLARED  intent=None  label=VOID     preserved=0 undeclared=['STATE_BRIDGE_PERMIT_LEGACY']
+  B  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=PROPOSED preserved=1 undeclared=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  diverge A/B: 6 of 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | A/C: 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | B/C: 3 ['intent_label', 'record.intent_preserved', 'summary']
+  summary chars A/B/C: 288 / 393 / 331
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+cross-1 septic x footbridge   (audit_many cross; intent declared: None)
+  A  OUT OF SCOPE -- INTENT UNDECLARED  intent=None  label=VOID     preserved=0 undeclared=['MN_7080_subpart_X_legacy']
+  B  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=PROPOSED preserved=1 undeclared=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  diverge A/B: 6 of 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | A/C: 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | B/C: 3 ['intent_label', 'record.intent_preserved', 'summary']
+  summary chars A/B/C: 312 / 417 / 355
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+cross-2 bridge x homestead   (audit_many cross; intent declared: None)
+  A  OUT OF SCOPE -- INTENT UNDECLARED  intent=None  label=VOID     preserved=0 undeclared=['STATE_BRIDGE_PERMIT_LEGACY']
+  B  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=PROPOSED preserved=1 undeclared=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  diverge A/B: 6 of 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | A/C: 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | B/C: 3 ['intent_label', 'record.intent_preserved', 'summary']
+  summary chars A/B/C: 273 / 378 / 316
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+card-1 d=5 intent None   (law-audit-card test_derive; intent declared: None)
+  A  IN SCOPE                           intent=None  label=VOID     preserved=0 undeclared=-
+  B  IN SCOPE                           intent=True  label=PROPOSED preserved=0 undeclared=-
+  C  IN SCOPE                           intent=True  label=-        preserved=0 undeclared=-
+  diverge A/B: 2 of 6 ['intent_still_applicable', 'intent_label'] | A/C: 2 ['intent_still_applicable', 'intent_label'] | B/C: 1 ['intent_label']
+  summary chars A/B/C: 34 / 34 / 34
+  removal test (declared True / False): IN SCOPE / IN SCOPE [OBSERVED]
+
+card-2 d=50 intent False   (law-audit-card test_derive; intent declared: False)
+  A  OUT OF SCOPE -- INTENT EXPIRED     intent=False label=-        preserved=0 undeclared=-
+  B  OUT OF SCOPE -- INTENT EXPIRED     intent=False label=-        preserved=0 undeclared=-
+  C  OUT OF SCOPE -- INTENT EXPIRED     intent=False label=-        preserved=0 undeclared=-
+  diverge A/B: 0 of 6 [] | A/C: 0 [] | B/C: 0 []
+  summary chars A/B/C: 106 / 106 / 106
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+card-3 d=50 intent True   (law-audit-card test_derive; intent declared: True)
+  A  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  B  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  diverge A/B: 0 of 6 [] | A/C: 0 [] | B/C: 0 []
+  summary chars A/B/C: 195 / 195 / 195
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+card-4 d=50 intent None   (law-audit-card test_undeclared (card.py returns VOID before calling TAF); intent declared: None)
+  A  OUT OF SCOPE -- INTENT UNDECLARED  intent=None  label=VOID     preserved=0 undeclared=['R']
+  B  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=PROPOSED preserved=1 undeclared=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   intent=True  label=-        preserved=1 undeclared=-
+  diverge A/B: 6 of 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | A/C: 6 ['verdict', 'intent_still_applicable', 'intent_label', 'record.intent_preserved', 'record.intent_undeclared', 'summary'] | B/C: 3 ['intent_label', 'record.intent_preserved', 'summary']
+  summary chars A/B/C: 152 / 257 / 195
+  removal test (declared True / False): OUT OF SCOPE -- INTENT PRESERVED / OUT OF SCOPE -- INTENT EXPIRED [OBSERVED]
+
+coincidence cards (cases where A and B give the same verdict):
+  UIA_card_1_d_5_intent_None  tool reading: OPEN {'unrun': ['local_normal_form'], 'supported': ['shared_constraint', 'low_dim_projection']}
+    shared_constraint    supported summary() tests in_scope before intent; flipping a declared intent True/False gives IN SCOPE / IN SCOPE [OBSERVED]
+    local_normal_form    void      void
+    statistical_artifact ruled_out no random draw anywhere in audit(); one run per mode is the whole population [DERIVED]
+    numerical_artifact   ruled_out the intent slot is a bool/None; no float enters the comparison [DERIVED]
+    low_dim_projection   supported verdict tag equal, but A and B differ on intent_still_applicable, intent_label [OBSERVED]
+    none_of_above        void      void
+  UIA_card_2_d_50_intent_False  tool reading: OPEN {'unrun': ['local_normal_form'], 'supported': ['shared_constraint']}
+    shared_constraint    supported intent declared (False): audit() returns before the switch is read, so A, B, C read one value [DERIVED: same code path; all 6 fields equal]
+    local_normal_form    void      void
+    statistical_artifact ruled_out no random draw anywhere in audit(); one run per mode is the whole population [DERIVED]
+    numerical_artifact   ruled_out the intent slot is a bool/None; no float enters the comparison [DERIVED]
+    low_dim_projection   ruled_out all 6 output fields equal under A and B [OBSERVED]
+    none_of_above        void      void
+  UIA_card_3_d_50_intent_True  tool reading: OPEN {'unrun': ['local_normal_form'], 'supported': ['shared_constraint']}
+    shared_constraint    supported intent declared (True): audit() returns before the switch is read, so A, B, C read one value [DERIVED: same code path; all 6 fields equal]
+    local_normal_form    void      void
+    statistical_artifact ruled_out no random draw anywhere in audit(); one run per mode is the whole population [DERIVED]
+    numerical_artifact   ruled_out the intent slot is a bool/None; no float enters the comparison [DERIVED]
+    low_dim_projection   ruled_out all 6 output fields equal under A and B [OBSERVED]
+    none_of_above        void      void
+
+downstream .py importing core/regulatory_scope_audit.py [OBSERVED]: none
+  so TAF's test suites cannot move under the switch; the module's own demo and
+  external callers (Simulators law-audit-card/card.py, via TAF_PATH) are the cases. [DERIVED]
