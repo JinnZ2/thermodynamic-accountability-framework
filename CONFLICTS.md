@@ -118,11 +118,9 @@ misuse_guard tests                       24 run, OK
 python calibration/test_calibration.py   OK
 ```
 
-One thing the ledger run shows: `--ledger` prints annual $22,282-34,502 and
-38.0%-58.8%. #53's CLAUDE.md note states the raw-input recompute as
-$22,403-34,231 and 38.2%-58.4%. Not checked here whether these are two
-different computations (rounded rows against raw inputs) or a mismatch;
-`docs/DCEA_checks.md` is the place to look.
+`--ledger` prints the rounded-row figures. #53's CLAUDE.md note quotes the
+raw-input figures ($22,403-34,231, 38.2%-58.4%). `docs/DCEA_checks.md`
+lines 19-20 list both as two separate computations, so these agree.
 
 ## Not done
 
