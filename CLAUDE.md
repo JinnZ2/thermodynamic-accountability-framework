@@ -3207,6 +3207,18 @@ session's notes only.
   section runs newest first and #53's two 2026-11-03 bullets already sit
   after the other 2026-11-03 entries and before the 2026-09-23 one;
   CONFLICTS.md had called that out of order and is corrected.
+- #80 follow-up (2026-11-11), branch claude/unknown-axis-followup, stacked on #80.
+  - A module that raises is now GAP_INSTRUMENT on the coverage axis, carrying the
+    exception and missing path. It no longer reads RED.
+  - INFO is a coverage kind of its own, apart from UNKNOWN.
+  - `pipeline._aggregate` with no reports returns NOT_MEASURED (it was 0.0 = GREEN).
+  - The UNKNOWN confidence penalty is an A/B/C experiment in
+    calibration/confidence_unknown_experiment.py; no default changed.
+  - The schemas/ crashes come from b42ea34 (2026-05-04). It moved the files into
+    schemas/eval/ and schemas/upstream/ and missed five readers. All 27 test failures
+    on main trace to that move.
+  - Two test_audit_family assertions now check severity, not overall_status.
+  - Tables are in docs/UNKNOWN_AXIS.md (generated); notes in docs/UNKNOWN_AXIS_FOLLOWUP.md.
 - UNKNOWN moved to its own axis in `calibration/unified_audit.py` (2026-11-11,
   decided by Kavik), branch claude/unknown-coverage-axis. "UNKNOWN": 1 was removed
   from the rank table. Severity is computed from measured statuses only; coverage

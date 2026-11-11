@@ -30,6 +30,25 @@ from observation_dependence import run_observation_audit
 from adaptation_debt import run_adaptation_debt_audit
 
 
+NOT_MEASURED = "NOT_MEASURED"
+
+
+def _aggregate(reports: dict) -> tuple:
+    """(unified_score, unified_band value) across module reports.
+
+    No module report -> (None, NOT_MEASURED). Was (0.0, Band.GREEN):
+    with no module run, the empty mean read 0.0, the best band. Not
+    reachable through run_unified_audit today, since the calibration
+    module always runs; kept honest for any caller that assembles
+    reports itself.
+    """
+    module_scores = [r.aggregate_score for r in reports.values()]
+    if not module_scores:
+        return (None, NOT_MEASURED)
+    agg_score = sum(module_scores) / len(module_scores)
+    return (agg_score, Band.from_score(agg_score).value)
+
+
 def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
     """
     Run all three audits and produce unified report.
@@ -79,14 +98,12 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
         reports["adaptation_debt"] = run_adaptation_debt_audit(debt_input)
 
     # Aggregate across modules
-    module_scores = [r.aggregate_score for r in reports.values()]
-    agg_score = (sum(module_scores) / len(module_scores)) if module_scores else 0.0
-    agg_band = Band.from_score(agg_score)
+    agg_score, agg_band = _aggregate(reports)
 
     unified = {
         "system_id": system_desc.get("system_id", "unnamed_system"),
-        "unified_score": round(agg_score, 4),
-        "unified_band": agg_band.value,
+        "unified_score": None if agg_score is None else round(agg_score, 4),
+        "unified_band": agg_band,
         "module_reports": {
             name: json.loads(r.to_json()) for name, r in reports.items()
         },
