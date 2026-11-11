@@ -115,7 +115,7 @@ class TestPipelineNotMeasured(unittest.TestCase):
 
     def test_no_modules_not_measured(self):
         from pipeline import _aggregate, NOT_MEASURED
-        self.assertEqual(_aggregate({}), (None, NOT_MEASURED))
+        self.assertEqual(_aggregate({}), (None, "undetermined", "NO_MODULES_RUN"))
 
 
 class TestConfidenceExperiment(unittest.TestCase):

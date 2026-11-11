@@ -8,7 +8,7 @@ keyed GREEN/YELLOW/RED, but the pipeline emits Band.value strings
 so the .get(band, "YELLOW") fallback fires on every run (SILENT_FILL SF01
 in silent_fill_register.py). Three readings, none picked:
 
-    A  unmatched band -> GAP_INSTRUMENT (coverage), no severity
+    A  unmatched band -> GAP_INSTRUMENT_UNRECOGNIZED_LABEL (coverage), no severity
     B  explicit mapping PROPOSED below (to be edited by Kavik)
     C  current behaviour (YELLOW for every band)
 
@@ -17,7 +17,7 @@ stdlib only. CC0.
 
 from __future__ import annotations
 
-GAP_INSTRUMENT = "GAP_INSTRUMENT"
+GAP_INSTRUMENT_UNRECOGNIZED_LABEL = "GAP_INSTRUMENT_UNRECOGNIZED_LABEL"
 
 # Current map in unified_audit._run_legacy_pipeline.
 CURRENT_MAP = {"GREEN": "GREEN", "green": "GREEN", "YELLOW": "YELLOW",
@@ -35,9 +35,9 @@ PROPOSED_MAP = {
 
 def status(band: str, variant: str) -> str:
     if variant == "A":
-        return CURRENT_MAP.get(band, GAP_INSTRUMENT)
+        return CURRENT_MAP.get(band, GAP_INSTRUMENT_UNRECOGNIZED_LABEL)
     if variant == "B":
-        return PROPOSED_MAP.get(band, CURRENT_MAP.get(band, GAP_INSTRUMENT))
+        return PROPOSED_MAP.get(band, CURRENT_MAP.get(band, GAP_INSTRUMENT_UNRECOGNIZED_LABEL))
     return CURRENT_MAP.get(band, "YELLOW")
 
 
@@ -69,8 +69,8 @@ def selftest() -> int:
     rs = rows()
     bad = [r[0] for r in rs if r[5] != r[6]]   # C must equal what runs today
     checks = len(rs) + 1
-    if status("calibrating", "A") != GAP_INSTRUMENT:
-        bad.append("A does not route unmatched to GAP_INSTRUMENT")
+    if status("calibrating", "A") != GAP_INSTRUMENT_UNRECOGNIZED_LABEL:
+        bad.append("A does not route unmatched to GAP_INSTRUMENT_UNRECOGNIZED_LABEL")
     print(f"checks: {checks}   failed: {len(bad)}")
     for b in bad:
         print("  FAIL C != current on", b)

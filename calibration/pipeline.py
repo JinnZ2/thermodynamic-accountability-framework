@@ -29,24 +29,24 @@ from calibration_audit import run_calibration_audit
 from observation_dependence import run_observation_audit
 from adaptation_debt import run_adaptation_debt_audit
 
-
-NOT_MEASURED = "NOT_MEASURED"
+NOT_MEASURED = "NOT_MEASURED"   # retired as a band (2026-11-11); name kept for importers
+NO_MODULES_RUN = "NO_MODULES_RUN"
 
 
 def _aggregate(reports: dict) -> tuple:
-    """(unified_score, unified_band value) across module reports.
+    """(unified_score, unified_band, not_measured_reason).
 
-    No module report -> (None, NOT_MEASURED). Was (0.0, Band.GREEN):
-    with no module run, the empty mean read 0.0, the best band. Not
-    reachable through run_unified_audit today, since the calibration
-    module always runs; kept honest for any caller that assembles
-    reports itself.
+    No module ran -> (None, Band.UNKNOWN, NO_MODULES_RUN), never a score
+    of 0.0 (2026-11-11: #84 three-value shape plus #81's no-score ->
+    UNKNOWN rule, chosen by Kavik). Note:
+    calibration_audit always runs in run_unified_audit, so via that
+    function the empty branch is not reached; it is tested here directly.
     """
     module_scores = [r.aggregate_score for r in reports.values()]
     if not module_scores:
-        return (None, NOT_MEASURED)
+        return None, Band.UNKNOWN.value, NO_MODULES_RUN
     agg_score = sum(module_scores) / len(module_scores)
-    return (agg_score, Band.from_score(agg_score).value)
+    return round(agg_score, 4), Band.from_score(agg_score).value, None
 
 
 def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
@@ -98,12 +98,13 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
         reports["adaptation_debt"] = run_adaptation_debt_audit(debt_input)
 
     # Aggregate across modules
-    agg_score, agg_band = _aggregate(reports)
+    unified_score, unified_band, not_measured_reason = _aggregate(reports)
 
     unified = {
         "system_id": system_desc.get("system_id", "unnamed_system"),
-        "unified_score": None if agg_score is None else round(agg_score, 4),
-        "unified_band": agg_band,
+        "unified_score": unified_score,
+        "unified_band": unified_band,
+        "not_measured_reason": not_measured_reason,
         "module_reports": {
             name: json.loads(r.to_json()) for name, r in reports.items()
         },
