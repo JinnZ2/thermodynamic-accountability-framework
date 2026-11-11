@@ -91,14 +91,14 @@ _STATUS_RANK = {
 NOT_DETERMINABLE = "NOT_DETERMINABLE"
 
 # A module that raised is not a reading of the system. Its status is
-# GAP_INSTRUMENT and it goes to coverage with the exception and the
+# GAP_INSTRUMENT_CRASH and it goes to coverage with the exception and the
 # missing path, never to severity (2026-11-11 follow-up to #80).
-GAP_INSTRUMENT = "GAP_INSTRUMENT"
+GAP_INSTRUMENT_CRASH = "GAP_INSTRUMENT_CRASH"
 
 # Coverage kinds, kept apart: UNKNOWN (no value), INFO (a value that the
-# instrument cannot assess, e.g. non-numeric), GAP_INSTRUMENT (the
+# instrument cannot assess, e.g. non-numeric), GAP_INSTRUMENT_CRASH (the
 # instrument itself failed).
-COVERAGE_KINDS = ("UNKNOWN", "INFO", "GAP_INSTRUMENT")
+COVERAGE_KINDS = ("UNKNOWN", "INFO", "GAP_INSTRUMENT_CRASH")
 
 # Exit conditions for the assumption_validator UNKNOWN emitter
 # (assumption_validator.py:288). The two registers disagree and are
@@ -278,10 +278,10 @@ def _run_assumption_validator(state: dict[str, float]) -> tuple[str, dict]:
 def _coverage_entries(name: str, status: str, section: Any) -> list[dict]:
     """UNKNOWN inputs for one module, each with its expiry_condition."""
     entries: list[dict] = []
-    if status == GAP_INSTRUMENT:
+    if status == GAP_INSTRUMENT_CRASH:
         sec = section if isinstance(section, dict) else {}
         entries.append({
-            "kind": GAP_INSTRUMENT,
+            "kind": GAP_INSTRUMENT_CRASH,
             "module": name,
             "input": name,
             "reason": sec.get("error", "module raised"),
@@ -435,8 +435,8 @@ def run_full_audit(
                 "missing_path": getattr(e, "filename", None),
             }
             report.modules_run.append(name)
-            module_statuses[name] = GAP_INSTRUMENT
-            return GAP_INSTRUMENT
+            module_statuses[name] = GAP_INSTRUMENT_CRASH
+            return GAP_INSTRUMENT_CRASH
         report.sections[name] = section
         report.modules_run.append(name)
         module_statuses[name] = status

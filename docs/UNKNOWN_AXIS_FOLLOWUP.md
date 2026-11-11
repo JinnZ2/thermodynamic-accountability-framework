@@ -3,9 +3,9 @@
 Hand-written notes for the follow-up to PR #80. The before/after table and
 the A/B/C confidence table are generated in `docs/UNKNOWN_AXIS.md`.
 
-## 1. Crash is GAP_INSTRUMENT, not RED
+## 1. Crash is GAP_INSTRUMENT_CRASH, not RED
 
-A module that raises now gets status `GAP_INSTRUMENT`. It goes to
+A module that raises now gets status `GAP_INSTRUMENT_CRASH`. It goes to
 coverage with the exception text and `missing_path` (from the exception's
 `filename`). It does not count toward severity and no longer adds a red
 flag. A run where every module crashes reads NOT_DETERMINABLE.
