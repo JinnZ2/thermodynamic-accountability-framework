@@ -3165,6 +3165,15 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- UNKNOWN moved to its own axis in `calibration/unified_audit.py` (2026-11-11,
+  decided by Kavik), branch claude/unknown-coverage-axis. "UNKNOWN": 1 was removed
+  from the rank table. Severity is computed from measured statuses only; coverage
+  lists each UNKNOWN input with its expiry_condition (#77 and #78 texts carried side
+  by side). No measured input gives NOT_DETERMINABLE. overall_status is
+  "<sev>+COVERAGE(n)" when n > 0. Mirror: demo_full_audit.py.
+  Table and U40 trace: docs/UNKNOWN_AXIS.md (generated). 3 of 13 changed: T1 empty,
+  planted (b) and (c). One test was updated (empty -> NOT_DETERMINABLE); it encoded
+  nothing-measured=GREEN. No test encoded UNKNOWN=YELLOW.
 - Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
   `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
   that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:

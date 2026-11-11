@@ -374,7 +374,11 @@ class TestUnifiedAudit(unittest.TestCase):
         from unified_audit import run_full_audit
         report = run_full_audit(system_id="empty_test")
         self.assertEqual(report.modules_run, [])
-        self.assertEqual(report.overall_status, "GREEN")
+        # Was "GREEN" before 2026-11-11: nothing measured read as GREEN.
+        # With UNKNOWN on its own axis, no measured input is
+        # NOT_DETERMINABLE (docs/UNKNOWN_AXIS.md).
+        self.assertEqual(report.overall_status, "NOT_DETERMINABLE")
+        self.assertEqual(report.severity, "NOT_DETERMINABLE")
         self.assertGreater(len(report.modules_skipped), 0)
 
     def test_naive_response_trips_multiple_modules(self):
