@@ -127,3 +127,16 @@ These register backwards from the usual "higher is better" direction. Watch the 
 | `expiry_condition` | Instrument class, sensitivity or protocol whose null result would downgrade a PENDING / UNKNOWN slot. Filled only from the slot's own text; otherwise `VOID -- no exit defined`. | `docs/expiry_register.json` |
 | `expiry_source` | `file:line` or citation where that exit is already stated; `VOID` when none is. | `docs/expiry_register.json` |
 | `ABSENT_AT_SENSITIVITY(<value>)` | Scoped absence: looked for with a stated instrument / sensitivity / protocol and not found at that sensitivity. Never written as bare "absent". No slot holds it yet. | `docs/expiry_register.json` |
+
+## Audit coverage terms (`calibration/unified_audit.py`)
+
+One name, `GAP_INSTRUMENT`, was used in two senses on two branches. Both
+senses are kept under split names (2026-11-11). The bare name is retired.
+
+| Term | Meaning | Defined in |
+|---|---|---|
+| `GAP_INSTRUMENT_CRASH` | A module raised; nothing was measured. Coverage, not severity (#82 sense) | `calibration/unified_audit.py` |
+| `GAP_INSTRUMENT_UNRECOGNIZED_LABEL` | A module returned a status outside `_STATUS_RANK`; it emitted no severity that can be ranked (#84 sense) | `calibration/unified_audit.py` (#84 branch) |
+| `ALL_MODULES_GAP_INSTRUMENT_CRASH` | `not_determinable_reason`: every non-measured status is a crash | `calibration/unified_audit.py` (#84 branch) |
+| `ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL` | `not_determinable_reason`: every non-measured status is an unrecognized label | `calibration/unified_audit.py` (#84 branch) |
+| `MIXED_UNKNOWN_AND_GAP_INSTRUMENT` | `not_determinable_reason`: UNKNOWN and gap-instrument statuses both present | `calibration/unified_audit.py` (#84 branch) |
