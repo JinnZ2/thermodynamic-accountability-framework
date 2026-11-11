@@ -12,6 +12,26 @@ Rule followed: no side picked. Where git stopped, both versions were kept.
 Where git did not stop but the two sides still disagree in content, nothing
 was edited; the disagreement is listed below. Decisions stay with Kavik.
 
+## Decisions (Kavik, 2026-11-10) -- added after merge
+
+Branch (b) reached main as PR #75 on 2026-11-10. The text below this
+section is the record as written before that; only the C1 downstream
+line was corrected (marked there).
+
+```text
+#   decision        what was done (branch claude/pr53-followup)
+C1  fix date order  nothing to move: the section runs newest first and the
+                    two 2026-11-03 bullets already sit in order. The claim
+                    below that they were out of order was this session's
+                    error.
+S1  add the rows    seven rows added to the README Directories table
+S2  DECIDED-KEEP    "general enough"; file stays verbatim
+S3  DECIDED-KEEP    "general enough"; file stays verbatim, sha256 pin unchanged
+```
+
+S2 and S3 are exceptions to the identifier scrub by owner decision. The
+same is recorded in CLAUDE.md, Audit Notes, 2026-11-10.
+
 ## Summary
 
 ```text
@@ -49,9 +69,10 @@ Both sides inserted text directly under the same heading.
   - #53's version alone: 384 lines of notes go, including the misuse
     register, the identifier scrub record and the judgment_registry notes.
   - (b)'s order: #53 put its bullets at the top of the section. On (b) they
-    sit below main's block, so the section is no longer in date order (the
-    2026-11-03 bullets follow notes from 2026-11-05 to 2026-11-10 and
-    precede the 2026-09-23 note). Moving them is a one-block cut and paste.
+    sit below main's block. CORRECTED 2026-11-10: an earlier version of
+    this line said the section was therefore out of date order. It is not.
+    The section runs newest first; the 2026-11-03 bullets follow the notes
+    from 2026-11-10 down to 2026-11-03 and precede the 2026-09-23 note.
 
 ## S1  README.md
 

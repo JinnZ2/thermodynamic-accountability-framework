@@ -3191,6 +3191,22 @@ session's notes only.
   ABSENT_AT_SENSITIVITY(<value>) added to docs/glossary.md and the
   register; no module's vocabulary tuple was changed. Stage 2 (deciding
   exits for the VOID rows) not started.
+- PR #53 follow-up (2026-11-10, co-authored), branch claude/pr53-followup.
+  #53 reached main through PR #75 (branch claude/pr53-onto-main), with
+  CONFLICTS.md listing four differences. Owner decisions, 2026-11-10:
+  S2 and S3 DECIDED-KEEP ("general enough") -- docs/readme_archive/
+  README_2026-11-03_node_map.md keeps its line naming the pre-scrub
+  case-study filename and date, and docs/worker_side_ledger_road_driver.md
+  keeps its body-size and employer-type details; both stay verbatim and
+  the ledger's sha256 pin in docs/DCEA_checks.md is unchanged. These two
+  files are exceptions to the N-items scrub by owner decision, not
+  oversights. S1: README Directories table gains rows for the seven
+  folders added after #53 was written (assembly_instrument,
+  community_black_start, gradient_field, judgment_registry, misuse_guard,
+  signal_calibration, weight_edit_ledger). C1: no move made -- this
+  section runs newest first and #53's two 2026-11-03 bullets already sit
+  after the other 2026-11-03 entries and before the 2026-09-23 one;
+  CONFLICTS.md had called that out of order and is corrected.
 - Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
   `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
   that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:
