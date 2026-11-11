@@ -19,7 +19,7 @@
 # Coincidence cards are read by the forest-model-ledger tool when
 # FOREST_LEDGER points at a checkout; otherwise NOT_TESTABLE.
 
-import io, json, os, re, subprocess, sys
+import ast, io, json, os, re, subprocess, sys
 from contextlib import redirect_stdout
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -376,7 +376,19 @@ def downstream(path):
                 continue
             with open(p, encoding="utf-8", errors="replace") as fh:
                 src = fh.read()
-            if re.search(r"^\s*(from|import)\s+[\w.]*\b%s\b" % re.escape(name), src, re.M):
+            # AST, not regex: a regex matched 'import substrate_audit as sa'
+            # inside calibration/substrate_audit.py's own docstring (2026-11-11).
+            try:
+                tree = ast.parse(src)
+            except SyntaxError:
+                continue
+            mods = set()
+            for n in ast.walk(tree):
+                if isinstance(n, ast.Import):
+                    mods.update(a.name.split(".")[-1] for a in n.names)
+                elif isinstance(n, ast.ImportFrom) and n.module:
+                    mods.add(n.module.split(".")[-1])
+            if name in mods:
                 hits.append(os.path.relpath(p, ROOT))
     return sorted(hits)
 
@@ -487,11 +499,11 @@ def chains():
     # within R6: missing flag makes the years fill unreachable on that event
     e = {"friction_events": [{"type": "a"}]}
     sc = R6a.score_friction_removal(e["friction_events"], fill_r6="baseline")
-    out.append({"fill": "R6", "within": "calibration_audit.py:202 -> :226",
+    out.append({"fill": "R6", "within": "calibration_audit.py:204 -> :255 (were :202 -> :226 at dc1c8c1)",
                 "note": "an event with no flag reads preserved, so its years default is never "
                         "read; the second fill is reached only through the first reading True "
                         "[OBSERVED: removed count %s]" % [x for x in sc.evidence if "removed" in x]})
-    out.append({"fill": "R6", "within": "pipeline.py:68-72 -> calibration_audit + adaptation_debt",
+    out.append({"fill": "R6", "within": "pipeline.py:83, :86 (were :68-71 at dc1c8c1) -> calibration_audit + adaptation_debt",
                 "note": "one event missing a field is read by both modules in run_unified_audit; "
                         "both reports and the unified band carry it [OBSERVED in planted pipeline cases]"})
     return out
