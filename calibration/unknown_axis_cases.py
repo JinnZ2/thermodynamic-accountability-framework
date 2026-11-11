@@ -102,7 +102,7 @@ PLANTED = [
     ("Pc_all_unknown", "planted (c)", {"system_state": {}},
      {"severity": "NOT_DETERMINABLE", "coverage_count": 8}),
     # follow-up: (d) INFO is coverage, labelled apart from UNKNOWN;
-    # (e) a module that raises is GAP_INSTRUMENT coverage, not RED.
+    # (e) a module that raises is GAP_INSTRUMENT_CRASH coverage, not RED.
     ("Pd_green_plus_1_info", "planted (d)",
      {"system_state": dict(_TEST_HEALTHY, trust_level="high")},
      {"severity": "GREEN", "coverage_count": 1}),
@@ -166,6 +166,8 @@ TRACE = [
 
 # overall_status on PR #82 (claude/unknown-axis-followup @ f12fc01):
 # crash as GAP_INSTRUMENT, but the five schemas/ readers still stale.
+# Pinned output of f12fc01, kept as recorded: the bare name was renamed
+# GAP_INSTRUMENT_CRASH afterwards (2026-11-11), not at that commit.
 PR82_COMMIT = "f12fc01"
 PR82 = {
     "T1_empty": "NOT_DETERMINABLE",

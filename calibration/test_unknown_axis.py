@@ -73,7 +73,7 @@ class TestRules(unittest.TestCase):
     def test_crash_is_gap_not_red(self):
         r = run_full_audit(function_audit={"function": None})
         self.assertEqual(r.severity, NOT_DETERMINABLE)
-        self.assertEqual([e["kind"] for e in r.coverage], ["GAP_INSTRUMENT"])
+        self.assertEqual([e["kind"] for e in r.coverage], ["GAP_INSTRUMENT_CRASH"])
         self.assertEqual(r.red_flags, [])
 
     def test_crash_records_missing_path(self):
@@ -86,7 +86,7 @@ class TestRules(unittest.TestCase):
             r = run_full_audit(response_text="x")
         finally:
             N._DEFAULT_LEDGER = saved
-        gaps = [e for e in r.coverage if e["kind"] == "GAP_INSTRUMENT"]
+        gaps = [e for e in r.coverage if e["kind"] == "GAP_INSTRUMENT_CRASH"]
         self.assertEqual([e["module"] for e in gaps], ["negative_space"])
         self.assertTrue(gaps[0]["missing_path"].endswith("no_such_ledger.json"))
         self.assertTrue(gaps[0]["reason"].startswith("FileNotFoundError"))
@@ -95,7 +95,7 @@ class TestRules(unittest.TestCase):
         for cid, _src, kw in CASES:
             r = run_full_audit(system_id=cid, **kw)
             self.assertEqual(
-                [e for e in r.coverage if e["kind"] == "GAP_INSTRUMENT"], [], cid)
+                [e for e in r.coverage if e["kind"] == "GAP_INSTRUMENT_CRASH"], [], cid)
 
     def test_info_kind_separate(self):
         r = run_full_audit(system_state={"trust_level": "high"})

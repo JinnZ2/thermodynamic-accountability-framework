@@ -31,7 +31,7 @@ REGISTER = [
      "pipeline unified_band is a Band.value (calibrating/drifting/mauling/"
      "memorialized_only); the map keys are GREEN/YELLOW/RED, so every band "
      "is unmatched and the fallback YELLOW is returned",
-     "A unmatched -> GAP_INSTRUMENT coverage | B explicit mapping, PROPOSED "
+     "A unmatched -> GAP_INSTRUMENT_UNRECOGNIZED_LABEL coverage | B explicit mapping, PROPOSED "
      "| C current; see pipeline_band_experiment.py", True),
 
     ("SF02", "SILENT_FILL", "calibration_audit.py", 41, "score=0.5,",
