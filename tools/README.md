@@ -4,6 +4,7 @@ Repo-hygiene scripts. stdlib only.
 
 - `chat_paste_check.py`   detect chat-paste contamination
 - `chat_paste_fix.py`     auto-fix the mechanical subset
+- `expiry_check.py`       check `docs/expiry_register.json` against the tree; `--write` renders the `.md`
 
 Run on staged files before commit:
 

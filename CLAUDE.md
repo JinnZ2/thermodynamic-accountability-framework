@@ -3169,6 +3169,22 @@ session's notes only.
   work order item 1(b). Reproduces 43 PENDING + 36 UNKNOWN lines at d5e6b1c and
   classifies each; 23 carry an expiry_condition, 7 have no exit defined (counted,
   not failed), 0 at ABSENT_AT_SENSITIVITY. Delivered files unedited.
+- expiry_condition stage 1 (2026-11-10, co-authored), branch
+  claude/expiry-condition-stage1. docs/expiry_register.json (source),
+  docs/expiry_register.md (generated), tools/expiry_check.py. One row per
+  PENDING / UNKNOWN slot with expiry_condition + expiry_source, filled
+  only from the slot's own text; otherwise VOID. Result: 64 slots (15
+  PENDING, 49 UNKNOWN), 0 filled, 64 VOID; 42 of the VOID rows have
+  partial text (a named protocol or a resolution condition with no
+  null-result rule), recorded apart and not counted as an exit. The work
+  order named 43 PENDING + 36 UNKNOWN; that list was not in the tree and
+  the slot rule here (stated in the register) does not reproduce it. The
+  "default sweep rank list" was not found either; verdict-reaching is
+  read from the code by hand. Sidecar only: no module, record or pinned
+  doc was edited, so no logic and no sha256 pin moved. Status
+  ABSENT_AT_SENSITIVITY(<value>) added to docs/glossary.md and the
+  register; no module's vocabulary tuple was changed. Stage 2 (deciding
+  exits for the VOID rows) not started.
 - Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
   `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
   that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:
