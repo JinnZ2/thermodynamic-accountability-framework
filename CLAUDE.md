@@ -3165,6 +3165,12 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/expiry_reconcile.py` + `docs/EXPIRY_RECONCILED.md` (2026-11-11),
+  branch claude/expiry-register-reconciled (merges #77 and #78 unchanged). Classifies
+  the 97 post-base lines (post_base_97: SLOT 32, EMITTER 2, DEFAULT 1, VOCAB 41,
+  RULE 6, MENTION 15) and puts both registers in one table with both counting rules
+  stated verbatim; no rule picked. With post_base_97: AGREE 170, RULE_DIFF 7,
+  CLASS_DIFF 4, ONLY_78 1, TREE_DIFF 0 (35 as shipped). No logic change.
 - Added `calibration/expiry_register.py` + `docs/EXPIRY_REGISTER.md` (2026-11-11):
   work order item 1(b). Reproduces 43 PENDING + 36 UNKNOWN lines at d5e6b1c and
   classifies each; 23 carry an expiry_condition, 7 have no exit defined (counted,
