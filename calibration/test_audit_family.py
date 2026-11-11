@@ -392,7 +392,10 @@ class TestUnifiedAudit(unittest.TestCase):
             system_id="naive_response",
             response_text=naive,
         )
-        self.assertEqual(report.overall_status, "RED")
+        # Was overall_status == "RED". negative_space raises (its ledger
+        # moved to schemas/eval/ in b42ea34); the crash is now coverage
+        # (GAP_INSTRUMENT), so the colour is checked on the severity axis.
+        self.assertEqual(report.severity, "RED")
         self.assertIn("monoculture", report.modules_run)
         self.assertIn("anti_metaphor", report.modules_run)
         self.assertIn("negative_space", report.modules_run)
@@ -424,7 +427,9 @@ class TestUnifiedAudit(unittest.TestCase):
             system_state=healthy_state,
             response_text=clean,
         )
-        self.assertIn(report.overall_status, ("GREEN", "YELLOW"))
+        # Was overall_status in (GREEN, YELLOW); failed on main because the
+        # negative_space crash scored RED. Checked on the severity axis.
+        self.assertIn(report.severity, ("GREEN", "YELLOW"))
         self.assertIn("assumption_validator", report.modules_run)
         # Healthy state should at minimum not RED the cascade
         av_section = report.sections.get("assumption_validator", {})

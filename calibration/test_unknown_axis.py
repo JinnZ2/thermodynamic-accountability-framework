@@ -28,7 +28,7 @@ class TestPlanted(unittest.TestCase):
     def test_b_prints_both_axes(self):
         _cid, _s, kw, _e = PLANTED[1]
         r = run_full_audit(**kw)
-        self.assertEqual(r.overall_status, "GREEN+COVERAGE(3)")
+        self.assertEqual(r.overall_status, "GREEN+COVERAGE(3: UNKNOWN=3)")
         self.assertNotEqual(r.overall_status, "GREEN")
         self.assertIn("Coverage: 3", r.summary)
 
@@ -60,19 +60,59 @@ class TestRules(unittest.TestCase):
             if r.coverage:
                 self.assertNotIn(r.overall_status, ("GREEN", "YELLOW", "RED"))
 
-    def test_existing_cases_changed_count(self):
+    def test_existing_cases_severity_changes(self):
+        # Severity (not the one-string form) vs main @ dc1c8c1. Moved:
+        # T1 (no input) and T3 (its RED came only from a crash).
         changed = []
         for cid, _src, kw in CASES:
             r = run_full_audit(system_id=cid, **kw)
-            if r.overall_status != BEFORE[cid]:
+            if r.severity != BEFORE[cid]:
                 changed.append(cid)
-        self.assertEqual(changed, ["T1_empty"])
+        self.assertEqual(changed, ["T1_empty", "T3_healthy_clean"])
+
+    def test_crash_is_gap_not_red(self):
+        r = run_full_audit(function_audit={"function": None})
+        self.assertEqual(r.severity, NOT_DETERMINABLE)
+        self.assertEqual([e["kind"] for e in r.coverage], ["GAP_INSTRUMENT"])
+        self.assertEqual(r.red_flags, [])
+
+    def test_crash_records_missing_path(self):
+        r = run_full_audit(response_text="x")
+        gaps = {e["module"]: e for e in r.coverage
+                if e["kind"] == "GAP_INSTRUMENT"}
+        for mod, e in gaps.items():
+            self.assertTrue(e["reason"])
+            if e["reason"].startswith("FileNotFoundError"):
+                self.assertTrue(e["missing_path"])
+
+    def test_info_kind_separate(self):
+        r = run_full_audit(system_state={"trust_level": "high"})
+        kinds = r.to_dict()["coverage_by_kind"]
+        self.assertEqual(kinds.get("INFO"), 1)
+        self.assertEqual(kinds.get("UNKNOWN"), 7)
 
     def test_generated_doc_current(self):
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             "..", "docs", "UNKNOWN_AXIS.md")
         with open(path) as fh:
             self.assertEqual(fh.read(), render(None))
+
+
+
+class TestPipelineNotMeasured(unittest.TestCase):
+
+    def test_no_modules_not_measured(self):
+        from pipeline import _aggregate, NOT_MEASURED
+        self.assertEqual(_aggregate({}), (None, NOT_MEASURED))
+
+
+class TestConfidenceExperiment(unittest.TestCase):
+
+    def test_selftest(self):
+        import contextlib, io
+        import confidence_unknown_experiment as X
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(X.selftest(), 0)
 
 
 if __name__ == "__main__":

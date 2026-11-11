@@ -90,6 +90,16 @@ _STATUS_RANK = {
 
 NOT_DETERMINABLE = "NOT_DETERMINABLE"
 
+# A module that raised is not a reading of the system. Its status is
+# GAP_INSTRUMENT and it goes to coverage with the exception and the
+# missing path, never to severity (2026-11-11 follow-up to #80).
+GAP_INSTRUMENT = "GAP_INSTRUMENT"
+
+# Coverage kinds, kept apart: UNKNOWN (no value), INFO (a value that the
+# instrument cannot assess, e.g. non-numeric), GAP_INSTRUMENT (the
+# instrument itself failed).
+COVERAGE_KINDS = ("UNKNOWN", "INFO", "GAP_INSTRUMENT")
+
 # Exit conditions for the assumption_validator UNKNOWN emitter
 # (assumption_validator.py:288). The two registers disagree and are
 # carried side by side; neither is picked (docs/EXPIRY_RECONCILED.md,
@@ -126,11 +136,19 @@ def _aggregate_status(statuses: list[str]) -> str:
     return _STATUS_NORMALIZED[worst]
 
 
-def _combined_status(severity: str, coverage_count: int) -> str:
+def _coverage_by_kind(coverage: list[dict]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for e in coverage:
+        counts[e["kind"]] = counts.get(e["kind"], 0) + 1
+    return {k: counts[k] for k in COVERAGE_KINDS if k in counts}
+
+
+def _combined_status(severity: str, coverage: list[dict]) -> str:
     """The one-string form. Never a colour alone when coverage > 0."""
-    if coverage_count == 0:
+    if not coverage:
         return severity
-    return f"{severity}+COVERAGE({coverage_count})"
+    kinds = ", ".join(f"{k}={v}" for k, v in _coverage_by_kind(coverage).items())
+    return f"{severity}+COVERAGE({len(coverage)}: {kinds})"
 
 
 # ---------------------------------------------------------------
@@ -157,6 +175,7 @@ class UnifiedAuditReport:
             "overall_status": self.overall_status,
             "severity": self.severity,
             "coverage_count": len(self.coverage),
+            "coverage_by_kind": _coverage_by_kind(self.coverage),
             "coverage": self.coverage,
             "red_flags": self.red_flags,
             "summary": self.summary,
@@ -241,8 +260,8 @@ def _run_assumption_validator(state: dict[str, float]) -> tuple[str, dict]:
     # Measured inputs only. detect_cascade_risk already ignores UNKNOWN
     # assumptions; with none measured its MINIMAL is the absence of a
     # reading, not a reading, so the module itself is UNKNOWN.
-    if assumptions and all(v.get("status") == "UNKNOWN"
-                           for v in assumptions.values()):
+    if assumptions and not any(v.get("status") in ("GREEN", "YELLOW", "RED")
+                               for v in assumptions.values()):
         return ("UNKNOWN", report)
     # Map cascade_level to our status vocabulary.
     cascade_level = report["cascade"]["cascade_level"]
@@ -259,18 +278,39 @@ def _run_assumption_validator(state: dict[str, float]) -> tuple[str, dict]:
 def _coverage_entries(name: str, status: str, section: Any) -> list[dict]:
     """UNKNOWN inputs for one module, each with its expiry_condition."""
     entries: list[dict] = []
+    if status == GAP_INSTRUMENT:
+        sec = section if isinstance(section, dict) else {}
+        entries.append({
+            "kind": GAP_INSTRUMENT,
+            "module": name,
+            "input": name,
+            "reason": sec.get("error", "module raised"),
+            "missing_path": sec.get("missing_path"),
+            "expiry_condition": _VOID,
+        })
+        return entries
     if name == "assumption_validator" and isinstance(section, dict):
         for aid, a in section.get("assumptions", {}).items():
             if a.get("status") == "UNKNOWN":
                 entries.append({
+                    "kind": "UNKNOWN",
                     "module": name,
                     "input": aid,
                     "reason": a.get("message", "no value"),
                     "expiry_condition": dict(_AV_UNKNOWN_EXPIRY),
                 })
+            elif a.get("status") == "INFO":
+                entries.append({
+                    "kind": "INFO",
+                    "module": name,
+                    "input": aid,
+                    "reason": a.get("message", "value not assessable"),
+                    "expiry_condition": _VOID,
+                })
         return entries
     if status not in _STATUS_RANK:
         entries.append({
+            "kind": "UNKNOWN",
             "module": name,
             "input": name,
             "reason": f"module status {status!r} is not a measured severity",
@@ -387,11 +427,16 @@ def run_full_audit(
         try:
             status, section = runner(*args, **kwargs)
         except Exception as e:
-            report.sections[name] = {"error": f"{type(e).__name__}: {e}"}
+            # Was: status RED + a red flag. A crash is a gap in the
+            # instrument, not a reading of the system.
+            report.sections[name] = {
+                "error": f"{type(e).__name__}: {e}",
+                "exception_type": type(e).__name__,
+                "missing_path": getattr(e, "filename", None),
+            }
             report.modules_run.append(name)
-            report.red_flags.append(f"{name} crashed: {e}")
-            module_statuses[name] = "RED"
-            return "RED"
+            module_statuses[name] = GAP_INSTRUMENT
+            return GAP_INSTRUMENT
         report.sections[name] = section
         report.modules_run.append(name)
         module_statuses[name] = status
@@ -463,7 +508,7 @@ def run_full_audit(
             _coverage_entries(name, status, report.sections.get(name)))
     report.severity = _aggregate_status(statuses)
     report.overall_status = _combined_status(report.severity,
-                                             len(report.coverage))
+                                             report.coverage)
 
     # Red flags: driven by the dispatcher's returned status, since
     # different modules expose their status under different key paths.
@@ -508,8 +553,10 @@ def run_full_audit(
     else:
         report.summary = (f"{n_run} module(s) ran; "
                           "partial degradation. Monitor for convergence.")
-    report.summary += (f" Coverage: {n_cov} UNKNOWN input(s)"
-                       + (" -- severity covers measured inputs only."
+    kinds = ", ".join(f"{k}={v}" for k, v in
+                      _coverage_by_kind(report.coverage).items())
+    report.summary += (f" Coverage: {n_cov} input(s) not measured"
+                       + (f" ({kinds}) -- severity covers measured inputs only."
                           if n_cov else "."))
 
     return report
