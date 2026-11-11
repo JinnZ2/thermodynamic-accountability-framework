@@ -3166,7 +3166,7 @@ session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
 - #80 follow-up (2026-11-11), branch claude/unknown-axis-followup, stacked on #80.
-  - A module that raises is now GAP_INSTRUMENT on the coverage axis, carrying the
+  - A module that raises is now GAP_INSTRUMENT_CRASH on the coverage axis, carrying the
     exception and missing path. It no longer reads RED.
   - INFO is a coverage kind of its own, apart from UNKNOWN.
   - `pipeline._aggregate` with no reports returns NOT_MEASURED (it was 0.0 = GREEN).

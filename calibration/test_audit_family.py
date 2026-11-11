@@ -394,7 +394,7 @@ class TestUnifiedAudit(unittest.TestCase):
         )
         # Was overall_status == "RED". negative_space raises (its ledger
         # moved to schemas/eval/ in b42ea34); the crash is now coverage
-        # (GAP_INSTRUMENT), so the colour is checked on the severity axis.
+        # (GAP_INSTRUMENT_CRASH), so the colour is checked on the severity axis.
         self.assertEqual(report.severity, "RED")
         self.assertIn("monoculture", report.modules_run)
         self.assertIn("anti_metaphor", report.modules_run)

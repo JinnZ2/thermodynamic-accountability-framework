@@ -73,13 +73,13 @@ class TestRules(unittest.TestCase):
     def test_crash_is_gap_not_red(self):
         r = run_full_audit(function_audit={"function": None})
         self.assertEqual(r.severity, NOT_DETERMINABLE)
-        self.assertEqual([e["kind"] for e in r.coverage], ["GAP_INSTRUMENT"])
+        self.assertEqual([e["kind"] for e in r.coverage], ["GAP_INSTRUMENT_CRASH"])
         self.assertEqual(r.red_flags, [])
 
     def test_crash_records_missing_path(self):
         r = run_full_audit(response_text="x")
         gaps = {e["module"]: e for e in r.coverage
-                if e["kind"] == "GAP_INSTRUMENT"}
+                if e["kind"] == "GAP_INSTRUMENT_CRASH"}
         for mod, e in gaps.items():
             self.assertTrue(e["reason"])
             if e["reason"].startswith("FileNotFoundError"):
