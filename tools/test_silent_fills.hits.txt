@@ -1,0 +1,19 @@
+existing = tests in test_calibration + test_audit_family that execute the line
+this_family = cases here that execute the line (each row's own case omits its input)
+existing_fired = of those, tests where the input was absent at the line
+row       existing  existing_fired  this_family
+SF-AD1           4               0            5
+SF-AD2           4               0            5
+SF-AD3           4               4            5
+SF-R1            0               0            2
+SF-R1b           0               0            2
+SF-R1c           0               0            1
+SF-R1d           0               0            1
+SF-R2            0               0            1
+SF-R3            0               0            1
+SF-R6a           2               0            4
+SF-R6b           1               0            2
+SF-R6c           0               0            2
+SF-R6d           0               0            2
+SF-R6e           6               0            7
+SF-R6f           4               0            5
