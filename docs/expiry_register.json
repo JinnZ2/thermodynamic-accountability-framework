@@ -53,9 +53,14 @@
     "file": "calibration/calibration_audit.py",
     "line": 204,
     "anchor": "e.get(\"removed\", False)",
-    "what": "_is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0",
+    "what": "_is_removed defaults False; calibration/pipeline.py:83 defaults removed to False and :86 defaults years_since_removed to 0.0",
     "holds_pending_or_unknown": false,
-    "line_at_built_commit": 202
+    "line_at_built_commit": 202,
+    "superseded_text": {
+     "text": "_is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0",
+     "superseded": "2026-11-11",
+     "why": "lines moved when the R6 switch was added: at built_against_commit the removed default was :68 (not named in the old text) and the years default :69-71; now :83 and :86"
+    }
    },
    {
     "rank": 7,
@@ -1103,10 +1108,11 @@
   }
  ],
  "silent_fills": {
-  "about": "SILENT_FILL = C7 without the label: a default fills a missing input and the output reads as if the input had been supplied. The PENDING/UNKNOWN slot rule cannot see it, because no PENDING or UNKNOWN value is ever held. Rows here cover sweep ranks 1, 2, 3, 6. Rank 7 (UNKNOWN severity 1 -> YELLOW) is out of scope, awaiting review. expiry_condition uses the slot guard: own stated exit, else VOID. None of these sites states an exit.",
+  "about": "SILENT_FILL = C7 without the label: a default fills a missing input and the output reads as if the input had been supplied. The PENDING/UNKNOWN slot rule cannot see it, because no PENDING or UNKNOWN value is ever held. Rows here cover sweep ranks 1, 2, 3, 6. Rank 7 (UNKNOWN severity 1 -> YELLOW) is out of scope, awaiting review. expiry_condition uses the slot guard: own stated exit, else VOID. None of these sites states an exit. Rows added 2026-11-11 (SF-R1b..d, SF-AD1..3) have no switch yet; the three-way switch for them is deferred.",
   "fail_direction_vocabulary": {
    "OPEN": "the fill reads the missing input in the direction that relaxes the verdict",
-   "SAFE": "the fill reads the missing input in the direction that tightens the verdict"
+   "SAFE": "the fill reads the missing input in the direction that tightens the verdict",
+   "UNSIGNED": "the fill is a midpoint or table value; whether it relaxes or tightens the verdict depends on the true value it replaces (added 2026-11-11)"
   },
   "rows": [
    {
@@ -1247,6 +1253,111 @@
     "expiry_source": "VOID",
     "in_sweep_rank": 6,
     "switch": "TAF_FILL_R6"
+   },
+   {
+    "id": "SF-R1b",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/provenance_corruption_detector_2026.py",
+    "line": 160,
+    "anchor": "), 0.10)",
+    "missing": "a citation type string not in PROVENANCE_GRADES",
+    "becomes": "grade 0.10",
+    "fail_direction": "SAFE",
+    "verdict_reached": "grounding_score -> mismatch -> per-claim risk -> summary_verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": "near 1 (same line)",
+    "switch": null,
+    "added": "2026-11-11",
+    "note": "Same line as SF-R1. The TAF_FILL_R1 void arm (line 152) still applies this 0.10 to unlisted types; not switched."
+   },
+   {
+    "id": "SF-R1c",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/provenance_corruption_detector_2026.py",
+    "line": 148,
+    "anchor": "return 0.10",
+    "missing": "any citation on a claim with a 2+ digit number or two capitalised words",
+    "becomes": "grade 0.10",
+    "fail_direction": "SAFE",
+    "verdict_reached": "grounding_score -> mismatch -> per-claim risk -> summary_verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": "no",
+    "switch": null,
+    "added": "2026-11-11",
+    "stated_text": "specific claim with no source = high hallucination risk",
+    "stated_text_line": 148
+   },
+   {
+    "id": "SF-R1d",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/provenance_corruption_detector_2026.py",
+    "line": 149,
+    "anchor": "return 0.30",
+    "missing": "any citation on a generic claim",
+    "becomes": "grade 0.30",
+    "fail_direction": "SAFE",
+    "verdict_reached": "grounding_score -> mismatch -> per-claim risk -> summary_verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": "no",
+    "switch": null,
+    "added": "2026-11-11",
+    "stated_text": "generic claim without source",
+    "stated_text_line": 149,
+    "note": "Tighter than every typed grade above 0.30, looser than the 0.10 branch on the line above. The 0.30 at lines 157 and 163 is unreachable (citations non-empty there)."
+   },
+   {
+    "id": "SF-AD1",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/adaptation_debt.py",
+    "line": 88,
+    "anchor": "event.get(\"initial_load\", 0.5)",
+    "missing": "friction event initial_load",
+    "becomes": "0.5",
+    "fail_direction": "UNSIGNED",
+    "verdict_reached": "compute_event_debt -> total debt / cliff proximity -> verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": "no",
+    "switch": null,
+    "added": "2026-11-11",
+    "note": "pipeline.py:70 and :82 write the same 0.5 into the events before they reach this line."
+   },
+   {
+    "id": "SF-AD2",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/adaptation_debt.py",
+    "line": 90,
+    "anchor": "event.get(\"domain\", \"institutional\")",
+    "missing": "friction event domain",
+    "becomes": "institutional (rate 0.08)",
+    "fail_direction": "UNSIGNED",
+    "verdict_reached": "compute_event_debt rate -> total debt / cliff proximity -> verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": "no",
+    "switch": null,
+    "added": "2026-11-11",
+    "note": "pipeline.py:69 and :81 and adaptation_debt.py:212 apply the same default."
+   },
+   {
+    "id": "SF-AD3",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/adaptation_debt.py",
+    "line": 91,
+    "anchor": "DEFAULT_COMPOUNDING_RATE.get(domain, 0.08)",
+    "missing": "compounding_rate; or a domain not in the table",
+    "becomes": "domain table rate; unlisted domain 0.08",
+    "fail_direction": "UNSIGNED",
+    "verdict_reached": "compute_event_debt -> total debt / cliff proximity -> verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": "no",
+    "switch": null,
+    "added": "2026-11-11",
+    "note": "The table carries a comment 'Calibrated against observed time-to-failure in analogous systems' (line 58) with no source or exit named; the 0.08 for an unlisted domain carries none."
    }
   ]
  }

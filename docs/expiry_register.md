@@ -192,16 +192,18 @@ Rows 1, 2, 3, 6: line moved when the SILENT_FILL switches were added (2026-11-10
 | 1 | `calibration/provenance_corruption_detector_2026.py:160` | missing citation type -> no_source_attribution -> grade 0.10 -> grounding_score -> summary_verdict | none |
 | 2 | `political_audit/substrate_audit.py:401` | unregistered field -> empty constraint list -> gate passes | none |
 | 3 | `core/automation_assessment.py:80` | missing impact -> helpful | none |
-| 6 | `calibration/calibration_audit.py:204` | _is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0 | none |
+| 6 | `calibration/calibration_audit.py:204` | _is_removed defaults False; calibration/pipeline.py:83 defaults removed to False and :86 defaults years_since_removed to 0.0 | none |
+| | | SUPERSEDED 2026-11-11: _is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0 (lines moved when the R6 switch was added: at built_against_commit the removed default was :68 (not named in the old text) and the years default :69-71; now :83 and :86) | |
 | 7 | `calibration/unified_audit.py:97` | status aggregation: UNKNOWN ranked 1 (line 81), unlisted status ranked 1 (line 96), both read YELLOW | U34, U35, U36, U37, U38, U39 |
 | 7 | `calibration/unified_audit.py:207` | unlisted cascade level -> YELLOW | U40 (not traced) |
 
 ## SILENT_FILL rows
 
-SILENT_FILL = C7 without the label: a default fills a missing input and the output reads as if the input had been supplied. The PENDING/UNKNOWN slot rule cannot see it, because no PENDING or UNKNOWN value is ever held. Rows here cover sweep ranks 1, 2, 3, 6. Rank 7 (UNKNOWN severity 1 -> YELLOW) is out of scope, awaiting review. expiry_condition uses the slot guard: own stated exit, else VOID. None of these sites states an exit.
+SILENT_FILL = C7 without the label: a default fills a missing input and the output reads as if the input had been supplied. The PENDING/UNKNOWN slot rule cannot see it, because no PENDING or UNKNOWN value is ever held. Rows here cover sweep ranks 1, 2, 3, 6. Rank 7 (UNKNOWN severity 1 -> YELLOW) is out of scope, awaiting review. expiry_condition uses the slot guard: own stated exit, else VOID. None of these sites states an exit. Rows added 2026-11-11 (SF-R1b..d, SF-AD1..3) have no switch yet; the three-way switch for them is deferred.
 
 - `OPEN`: the fill reads the missing input in the direction that relaxes the verdict
 - `SAFE`: the fill reads the missing input in the direction that tightens the verdict
+- `UNSIGNED`: the fill is a midpoint or table value; whether it relaxes or tightens the verdict depends on the true value it replaces (added 2026-11-11)
 
 | id | file:line | missing | becomes | fail | verdict reached | expiry | rank | switch |
 |---|---|---|---|---|---|---|---|---|
@@ -214,6 +216,12 @@ SILENT_FILL = C7 without the label: a default fills a missing input and the outp
 | SF-R6d | `calibration/pipeline.py:86` | years since removal when translating basic-schema events | 0.0 years | OPEN | adaptation_debt input -> unified_score / unified band | VOID | 6 | `TAF_FILL_R6` |
 | SF-R6e | `calibration/adaptation_debt.py:85` | event removal flag | False -> event debt 0.0 | OPEN | compute_event_debt -> total debt / cliff proximity -> verdict | VOID | 6 | `TAF_FILL_R6` |
 | SF-R6f | `calibration/adaptation_debt.py:89` | years since removal | 0.0 -> debt = initial_load | OPEN | compute_event_debt -> total debt / cliff proximity -> verdict | VOID | 6 | `TAF_FILL_R6` |
+| SF-R1b | `calibration/provenance_corruption_detector_2026.py:160` | a citation type string not in PROVENANCE_GRADES | grade 0.10 | SAFE | grounding_score -> mismatch -> per-claim risk -> summary_verdict | VOID | near 1 (same line) | `none yet` |
+| SF-R1c | `calibration/provenance_corruption_detector_2026.py:148` | any citation on a claim with a 2+ digit number or two capitalised words | grade 0.10 | SAFE | grounding_score -> mismatch -> per-claim risk -> summary_verdict | VOID | no | `none yet` |
+| SF-R1d | `calibration/provenance_corruption_detector_2026.py:149` | any citation on a generic claim | grade 0.30 | SAFE | grounding_score -> mismatch -> per-claim risk -> summary_verdict | VOID | no | `none yet` |
+| SF-AD1 | `calibration/adaptation_debt.py:88` | friction event initial_load | 0.5 | UNSIGNED | compute_event_debt -> total debt / cliff proximity -> verdict | VOID | no | `none yet` |
+| SF-AD2 | `calibration/adaptation_debt.py:90` | friction event domain | institutional (rate 0.08) | UNSIGNED | compute_event_debt rate -> total debt / cliff proximity -> verdict | VOID | no | `none yet` |
+| SF-AD3 | `calibration/adaptation_debt.py:91` | compounding_rate; or a domain not in the table | domain table rate; unlisted domain 0.08 | UNSIGNED | compute_event_debt -> total debt / cliff proximity -> verdict | VOID | no | `none yet` |
 
 ## Status vocabulary addition
 
