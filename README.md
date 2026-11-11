@@ -27,24 +27,31 @@ buy · homeostasis scored by minimum need · transfers charged back.
 | Path | Holds |
 |---|---|
 | alignment_audit/ | contradictions and obsolescence in AI alignment advice |
+| assembly_instrument/ | cross-domain assembly instrument keyed on function; field feedback ledger |
 | calibration/ | general audit machinery: fragility, cognition mismatch, provenance |
+| community_black_start/ | community-first black-start dependency chain; coordination and defenses |
 | concerns/ | cascade and externality audits |
 | core/ | fatigue, collapse, energy debt, price guard, scope audits, DCEA |
 | core/integrations/ | bridges to sibling repos |
 | docs/ | theory, governance, economics, AI guidance, case studies, DCEA |
 | game_theory/ | proof pipelines and rational-actor audits |
+| gradient_field/ | interacting training gradients (models and humans), interactions, matrix |
 | in_progress/ | drafts and notes |
 | investment_distribution/ | capital holdings vs regeneration cost |
+| judgment_registry/ | version control for stated judgments; integrity flags only, no rating |
 | knowledge/ | study scope mapping, edge cases, silence patterns |
 | labor_thermodynamics/ | workforce measurement failures, driver-hours register |
 | metrology/ | measurement x framework audit, Earth-systems weather |
+| misuse_guard/ | checks for the misuse register: local-data loader, fixture pattern scan |
 | money_distribution/ | per-receiver split of the Money Equation |
 | political_audit/ | institutional, standardization, forecast audits |
 | schemas/ | upstream contract mirrors, eval fixtures |
 | seeam/ | "people are our greatest asset" as a physical claim |
+| signal_calibration/ | preregistered test battery for edge-signal handling in models |
 | simulations/ | coupled-system and resilience sims, figures |
 | tools/ | repo hygiene: chat-paste check, repo guard |
 | visualizations/ | React and HTML views |
+| weight_edit_ledger/ | record keeping for weight edits: hash chain, second-reader audit, deploy gate |
 | .github/workflows/ | chat-paste check, upstream staleness |
 | AI_ENTRY.md | AI onboarding: equations, sims, safe rules |
 | CLAUDE.md | full tree, equations, audit notes |
