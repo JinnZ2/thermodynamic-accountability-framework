@@ -118,3 +118,12 @@ These register backwards from the usual "higher is better" direction. Watch the 
 - `practice_attachment`
 - `rotation_gaming`
 - `witness_dependence` (high = skill only appears under observation = fragile)
+
+## Open-slot statuses and their exits
+
+| Term | Role | Defined in |
+|---|---|---|
+| `PENDING` / `UNKNOWN` | A slot whose value is not yet known. Never read as zero or as absent. | per module; listed in `docs/expiry_register.json` |
+| `expiry_condition` | Instrument class, sensitivity or protocol whose null result would downgrade a PENDING / UNKNOWN slot. Filled only from the slot's own text; otherwise `VOID -- no exit defined`. | `docs/expiry_register.json` |
+| `expiry_source` | `file:line` or citation where that exit is already stated; `VOID` when none is. | `docs/expiry_register.json` |
+| `ABSENT_AT_SENSITIVITY(<value>)` | Scoped absence: looked for with a stated instrument / sensitivity / protocol and not found at that sensitivity. Never written as bare "absent". No slot holds it yet. | `docs/expiry_register.json` |

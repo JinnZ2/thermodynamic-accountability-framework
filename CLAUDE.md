@@ -3165,6 +3165,32 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/expiry_reconcile.py` + `docs/EXPIRY_RECONCILED.md` (2026-11-11),
+  branch claude/expiry-register-reconciled (merges #77 and #78 unchanged). Classifies
+  the 97 post-base lines (post_base_97: SLOT 32, EMITTER 2, DEFAULT 1, VOCAB 41,
+  RULE 6, MENTION 15) and puts both registers in one table with both counting rules
+  stated verbatim; no rule picked. With post_base_97: AGREE 170, RULE_DIFF 7,
+  CLASS_DIFF 4, ONLY_78 1, TREE_DIFF 0 (35 as shipped). No logic change.
+- Added `calibration/expiry_register.py` + `docs/EXPIRY_REGISTER_78.md` (renamed from `docs/EXPIRY_REGISTER.md` on 2026-11-11: it case-collided with `docs/expiry_register.md` on case-insensitive filesystems; both contents kept) (2026-11-11):
+  work order item 1(b). Reproduces 43 PENDING + 36 UNKNOWN lines at d5e6b1c and
+  classifies each; 23 carry an expiry_condition, 7 have no exit defined (counted,
+  not failed), 0 at ABSENT_AT_SENSITIVITY. Delivered files unedited.
+- expiry_condition stage 1 (2026-11-10, co-authored), branch
+  claude/expiry-condition-stage1. docs/expiry_register.json (source),
+  docs/expiry_register.md (generated), tools/expiry_check.py. One row per
+  PENDING / UNKNOWN slot with expiry_condition + expiry_source, filled
+  only from the slot's own text; otherwise VOID. Result: 64 slots (15
+  PENDING, 49 UNKNOWN), 0 filled, 64 VOID; 42 of the VOID rows have
+  partial text (a named protocol or a resolution condition with no
+  null-result rule), recorded apart and not counted as an exit. The work
+  order named 43 PENDING + 36 UNKNOWN; that list was not in the tree and
+  the slot rule here (stated in the register) does not reproduce it. The
+  "default sweep rank list" was not found either; verdict-reaching is
+  read from the code by hand. Sidecar only: no module, record or pinned
+  doc was edited, so no logic and no sha256 pin moved. Status
+  ABSENT_AT_SENSITIVITY(<value>) added to docs/glossary.md and the
+  register; no module's vocabulary tuple was changed. Stage 2 (deciding
+  exits for the VOID rows) not started.
 - PR #53 follow-up (2026-11-10, co-authored), branch claude/pr53-followup.
   #53 reached main through PR #75 (branch claude/pr53-onto-main), with
   CONFLICTS.md listing four differences. Owner decisions, 2026-11-10:
