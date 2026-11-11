@@ -27,7 +27,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 
 # (id, kind, path relative to calibration/, line, quote, what, variants, ordered)
 REGISTER = [
-    ("SF01", "SILENT_FILL", "unified_audit.py", 368, '}.get(band, "YELLOW")',
+    ("SF01", "SILENT_FILL", "unified_audit.py", 421, '}.get(band, "YELLOW")',
      "pipeline unified_band is a Band.value (calibrating/drifting/mauling/"
      "memorialized_only); the map keys are GREEN/YELLOW/RED, so every band "
      "is unmatched and the fallback YELLOW is returned",
@@ -56,7 +56,7 @@ REGISTER = [
      "adaptation_debt (friction removal): no friction events -> 0.5",
      "A void | B assumed | C baseline", True),
 
-    ("SF08", "SILENT_FILL", "schema.py", 94, "return 0.0, Band.GREEN",
+    ("SF08", "SILENT_FILL", "schema.py", 95, "return 0.0, Band.GREEN",
      "CalibrationReport.aggregate with no scores -> 0.0 GREEN",
      "registered only", False),
     ("SF09", "SILENT_FILL", "observation_dependence.py", 68, "score=0.5,",
