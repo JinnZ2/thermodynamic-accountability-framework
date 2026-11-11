@@ -116,7 +116,7 @@ def check_substrate_primary_biology(
 
     if is_behavioral:
         considered = {s.lower() for s in declared_substrate_considerations}
-        for domain in SUBSTRATE_DOMAINS:
+        for domain in sorted(SUBSTRATE_DOMAINS):  # sorted: byte-stable output
             if domain not in considered:
                 # Check if mentioned in methodology
                 if domain.replace("_", " ") not in methodology_summary.lower():
@@ -194,7 +194,7 @@ def check_scope_laundering(
     found_tokens: List[str] = []
 
     claim_lower = presented_claim.lower()
-    for token in UNIVERSALIZING_TOKENS:
+    for token in sorted(UNIVERSALIZING_TOKENS):  # sorted: byte-stable output
         if token in claim_lower:
             found_tokens.append(token)
 
