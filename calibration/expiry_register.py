@@ -188,7 +188,7 @@ REGISTER = [
 
 def _grep(args):
     out = subprocess.run(["grep", "-rn", "--exclude-dir=.git", "--exclude=expiry_register.py",
-                          "--exclude=EXPIRY_REGISTER.md"] + args + ["."], cwd=ROOT, capture_output=True, text=True).stdout
+                          "--exclude=EXPIRY_REGISTER_78.md"] + args + ["."], cwd=ROOT, capture_output=True, text=True).stdout
     found = set()
     for line in out.splitlines():
         p, n, _ = line.split(":", 2)

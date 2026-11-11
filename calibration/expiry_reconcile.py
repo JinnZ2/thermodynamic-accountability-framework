@@ -172,7 +172,7 @@ def _show(commit, path):
 def _occ(commit):
     def g(args):
         out = subprocess.run(["git", "grep", "-n"] + args + [commit, "--", ".", ":!calibration/expiry_register.py",
-                              ":!docs/EXPIRY_REGISTER.md"], cwd=ROOT, capture_output=True, text=True).stdout
+                              ":!docs/EXPIRY_REGISTER.md", ":!docs/EXPIRY_REGISTER_78.md"], cwd=ROOT, capture_output=True, text=True).stdout
         s = set()
         for l in out.splitlines():
             _, p, n, _ = l.split(":", 3)

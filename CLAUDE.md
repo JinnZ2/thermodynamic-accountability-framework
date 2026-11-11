@@ -3171,7 +3171,7 @@ session's notes only.
   RULE 6, MENTION 15) and puts both registers in one table with both counting rules
   stated verbatim; no rule picked. With post_base_97: AGREE 170, RULE_DIFF 7,
   CLASS_DIFF 4, ONLY_78 1, TREE_DIFF 0 (35 as shipped). No logic change.
-- Added `calibration/expiry_register.py` + `docs/EXPIRY_REGISTER.md` (2026-11-11):
+- Added `calibration/expiry_register.py` + `docs/EXPIRY_REGISTER_78.md` (renamed from `docs/EXPIRY_REGISTER.md` on 2026-11-11: it case-collided with `docs/expiry_register.md` on case-insensitive filesystems; both contents kept) (2026-11-11):
   work order item 1(b). Reproduces 43 PENDING + 36 UNKNOWN lines at d5e6b1c and
   classifies each; 23 carry an expiry_condition, 7 have no exit defined (counted,
   not failed), 0 at ABSENT_AT_SENSITIVITY. Delivered files unedited.
