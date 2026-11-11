@@ -95,19 +95,33 @@ NOT_DETERMINABLE = "NOT_DETERMINABLE"
 #   NO_MODULES_RUN             no module ran (empty audit)
 #   ALL_INPUTS_UNKNOWN         modules ran; every non-measured status is
 #                              "UNKNOWN" (the module had no measured input)
-#   ALL_MODULES_GAP_INSTRUMENT modules ran; every non-measured status is a
+#   ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL
+#                              modules ran; every non-measured status is a
 #                              label outside _STATUS_RANK other than
 #                              "UNKNOWN" (the instrument emitted no
-#                              severity). Reading of the delivered name;
-#                              no prior definition exists in this repo.
+#                              severity it can be ranked on).
+#   ALL_MODULES_GAP_INSTRUMENT_CRASH
+#                              modules ran; every non-measured status is a
+#                              module that raised. Not reachable on this
+#                              branch (a raise is RED here); reachable once
+#                              the crash-as-coverage change (#82) lands.
+# The single name ALL_MODULES_GAP_INSTRUMENT is retired: #82 used
+# GAP_INSTRUMENT for "module raised" and this branch for "label outside
+# the table". Both senses are kept under split names (2026-11-11).
+GAP_INSTRUMENT_UNRECOGNIZED_LABEL = "GAP_INSTRUMENT_UNRECOGNIZED_LABEL"
+GAP_INSTRUMENT_CRASH = "GAP_INSTRUMENT_CRASH"
 NO_MODULES_RUN = "NO_MODULES_RUN"
 ALL_INPUTS_UNKNOWN = "ALL_INPUTS_UNKNOWN"
-ALL_MODULES_GAP_INSTRUMENT = "ALL_MODULES_GAP_INSTRUMENT"
-# Not in the delivered set: both kinds present among the modules that ran.
-# Reported rather than forced into one of the three.
+ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL = (
+    "ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL")
+ALL_MODULES_GAP_INSTRUMENT_CRASH = "ALL_MODULES_GAP_INSTRUMENT_CRASH"
+# Not in the delivered set: UNKNOWN and gap-instrument statuses both
+# present among the modules that ran (accepted 2026-11-11). Covers either
+# gap-instrument sense.
 MIXED_UNKNOWN_AND_GAP_INSTRUMENT = "MIXED_UNKNOWN_AND_GAP_INSTRUMENT"
 NOT_DETERMINABLE_REASONS = (NO_MODULES_RUN, ALL_INPUTS_UNKNOWN,
-                            ALL_MODULES_GAP_INSTRUMENT,
+                            ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL,
+                            ALL_MODULES_GAP_INSTRUMENT_CRASH,
                             MIXED_UNKNOWN_AND_GAP_INSTRUMENT)
 
 # Exit conditions for the assumption_validator UNKNOWN emitter
@@ -156,7 +170,9 @@ def _not_determinable_reason(statuses: list[str]) -> Optional[str]:
     if unknown == len(statuses):
         return ALL_INPUTS_UNKNOWN
     if unknown == 0:
-        return ALL_MODULES_GAP_INSTRUMENT
+        # On this branch a raise is RED (measured), so every remaining
+        # status here is a label outside the table.
+        return ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL
     return MIXED_UNKNOWN_AND_GAP_INSTRUMENT
 
 

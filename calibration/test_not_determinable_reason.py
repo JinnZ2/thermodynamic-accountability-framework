@@ -36,7 +36,7 @@ class NotDeterminableReason(unittest.TestCase):
             r = U.run_full_audit(response_text="x")
         self.assertEqual(r.modules_run, ["monoculture", "anti_metaphor", "negative_space"])
         self.assertEqual(r.severity, U.NOT_DETERMINABLE)
-        self.assertEqual(r.not_determinable_reason, U.ALL_MODULES_GAP_INSTRUMENT)
+        self.assertEqual(r.not_determinable_reason, U.ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL)
 
     def test_mixed_is_reported_not_forced(self):
         with mock.patch.object(U, "_run_monoculture", _gap), \
@@ -54,7 +54,7 @@ class NotDeterminableReason(unittest.TestCase):
         f = U._not_determinable_reason
         self.assertEqual(f([]), U.NO_MODULES_RUN)
         self.assertEqual(f(["UNKNOWN"]), U.ALL_INPUTS_UNKNOWN)
-        self.assertEqual(f(["not_a_label"]), U.ALL_MODULES_GAP_INSTRUMENT)
+        self.assertEqual(f(["not_a_label"]), U.ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL)
         self.assertEqual(f(["UNKNOWN", "x"]), U.MIXED_UNKNOWN_AND_GAP_INSTRUMENT)
         self.assertIsNone(f(["UNKNOWN", "GREEN"]))
 
@@ -69,6 +69,17 @@ class PipelineNotMeasured(unittest.TestCase):
         self.assertIsNone(r["not_measured_reason"])
         self.assertNotEqual(r["unified_band"], PL.NOT_MEASURED)
 
+
+
+class SplitNames(unittest.TestCase):
+    def test_bare_gap_instrument_name_retired(self):
+        self.assertFalse(hasattr(U, "ALL_MODULES_GAP_INSTRUMENT"))
+        self.assertIn(U.ALL_MODULES_GAP_INSTRUMENT_CRASH,
+                      U.NOT_DETERMINABLE_REASONS)
+        self.assertIn(U.ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL,
+                      U.NOT_DETERMINABLE_REASONS)
+        self.assertNotEqual(U.GAP_INSTRUMENT_CRASH,
+                            U.GAP_INSTRUMENT_UNRECOGNIZED_LABEL)
 
 if __name__ == "__main__":
     unittest.main()
