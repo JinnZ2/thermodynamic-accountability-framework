@@ -33,6 +33,7 @@ class Band(Enum):
     YELLOW = "drifting"             # 0.30 - 0.60
     RED = "mauling"                 # 0.60 - 0.85
     EXTINCT = "memorialized_only"   # 0.85 - 1.00
+    UNKNOWN = "undetermined"        # no score; from_score never returns it
 
     @classmethod
     def from_score(cls, score: float) -> "Band":

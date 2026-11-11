@@ -6926,3 +6926,13 @@ session's notes only.
   live upstream `assumption_validator` package if importable;
   otherwise it returns UNKNOWN verdicts so TAF stays runnable in
   isolation. stdlib only.
+- #82 follow-up (2026-11-11), branch claude/unknown-axis-followup-2, stacked on #82.
+  - 5 stale schemas/ readers moved to the b42ea34 paths (own commit, 2cc6509).
+    test_audit_family: 88/88, was 26 errors. Existing cases now raise no
+    GAP_INSTRUMENT_CRASH. Only T3's RED was crash-only (now YELLOW).
+  - calibration/silent_fill_register.py: SF01-SF13 SILENT_FILL, UC01
+    UNSOURCED_CONSTANT (variant B confidence penalties 0.3/0.8, borrowed from
+    assumption_validator). Each entry is checked by its quote at its line.
+  - pipeline_band_experiment.py (SF01): A GAP_INSTRUMENT_UNRECOGNIZED_LABEL / B PROPOSED map /
+    C current (always YELLOW). calibration_missing_experiment.py (SF02-SF07):
+    A void / B assumed / C baseline. Tables in docs/SILENT_FILL.md. Nothing picked.

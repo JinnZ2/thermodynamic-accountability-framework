@@ -164,6 +164,30 @@ TRACE = [
 ]
 
 
+# overall_status on PR #82 (claude/unknown-axis-followup @ f12fc01):
+# crash as GAP_INSTRUMENT, but the five schemas/ readers still stale.
+# Pinned output of f12fc01, kept as recorded: the bare name was renamed
+# GAP_INSTRUMENT_CRASH afterwards (2026-11-11), not at that commit.
+PR82_COMMIT = "f12fc01"
+PR82 = {
+    "T1_empty": "NOT_DETERMINABLE",
+    "T2_naive_text": "RED+COVERAGE(1: GAP_INSTRUMENT=1)",
+    "T3_healthy_clean": "YELLOW+COVERAGE(1: GAP_INSTRUMENT=1)",
+    "D1_naive": "RED+COVERAGE(2: GAP_INSTRUMENT=2)",
+    "D2_policy": "RED+COVERAGE(2: GAP_INSTRUMENT=2)",
+    "D3_substrate": "RED+COVERAGE(2: GAP_INSTRUMENT=2)",
+    "D4_state_healthy": "GREEN",
+    "D5_state_stressed": "YELLOW",
+    "D6_state_critical": "RED",
+    "M1_main_demo": "RED+COVERAGE(2: GAP_INSTRUMENT=2)",
+    "Pa_all_measured_red": "RED",
+    "Pb_green_plus_3_unknown": "GREEN+COVERAGE(3: UNKNOWN=3)",
+    "Pc_all_unknown": "NOT_DETERMINABLE+COVERAGE(8: UNKNOWN=8)",
+    "Pd_green_plus_1_info": "GREEN+COVERAGE(1: INFO=1)",
+    "Pe_crash_only": "NOT_DETERMINABLE+COVERAGE(1: GAP_INSTRUMENT=1)",
+}
+
+
 def run_all():
     """[(case_id, source, old, report)] for existing + planted cases."""
     import contextlib
@@ -193,19 +217,21 @@ def render(path: str = "../docs/UNKNOWN_AXIS.md") -> str:
         f"Old column: `run_full_audit` on main @ {BEFORE_COMMIT}.",
         "",
         f"#80 column: PR #80 @ {PR80_COMMIT} (UNKNOWN axis only).",
+        f"#82 column: PR #82 @ {PR82_COMMIT} (crash -> GAP_INSTRUMENT; "
+        "schemas/ readers still stale, so negative_space and trapdoor raise).",
         "",
         f"Changed vs main: {len(changed)} of {len(rows)} "
         f"({len(CASES)} existing, {len(PLANTED)} planted). "
         f"Severity changed vs #80: {len(sev_changed)} "
         f"({', '.join(sev_changed) or 'none'}).",
         "",
-        "| case | source | main | #80 | severity now | coverage now | overall_status now | changed vs main? |",
-        "|---|---|---|---|---|---|---|---|",
+        "| case | source | main | #80 | #82 | severity now | coverage now | overall_status now | changed vs main? |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for cid, src, old, r in rows:
         kinds = ", ".join(f"{k}={v}" for k, v in
                           r.to_dict()["coverage_by_kind"].items()) or "0"
-        lines.append(f"| {cid} | {src} | {old} | {PR80[cid]} | "
+        lines.append(f"| {cid} | {src} | {old} | {PR80[cid]} | {PR82[cid]} | "
                      f"{r.severity} | {kinds} | {r.overall_status} | "
                      f"{'yes' if old != r.overall_status else 'no'} |")
     lines += ["", "## U40 trace (assumption_validator.py:288)", ""] + TRACE

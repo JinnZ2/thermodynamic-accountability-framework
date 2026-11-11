@@ -452,7 +452,7 @@ class TestLogicFerretContract(unittest.TestCase):
         # import path; load it directly. Register in sys.modules before
         # exec so @dataclass inside the module can resolve __module__.
         path = (pathlib.Path(__file__).resolve().parent.parent
-                / "schemas" / "logic_ferret_contract.py")
+                / "schemas" / "upstream" / "logic_ferret_contract.py")
         spec = importlib.util.spec_from_file_location(
             "logic_ferret_contract", path)
         module = importlib.util.module_from_spec(spec)
@@ -614,7 +614,7 @@ class TestMetabolicAccountingContract(unittest.TestCase):
         import pathlib
         import sys
         path = (pathlib.Path(__file__).resolve().parent.parent
-                / "schemas" / "metabolic_accounting_contract.py")
+                / "schemas" / "upstream" / "metabolic_accounting_contract.py")
         spec = importlib.util.spec_from_file_location(
             "metabolic_accounting_contract", path)
         module = importlib.util.module_from_spec(spec)
@@ -1032,7 +1032,7 @@ class TestGeometricBridgeContract(unittest.TestCase):
         import pathlib
         import sys
         path = (pathlib.Path(__file__).resolve().parent.parent
-                / "schemas" / "geometric_bridge_contract.py")
+                / "schemas" / "upstream" / "geometric_bridge_contract.py")
         spec = importlib.util.spec_from_file_location(
             "geometric_bridge_contract", path)
         module = importlib.util.module_from_spec(spec)

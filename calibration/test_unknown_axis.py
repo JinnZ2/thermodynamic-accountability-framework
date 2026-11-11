@@ -77,13 +77,25 @@ class TestRules(unittest.TestCase):
         self.assertEqual(r.red_flags, [])
 
     def test_crash_records_missing_path(self):
-        r = run_full_audit(response_text="x")
-        gaps = {e["module"]: e for e in r.coverage
-                if e["kind"] == "GAP_INSTRUMENT_CRASH"}
-        for mod, e in gaps.items():
-            self.assertTrue(e["reason"])
-            if e["reason"].startswith("FileNotFoundError"):
-                self.assertTrue(e["missing_path"])
+        # Point negative_space at a path that does not exist; the crash
+        # must reach coverage carrying that path, and not reach severity.
+        import negative_space_index as N
+        saved = N._DEFAULT_LEDGER
+        N._DEFAULT_LEDGER = saved.parent / "no_such_ledger.json"
+        try:
+            r = run_full_audit(response_text="x")
+        finally:
+            N._DEFAULT_LEDGER = saved
+        gaps = [e for e in r.coverage if e["kind"] == "GAP_INSTRUMENT_CRASH"]
+        self.assertEqual([e["module"] for e in gaps], ["negative_space"])
+        self.assertTrue(gaps[0]["missing_path"].endswith("no_such_ledger.json"))
+        self.assertTrue(gaps[0]["reason"].startswith("FileNotFoundError"))
+
+    def test_existing_cases_no_crash_after_path_fix(self):
+        for cid, _src, kw in CASES:
+            r = run_full_audit(system_id=cid, **kw)
+            self.assertEqual(
+                [e for e in r.coverage if e["kind"] == "GAP_INSTRUMENT_CRASH"], [], cid)
 
     def test_info_kind_separate(self):
         r = run_full_audit(system_state={"trust_level": "high"})
@@ -103,7 +115,7 @@ class TestPipelineNotMeasured(unittest.TestCase):
 
     def test_no_modules_not_measured(self):
         from pipeline import _aggregate, NOT_MEASURED
-        self.assertEqual(_aggregate({}), (None, NOT_MEASURED))
+        self.assertEqual(_aggregate({}), (None, "undetermined", "NO_MODULES_RUN"))
 
 
 class TestConfidenceExperiment(unittest.TestCase):
@@ -113,6 +125,31 @@ class TestConfidenceExperiment(unittest.TestCase):
         import confidence_unknown_experiment as X
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(X.selftest(), 0)
+
+
+
+class TestSilentFillExperiments(unittest.TestCase):
+
+    def _quiet(self, fn):
+        import contextlib, io
+        with contextlib.redirect_stdout(io.StringIO()):
+            return fn()
+
+    def test_register_resolves(self):
+        import silent_fill_register as R
+        self.assertEqual(self._quiet(R.selftest), 0)
+
+    def test_band_experiment(self):
+        import pipeline_band_experiment as X
+        self.assertEqual(self._quiet(X.selftest), 0)
+
+    def test_missing_experiment(self):
+        import calibration_missing_experiment as X
+        self.assertEqual(self._quiet(X.selftest), 0)
+        p1 = [c for c in __import__("calibration_cases").cases()
+              if c[0] == "P1_one_dim_worst"][0][2]
+        self.assertAlmostEqual(X.calibration_score(p1, "C")[0], 0.7)
+        self.assertAlmostEqual(X.calibration_score(p1, "A")[0], 1.0)
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ Lineage: substrate_audit, monoculture_detector, assumption_validator,
 Family role: inoculation against absorption -- detects when a model
     simulates content in a region declared off-limits.
 
-Default ledger location: schemas/negative_space.json (sibling to this
+Default ledger location: schemas/eval/negative_space.json (sibling to this
 repo's other contracts in schemas/).
 """
 
@@ -40,7 +40,7 @@ from typing import Any, Optional
 # ---------------------------------------------------------------
 
 # Repo-relative path. Resolved at call time so the module is portable.
-_DEFAULT_LEDGER = Path(__file__).resolve().parent.parent / "schemas" / "negative_space.json"
+_DEFAULT_LEDGER = Path(__file__).resolve().parent.parent / "schemas" / "eval" / "negative_space.json"
 
 
 # ---------------------------------------------------------------
@@ -51,7 +51,7 @@ _DEFAULT_LEDGER = Path(__file__).resolve().parent.parent / "schemas" / "negative
 class BoundaryEntry:
     """One declared negative-space region.
 
-    Mirrors the JSON schema in schemas/negative_space.json. Fields
+    Mirrors the JSON schema in schemas/eval/negative_space.json. Fields
     that are absent from a JSON entry default to empty / None.
     """
     domain: str
@@ -137,7 +137,7 @@ def load_ledger(path: Optional[Path | str] = None) -> list[BoundaryEntry]:
     Parameters
     ----------
     path : Path or str, optional
-        Path to the JSON ledger. Defaults to schemas/negative_space.json
+        Path to the JSON ledger. Defaults to schemas/eval/negative_space.json
         relative to this file.
 
     Returns

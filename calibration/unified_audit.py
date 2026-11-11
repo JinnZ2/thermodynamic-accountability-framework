@@ -100,6 +100,39 @@ GAP_INSTRUMENT_CRASH = "GAP_INSTRUMENT_CRASH"
 # instrument itself failed).
 COVERAGE_KINDS = ("UNKNOWN", "INFO", "GAP_INSTRUMENT_CRASH")
 
+# Why severity is NOT_DETERMINABLE (2026-11-11, decided by Kavik). Set only
+# when severity is NOT_DETERMINABLE; None otherwise.
+#   NO_MODULES_RUN             no module ran (empty audit)
+#   ALL_INPUTS_UNKNOWN         modules ran; every non-measured status is
+#                              "UNKNOWN" (the module had no measured input)
+#   ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL
+#                              modules ran; every non-measured status is a
+#                              label outside _STATUS_RANK other than
+#                              "UNKNOWN" (the instrument emitted no
+#                              severity it can be ranked on).
+#   ALL_MODULES_GAP_INSTRUMENT_CRASH
+#                              modules ran; every non-measured status is a
+#                              module that raised. Not reachable on this
+#                              branch (a raise is RED here); reachable once
+#                              the crash-as-coverage change (#82) lands.
+# The single name ALL_MODULES_GAP_INSTRUMENT is retired: #82 used
+# GAP_INSTRUMENT for "module raised" and this branch for "label outside
+# the table". Both senses are kept under split names (2026-11-11).
+GAP_INSTRUMENT_UNRECOGNIZED_LABEL = "GAP_INSTRUMENT_UNRECOGNIZED_LABEL"
+NO_MODULES_RUN = "NO_MODULES_RUN"
+ALL_INPUTS_UNKNOWN = "ALL_INPUTS_UNKNOWN"
+ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL = (
+    "ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL")
+ALL_MODULES_GAP_INSTRUMENT_CRASH = "ALL_MODULES_GAP_INSTRUMENT_CRASH"
+# Not in the delivered set: UNKNOWN and gap-instrument statuses both
+# present among the modules that ran (accepted 2026-11-11). Covers either
+# gap-instrument sense.
+MIXED_UNKNOWN_AND_GAP_INSTRUMENT = "MIXED_UNKNOWN_AND_GAP_INSTRUMENT"
+NOT_DETERMINABLE_REASONS = (NO_MODULES_RUN, ALL_INPUTS_UNKNOWN,
+                            ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL,
+                            ALL_MODULES_GAP_INSTRUMENT_CRASH,
+                            MIXED_UNKNOWN_AND_GAP_INSTRUMENT)
+
 # Exit conditions for the assumption_validator UNKNOWN emitter
 # (assumption_validator.py:288). The two registers disagree and are
 # carried side by side; neither is picked (docs/EXPIRY_RECONCILED.md,
@@ -143,6 +176,24 @@ def _coverage_by_kind(coverage: list[dict]) -> dict[str, int]:
     return {k: counts[k] for k in COVERAGE_KINDS if k in counts}
 
 
+def _not_determinable_reason(statuses: list[str]) -> Optional[str]:
+    """Reason for NOT_DETERMINABLE, or None when severity is measured."""
+    if any(s in _STATUS_RANK for s in statuses):
+        return None
+    if not statuses:
+        return NO_MODULES_RUN
+    unknown = sum(1 for s in statuses if s == "UNKNOWN")
+    if unknown == len(statuses):
+        return ALL_INPUTS_UNKNOWN
+    crash = sum(1 for s in statuses if s == GAP_INSTRUMENT_CRASH)
+    label = len(statuses) - unknown - crash
+    if unknown == 0 and label == 0:
+        return ALL_MODULES_GAP_INSTRUMENT_CRASH
+    if unknown == 0 and crash == 0:
+        return ALL_MODULES_GAP_INSTRUMENT_UNRECOGNIZED_LABEL
+    return MIXED_UNKNOWN_AND_GAP_INSTRUMENT
+
+
 def _combined_status(severity: str, coverage: list[dict]) -> str:
     """The one-string form. Never a colour alone when coverage > 0."""
     if not coverage:
@@ -164,6 +215,7 @@ class UnifiedAuditReport:
     severity: str = NOT_DETERMINABLE
     coverage: list[dict] = field(default_factory=list)
     overall_status: str = NOT_DETERMINABLE
+    not_determinable_reason: Optional[str] = NO_MODULES_RUN
     red_flags: list[str] = field(default_factory=list)
     summary: str = ""
 
@@ -174,6 +226,7 @@ class UnifiedAuditReport:
             "modules_skipped": self.modules_skipped,
             "overall_status": self.overall_status,
             "severity": self.severity,
+            "not_determinable_reason": self.not_determinable_reason,
             "coverage_count": len(self.coverage),
             "coverage_by_kind": _coverage_by_kind(self.coverage),
             "coverage": self.coverage,
@@ -507,6 +560,7 @@ def run_full_audit(
         report.coverage.extend(
             _coverage_entries(name, status, report.sections.get(name)))
     report.severity = _aggregate_status(statuses)
+    report.not_determinable_reason = _not_determinable_reason(statuses)
     report.overall_status = _combined_status(report.severity,
                                              report.coverage)
 
@@ -539,7 +593,8 @@ def run_full_audit(
     n_cov = len(report.coverage)
     if report.severity == NOT_DETERMINABLE:
         report.summary = (f"{n_run} module(s) ran; no input was measured. "
-                          "Severity not determinable.")
+                          "Severity not determinable "
+                          f"({report.not_determinable_reason}).")
     elif report.severity == "GREEN":
         report.summary = (f"{n_run} module(s) ran; no red flags. "
                           "System is within validated envelope."
