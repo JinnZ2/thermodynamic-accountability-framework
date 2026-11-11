@@ -29,6 +29,24 @@ from calibration_audit import run_calibration_audit
 from observation_dependence import run_observation_audit
 from adaptation_debt import run_adaptation_debt_audit
 
+NOT_MEASURED = "NOT_MEASURED"
+NO_MODULES_RUN = "NO_MODULES_RUN"
+
+
+def _aggregate(reports: dict) -> tuple:
+    """(unified_score, unified_band, not_measured_reason).
+
+    No module ran -> NOT_MEASURED with a reason, never a score of 0.0
+    (2026-11-11, same rule as unified_audit NOT_DETERMINABLE). Note:
+    calibration_audit always runs in run_unified_audit, so via that
+    function the empty branch is not reached; it is tested here directly.
+    """
+    module_scores = [r.aggregate_score for r in reports.values()]
+    if not module_scores:
+        return None, NOT_MEASURED, NO_MODULES_RUN
+    agg_score = sum(module_scores) / len(module_scores)
+    return round(agg_score, 4), Band.from_score(agg_score).value, None
+
 
 def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
     """
@@ -79,14 +97,13 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
         reports["adaptation_debt"] = run_adaptation_debt_audit(debt_input)
 
     # Aggregate across modules
-    module_scores = [r.aggregate_score for r in reports.values()]
-    agg_score = (sum(module_scores) / len(module_scores)) if module_scores else 0.0
-    agg_band = Band.from_score(agg_score)
+    unified_score, unified_band, not_measured_reason = _aggregate(reports)
 
     unified = {
         "system_id": system_desc.get("system_id", "unnamed_system"),
-        "unified_score": round(agg_score, 4),
-        "unified_band": agg_band.value,
+        "unified_score": unified_score,
+        "unified_band": unified_band,
+        "not_measured_reason": not_measured_reason,
         "module_reports": {
             name: json.loads(r.to_json()) for name, r in reports.items()
         },
