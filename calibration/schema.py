@@ -22,9 +22,30 @@ All scores normalized to [0.0, 1.0] where:
 """
 
 from dataclasses import dataclass, field, asdict
-from typing import Any
+from typing import Any, Optional
 from enum import Enum
 import json
+import os
+
+
+# Silent-fill switch R6 (co-authored, 2026-11-10). Shared by
+# calibration_audit.py, adaptation_debt.py and pipeline.py: a friction
+# event with no removal flag reads as preserved (False), and a removed
+# event with no years field reads as 0.0 years, both with no label.
+# Chosen per call, else TAF_FILL_R6, else "baseline".
+#   baseline  current code, unlabeled (byte-identical to main)
+#   assumed   same values, labeled PROPOSED in report metadata
+#   void      missing flag or years -> dimension score None, band UNKNOWN,
+#             aggregate None / UNKNOWN when any dimension is None
+FILL_R6_MODES = ("baseline", "assumed", "void")
+FILL_R6_DEFAULT = "baseline"
+
+
+def fill_r6_mode(mode: Optional[str] = None) -> str:
+    m = mode or os.environ.get("TAF_FILL_R6") or FILL_R6_DEFAULT
+    if m not in FILL_R6_MODES:
+        raise ValueError(f"fill_r6 must be one of {FILL_R6_MODES}, got {m!r}")
+    return m
 
 
 class Band(Enum):
@@ -33,6 +54,7 @@ class Band(Enum):
     YELLOW = "drifting"             # 0.30 - 0.60
     RED = "mauling"                 # 0.60 - 0.85
     EXTINCT = "memorialized_only"   # 0.85 - 1.00
+    UNKNOWN = "undetermined"        # fill_r6=void only; from_score never returns it
 
     @classmethod
     def from_score(cls, score: float) -> "Band":
@@ -78,7 +100,8 @@ class CalibrationReport:
             "module": self.module,
             "system_id": self.system_id,
             "dimensions": [dim.to_dict() for dim in self.dimensions],
-            "aggregate_score": round(self.aggregate_score, 4),
+            "aggregate_score": (None if self.aggregate_score is None
+                                else round(self.aggregate_score, 4)),
             "aggregate_band": self.aggregate_band.value,
             "verdict": self.verdict,
             "failing_dimensions": self.failing_dimensions,
@@ -92,6 +115,8 @@ class CalibrationReport:
         """Aggregate with max-weighting: one red dimension reddens the whole."""
         if not scores:
             return 0.0, Band.GREEN
+        if any(x is None for x in scores):
+            return None, Band.UNKNOWN
         mean = sum(scores) / len(scores)
         worst = max(scores)
         # 60% mean, 40% worst -- a single failing dimension should dominate

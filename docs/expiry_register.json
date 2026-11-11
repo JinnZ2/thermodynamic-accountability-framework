@@ -24,34 +24,38 @@
    {
     "rank": 1,
     "file": "calibration/provenance_corruption_detector_2026.py",
-    "line": 131,
+    "line": 160,
     "anchor": "c.get(\"type\", \"no_source_attribution\"), 0.10",
     "what": "missing citation type -> no_source_attribution -> grade 0.10 -> grounding_score -> summary_verdict",
-    "holds_pending_or_unknown": false
+    "holds_pending_or_unknown": false,
+    "line_at_built_commit": 131
    },
    {
     "rank": 2,
     "file": "political_audit/substrate_audit.py",
-    "line": 363,
+    "line": 401,
     "anchor": "CROSS_DOMAIN_CONSTRAINTS.get(field_key, [])",
     "what": "unregistered field -> empty constraint list -> gate passes",
-    "holds_pending_or_unknown": false
+    "holds_pending_or_unknown": false,
+    "line_at_built_commit": 363
    },
    {
     "rank": 3,
     "file": "core/automation_assessment.py",
-    "line": 57,
+    "line": 80,
     "anchor": "module.get(\"impact\", \"helpful\")",
     "what": "missing impact -> helpful",
-    "holds_pending_or_unknown": false
+    "holds_pending_or_unknown": false,
+    "line_at_built_commit": 57
    },
    {
     "rank": 6,
     "file": "calibration/calibration_audit.py",
-    "line": 202,
+    "line": 204,
     "anchor": "e.get(\"removed\", False)",
     "what": "_is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0",
-    "holds_pending_or_unknown": false
+    "holds_pending_or_unknown": false,
+    "line_at_built_commit": 202
    },
    {
     "rank": 7,
@@ -69,7 +73,8 @@
     "what": "unlisted cascade level -> YELLOW",
     "holds_pending_or_unknown": false
    }
-  ]
+  ],
+  "line_note": "Rows 1, 2, 3, 6: line moved when the SILENT_FILL switches were added (2026-11-10); line_at_built_commit keeps the line at built_against_commit. Anchor text unchanged."
  },
  "slots": [
   {
@@ -1096,5 +1101,153 @@
    "same_quantity_as": null,
    "in_sweep_rank": "no"
   }
- ]
+ ],
+ "silent_fills": {
+  "about": "SILENT_FILL = C7 without the label: a default fills a missing input and the output reads as if the input had been supplied. The PENDING/UNKNOWN slot rule cannot see it, because no PENDING or UNKNOWN value is ever held. Rows here cover sweep ranks 1, 2, 3, 6. Rank 7 (UNKNOWN severity 1 -> YELLOW) is out of scope, awaiting review. expiry_condition uses the slot guard: own stated exit, else VOID. None of these sites states an exit.",
+  "fail_direction_vocabulary": {
+   "OPEN": "the fill reads the missing input in the direction that relaxes the verdict",
+   "SAFE": "the fill reads the missing input in the direction that tightens the verdict"
+  },
+  "rows": [
+   {
+    "id": "SF-R1",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/provenance_corruption_detector_2026.py",
+    "line": 160,
+    "anchor": "c.get(\"type\", \"no_source_attribution\"), 0.10",
+    "missing": "citation 'type' key",
+    "becomes": "no_source_attribution, grade 0.10, unlabeled",
+    "fail_direction": "SAFE",
+    "verdict_reached": "grounding_score -> mismatch -> per-claim risk -> summary_verdict (pushes toward HIGH; masked by max() when another citation is typed)",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 1,
+    "switch": "TAF_FILL_R1"
+   },
+   {
+    "id": "SF-R2",
+    "row_type": "SILENT_FILL",
+    "file": "political_audit/substrate_audit.py",
+    "line": 401,
+    "anchor": "CROSS_DOMAIN_CONSTRAINTS.get(field_key, [])",
+    "missing": "registered constraint list for the study field",
+    "becomes": "empty list -> gate passes",
+    "fail_direction": "OPEN",
+    "verdict_reached": "cross_domain gate -> StudyVerdict (valid_within_scope / valid_with_flags)",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 2,
+    "switch": "TAF_FILL_R2",
+    "stated_text": "No registered constraints; pass with note",
+    "stated_text_line": 403
+   },
+   {
+    "id": "SF-R3",
+    "row_type": "SILENT_FILL",
+    "file": "core/automation_assessment.py",
+    "line": 80,
+    "anchor": "module.get(\"impact\", \"helpful\")",
+    "missing": "automation module 'impact' key",
+    "becomes": "helpful (delta -2, load reduced)",
+    "fail_direction": "OPEN",
+    "verdict_reached": "automation_entropy -> net_load -> fatigue_score -> collapse_risk",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 3,
+    "switch": "TAF_FILL_R3",
+    "stated_text": "default assumption",
+    "stated_text_line": 78
+   },
+   {
+    "id": "SF-R6a",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/calibration_audit.py",
+    "line": 204,
+    "anchor": "e.get(\"removed\", False)",
+    "missing": "friction event removal flag",
+    "becomes": "False (friction preserved)",
+    "fail_direction": "OPEN",
+    "verdict_reached": "score_friction_removal -> aggregate band -> verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 6,
+    "switch": "TAF_FILL_R6"
+   },
+   {
+    "id": "SF-R6b",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/calibration_audit.py",
+    "line": 255,
+    "anchor": "e.get(\"years_since_removed\", 0.0)",
+    "missing": "years since removal on a removed event",
+    "becomes": "0.0 years",
+    "fail_direction": "OPEN",
+    "verdict_reached": "debt_signal -> score_friction_removal -> aggregate band",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 6,
+    "switch": "TAF_FILL_R6"
+   },
+   {
+    "id": "SF-R6c",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/pipeline.py",
+    "line": 83,
+    "anchor": "e.get(\"was_removed\", e.get(\"removed\", False))",
+    "missing": "removal flag when translating basic-schema events",
+    "becomes": "False",
+    "fail_direction": "OPEN",
+    "verdict_reached": "adaptation_debt input -> unified_score / unified band",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 6,
+    "switch": "TAF_FILL_R6"
+   },
+   {
+    "id": "SF-R6d",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/pipeline.py",
+    "line": 86,
+    "anchor": "e.get(\"years_since_removed\", 0.0)",
+    "missing": "years since removal when translating basic-schema events",
+    "becomes": "0.0 years",
+    "fail_direction": "OPEN",
+    "verdict_reached": "adaptation_debt input -> unified_score / unified band",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 6,
+    "switch": "TAF_FILL_R6"
+   },
+   {
+    "id": "SF-R6e",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/adaptation_debt.py",
+    "line": 85,
+    "anchor": "event.get(\"removed\", False)",
+    "missing": "event removal flag",
+    "becomes": "False -> event debt 0.0",
+    "fail_direction": "OPEN",
+    "verdict_reached": "compute_event_debt -> total debt / cliff proximity -> verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 6,
+    "switch": "TAF_FILL_R6"
+   },
+   {
+    "id": "SF-R6f",
+    "row_type": "SILENT_FILL",
+    "file": "calibration/adaptation_debt.py",
+    "line": 89,
+    "anchor": "event.get(\"years_since_removed\", 0.0)",
+    "missing": "years since removal",
+    "becomes": "0.0 -> debt = initial_load",
+    "fail_direction": "OPEN",
+    "verdict_reached": "compute_event_debt -> total debt / cliff proximity -> verdict",
+    "expiry_condition": "VOID -- no exit defined",
+    "expiry_source": "VOID",
+    "in_sweep_rank": 6,
+    "switch": "TAF_FILL_R6"
+   }
+  ]
+ }
 }

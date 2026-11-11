@@ -12,6 +12,8 @@
 #   - every slot's anchor text is still on the stated file:line
 #   - a filled expiry_condition has a non-VOID expiry_source; a VOID one has VOID
 #   - every stated_partial_source file:line exists
+#   - every SILENT_FILL row's anchor (and stated_text, if any) is on its file:line,
+#     its expiry fields agree on VOID, and fail_direction is OPEN or SAFE
 # What it does not check: whether a quoted source says what the row claims,
 # and whether the slot list is complete (the slot rule is applied by hand).
 #
@@ -58,6 +60,23 @@ def check(reg):
         got = _line(row["file"], row["line"])
         if got is None or row["anchor"] not in got:
             problems.append("sweep rank %d: anchor not on %s:%d" % (row["rank"], row["file"], row["line"]))
+    sf = reg.get("silent_fills", {})
+    for row in sf.get("rows", []):
+        got = _line(row["file"], row["line"])
+        if got is None or row["anchor"] not in got:
+            problems.append("%s: anchor not on %s:%d" % (row["id"], row["file"], row["line"]))
+        if row.get("stated_text"):
+            got = _line(row["file"], row["stated_text_line"])
+            if got is None or row["stated_text"] not in got:
+                problems.append("%s: stated_text not on %s:%d" % (row["id"], row["file"], row["stated_text_line"]))
+        if row.get("row_type") != "SILENT_FILL":
+            problems.append("%s: row_type %s" % (row["id"], row.get("row_type")))
+        if row["fail_direction"] not in sf.get("fail_direction_vocabulary", {}):
+            problems.append("%s: fail_direction %s" % (row["id"], row["fail_direction"]))
+        if row["expiry_condition"].startswith(VOID) != (row["expiry_source"] == VOID):
+            problems.append("%s: expiry_condition and expiry_source disagree on VOID" % row["id"])
+        if "in_sweep_rank" not in row:
+            problems.append("%s: no in_sweep_rank" % row["id"])
     for s in reg["slots"]:
         if "in_sweep_rank" not in s:
             problems.append("%s: no in_sweep_rank" % s["slot"])
@@ -129,6 +148,7 @@ def render(reg):
             "None of these sites holds a PENDING or UNKNOWN value: each is a default that",
             "fills a missing input. They are not slots under the rule above and carry no",
             "expiry fields. Slots that pass through one are marked in the table above.", "",
+            ] + ([sw["line_note"], ""] if sw.get("line_note") else []) + [
             "| rank | file:line | what the default does | slots passing through |", "|---|---|---|---|"]
     for row in sw["rows"]:
         through = [s["slot"] + (" (not traced)" if s["in_sweep_rank"].startswith("near") else "") for s in slots if s["in_sweep_rank"] != "no"
@@ -136,6 +156,18 @@ def render(reg):
                    and re.search(r":(\d+)-(\d+)", s["in_sweep_rank"])
                    and int(re.search(r":(\d+)-(\d+)", s["in_sweep_rank"]).group(1)) <= row["line"] <= int(re.search(r":(\d+)-(\d+)", s["in_sweep_rank"]).group(2))]
         out.append("| %d | `%s:%d` | %s | %s |" % (row["rank"], row["file"], row["line"], row["what"], ", ".join(through) or "none"))
+    sf = reg.get("silent_fills")
+    if sf:
+        out += ["", "## SILENT_FILL rows", "", sf["about"], ""]
+        for k, v in sf["fail_direction_vocabulary"].items():
+            out.append("- `%s`: %s" % (k, v))
+        out += ["", "| id | file:line | missing | becomes | fail | verdict reached | expiry | rank | switch |",
+                "|---|---|---|---|---|---|---|---|---|"]
+        for r in sf["rows"]:
+            out.append("| %s | `%s:%d` | %s | %s | %s | %s | %s | %d | `%s` |" % (
+                r["id"], r["file"], r["line"], r["missing"].replace("|", "/"), r["becomes"].replace("|", "/"),
+                r["fail_direction"], r["verdict_reached"].replace("|", "/"),
+                "filled" if not r["expiry_condition"].startswith(VOID) else "VOID", r["in_sweep_rank"], r["switch"]))
     out += ["", "## Status vocabulary addition", ""]
     for k, v in reg["status_vocabulary_addition"].items():
         out.append("- `%s`: %s" % (k, v))
@@ -158,6 +190,7 @@ def main(argv):
         with open(OUT, "w", encoding="utf-8") as f:
             f.write(render(reg))
         print("wrote docs/expiry_register.md")
+    print("silent_fill rows %d" % len(reg.get("silent_fills", {}).get("rows", [])))
     print("%d mismatch(es)" % len(problems))
     return 1 if problems else 0
 

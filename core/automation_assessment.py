@@ -5,6 +5,7 @@ Maps hidden variables, human energy, and automation as dynamic entropy.
 Calculates fatigue, collapse risk, and system stress numerically.
 """
 
+import os
 import math
 from datetime import datetime
 
@@ -43,13 +44,35 @@ def calculate_hidden_entropy(hidden_vars):
         return 0.0
     return round(10 * (1 - math.exp(-0.35 * count)), 1)
 
-def automation_entropy(automation_modules, hidden_vars, environment_factor=1.0):
+# Silent-fill switch R3 (co-authored, 2026-11-10). A module with no "impact"
+# key is read as "helpful" (delta -2, load reduced) with no label.
+# Chosen per call, else TAF_FILL_R3, else "baseline".
+#   baseline  current code, unlabeled (byte-identical to main)
+#   assumed   same value, labeled PROPOSED, filled modules listed
+#   void      missing impact -> automation entropy unknown; net_load,
+#             fatigue_score and collapse_risk become None
+FILL_R3_MODES = ("baseline", "assumed", "void")
+FILL_R3_DEFAULT = "baseline"
+
+
+def _fill_r3_mode(mode=None):
+    m = mode or os.environ.get("TAF_FILL_R3") or FILL_R3_DEFAULT
+    if m not in FILL_R3_MODES:
+        raise ValueError(f"fill_r3 must be one of {FILL_R3_MODES}, got {m!r}")
+    return m
+
+
+def automation_entropy(automation_modules, hidden_vars, environment_factor=1.0,
+                       fill_r3=None):
     """
     Automation can reduce load (negative) or increase it (positive) depending on complexity and hidden variables.
     environment_factor: multiplier for environmental stress (1.0 = normal, >1 = extreme)
     """
     if not automation_modules:
         return 0.0
+    if _fill_r3_mode(fill_r3) == "void" and any(
+            "impact" not in m for m in automation_modules):
+        return None
     base_entropy = 0
     for module in automation_modules:
         # default assumption: each module reduces load by 0-3, but edge complexity flips it
@@ -62,9 +85,13 @@ def automation_entropy(automation_modules, hidden_vars, environment_factor=1.0):
         base_entropy += delta
     return base_entropy
 
-def total_human_load(base_human_energy, hidden_vars, automation_modules, environment_factor=1.0):
+def total_human_load(base_human_energy, hidden_vars, automation_modules, environment_factor=1.0,
+                     fill_r3=None):
     hidden_load = calculate_hidden_entropy(hidden_vars)
-    auto_load = automation_entropy(automation_modules, hidden_vars, environment_factor)
+    auto_load = automation_entropy(automation_modules, hidden_vars, environment_factor,
+                                   fill_r3=fill_r3)
+    if auto_load is None:
+        return None
     net_load = base_human_energy + hidden_load + auto_load
     return max(net_load, 0)
 
@@ -87,7 +114,7 @@ def collapse_risk(fatigue, hidden_entropy):
 # Programmatic assessment
 # -----------------------------
 def assess(base_human_energy, hidden_vars=None, automation_modules=None,
-           environment_factor=1.0):
+           environment_factor=1.0, fill_r3=None):
     """
     Programmatic entry point. Takes data directly and returns a dict.
     Mirrors run_example() but without any stdin interaction.
@@ -102,11 +129,13 @@ def assess(base_human_energy, hidden_vars=None, automation_modules=None,
     hidden_vars = hidden_vars or []
     automation_modules = automation_modules or []
 
+    mode = _fill_r3_mode(fill_r3)
     hidden_entropy = calculate_hidden_entropy(hidden_vars)
     net_load = total_human_load(base_human_energy, hidden_vars,
-                                automation_modules, environment_factor)
-    fatigue = fatigue_score(net_load)
-    risk = collapse_risk(fatigue, hidden_entropy)
+                                automation_modules, environment_factor,
+                                fill_r3=mode)
+    fatigue = None if net_load is None else fatigue_score(net_load)
+    risk = None if fatigue is None else collapse_risk(fatigue, hidden_entropy)
 
     return {
         "hidden_var_count":   len(hidden_vars),
@@ -117,6 +146,14 @@ def assess(base_human_energy, hidden_vars=None, automation_modules=None,
         "net_load":           net_load,
         "fatigue_score":      fatigue,
         "collapse_risk":      risk,
+        **({"fill_r3": {
+            "mode": mode,
+            "label": "PROPOSED" if mode == "assumed" else "VOID",
+            "modules_without_impact": [m.get("name", "unnamed")
+                                       for m in automation_modules
+                                       if "impact" not in m],
+            "filled_as": "helpful" if mode == "assumed" else None,
+        }} if mode != "baseline" else {}),
     }
 
 

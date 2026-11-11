@@ -185,14 +185,35 @@ None of these sites holds a PENDING or UNKNOWN value: each is a default that
 fills a missing input. They are not slots under the rule above and carry no
 expiry fields. Slots that pass through one are marked in the table above.
 
+Rows 1, 2, 3, 6: line moved when the SILENT_FILL switches were added (2026-11-10); line_at_built_commit keeps the line at built_against_commit. Anchor text unchanged.
+
 | rank | file:line | what the default does | slots passing through |
 |---|---|---|---|
-| 1 | `calibration/provenance_corruption_detector_2026.py:131` | missing citation type -> no_source_attribution -> grade 0.10 -> grounding_score -> summary_verdict | none |
-| 2 | `political_audit/substrate_audit.py:363` | unregistered field -> empty constraint list -> gate passes | none |
-| 3 | `core/automation_assessment.py:57` | missing impact -> helpful | none |
-| 6 | `calibration/calibration_audit.py:202` | _is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0 | none |
+| 1 | `calibration/provenance_corruption_detector_2026.py:160` | missing citation type -> no_source_attribution -> grade 0.10 -> grounding_score -> summary_verdict | none |
+| 2 | `political_audit/substrate_audit.py:401` | unregistered field -> empty constraint list -> gate passes | none |
+| 3 | `core/automation_assessment.py:80` | missing impact -> helpful | none |
+| 6 | `calibration/calibration_audit.py:204` | _is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0 | none |
 | 7 | `calibration/unified_audit.py:97` | status aggregation: UNKNOWN ranked 1 (line 81), unlisted status ranked 1 (line 96), both read YELLOW | U34, U35, U36, U37, U38, U39 |
 | 7 | `calibration/unified_audit.py:207` | unlisted cascade level -> YELLOW | U40 (not traced) |
+
+## SILENT_FILL rows
+
+SILENT_FILL = C7 without the label: a default fills a missing input and the output reads as if the input had been supplied. The PENDING/UNKNOWN slot rule cannot see it, because no PENDING or UNKNOWN value is ever held. Rows here cover sweep ranks 1, 2, 3, 6. Rank 7 (UNKNOWN severity 1 -> YELLOW) is out of scope, awaiting review. expiry_condition uses the slot guard: own stated exit, else VOID. None of these sites states an exit.
+
+- `OPEN`: the fill reads the missing input in the direction that relaxes the verdict
+- `SAFE`: the fill reads the missing input in the direction that tightens the verdict
+
+| id | file:line | missing | becomes | fail | verdict reached | expiry | rank | switch |
+|---|---|---|---|---|---|---|---|---|
+| SF-R1 | `calibration/provenance_corruption_detector_2026.py:160` | citation 'type' key | no_source_attribution, grade 0.10, unlabeled | SAFE | grounding_score -> mismatch -> per-claim risk -> summary_verdict (pushes toward HIGH; masked by max() when another citation is typed) | VOID | 1 | `TAF_FILL_R1` |
+| SF-R2 | `political_audit/substrate_audit.py:401` | registered constraint list for the study field | empty list -> gate passes | OPEN | cross_domain gate -> StudyVerdict (valid_within_scope / valid_with_flags) | VOID | 2 | `TAF_FILL_R2` |
+| SF-R3 | `core/automation_assessment.py:80` | automation module 'impact' key | helpful (delta -2, load reduced) | OPEN | automation_entropy -> net_load -> fatigue_score -> collapse_risk | VOID | 3 | `TAF_FILL_R3` |
+| SF-R6a | `calibration/calibration_audit.py:204` | friction event removal flag | False (friction preserved) | OPEN | score_friction_removal -> aggregate band -> verdict | VOID | 6 | `TAF_FILL_R6` |
+| SF-R6b | `calibration/calibration_audit.py:255` | years since removal on a removed event | 0.0 years | OPEN | debt_signal -> score_friction_removal -> aggregate band | VOID | 6 | `TAF_FILL_R6` |
+| SF-R6c | `calibration/pipeline.py:83` | removal flag when translating basic-schema events | False | OPEN | adaptation_debt input -> unified_score / unified band | VOID | 6 | `TAF_FILL_R6` |
+| SF-R6d | `calibration/pipeline.py:86` | years since removal when translating basic-schema events | 0.0 years | OPEN | adaptation_debt input -> unified_score / unified band | VOID | 6 | `TAF_FILL_R6` |
+| SF-R6e | `calibration/adaptation_debt.py:85` | event removal flag | False -> event debt 0.0 | OPEN | compute_event_debt -> total debt / cliff proximity -> verdict | VOID | 6 | `TAF_FILL_R6` |
+| SF-R6f | `calibration/adaptation_debt.py:89` | years since removal | 0.0 -> debt = initial_load | OPEN | compute_event_debt -> total debt / cliff proximity -> verdict | VOID | 6 | `TAF_FILL_R6` |
 
 ## Status vocabulary addition
 

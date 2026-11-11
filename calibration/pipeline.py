@@ -24,13 +24,14 @@ License: CC0.
 
 import json
 from typing import Any
-from schema import CalibrationReport, Band, EMBEDDED_PROMPT
+from schema import CalibrationReport, Band, EMBEDDED_PROMPT, fill_r6_mode
 from calibration_audit import run_calibration_audit
 from observation_dependence import run_observation_audit
 from adaptation_debt import run_adaptation_debt_audit
 
 
-def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
+def run_unified_audit(system_desc: dict[str, Any],
+                      fill_r6: "str | None" = None) -> dict[str, Any]:
     """
     Run all three audits and produce unified report.
 
@@ -40,10 +41,11 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
         - skill_log                             (observation_dependence)
         - friction_events                       (adaptation_debt)
     """
+    mode = fill_r6_mode(fill_r6)
     reports = {}
 
     # Module 1: full diagnostic
-    reports["calibration"] = run_calibration_audit(system_desc)
+    reports["calibration"] = run_calibration_audit(system_desc, fill_r6=mode)
 
     # Module 2: observation dependence (needs skill_log)
     if "skill_log" in system_desc:
@@ -59,6 +61,19 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
         for e in system_desc["friction_events"]:
             if "initial_load" in e:
                 debt_events.append(e)
+            elif mode == "void":
+                # Same translation, but a missing flag stays None and a
+                # missing years field stays absent (no silent 0.0).
+                ev = {
+                    "name": e.get("type", "unnamed"),
+                    "domain": e.get("domain", "institutional"),
+                    "initial_load": e.get("initial_load", 0.5),
+                    "removed": e.get("was_removed", e.get("removed")),
+                }
+                yrs = e.get("years_since_removal", e.get("years_since_removed"))
+                if yrs is not None:
+                    ev["years_since_removed"] = yrs
+                debt_events.append(ev)
             else:
                 # Auto-translate from basic schema
                 debt_events.append({
@@ -76,16 +91,19 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
             "friction_events": debt_events,
             "cliff_threshold": system_desc.get("cliff_threshold", 10.0),
         }
-        reports["adaptation_debt"] = run_adaptation_debt_audit(debt_input)
+        reports["adaptation_debt"] = run_adaptation_debt_audit(debt_input, fill_r6=mode)
 
     # Aggregate across modules
     module_scores = [r.aggregate_score for r in reports.values()]
-    agg_score = (sum(module_scores) / len(module_scores)) if module_scores else 0.0
-    agg_band = Band.from_score(agg_score)
+    if any(x is None for x in module_scores):
+        agg_score, agg_band = None, Band.UNKNOWN
+    else:
+        agg_score = (sum(module_scores) / len(module_scores)) if module_scores else 0.0
+        agg_band = Band.from_score(agg_score)
 
     unified = {
         "system_id": system_desc.get("system_id", "unnamed_system"),
-        "unified_score": round(agg_score, 4),
+        "unified_score": None if agg_score is None else round(agg_score, 4),
         "unified_band": agg_band.value,
         "module_reports": {
             name: json.loads(r.to_json()) for name, r in reports.items()
@@ -105,6 +123,9 @@ def run_unified_audit(system_desc: dict[str, Any]) -> dict[str, Any]:
             "modules_run": list(reports.keys()),
             "license": "CC0",
             "schema_version": "1.0",
+            **({"fill_r6": {"mode": mode,
+                            "label": "PROPOSED" if mode == "assumed" else "VOID"}}
+               if mode != "baseline" else {}),
         },
     }
     return unified

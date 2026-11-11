@@ -1,0 +1,216 @@
+SILENT FILLS -- A void / B assumed / C baseline (no winner picked)
+planted cases are CONSTRUCTED; existing cases are module demos / self_audit inputs
+
+== R1  calibration/provenance_corruption_detector_2026.py
+  [existing] existing: module demo  hit=False
+      A=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  B=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  C=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  [CONSTRUCTED] planted: one untyped citation  hit=True
+      A=PROVENANCE_UNDETERMINED  B=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  C=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  B label=PROPOSED
+      size: 4 of 4 claims change risk level
+      fields A!=C: 16 high_risk_count, high_risk_fraction, medium_risk_count, per_claim[0].confidence_grounding_mismatch, per_claim[0].grounding ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: untyped + ai_generated_text  hit=True
+      A=PROVENANCE_UNDETERMINED  B=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  C=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  B label=PROPOSED
+      size: 4 of 4 claims change risk level
+      fields A!=C: 16 high_risk_count, high_risk_fraction, medium_risk_count, per_claim[0].confidence_grounding_mismatch, per_claim[0].grounding ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: untyped + primary source (top grade)  hit=True
+      A=OUTPUT_ACCEPTABLE_PROVENANCE  B=OUTPUT_ACCEPTABLE_PROVENANCE  C=OUTPUT_ACCEPTABLE_PROVENANCE  B label=PROPOSED
+      size: 0 of 4 claims change risk level
+      fields A!=C: 0
+      fields B!=C: 0
+  [CONSTRUCTED] planted: untyped, low-confidence text  hit=True
+      A=PROVENANCE_UNDETERMINED  B=OUTPUT_ACCEPTABLE_PROVENANCE  C=OUTPUT_ACCEPTABLE_PROVENANCE  B label=PROPOSED
+      size: 2 of 2 claims change risk level
+      fields A!=C: 8 medium_risk_count, per_claim[0].confidence_grounding_mismatch, per_claim[0].grounding, per_claim[0].risk_level, per_claim[1].confidence_grounding_mismatch ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: untyped + ai text reposted to forum (circular)  hit=True
+      A=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  B=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  C=OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK  B label=PROPOSED
+      size: 0 of 4 claims change risk level
+      fields A!=C: 8 per_claim[0].confidence_grounding_mismatch, per_claim[0].grounding, per_claim[1].confidence_grounding_mismatch, per_claim[1].grounding, per_claim[2].confidence_grounding_mismatch ...
+      fields B!=C: 0
+  coincidence cards (A and C agree): 3
+    SF_R1_existing_module_demo  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+    SF_R1_planted_untyped_primary_source_top_grade  tool=RESOLVED
+      shared_constraint     supported a known grade at the top (1.00) fixes max(); the unknown cannot raise it [DERIVED: max over grades]
+      local_normal_form     ruled_out sweep of the typed citation over all 13 grades: A/C agree only at ['primary_source_with_methodology']; agreeme
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out the agreeing branch is not a float comparison [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+    SF_R1_planted_untyped_ai_text_reposted_to_forum_circul  tool=RESOLVED
+      shared_constraint     supported circular corruption forces HIGH on every claim regardless of grounding [OBSERVED]
+      local_normal_form     ruled_out circular is a boolean override set after the mismatch test; agreement does not depend on any distance [DERIVED
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out the agreeing branch is not a float comparison [DERIVED]
+      low_dim_projection    supported verdict equal, A/C differ on per_claim[0].confidence_grounding_mismatch, per_claim[0].grounding, per_claim[1].
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+
+== R2  political_audit/substrate_audit.py
+  [existing] existing: module demo (behavioral_economics, registered)  hit=False
+      A=rejected_substrate_denial  B=rejected_substrate_denial  C=rejected_substrate_denial  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  [CONSTRUCTED] planted: unregistered field, other gates pass  hit=True
+      A=undetermined_cross_domain  B=valid_within_scope  C=valid_within_scope  B label=PROPOSED
+      size: cross_domain.passes True -> None
+      fields A!=C: 2 gates.cross_domain.passes, verdict
+      fields B!=C: 0
+  [CONSTRUCTED] planted: unregistered field, falsification gate fails  hit=True
+      A=rejected_unfalsifiable  B=rejected_unfalsifiable  C=rejected_unfalsifiable  B label=PROPOSED
+      size: cross_domain.passes True -> None
+      fields A!=C: 1 gates.cross_domain.passes
+      fields B!=C: 0
+  [CONSTRUCTED] planted: registered field (flood_recurrence), other gates pass  hit=False
+      A=valid_with_flags  B=valid_with_flags  C=valid_with_flags  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  coincidence cards (A and C agree): 3
+    SF_R2_existing_module_demo_behavioral_economics_regist  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+    SF_R2_planted_unregistered_field_falsification_gate_fa  tool=RESOLVED
+      shared_constraint     supported another gate fails, so verdict() leaves VALID_WITHIN_SCOPE before cross_domain is decisive [OBSERVED]
+      local_normal_form     ruled_out gates are booleans; no continuous edge [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no float comparison on the path [DERIVED]
+      low_dim_projection    supported verdict equal, A/C differ on gates.cross_domain.passes [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+    SF_R2_planted_registered_field_flood_recurrence_other_  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+
+== R3  core/automation_assessment.py
+  [CONSTRUCTED] planted: one module without impact, env 1.0  hit=True
+      A=None  B=5.5  C=5.5  B label=PROPOSED
+      size: baseline net_load 8.0 replaced by None
+      other end: impact=complex gives collapse_risk 6.5 (baseline 5.5)
+      fields A!=C: 3 collapse_risk, fatigue_score, net_load
+      fields B!=C: 0
+  [CONSTRUCTED] planted: one module without impact, env 2.0  hit=True
+      A=None  B=6.5  C=6.5  B label=PROPOSED
+      size: baseline net_load 11.0 replaced by None
+      other end: impact=complex gives collapse_risk 6.5 (baseline 6.5)
+      fields A!=C: 3 collapse_risk, fatigue_score, net_load
+      fields B!=C: 0
+  [CONSTRUCTED] planted: all modules without impact  hit=True
+      A=None  B=6.5  C=6.5  B label=PROPOSED
+      size: baseline net_load 6.5 replaced by None
+      other end: impact=complex gives collapse_risk 8.2 (baseline 6.5)
+      fields A!=C: 3 collapse_risk, fatigue_score, net_load
+      fields B!=C: 0
+  [CONSTRUCTED] planted: fatigue already capped  hit=True
+      A=None  B=7.5  C=7.5  B label=PROPOSED
+      size: baseline net_load 16.5 replaced by None
+      other end: impact=complex gives collapse_risk 7.5 (baseline 7.5)
+      fields A!=C: 3 collapse_risk, fatigue_score, net_load
+      fields B!=C: 0
+  [CONSTRUCTED] planted: every module states impact (fill not hit)  hit=False
+      A=5.5  B=5.5  C=5.5  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  coincidence cards (A and C agree): 1
+    SF_R3_planted_every_module_states_impact_fill_not_hit  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+
+== R6  calibration/calibration_audit.py
+  [existing] existing: calibration_audit demo  hit=False
+      A=drifting  B=drifting  C=drifting  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  [existing] existing: self_audit OPTIMISTIC (pipeline)  hit=False
+      A=calibrating  B=calibrating  C=calibrating  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  [existing] existing: self_audit HONEST (pipeline)  hit=False
+      A=drifting  B=drifting  C=drifting  B label=None
+      size: fill not hit
+      fields A!=C: 0
+      fields B!=C: 0
+  [CONSTRUCTED] planted: one event with no removal flag (calibration_audit)  hit=True
+      A=undetermined  B=drifting  C=drifting  B label=PROPOSED
+      size: score 0.4183 -> None
+      other end: flag True / years 20 gives mauling 0.6062 (baseline drifting 0.4183)
+      fields A!=C: 10 aggregate_band, aggregate_score, dimensions[4].band, dimensions[4].evidence[1], dimensions[4].evidence[2] ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: removed event with no years (calibration_audit)  hit=True
+      A=undetermined  B=drifting  C=drifting  B label=PROPOSED
+      size: score 0.38 -> None
+      other end: flag True / years 20 gives drifting 0.44 (baseline drifting 0.38)
+      fields A!=C: 10 aggregate_band, aggregate_score, dimensions[4].band, dimensions[4].evidence[1], dimensions[4].evidence[2] ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: no flag AND no years on one event (chain)  hit=True
+      A=undetermined  B=drifting  C=drifting  B label=PROPOSED
+      size: score 0.4017 -> None
+      other end: flag True / years 20 gives drifting 0.5338 (baseline drifting 0.4017)
+      fields A!=C: 10 aggregate_band, aggregate_score, dimensions[4].band, dimensions[4].evidence[1], dimensions[4].evidence[2] ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: basic-schema event, no years, through pipeline  hit=True
+      A=undetermined  B=drifting  C=drifting  B label=PROPOSED
+      size: score 0.5251 -> None
+      other end: flag True / years 20 gives mauling 0.6668 (baseline drifting 0.5251)
+      fields A!=C: 34 all_falsifiable_claims[4], all_falsifiable_claims[5], all_falsifiable_claims[7], module_reports.adaptation_debt.aggregate_band, module_reports.adaptation_debt.aggregate_score ...
+      fields B!=C: 0
+  [CONSTRUCTED] planted: debt-schema event, no years, through pipeline  hit=True
+      A=undetermined  B=drifting  C=drifting  B label=PROPOSED
+      size: score 0.58 -> None
+      other end: flag True / years 20 gives mauling 0.7753 (baseline drifting 0.58)
+      fields A!=C: 34 all_falsifiable_claims[4], all_falsifiable_claims[5], all_falsifiable_claims[7], module_reports.adaptation_debt.aggregate_band, module_reports.adaptation_debt.aggregate_score ...
+      fields B!=C: 0
+  coincidence cards (A and C agree): 3
+    SF_R6_existing_calibration_audit_demo  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+    SF_R6_existing_self_audit_OPTIMISTIC_pipeline  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+    SF_R6_existing_self_audit_HONEST_pipeline  tool=RESOLVED
+      shared_constraint     supported fill not hit: no missing input, the switch is never read [OBSERVED]
+      local_normal_form     ruled_out no fill read, so no edge to be near [DERIVED]
+      statistical_artifact  ruled_out no random draw on the scored path; one run per arm [DERIVED]
+      numerical_artifact    ruled_out no comparison on the fill path [DERIVED]
+      low_dim_projection    ruled_out all compared fields equal A/C [OBSERVED]
+      none_of_above         ruled_out a named cause is supported [DERIVED]
+
+== chains
+  R1 (provenance_corruption_detector_2026) imported by none; feeds another fill module: no
+  R2 (substrate_audit) imported by ['calibration/substrate_audit.py']; feeds another fill module: no
+  R3 (automation_assessment) imported by none; feeds another fill module: no
+  R6 (calibration_audit) imported by ['calibration/__init__.py', 'calibration/pipeline.py', 'calibration/test_calibration.py']; feeds another fill module: no
+  R6 within calibration_audit.py:202 -> :226: an event with no flag reads preserved, so its years default is never read; the second fill is reached only through the first reading True [OBSERVED: removed count ['removed (debt accumulating): 0']]
+  R6 within pipeline.py:68-72 -> calibration_audit + adaptation_debt: one event missing a field is read by both modules in run_unified_audit; both reports and the unified band carry it [OBSERVED in planted pipeline cases]

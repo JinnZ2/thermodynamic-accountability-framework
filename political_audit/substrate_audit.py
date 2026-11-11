@@ -45,6 +45,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import os
 from typing import Dict, List, Optional, Tuple
 
 
@@ -350,15 +351,52 @@ class CrossDomainResult:
     ignored_fields: List[str]
 
 
+# Silent-fill switch R2 (co-authored, 2026-11-10). A field with no entry in
+# CROSS_DOMAIN_CONSTRAINTS reads as an empty requirement list and the gate
+# passes with no label. Chosen per call, else TAF_FILL_R2, else "baseline".
+#   baseline  current code, unlabeled (byte-identical to main)
+#   assumed   same pass, labeled PROPOSED in the report
+#   void      passes=None (not determinable); verdict() returns
+#             UNDETERMINED_CROSS_DOMAIN where it would otherwise have
+#             returned VALID_WITHIN_SCOPE
+FILL_R2_MODES = ("baseline", "assumed", "void")
+FILL_R2_DEFAULT = "baseline"
+
+
+def _fill_r2_mode(mode: Optional[str]) -> str:
+    m = mode or os.environ.get("TAF_FILL_R2") or FILL_R2_DEFAULT
+    if m not in FILL_R2_MODES:
+        raise ValueError(f"fill_r2 must be one of {FILL_R2_MODES}, got {m!r}")
+    return m
+
+
 def check_cross_domain_constraints(
     study_field: str,
     fields_acknowledged: List[str],
+    fill_r2: Optional[str] = None,
 ) -> CrossDomainResult:
     """
     Gate 4: are known cross-domain constraints acknowledged?
     """
+    mode = _fill_r2_mode(fill_r2)
     red_flags: List[str] = []
     field_key = study_field.lower().replace(" ", "_").replace("-", "_")
+
+    if mode != "baseline" and field_key not in CROSS_DOMAIN_CONSTRAINTS:
+        res = CrossDomainResult(
+            passes=None if mode == "void" else True,
+            red_flags=[],
+            required_fields=[],
+            acknowledged_fields=fields_acknowledged,
+            ignored_fields=[],
+        )
+        res.fill_r2 = {
+            "mode": mode,
+            "label": "PROPOSED" if mode == "assumed" else "VOID",
+            "field_key": field_key,
+            "note": "field not in CROSS_DOMAIN_CONSTRAINTS",
+        }
+        return res
 
     required = CROSS_DOMAIN_CONSTRAINTS.get(field_key, [])
     if not required:
@@ -460,6 +498,7 @@ class StudyVerdict(Enum):
     REJECTED_SUBSTRATE_DENIAL = "rejected_substrate_denial"
     REJECTED_UNFALSIFIABLE = "rejected_unfalsifiable"
     REJECTED_CORPUS_CONTAMINATION = "rejected_corpus_contamination"
+    UNDETERMINED_CROSS_DOMAIN = "undetermined_cross_domain"   # fill_r2=void only
 
 
 @dataclass
@@ -490,6 +529,14 @@ class StudyAudit:
 
         if not self.corpus.passes and self.corpus.echo_pattern_detected:
             return StudyVerdict.REJECTED_CORPUS_CONTAMINATION
+
+        if self.cross_domain.passes is None and all([
+            self.substrate.passes,
+            self.scope.passes,
+            self.falsification.passes,
+            self.corpus.passes,
+        ]):
+            return StudyVerdict.UNDETERMINED_CROSS_DOMAIN
 
         if all([
             self.substrate.passes,
@@ -538,6 +585,8 @@ class StudyAudit:
                     "passes": self.cross_domain.passes,
                     "red_flags": self.cross_domain.red_flags,
                     "ignored_fields": self.cross_domain.ignored_fields,
+                    **({"fill_r2": self.cross_domain.fill_r2}
+                       if getattr(self.cross_domain, "fill_r2", None) else {}),
                 },
                 "corpus_echo": {
                     "passes": self.corpus.passes,

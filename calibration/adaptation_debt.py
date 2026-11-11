@@ -51,7 +51,7 @@ Input schema:
 
 import math
 from typing import Any
-from schema import DimensionScore, CalibrationReport, Band
+from schema import DimensionScore, CalibrationReport, Band, fill_r6_mode
 
 # Default compounding rates by domain
 
@@ -64,11 +64,24 @@ DEFAULT_COMPOUNDING_RATE = {
 "cognitive": 0.15,       # ~5 year doubling (individual skill atrophy)
 }
 
-def compute_event_debt(event: dict[str, Any]) -> float:
+def _r6_void_gap(event: dict[str, Any]) -> "str | None":
+    """fill_r6=void: name the missing field, else None. `removed: None` is
+    what pipeline.py writes for a missing flag in void mode."""
+    if event.get("removed") is None:
+        return "removed"
+    if event["removed"] and "years_since_removed" not in event:
+        return "years_since_removed"
+    return None
+
+
+def compute_event_debt(event: dict[str, Any],
+                       fill_r6: "str | None" = None) -> "float | None":
     """
     Single event debt = initial_load × (1 + r)^t
     If not removed, returns 0 (preserved friction = no debt).
     """
+    if fill_r6_mode(fill_r6) == "void" and _r6_void_gap(event):
+        return None
     if not event.get("removed", False):
         return 0.0
 
@@ -78,9 +91,20 @@ def compute_event_debt(event: dict[str, Any]) -> float:
     r = event.get("compounding_rate", DEFAULT_COMPOUNDING_RATE.get(domain, 0.08))
 
     return load * ((1.0 + r) ** t)
+def _r6_void_dim(name, friction_events):
+    gaps = [(e.get("name", "unnamed"), _r6_void_gap(e)) for e in friction_events
+            if _r6_void_gap(e)]
+    return DimensionScore(
+        name=name, score=None, band=Band.UNKNOWN,
+        evidence=["VOID: events missing a field: %s" % gaps],
+        falsifier="state removed and years_since_removed for every event",
+    )
+
+
 def score_total_debt(
     friction_events: list[dict[str, Any]],
     cliff: float = 10.0,
+    fill_r6: "str | None" = None,
 ) -> DimensionScore:
     """
     Total debt normalized against cliff threshold.
@@ -94,6 +118,8 @@ band=Band.YELLOW,
 evidence=["no friction events recorded"],
 falsifier="provide ≥5 friction events with removal status",
 )
+    if fill_r6_mode(fill_r6) == "void" and any(_r6_void_gap(e) for e in friction_events):
+        return _r6_void_dim("total_adaptation_debt", friction_events)
     debts = [(e.get("name", "unnamed"), compute_event_debt(e))
          for e in friction_events]
     total_debt = sum(d for _, d in debts)
@@ -118,6 +144,7 @@ falsifier="provide ≥5 friction events with removal status",
 )
 def score_friction_preservation(
     friction_events: list[dict[str, Any]],
+    fill_r6: "str | None" = None,
 ) -> DimensionScore:
     """
     Fraction of friction events still preserved.
@@ -131,6 +158,9 @@ band=Band.YELLOW,
 evidence=["no friction data"],
 falsifier="log friction events",
 )
+    if fill_r6_mode(fill_r6) == "void" and any(
+            e.get("removed") is None for e in friction_events):
+        return _r6_void_dim("friction_preservation", friction_events)
     preserved = sum(1 for e in friction_events if not e.get("removed", False))
     total = len(friction_events)
     preservation_ratio = preserved / total
@@ -155,6 +185,7 @@ falsifier="log friction events",
 def score_cliff_proximity(
     friction_events: list[dict[str, Any]],
     cliff: float = 10.0,
+    fill_r6: "str | None" = None,
 ) -> DimensionScore:
     """
     Years-to-cliff estimate. Projects current debt trajectory forward.
@@ -163,6 +194,8 @@ def score_cliff_proximity(
 
     Score = 1 - (years_to_cliff / 30)   [30y = effectively safe horizon]
     """
+    if fill_r6_mode(fill_r6) == "void" and any(_r6_void_gap(e) for e in friction_events):
+        return _r6_void_dim("cliff_proximity", friction_events)
     removed = [e for e in friction_events if e.get("removed", False)]
     if not removed:
         return DimensionScore(
@@ -206,17 +239,19 @@ def score_cliff_proximity(
             "or rate reduction), dimension flips to GREEN"
         ),
     )
-def run_adaptation_debt_audit(input_data: dict[str, Any]) -> CalibrationReport:
+def run_adaptation_debt_audit(input_data: dict[str, Any],
+                              fill_r6: "str | None" = None) -> CalibrationReport:
     """
     Energy-flow:
     friction_events → 3 dimension scorers → aggregate → cliff estimate
     """
     events = input_data.get("friction_events", [])
     cliff = input_data.get("cliff_threshold", 10.0)
+    mode = fill_r6_mode(fill_r6)
     dims = [
-    score_total_debt(events, cliff),
-    score_friction_preservation(events),
-    score_cliff_proximity(events, cliff),
+    score_total_debt(events, cliff, fill_r6=mode),
+    score_friction_preservation(events, fill_r6=mode),
+    score_cliff_proximity(events, cliff, fill_r6=mode),
 ]
 
     scores = [d.score for d in dims]
@@ -240,6 +275,7 @@ def run_adaptation_debt_audit(input_data: dict[str, Any]) -> CalibrationReport:
         "entirely on cached comfort with no remaining calibration capacity. "
         "Next stressor exceeds response threshold."
     ),
+    Band.UNKNOWN: "Adaptation debt is UNDETERMINED: an event lacks a removal flag or years (VOID).",
 }
 
     # Extract cliff-proximity metadata for the report
@@ -261,6 +297,12 @@ def run_adaptation_debt_audit(input_data: dict[str, Any]) -> CalibrationReport:
         "license": "CC0",
         "cliff_threshold": cliff,
         "cliff_estimate": ytc_evidence,
+        **({"fill_r6": {
+            "mode": mode,
+            "label": "PROPOSED" if mode == "assumed" else "VOID",
+            "events_missing": [(e.get("name", "unnamed"), g) for e in events
+                               for g in [_r6_void_gap(e)] if g],
+        }} if mode != "baseline" else {}),
     },
 )
 if __name__ == "__main__":

@@ -21,8 +21,28 @@ Sister to:
 Standard library only. CC0 Public Domain.
 """
 
+import os
 import re
 from typing import Dict, List, Tuple, Optional
+
+
+# Silent-fill switch R1 (co-authored, 2026-11-10). A citation dict with no
+# "type" key is read as "no_source_attribution" (grade 0.10) with no label.
+# Chosen per call, else TAF_FILL_R1, else "baseline".
+#   baseline  current code, unlabeled (byte-identical to main)
+#   assumed   same value, labeled PROPOSED, filled citations listed
+#   void      missing type -> grade unknown; grounding unknown unless a
+#             known grade already reaches 1.0; dependent risk UNKNOWN
+#             unless circular / domain forces HIGH
+FILL_R1_MODES = ("baseline", "assumed", "void")
+FILL_R1_DEFAULT = "baseline"
+
+
+def _fill_r1_mode(mode: Optional[str]) -> str:
+    m = mode or os.environ.get("TAF_FILL_R1") or FILL_R1_DEFAULT
+    if m not in FILL_R1_MODES:
+        raise ValueError(f"fill_r1 must be one of {FILL_R1_MODES}, got {m!r}")
+    return m
 
 
 # =============================================================================
@@ -113,7 +133,8 @@ def confidence_score(claim: str) -> float:
 # PROVENANCE GROUNDING CHECK
 # =============================================================================
 
-def grounding_score(claim: str, citations: Optional[List[Dict]] = None) -> float:
+def grounding_score(claim: str, citations: Optional[List[Dict]] = None,
+                    fill_r1: Optional[str] = None) -> Optional[float]:
     """
     Score how well-grounded a claim is. citations is a list of dicts:
         {"type": "primary_source_with_methodology", "url": "..."}
@@ -126,6 +147,14 @@ def grounding_score(claim: str, citations: Optional[List[Dict]] = None) -> float
         if has_specific_number or has_named_entity:
             return 0.10  # specific claim with no source = high hallucination risk
         return 0.30      # generic claim without source
+
+    if _fill_r1_mode(fill_r1) == "void":
+        known = [PROVENANCE_GRADES.get(c["type"], 0.10)
+                 for c in citations if "type" in c]
+        if len(known) < len(citations):
+            top = max(PROVENANCE_GRADES.values())
+            return max(known) if known and max(known) >= top else None
+        return max(known) if known else 0.30
 
     grades = [
         PROVENANCE_GRADES.get(c.get("type", "no_source_attribution"), 0.10)
@@ -201,25 +230,30 @@ def domain_caution_flag(claim: str, domain_hints: List[str]) -> Tuple[bool, str]
 
 def analyze_output(text: str,
                    citations: Optional[List[Dict]] = None,
-                   domain_hints: Optional[List[str]] = None) -> Dict:
+                   domain_hints: Optional[List[str]] = None,
+                   fill_r1: Optional[str] = None) -> Dict:
     """
     Run full provenance corruption analysis on a text output.
     Returns per-claim and aggregate flags.
     """
     if domain_hints is None:
         domain_hints = []
+    mode = _fill_r1_mode(fill_r1)
     claims = extract_claims(text)
+    untyped = [i for i, c in enumerate(citations or []) if "type" not in c]
 
     per_claim_results = []
     for claim in claims:
         conf = confidence_score(claim)
-        ground = grounding_score(claim, citations)
-        mismatch = conf - ground
+        ground = grounding_score(claim, citations, fill_r1=mode)
+        mismatch = None if ground is None else conf - ground
         circular, circ_reason = detect_circular_corruption(citations or [])
         domain_flag, domain_reason = domain_caution_flag(claim, domain_hints)
 
         risk = "LOW"
-        if mismatch > 0.5:
+        if mismatch is None:
+            risk = "UNKNOWN"
+        elif mismatch > 0.5:
             risk = "HIGH"
         elif mismatch > 0.25:
             risk = "MEDIUM"
@@ -231,8 +265,9 @@ def analyze_output(text: str,
         per_claim_results.append({
             "claim": claim,
             "confidence": round(conf, 2),
-            "grounding": round(ground, 2),
-            "confidence_grounding_mismatch": round(mismatch, 2),
+            "grounding": None if ground is None else round(ground, 2),
+            "confidence_grounding_mismatch": (
+                None if mismatch is None else round(mismatch, 2)),
             "circular_corruption": circ_reason if circular else None,
             "domain_caution": domain_reason if domain_flag else None,
             "risk_level": risk,
@@ -241,17 +276,31 @@ def analyze_output(text: str,
     high_risk = [c for c in per_claim_results if c["risk_level"] == "HIGH"]
     medium_risk = [c for c in per_claim_results if c["risk_level"] == "MEDIUM"]
 
-    return {
+    unknown_risk = [c for c in per_claim_results if c["risk_level"] == "UNKNOWN"]
+    if high_risk:
+        summary = "OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK"
+    elif unknown_risk:
+        summary = "PROVENANCE_UNDETERMINED"
+    else:
+        summary = "OUTPUT_ACCEPTABLE_PROVENANCE"
+
+    out = {
         "total_claims": len(claims),
         "high_risk_count": len(high_risk),
         "medium_risk_count": len(medium_risk),
         "high_risk_fraction": len(high_risk) / max(len(claims), 1),
         "per_claim": per_claim_results,
-        "summary_verdict": (
-            "OUTPUT_HAS_PROVENANCE_CORRUPTION_RISK" if len(high_risk) > 0
-            else "OUTPUT_ACCEPTABLE_PROVENANCE"
-        ),
+        "summary_verdict": summary,
     }
+    if mode != "baseline":
+        out["fill_r1"] = {
+            "mode": mode,
+            "label": "PROPOSED" if mode == "assumed" else "VOID",
+            "untyped_citations": untyped,
+            "filled_as": "no_source_attribution (0.10)" if mode == "assumed" else None,
+            "unknown_risk_count": len(unknown_risk),
+        }
+    return out
 
 
 # =============================================================================

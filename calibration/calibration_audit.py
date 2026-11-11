@@ -23,7 +23,7 @@ them and emits a CalibrationReport.
 
 import math
 from typing import Any
-from schema import DimensionScore, CalibrationReport, Band
+from schema import DimensionScore, CalibrationReport, Band, fill_r6_mode
 
 
 # --- Q1: BITE SOURCE ---------------------------------------------------------
@@ -197,13 +197,25 @@ def score_memorialization(memorialized: list[dict[str, Any]]) -> DimensionScore:
 
 # --- Q5: FRICTION / ADAPTATION DEBT ------------------------------------------
 
-def _is_removed(e: dict[str, Any]) -> bool:
+def _is_removed(e: dict[str, Any], fill_r6: "str | None" = None) -> "bool | None":
     """Accept either `was_removed` or `removed` for schema compatibility."""
+    if fill_r6_mode(fill_r6) == "void" and "was_removed" not in e and "removed" not in e:
+        return None
     return e.get("was_removed", e.get("removed", False))
 
 
-def score_friction_removal(friction_events: list[dict[str, Any]]
-                           ) -> DimensionScore:
+def _r6_gaps(friction_events):
+    """Events missing the removal flag, and removed events missing years."""
+    no_flag = [i for i, e in enumerate(friction_events)
+               if "was_removed" not in e and "removed" not in e]
+    no_years = [i for i, e in enumerate(friction_events)
+                if i not in no_flag and e.get("was_removed", e.get("removed", False))
+                and "years_since_removal" not in e and "years_since_removed" not in e]
+    return no_flag, no_years
+
+
+def score_friction_removal(friction_events: list[dict[str, Any]],
+                           fill_r6: "str | None" = None) -> DimensionScore:
     """
     Removed friction = stored adaptation debt.
     Longer since removal = more debt compounded.
@@ -218,6 +230,22 @@ def score_friction_removal(friction_events: list[dict[str, Any]]
             evidence=["no friction events recorded"],
             falsifier="provide >=5 friction events with removal status",
         )
+
+    mode = fill_r6_mode(fill_r6)
+    if mode == "void":
+        no_flag, no_years = _r6_gaps(friction_events)
+        if no_flag or no_years:
+            return DimensionScore(
+                name="adaptation_debt",
+                score=None,
+                band=Band.UNKNOWN,
+                evidence=[
+                    f"friction events: {len(friction_events)}",
+                    f"VOID: events with no removal flag: {no_flag}",
+                    f"VOID: removed events with no years field: {no_years}",
+                ],
+                falsifier="state removal flag and years for every friction event",
+            )
 
     removed = [e for e in friction_events if _is_removed(e)]
     preserved = [e for e in friction_events if not _is_removed(e)]
@@ -249,7 +277,8 @@ def score_friction_removal(friction_events: list[dict[str, Any]]
 
 # --- MAIN AUDIT --------------------------------------------------------------
 
-def run_calibration_audit(system_desc: dict[str, Any]) -> CalibrationReport:
+def run_calibration_audit(system_desc: dict[str, Any],
+                          fill_r6: "str | None" = None) -> CalibrationReport:
     """
     Energy-flow:
         system_desc -> 5 dimension scorers -> aggregate -> verdict
@@ -259,8 +288,10 @@ def run_calibration_audit(system_desc: dict[str, Any]) -> CalibrationReport:
         score_skin_in_game(system_desc.get("decisions", [])),
         score_witness_dependence(system_desc.get("skills_observed", [])),
         score_memorialization(system_desc.get("memorialized_skills", [])),
-        score_friction_removal(system_desc.get("friction_events", [])),
+        score_friction_removal(system_desc.get("friction_events", []),
+                               fill_r6=fill_r6),
     ]
+    mode = fill_r6_mode(fill_r6)
     scores = [d.score for d in dims]
     agg_score, agg_band = CalibrationReport.aggregate(scores)
     failing = [d.name for d in dims if d.band in (Band.RED, Band.EXTINCT)]
@@ -273,7 +304,22 @@ def run_calibration_audit(system_desc: dict[str, Any]) -> CalibrationReport:
             "System has crossed into MEMORIALIZATION-ONLY state. "
             "Actual skill is near-extinct; what remains is propaganda of skill."
         ),
+        Band.UNKNOWN: "UNDETERMINED: a dimension could not be scored (VOID input).",
     }
+
+    metadata = {
+        "source": "Calibration Diagnostic (2026)",
+        "license": "CC0",
+        "dimensions_count": len(dims),
+    }
+    if mode != "baseline":
+        no_flag, no_years = _r6_gaps(system_desc.get("friction_events", []))
+        metadata["fill_r6"] = {
+            "mode": mode,
+            "label": "PROPOSED" if mode == "assumed" else "VOID",
+            "events_without_removal_flag": no_flag,
+            "removed_events_without_years": no_years,
+        }
 
     return CalibrationReport(
         module="calibration_audit",
@@ -284,11 +330,7 @@ def run_calibration_audit(system_desc: dict[str, Any]) -> CalibrationReport:
         verdict=verdict_map[agg_band],
         failing_dimensions=failing,
         falsifiable_claims=[d.falsifier for d in dims if d.falsifier],
-        metadata={
-            "source": "Calibration Diagnostic (2026)",
-            "license": "CC0",
-            "dimensions_count": len(dims),
-        },
+        metadata=metadata,
     )
 
 
