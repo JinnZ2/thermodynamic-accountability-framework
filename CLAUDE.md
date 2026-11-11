@@ -3181,6 +3181,16 @@ session's notes only.
   ABSENT_AT_SENSITIVITY(<value>) added to docs/glossary.md and the
   register; no module's vocabulary tuple was changed. Stage 2 (deciding
   exits for the VOID rows) not started.
+  Follow-up (chat-side reconciliation, 2026-11-10): the 43 / 36 figure
+  was an earlier session's all-occurrences count (vocabulary and prose
+  included); the value-holding rule (15 / 49) stands and the register
+  states both. The default-sweep rank list was supplied in chat (ranks
+  1, 2, 3, 6, 7; not a repo file). Register gains `in_sweep_rank`: U34-U39
+  pass through rank 7 (unified_audit.py:96-97); U40 passes the function
+  holding the second rank-7 site (:207), effect not traced; the other 13
+  output-reaching rows match no ranked site. Ranks 1, 2, 3, 6 hold no
+  PENDING / UNKNOWN value (silent defaults), so they are not slots and
+  got no expiry fields. No exits written.
 - Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
   `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
   that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:

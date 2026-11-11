@@ -54,6 +54,13 @@ def check(reg):
         for ref in re.findall(r"([\w./-]+\.\w+):(\d+)", s.get("stated_partial_source") or ""):
             if _line(ref[0], int(ref[1])) is None:
                 problems.append("%s: partial source %s:%s not in tree" % (s["slot"], ref[0], ref[1]))
+    for row in reg.get("sweep_rank", {}).get("rows", []):
+        got = _line(row["file"], row["line"])
+        if got is None or row["anchor"] not in got:
+            problems.append("sweep rank %d: anchor not on %s:%d" % (row["rank"], row["file"], row["line"]))
+    for s in reg["slots"]:
+        if "in_sweep_rank" not in s:
+            problems.append("%s: no in_sweep_rank" % s["slot"])
     return problems
 
 
@@ -88,6 +95,13 @@ def render(reg):
            "`partial` below is text that names a protocol or a resolution condition without",
            "a null-result rule. It is not an exit and it is counted as VOID.", "",
            "Slot rule: " + reg["slot_rule"], "",
+           "## Two slot rules, two counts", "",
+           "| rule | PENDING | UNKNOWN | what it counts |", "|---|---|---|---|"]
+    cmp_ = reg["slot_rule_comparison"]
+    for k in cmp_:
+        if k != "decision":
+            out.append("| %s | %d | %d | %s |" % (k, cmp_[k]["PENDING"], cmp_[k]["UNKNOWN"], cmp_[k]["rule"].replace("|", "/")))
+    out += ["", cmp_["decision"], "",
            "## Counts", "",
            "| folder | PENDING | UNKNOWN | filled | VOID | of which VOID with partial |", "|---|---|---|---|---|---|"]
     for f in sorted(by):
@@ -104,12 +118,24 @@ def render(reg):
         if not is_filled(s) and s.get("stated_partial"):
             out.append("| %s | %s | `%s` |" % (s["slot"], s["stated_partial"].replace("|", "/"), s["stated_partial_source"]))
     out += ["", "## VOID slots in code or data that reaches an output", "",
-            "Read from the code by hand; no rank list was available to cross-reference.", "",
-            "| slot | file:line | how it reaches an output |", "|---|---|---|"]
+            "Read from the code by hand. `in_sweep_rank` cross-references the rank list below.", "",
+            "| slot | file:line | how it reaches an output | in_sweep_rank |", "|---|---|---|---|"]
     for s in slots:
         v = s.get("verdict_reaching") or ""
         if not is_filled(s) and v.startswith(("yes", "written", "carried")):
-            out.append("| %s | `%s:%d` | %s |" % (s["slot"], s["file"], s["line"], v.replace("|", "/")))
+            out.append("| %s | `%s:%d` | %s | %s |" % (s["slot"], s["file"], s["line"], v.replace("|", "/"), s["in_sweep_rank"]))
+    sw = reg["sweep_rank"]
+    out += ["", "## Default-sweep rank rows", "", sw["source"], "",
+            "None of these sites holds a PENDING or UNKNOWN value: each is a default that",
+            "fills a missing input. They are not slots under the rule above and carry no",
+            "expiry fields. Slots that pass through one are marked in the table above.", "",
+            "| rank | file:line | what the default does | slots passing through |", "|---|---|---|---|"]
+    for row in sw["rows"]:
+        through = [s["slot"] + (" (not traced)" if s["in_sweep_rank"].startswith("near") else "") for s in slots if s["in_sweep_rank"] != "no"
+                   and ("%s:" % row["file"].split("/")[-1]) in s["in_sweep_rank"]
+                   and re.search(r":(\d+)-(\d+)", s["in_sweep_rank"])
+                   and int(re.search(r":(\d+)-(\d+)", s["in_sweep_rank"]).group(1)) <= row["line"] <= int(re.search(r":(\d+)-(\d+)", s["in_sweep_rank"]).group(2))]
+        out.append("| %d | `%s:%d` | %s | %s |" % (row["rank"], row["file"], row["line"], row["what"], ", ".join(through) or "none"))
     out += ["", "## Status vocabulary addition", ""]
     for k, v in reg["status_vocabulary_addition"].items():
         out.append("- `%s`: %s" % (k, v))

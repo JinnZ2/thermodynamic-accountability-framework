@@ -11,6 +11,15 @@ a null-result rule. It is not an exit and it is counted as VOID.
 
 Slot rule: A slot is one place where the tree HOLDS a value in the state PENDING or UNKNOWN: a recorded data value, or a code site that assigns or returns that state. Not slots: vocabulary declarations and legends, prose stating a rule, comparisons and handlers, tests and selftest fixtures, docs/readme_archive/, CLAUDE.md, CONFLICTS.md.
 
+## Two slot rules, two counts
+
+| rule | PENDING | UNKNOWN | what it counts |
+|---|---|---|---|
+| value_holding (this register) | 15 | 49 | A slot is one place where the tree HOLDS a value in the state PENDING or UNKNOWN: a recorded data value, or a code site that assigns or returns that state. Not slots: vocabulary declarations and legends, prose stating a rule, comparisons and handlers, tests and selftest fixtures, docs/readme_archive/, CLAUDE.md, CONFLICTS.md. |
+| all_occurrences (earlier session, work order figure) | 43 | 36 | Every occurrence of PENDING or UNKNOWN in the tree, including vocabulary declarations and rule prose. Count reported by chat-side Claude, 2026-11-10; the list itself is not in this repo and was not recomputed here. |
+
+Value-holding rule stands (chat-side Claude, 2026-11-10).
+
 ## Counts
 
 | folder | PENDING | UNKNOWN | filled | VOID | of which VOID with partial |
@@ -143,30 +152,47 @@ Slot rule: A slot is one place where the tree HOLDS a value in the state PENDING
 
 ## VOID slots in code or data that reaches an output
 
-Read from the code by hand; no rank list was available to cross-reference.
+Read from the code by hand. `in_sweep_rank` cross-references the rank list below.
 
-| slot | file:line | how it reaches an output |
-|---|---|---|
-| P13 | `core/dcea.py:87` | yes: ledger() totals exclude it; printed as 'floor only: filters PENDING' |
-| P14 | `judgment_registry/records/J12/L6.json:36` | yes: ablation.py raises flag CONCLUSION_ON_UNABLATED for UNTESTED / PENDING (a flag, not a rating) |
-| P15 | `community_black_start/coordination.py:148` | yes: state() is the proposal's reported state |
-| U32 | `signal_calibration/prereg/TEMPLATE.json:31` | carried into each SignalIntervention record written by runner.py |
-| U34 | `calibration/anti_metaphor_locker.py:272` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW |
-| U35 | `calibration/cascade_length_eval.py:243` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW |
-| U36 | `calibration/fork_width_scorer.py:195` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW |
-| U37 | `calibration/monoculture_detector.py:220` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW |
-| U38 | `calibration/substrate_refusal_eval.py:208` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW |
-| U39 | `calibration/trapdoor_eval.py:114` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW |
-| U40 | `calibration/assumption_validator.py:288` | yes: counted in summary['unknown']; effect on global_confidence_multiplier not traced |
-| U41 | `calibration/study_scope_audit.py:192` | yes: emitted as report['regime_risk'] |
-| U42 | `core/integrations/earth_physics_fieldlink.py:203` | yes: this is the returned verdict |
-| U43 | `core/integrations/earth_physics_fieldlink.py:215` | yes: this is the returned verdict |
-| U44 | `core/integrations/earth_physics_fieldlink.py:229` | yes: this is the returned verdict |
-| U45 | `core/integrations/earth_physics_fieldlink.py:243` | yes: an UNKNOWN status joins none of red / yellow / green |
-| U46 | `core/integrations/earth_physics_fieldlink.py:258` | yes: this is the returned verdict |
-| U47 | `core/liability_routing.py:117` | yes: written to the routing report as benefit provenance |
-| U48 | `knowledge/scope_mapper.py:242` | yes: returned as the study's measurement type |
-| U49 | `signal_calibration/runner.py:68` | written to the judgment_registry ledger record; registry flags are informational |
+| slot | file:line | how it reaches an output | in_sweep_rank |
+|---|---|---|---|
+| P13 | `core/dcea.py:87` | yes: ledger() totals exclude it; printed as 'floor only: filters PENDING' | no |
+| P14 | `judgment_registry/records/J12/L6.json:36` | yes: ablation.py raises flag CONCLUSION_ON_UNABLATED for UNTESTED / PENDING (a flag, not a rating) | no |
+| P15 | `community_black_start/coordination.py:148` | yes: state() is the proposal's reported state | no |
+| U32 | `signal_calibration/prereg/TEMPLATE.json:31` | carried into each SignalIntervention record written by runner.py | no |
+| U34 | `calibration/anti_metaphor_locker.py:272` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW | 7 -- overall_status UNKNOWN enters _aggregate_status (unified_audit.py:96-97) and reads YELLOW |
+| U35 | `calibration/cascade_length_eval.py:243` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW | 7 -- overall_status UNKNOWN enters _aggregate_status (unified_audit.py:96-97) and reads YELLOW |
+| U36 | `calibration/fork_width_scorer.py:195` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW | 7 -- overall_status UNKNOWN enters _aggregate_status (unified_audit.py:96-97) and reads YELLOW |
+| U37 | `calibration/monoculture_detector.py:220` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW | 7 -- overall_status UNKNOWN enters _aggregate_status (unified_audit.py:96-97) and reads YELLOW |
+| U38 | `calibration/substrate_refusal_eval.py:208` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW | 7 -- overall_status UNKNOWN enters _aggregate_status (unified_audit.py:96-97) and reads YELLOW |
+| U39 | `calibration/trapdoor_eval.py:114` | yes if a report is built without setting it: unified_audit maps UNKNOWN to severity 1, normalized YELLOW | 7 -- overall_status UNKNOWN enters _aggregate_status (unified_audit.py:96-97) and reads YELLOW |
+| U40 | `calibration/assumption_validator.py:288` | yes: counted in summary['unknown']; effect on global_confidence_multiplier not traced | near 7 -- its report passes through _run_assumption_validator (unified_audit.py:195-207); whether this UNKNOWN changes cascade_level was not traced |
+| U41 | `calibration/study_scope_audit.py:192` | yes: emitted as report['regime_risk'] | no |
+| U42 | `core/integrations/earth_physics_fieldlink.py:203` | yes: this is the returned verdict | no |
+| U43 | `core/integrations/earth_physics_fieldlink.py:215` | yes: this is the returned verdict | no |
+| U44 | `core/integrations/earth_physics_fieldlink.py:229` | yes: this is the returned verdict | no |
+| U45 | `core/integrations/earth_physics_fieldlink.py:243` | yes: an UNKNOWN status joins none of red / yellow / green | no |
+| U46 | `core/integrations/earth_physics_fieldlink.py:258` | yes: this is the returned verdict | no |
+| U47 | `core/liability_routing.py:117` | yes: written to the routing report as benefit provenance | no |
+| U48 | `knowledge/scope_mapper.py:242` | yes: returned as the study's measurement type | no |
+| U49 | `signal_calibration/runner.py:68` | written to the judgment_registry ledger record; registry flags are informational | no |
+
+## Default-sweep rank rows
+
+Default-sweep rank list, supplied in chat by chat-side Claude 2026-11-10 (top TAF rows only; ranks 4 and 5 were not supplied). Not a file in this repo.
+
+None of these sites holds a PENDING or UNKNOWN value: each is a default that
+fills a missing input. They are not slots under the rule above and carry no
+expiry fields. Slots that pass through one are marked in the table above.
+
+| rank | file:line | what the default does | slots passing through |
+|---|---|---|---|
+| 1 | `calibration/provenance_corruption_detector_2026.py:131` | missing citation type -> no_source_attribution -> grade 0.10 -> grounding_score -> summary_verdict | none |
+| 2 | `political_audit/substrate_audit.py:363` | unregistered field -> empty constraint list -> gate passes | none |
+| 3 | `core/automation_assessment.py:57` | missing impact -> helpful | none |
+| 6 | `calibration/calibration_audit.py:202` | _is_removed defaults False; calibration/pipeline.py:69-71 defaults years_since_removed to 0.0 | none |
+| 7 | `calibration/unified_audit.py:97` | status aggregation: UNKNOWN ranked 1 (line 81), unlisted status ranked 1 (line 96), both read YELLOW | U34, U35, U36, U37, U38, U39 |
+| 7 | `calibration/unified_audit.py:207` | unlisted cascade level -> YELLOW | U40 (not traced) |
 
 ## Status vocabulary addition
 
