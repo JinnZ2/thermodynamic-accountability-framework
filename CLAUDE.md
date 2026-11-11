@@ -3146,6 +3146,10 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/expiry_register.py` + `docs/EXPIRY_REGISTER.md` (2026-11-11):
+  work order item 1(b). Reproduces 43 PENDING + 36 UNKNOWN lines at d5e6b1c and
+  classifies each; 23 carry an expiry_condition, 7 have no exit defined (counted,
+  not failed), 0 at ABSENT_AT_SENSITIVITY. Delivered files unedited.
 - README.md rewritten 2026-11-03 as a node map (purpose, DCEA rules, full tree
   with run-status tags, run commands, conventions, worked cases, gaps); prior
   README kept verbatim at docs/readme_archive/README_before_2026-11-03.md.
