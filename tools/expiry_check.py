@@ -156,6 +156,9 @@ def render(reg):
                    and re.search(r":(\d+)-(\d+)", s["in_sweep_rank"])
                    and int(re.search(r":(\d+)-(\d+)", s["in_sweep_rank"]).group(1)) <= row["line"] <= int(re.search(r":(\d+)-(\d+)", s["in_sweep_rank"]).group(2))]
         out.append("| %d | `%s:%d` | %s | %s |" % (row["rank"], row["file"], row["line"], row["what"], ", ".join(through) or "none"))
+        if row.get("superseded_text"):
+            st = row["superseded_text"]
+            out.append("| | | SUPERSEDED %s: %s (%s) | |" % (st["superseded"], st["text"], st["why"]))
     sf = reg.get("silent_fills")
     if sf:
         out += ["", "## SILENT_FILL rows", "", sf["about"], ""]
@@ -164,10 +167,10 @@ def render(reg):
         out += ["", "| id | file:line | missing | becomes | fail | verdict reached | expiry | rank | switch |",
                 "|---|---|---|---|---|---|---|---|---|"]
         for r in sf["rows"]:
-            out.append("| %s | `%s:%d` | %s | %s | %s | %s | %s | %d | `%s` |" % (
+            out.append("| %s | `%s:%d` | %s | %s | %s | %s | %s | %s | `%s` |" % (
                 r["id"], r["file"], r["line"], r["missing"].replace("|", "/"), r["becomes"].replace("|", "/"),
                 r["fail_direction"], r["verdict_reached"].replace("|", "/"),
-                "filled" if not r["expiry_condition"].startswith(VOID) else "VOID", r["in_sweep_rank"], r["switch"]))
+                "filled" if not r["expiry_condition"].startswith(VOID) else "VOID", r["in_sweep_rank"], r["switch"] or "none yet"))
     out += ["", "## Status vocabulary addition", ""]
     for k, v in reg["status_vocabulary_addition"].items():
         out.append("- `%s`: %s" % (k, v))

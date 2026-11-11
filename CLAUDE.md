@@ -3165,6 +3165,16 @@ text is preserved there; this section now holds the active
 session's notes only.
 
 ### Audit Notes (2026-05-02 onward)
+- Added `calibration/expiry_reconcile.py` + `docs/EXPIRY_RECONCILED.md` (2026-11-11),
+  branch claude/expiry-register-reconciled (merges #77 and #78 unchanged). Classifies
+  the 97 post-base lines (post_base_97: SLOT 32, EMITTER 2, DEFAULT 1, VOCAB 41,
+  RULE 6, MENTION 15) and puts both registers in one table with both counting rules
+  stated verbatim; no rule picked. With post_base_97: AGREE 170, RULE_DIFF 7,
+  CLASS_DIFF 4, ONLY_78 1, TREE_DIFF 0 (35 as shipped). No logic change.
+- Added `calibration/expiry_register.py` + `docs/EXPIRY_REGISTER_78.md` (renamed from `docs/EXPIRY_REGISTER.md` on 2026-11-11: it case-collided with `docs/expiry_register.md` on case-insensitive filesystems; both contents kept) (2026-11-11):
+  work order item 1(b). Reproduces 43 PENDING + 36 UNKNOWN lines at d5e6b1c and
+  classifies each; 23 carry an expiry_condition, 7 have no exit defined (counted,
+  not failed), 0 at ABSENT_AT_SENSITIVITY. Delivered files unedited.
 - expiry_condition stage 1 (2026-11-10, co-authored), branch
   claude/expiry-condition-stage1. docs/expiry_register.json (source),
   docs/expiry_register.md (generated), tools/expiry_check.py. One row per
@@ -3191,6 +3201,22 @@ session's notes only.
   output-reaching rows match no ranked site. Ranks 1, 2, 3, 6 hold no
   PENDING / UNKNOWN value (silent defaults), so they are not slots and
   got no expiry fields. No exits written.
+- PR #53 follow-up (2026-11-10, co-authored), branch claude/pr53-followup.
+  #53 reached main through PR #75 (branch claude/pr53-onto-main), with
+  CONFLICTS.md listing four differences. Owner decisions, 2026-11-10:
+  S2 and S3 DECIDED-KEEP ("general enough") -- docs/readme_archive/
+  README_2026-11-03_node_map.md keeps its line naming the pre-scrub
+  case-study filename and date, and docs/worker_side_ledger_road_driver.md
+  keeps its body-size and employer-type details; both stay verbatim and
+  the ledger's sha256 pin in docs/DCEA_checks.md is unchanged. These two
+  files are exceptions to the N-items scrub by owner decision, not
+  oversights. S1: README Directories table gains rows for the seven
+  folders added after #53 was written (assembly_instrument,
+  community_black_start, gradient_field, judgment_registry, misuse_guard,
+  signal_calibration, weight_edit_ledger). C1: no move made -- this
+  section runs newest first and #53's two 2026-11-03 bullets already sit
+  after the other 2026-11-03 entries and before the 2026-09-23 one;
+  CONFLICTS.md had called that out of order and is corrected.
 - Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
   `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
   that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:

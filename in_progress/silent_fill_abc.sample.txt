@@ -208,9 +208,9 @@ planted cases are CONSTRUCTED; existing cases are module demos / self_audit inpu
       none_of_above         ruled_out a named cause is supported [DERIVED]
 
 == chains
-  R1 (provenance_corruption_detector_2026) imported by none; feeds another fill module: no
-  R2 (substrate_audit) imported by ['calibration/substrate_audit.py']; feeds another fill module: no
-  R3 (automation_assessment) imported by none; feeds another fill module: no
-  R6 (calibration_audit) imported by ['calibration/__init__.py', 'calibration/pipeline.py', 'calibration/test_calibration.py']; feeds another fill module: no
-  R6 within calibration_audit.py:202 -> :226: an event with no flag reads preserved, so its years default is never read; the second fill is reached only through the first reading True [OBSERVED: removed count ['removed (debt accumulating): 0']]
-  R6 within pipeline.py:68-72 -> calibration_audit + adaptation_debt: one event missing a field is read by both modules in run_unified_audit; both reports and the unified band carry it [OBSERVED in planted pipeline cases]
+  R1 (provenance_corruption_detector_2026) imported by ['tools/test_silent_fills.py']; feeds another fill module: no
+  R2 (substrate_audit) imported by ['tools/test_silent_fills.py']; feeds another fill module: no
+  R3 (automation_assessment) imported by ['tools/test_silent_fills.py']; feeds another fill module: no
+  R6 (calibration_audit) imported by ['calibration/__init__.py', 'calibration/pipeline.py', 'calibration/test_calibration.py', 'tools/test_silent_fills.py']; feeds another fill module: no
+  R6 within calibration_audit.py:204 -> :255 (were :202 -> :226 at dc1c8c1): an event with no flag reads preserved, so its years default is never read; the second fill is reached only through the first reading True [OBSERVED: removed count ['removed (debt accumulating): 0']]
+  R6 within pipeline.py:83, :86 (were :68-71 at dc1c8c1) -> calibration_audit + adaptation_debt: one event missing a field is read by both modules in run_unified_audit; both reports and the unified band carry it [OBSERVED in planted pipeline cases]
