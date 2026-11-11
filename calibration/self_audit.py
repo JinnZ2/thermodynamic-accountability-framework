@@ -149,7 +149,13 @@ f"[{rep['aggregate_band']}]")
         print("  No failing dimensions.")
         print()
 
-if __name__ == "__main__":
+def main(argv=None):
+    """Run both self-descriptions and print the delta.
+
+    JSON reports are written only with --write-json (default: no writes).
+    """
+    import sys
+    argv = sys.argv[1:] if argv is None else argv
     opt = run_unified_audit(OPTIMISTIC)
     hon = run_unified_audit(HONEST)
     _print_report(opt, "RUN 1: OPTIMISTIC SELF-DESCRIPTION")
@@ -166,16 +172,24 @@ if __name__ == "__main__":
         print("  is designed to catch. The framework is partially ceremonial")
         print("  when used as self-description. It calibrates best when used")
         print("  on OTHER systems by operators with skin in the game.")
-elif delta > 0.05:
-    print("  READING: Moderate gap. Framework is mostly honest but has")
-    print("  soft spots.")
-else:
-    print("  READING: No significant gap. Either well-calibrated OR the")
-    print("  honest input was still self-flattering.")
-print()
+    elif delta > 0.05:
+        print("  READING: Moderate gap. Framework is mostly honest but has")
+        print("  soft spots.")
+    else:
+        print("  READING: No significant gap. Either well-calibrated OR the")
+        print("  honest input was still self-flattering.")
+    print()
 
-with open("self_audit_optimistic.json", "w") as f:
-    json.dump(opt, f, indent=2)
-with open("self_audit_honest.json", "w") as f:
-    json.dump(hon, f, indent=2)
-print("  Reports saved: self_audit_optimistic.json, self_audit_honest.json")
+    if "--write-json" in argv:
+        with open("self_audit_optimistic.json", "w") as f:
+            json.dump(opt, f, indent=2)
+        with open("self_audit_honest.json", "w") as f:
+            json.dump(hon, f, indent=2)
+        print("  Reports saved: self_audit_optimistic.json, self_audit_honest.json")
+    else:
+        print("  No reports written (pass --write-json to save them).")
+    return opt, hon
+
+
+if __name__ == "__main__":
+    main()
