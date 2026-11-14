@@ -1,3 +1,6 @@
+> Read first: [READING_PROTOCOL.md](READING_PROTOCOL.md) (how to read this repo).
+> Map, not prescription. Errors are data. Check it. Built for the need, revisable.
+
 # Thermodynamic Accountability Framework
 
 Physics-first accounting of where energy actually goes in institutions, labor and markets.
