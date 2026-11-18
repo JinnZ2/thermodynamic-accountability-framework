@@ -3207,6 +3207,27 @@ session's notes only.
   section runs newest first and #53's two 2026-11-03 bullets already sit
   after the other 2026-11-03 entries and before the 2026-09-23 one;
   CONFLICTS.md had called that out of order and is corrected.
+- #80 follow-up (2026-11-11), branch claude/unknown-axis-followup, stacked on #80.
+  - A module that raises is now GAP_INSTRUMENT_CRASH on the coverage axis, carrying the
+    exception and missing path. It no longer reads RED.
+  - INFO is a coverage kind of its own, apart from UNKNOWN.
+  - `pipeline._aggregate` with no reports returns NOT_MEASURED (it was 0.0 = GREEN).
+  - The UNKNOWN confidence penalty is an A/B/C experiment in
+    calibration/confidence_unknown_experiment.py; no default changed.
+  - The schemas/ crashes come from b42ea34 (2026-05-04). It moved the files into
+    schemas/eval/ and schemas/upstream/ and missed five readers. All 27 test failures
+    on main trace to that move.
+  - Two test_audit_family assertions now check severity, not overall_status.
+  - Tables are in docs/UNKNOWN_AXIS.md (generated); notes in docs/UNKNOWN_AXIS_FOLLOWUP.md.
+- UNKNOWN moved to its own axis in `calibration/unified_audit.py` (2026-11-11,
+  decided by Kavik), branch claude/unknown-coverage-axis. "UNKNOWN": 1 was removed
+  from the rank table. Severity is computed from measured statuses only; coverage
+  lists each UNKNOWN input with its expiry_condition (#77 and #78 texts carried side
+  by side). No measured input gives NOT_DETERMINABLE. overall_status is
+  "<sev>+COVERAGE(n)" when n > 0. Mirror: demo_full_audit.py.
+  Table and U40 trace: docs/UNKNOWN_AXIS.md (generated). 3 of 13 changed: T1 empty,
+  planted (b) and (c). One test was updated (empty -> NOT_DETERMINABLE); it encoded
+  nothing-measured=GREEN. No test encoded UNKNOWN=YELLOW.
 - Note 2026-11-10: candidate correction, code untouched. `core/regulatory_scope_audit.py`
   `audit()` sets `intent_applicable = True` when `intent_check` is None, so a regulation
   that is out of scope with no intent check reads `[OUT OF SCOPE -- INTENT PRESERVED]`:
@@ -6947,3 +6968,13 @@ session's notes only.
   live upstream `assumption_validator` package if importable;
   otherwise it returns UNKNOWN verdicts so TAF stays runnable in
   isolation. stdlib only.
+- #82 follow-up (2026-11-11), branch claude/unknown-axis-followup-2, stacked on #82.
+  - 5 stale schemas/ readers moved to the b42ea34 paths (own commit, 2cc6509).
+    test_audit_family: 88/88, was 26 errors. Existing cases now raise no
+    GAP_INSTRUMENT. Only T3's RED was crash-only (now YELLOW).
+  - calibration/silent_fill_register.py: SF01-SF13 SILENT_FILL, UC01
+    UNSOURCED_CONSTANT (variant B confidence penalties 0.3/0.8, borrowed from
+    assumption_validator). Each entry is checked by its quote at its line.
+  - pipeline_band_experiment.py (SF01): A GAP_INSTRUMENT / B PROPOSED map /
+    C current (always YELLOW). calibration_missing_experiment.py (SF02-SF07):
+    A void / B assumed / C baseline. Tables in docs/SILENT_FILL.md. Nothing picked.

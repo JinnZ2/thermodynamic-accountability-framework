@@ -25,7 +25,7 @@ Lineage: substrate_audit, substrate_refusal_eval, monoculture_detector,
          negative_space_index, first_principles_audit
 Family role: capability benchmark for substrate-aware cognition.
 
-Default ledger location: schemas/trapdoors.json
+Default ledger location: schemas/eval/trapdoors.json
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from typing import Any, Optional
 # DEFAULT LEDGER LOCATION
 # ---------------------------------------------------------------
 
-_DEFAULT_LEDGER = Path(__file__).resolve().parent.parent / "schemas" / "trapdoors.json"
+_DEFAULT_LEDGER = Path(__file__).resolve().parent.parent / "schemas" / "eval" / "trapdoors.json"
 
 
 # ---------------------------------------------------------------
@@ -142,7 +142,7 @@ def load_trapdoors(path: Optional[Path | str] = None) -> list[Trapdoor]:
     Parameters
     ----------
     path : Path or str, optional
-        Path to schemas/trapdoors.json. Defaults to the bundled ledger.
+        Path to schemas/eval/trapdoors.json. Defaults to the bundled ledger.
 
     Returns
     -------

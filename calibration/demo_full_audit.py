@@ -104,6 +104,7 @@ STATUS_ICON = {
     "GREEN": "[ OK ]",
     "YELLOW": "[WARN]",
     "RED": "[FAIL]",
+    "NOT_DETERMINABLE": "[ ND ]",
 }
 
 
@@ -117,6 +118,10 @@ def _module_status(report: UnifiedAuditReport, name: str) -> str:
     # Different modules expose status under different keys
     candidates = []
     if isinstance(section, dict):
+        summ = section.get("summary")
+        if (name == "assumption_validator" and isinstance(summ, dict)
+                and summ.get("total") and summ.get("unknown") == summ.get("total")):
+            return "[UNK ]"   # nothing measured; cascade MINIMAL is not a reading
         candidates.append(section.get("overall_status"))
         cascade = section.get("cascade")
         if isinstance(cascade, dict):
@@ -148,10 +153,11 @@ def _print_header(title: str):
 
 
 def _print_scenario(label: str, report: UnifiedAuditReport):
-    overall = STATUS_ICON.get(report.overall_status, "-----")
+    overall = STATUS_ICON.get(report.severity, "-----")
     print()
     print(f"  SCENARIO: {label}")
-    print(f"  overall:  {overall} {report.overall_status}")
+    print(f"  severity: {overall} {report.severity}")
+    print(f"  coverage: {len(report.coverage)} UNKNOWN input(s)")
     print(f"  modules:  {len(report.modules_run)} run, "
           f"{len(report.modules_skipped)} skipped")
     print()
@@ -236,9 +242,9 @@ def main():
         av = report.sections.get("assumption_validator", {})
         cascade = av.get("cascade", {})
         summary = av.get("summary", {})
-        icon = STATUS_ICON.get(report.overall_status, "-----")
+        icon = STATUS_ICON.get(report.severity, "-----")
         print()
-        print(f"  {label:<10}  {icon}  "
+        print(f"  {label:<10}  {icon}  coverage={len(report.coverage)}  "
               f"cascade={cascade.get('cascade_level','-')}  "
               f"green={summary.get('green','-')}  "
               f"yellow={summary.get('yellow','-')}  "
