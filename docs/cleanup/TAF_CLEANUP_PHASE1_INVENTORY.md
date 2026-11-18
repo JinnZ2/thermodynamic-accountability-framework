@@ -42,3 +42,5 @@ TAF: `cross-domain-assembly-instrument`, `judgment-registry`,
 `registry-j14`, `registry-j15`, `registry-j16`, `weight-edit-ledger`,
 plus the archived-source branches of the closed PRs above (their tips are
 under `archive/`) and the stray `archive/expiry-condition-stage1-test`.
+
+Branch deletes: all 19 verified ABSENT_BEFORE_TASK 2026-11-18T00:25Z (Manus, read-only; no writes); archive/* unchanged
