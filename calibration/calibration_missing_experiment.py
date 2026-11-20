@@ -12,7 +12,7 @@ in silent_fill_register.py. Three readings, none picked:
     B  assumed   a missing dimension takes the value in ASSUMED below,
                  labelled PROPOSED and reported as assumed. The table is
                  seeded with today's fills so B equals C until edited
-                 (to be edited by Kavik)
+                 (to be edited by JinnZ2)
     C  baseline  current behaviour
 
 A dimension counts as missing when its input list is absent or empty.

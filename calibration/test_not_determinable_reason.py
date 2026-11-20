@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # calibration/test_not_determinable_reason.py -- CC0, stdlib only
-# Provenance: co-authored (Kavik + Claude), 2026-11-11.
+# Provenance: co-authored (JinnZ2 + Claude), 2026-11-11.
 # One test per not_determinable_reason value, plus the pipeline rule.
 import os
 import sys

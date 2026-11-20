@@ -9,7 +9,7 @@ so the .get(band, "YELLOW") fallback fires on every run (SILENT_FILL SF01
 in silent_fill_register.py). Three readings, none picked:
 
     A  unmatched band -> GAP_INSTRUMENT_UNRECOGNIZED_LABEL (coverage), no severity
-    B  explicit mapping PROPOSED below (to be edited by Kavik)
+    B  explicit mapping PROPOSED below (to be edited by JinnZ2)
     C  current behaviour (YELLOW for every band)
 
 stdlib only. CC0.

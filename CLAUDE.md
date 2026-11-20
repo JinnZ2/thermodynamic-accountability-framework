@@ -3220,7 +3220,7 @@ session's notes only.
   - Two test_audit_family assertions now check severity, not overall_status.
   - Tables are in docs/UNKNOWN_AXIS.md (generated); notes in docs/UNKNOWN_AXIS_FOLLOWUP.md.
 - UNKNOWN moved to its own axis in `calibration/unified_audit.py` (2026-11-11,
-  decided by Kavik), branch claude/unknown-coverage-axis. "UNKNOWN": 1 was removed
+  decided by JinnZ2), branch claude/unknown-coverage-axis. "UNKNOWN": 1 was removed
   from the rank table. Severity is computed from measured statuses only; coverage
   lists each UNKNOWN input with its expiry_condition (#77 and #78 texts carried side
   by side). No measured input gives NOT_DETERMINABLE. overall_status is

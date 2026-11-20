@@ -38,7 +38,7 @@ def _aggregate(reports: dict) -> tuple:
 
     No module ran -> (None, Band.UNKNOWN, NO_MODULES_RUN), never a score
     of 0.0 (2026-11-11: #84 three-value shape plus #81's no-score ->
-    UNKNOWN rule, chosen by Kavik). Note:
+    UNKNOWN rule, chosen by JinnZ2). Note:
     calibration_audit always runs in run_unified_audit, so via that
     function the empty branch is not reached; it is tested here directly.
     """
