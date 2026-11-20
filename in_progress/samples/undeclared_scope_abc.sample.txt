@@ -1,0 +1,193 @@
+UNDECLARED-SCOPE A/B/C, crossed with UNDECLARED-INTENT A/B/C (9 arms)
+scope: A void | B assumed+PROPOSED | C baseline = main.  No winner is picked.
+OBSERVED = printed by this run; DERIVED = follows from code.
+
+demo stdout, lines differing from CC (scope,intent) [OBSERVED]:
+  AA: [4, 11, 21, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, ('len', 69, 71)]
+  AB: [4, 21, 31, 50]
+  AC: none
+  BA: [4, 11, 21, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, ('len', 69, 71)]
+  BB: [4, 21, 31, 50]
+  BC: none
+  CA: [4, 11, 21, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, ('len', 69, 71)]
+  CB: [4, 21, 31, 50]
+  CC: none
+
+demo-1 septic x homestead   (demo a1; intent declared: None; missing: -)
+  A  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['MN_7080_subpart_X_legacy'] undet=-
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['MN_7080_subpart_X_legacy'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['MN_7080_subpart_X_legacy'] undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 340 / 340 / 340
+  9-arm cross: intent only
+    verdicts (scope,intent): AA=OUT OF SCOPE -- INTENT UNDECLARED; AB=OUT OF SCOPE -- INTENT PRESERVED; AC=OUT OF SCOPE -- INTENT PRESERVED; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=6 AB=3 AC=0 BA=6 BB=3 BC=0 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+demo-2 bridge x footbridge   (demo a2; intent declared: None; missing: -)
+  A  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['STATE_BRIDGE_PERMIT_LEGACY'] undet=-
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['STATE_BRIDGE_PERMIT_LEGACY'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['STATE_BRIDGE_PERMIT_LEGACY'] undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 331 / 331 / 331
+  9-arm cross: intent only
+    verdicts (scope,intent): AA=OUT OF SCOPE -- INTENT UNDECLARED; AB=OUT OF SCOPE -- INTENT PRESERVED; AC=OUT OF SCOPE -- INTENT PRESERVED; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=6 AB=3 AC=0 BA=6 BB=3 BC=0 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+cross-1 septic x footbridge   (audit_many cross; intent declared: None; missing: ['population_density_per_km2', 'groundwater_depth_m', 'lot_size_ha', 'annual_rainfall_mm'])
+  A  SCOPE NOT DETERMINABLE             in_scope=None  slabel=VOID     oos=- undet=['MN_7080_subpart_X_legacy']
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=PROPOSED oos=['MN_7080_subpart_X_legacy [PROPOSED]'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['MN_7080_subpart_X_legacy'] undet=-
+  diverge A/B: 7 of 10 ['verdict', 'in_scope', 'scope_label', 'record.out_of_scope', 'record.intent_preserved', 'record.scope_undeterminable', 'summary'] | A/C: 7 | B/C: 3 ['scope_label', 'record.out_of_scope', 'summary']
+  summary chars A/B/C: 323 / 496 / 355
+  9-arm cross: chain: scope VOID masks the intent reading
+    verdicts (scope,intent): AA=SCOPE NOT DETERMINABLE; AB=SCOPE NOT DETERMINABLE; AC=SCOPE NOT DETERMINABLE; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=9 AB=8 AC=7 BA=8 BB=5 BC=3 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=cancel-or-mask (9 of 10 fields); AB=stack; BA=stack; BB=stack
+
+cross-2 bridge x homestead   (audit_many cross; intent declared: None; missing: ['expected_daily_vehicles', 'span_meters', 'design_life_years', 'budget_usd_million'])
+  A  SCOPE NOT DETERMINABLE             in_scope=None  slabel=VOID     oos=- undet=['STATE_BRIDGE_PERMIT_LEGACY']
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=PROPOSED oos=['STATE_BRIDGE_PERMIT_LEGACY [PROPOSED]'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['STATE_BRIDGE_PERMIT_LEGACY'] undet=-
+  diverge A/B: 7 of 10 ['verdict', 'in_scope', 'scope_label', 'record.out_of_scope', 'record.intent_preserved', 'record.scope_undeterminable', 'summary'] | A/C: 7 | B/C: 3 ['scope_label', 'record.out_of_scope', 'summary']
+  summary chars A/B/C: 305 / 452 / 316
+  9-arm cross: chain: scope VOID masks the intent reading
+    verdicts (scope,intent): AA=SCOPE NOT DETERMINABLE; AB=SCOPE NOT DETERMINABLE; AC=SCOPE NOT DETERMINABLE; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=9 AB=8 AC=7 BA=8 BB=5 BC=3 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=cancel-or-mask (9 of 10 fields); AB=stack; BA=stack; BB=stack
+
+card-1 d=5 intent None   (law-audit-card test_derive; intent declared: None; missing: -)
+  A  IN SCOPE                           in_scope=True  slabel=-        oos=- undet=-
+  B  IN SCOPE                           in_scope=True  slabel=-        oos=- undet=-
+  C  IN SCOPE                           in_scope=True  slabel=-        oos=- undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 34 / 34 / 34
+  9-arm cross: intent only
+    verdicts (scope,intent): AA=IN SCOPE; AB=IN SCOPE; AC=IN SCOPE; BA=IN SCOPE; BB=IN SCOPE; BC=IN SCOPE; CA=IN SCOPE; CB=IN SCOPE; CC=IN SCOPE
+    fields changed vs CC:    AA=2 AB=1 AC=0 BA=2 BB=1 BC=0 CA=2 CB=1 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+card-2 d=50 intent False   (law-audit-card test_derive; intent declared: False; missing: -)
+  A  OUT OF SCOPE -- INTENT EXPIRED     in_scope=False slabel=-        oos=['R'] undet=-
+  B  OUT OF SCOPE -- INTENT EXPIRED     in_scope=False slabel=-        oos=['R'] undet=-
+  C  OUT OF SCOPE -- INTENT EXPIRED     in_scope=False slabel=-        oos=['R'] undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 106 / 106 / 106
+  9-arm cross: neither switch read
+    verdicts (scope,intent): AA=OUT OF SCOPE -- INTENT EXPIRED; AB=OUT OF SCOPE -- INTENT EXPIRED; AC=OUT OF SCOPE -- INTENT EXPIRED; BA=OUT OF SCOPE -- INTENT EXPIRED; BB=OUT OF SCOPE -- INTENT EXPIRED; BC=OUT OF SCOPE -- INTENT EXPIRED; CA=OUT OF SCOPE -- INTENT EXPIRED; CB=OUT OF SCOPE -- INTENT EXPIRED; CC=OUT OF SCOPE -- INTENT EXPIRED
+    fields changed vs CC:    AA=0 AB=0 AC=0 BA=0 BB=0 BC=0 CA=0 CB=0 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+card-3 d=50 intent True   (law-audit-card test_derive; intent declared: True; missing: -)
+  A  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R'] undet=-
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R'] undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 195 / 195 / 195
+  9-arm cross: neither switch read
+    verdicts (scope,intent): AA=OUT OF SCOPE -- INTENT PRESERVED; AB=OUT OF SCOPE -- INTENT PRESERVED; AC=OUT OF SCOPE -- INTENT PRESERVED; BA=OUT OF SCOPE -- INTENT PRESERVED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT PRESERVED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=0 AB=0 AC=0 BA=0 BB=0 BC=0 CA=0 CB=0 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+card-4 d=50 intent None   (law-audit-card test_undeclared (card.py returns VOID before calling TAF); intent declared: None; missing: -)
+  A  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R'] undet=-
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R'] undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 195 / 195 / 195
+  9-arm cross: intent only
+    verdicts (scope,intent): AA=OUT OF SCOPE -- INTENT UNDECLARED; AB=OUT OF SCOPE -- INTENT PRESERVED; AC=OUT OF SCOPE -- INTENT PRESERVED; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=6 AB=3 AC=0 BA=6 BB=3 BC=0 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+E1 d=5 e missing, intent None   (CONSTRUCTED: measured var in range, one var missing; intent declared: None; missing: ['e'])
+  A  SCOPE NOT DETERMINABLE             in_scope=None  slabel=VOID     oos=- undet=['R2']
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=PROPOSED oos=['R2 [PROPOSED]'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R2'] undet=-
+  diverge A/B: 7 of 10 ['verdict', 'in_scope', 'scope_label', 'record.out_of_scope', 'record.intent_preserved', 'record.scope_undeterminable', 'summary'] | A/C: 7 | B/C: 3 ['scope_label', 'record.out_of_scope', 'summary']
+  summary chars A/B/C: 180 / 258 / 196
+  9-arm cross: chain: scope VOID masks the intent reading
+    verdicts (scope,intent): AA=SCOPE NOT DETERMINABLE; AB=SCOPE NOT DETERMINABLE; AC=SCOPE NOT DETERMINABLE; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=9 AB=8 AC=7 BA=8 BB=5 BC=3 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=cancel-or-mask (9 of 10 fields); AB=stack; BA=stack; BB=stack
+
+E2 d=50 e missing, intent None   (CONSTRUCTED: measured var out of range, one var missing; intent declared: None; missing: ['e'])
+  A  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R2'] undet=-
+  B  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R2'] undet=-
+  C  OUT OF SCOPE -- INTENT PRESERVED   in_scope=False slabel=-        oos=['R2'] undet=-
+  diverge A/B: 0 of 10 [] | A/C: 0 | B/C: 0 []
+  summary chars A/B/C: 196 / 196 / 196
+  9-arm cross: intent only
+    verdicts (scope,intent): AA=OUT OF SCOPE -- INTENT UNDECLARED; AB=OUT OF SCOPE -- INTENT PRESERVED; AC=OUT OF SCOPE -- INTENT PRESERVED; BA=OUT OF SCOPE -- INTENT UNDECLARED; BB=OUT OF SCOPE -- INTENT PRESERVED; BC=OUT OF SCOPE -- INTENT PRESERVED; CA=OUT OF SCOPE -- INTENT UNDECLARED; CB=OUT OF SCOPE -- INTENT PRESERVED; CC=OUT OF SCOPE -- INTENT PRESERVED
+    fields changed vs CC:    AA=6 AB=3 AC=0 BA=6 BB=3 BC=0 CA=6 CB=3 CC=0
+    combos (scope x intent, AB arms): AA=single; AB=single; BA=single; BB=single
+
+edge sweeps (verdict under scope A / scope B) [OBSERVED]:
+  one_var:
+    d=9.0   A=IN SCOPE                           B=IN SCOPE                           agree
+    d=9.5   A=IN SCOPE                           B=IN SCOPE                           agree
+    d=9.9   A=IN SCOPE                           B=IN SCOPE                           agree
+    d=10.0  A=IN SCOPE                           B=IN SCOPE                           agree
+    d=10.1  A=OUT OF SCOPE -- INTENT PRESERVED   B=OUT OF SCOPE -- INTENT PRESERVED   agree
+    d=10.5  A=OUT OF SCOPE -- INTENT PRESERVED   B=OUT OF SCOPE -- INTENT PRESERVED   agree
+    d=11.0  A=OUT OF SCOPE -- INTENT PRESERVED   B=OUT OF SCOPE -- INTENT PRESERVED   agree
+  two_var_e_missing:
+    d=9.0   A=SCOPE NOT DETERMINABLE             B=OUT OF SCOPE -- INTENT PRESERVED   SPLIT
+    d=9.5   A=SCOPE NOT DETERMINABLE             B=OUT OF SCOPE -- INTENT PRESERVED   SPLIT
+    d=9.9   A=SCOPE NOT DETERMINABLE             B=OUT OF SCOPE -- INTENT PRESERVED   SPLIT
+    d=10.0  A=SCOPE NOT DETERMINABLE             B=OUT OF SCOPE -- INTENT PRESERVED   SPLIT
+    d=10.1  A=OUT OF SCOPE -- INTENT PRESERVED   B=OUT OF SCOPE -- INTENT PRESERVED   agree
+    d=10.5  A=OUT OF SCOPE -- INTENT PRESERVED   B=OUT OF SCOPE -- INTENT PRESERVED   agree
+    d=11.0  A=OUT OF SCOPE -- INTENT PRESERVED   B=OUT OF SCOPE -- INTENT PRESERVED   agree
+
+coincidence cards (cases where scope A and B give the same verdict):
+  USA_demo_1_septic_x_homestead  tool reading: RESOLVED {'supported': ['shared_constraint']}
+    shared_constraint    supported no scope variable missing: the switch is never read, A/B/C run one code path [DERIVED; OBSERVED: 0 of 10 fields differ A/B]
+    local_normal_form    ruled_out sweep population_density_per_km2 across 20000.0 (own regulation): A/B agree at every point both sides of the edge; agreement here does not depend on nearness to it [OBSERVED]; with groundwater_depth_m removed the same sweep has none (agree [18000.0, 19800.0, 20000.0, 20200.0, 22000.0], split []) [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]
+  USA_demo_2_bridge_x_footbridge  tool reading: RESOLVED {'supported': ['shared_constraint']}
+    shared_constraint    supported no scope variable missing: the switch is never read, A/B/C run one code path [DERIVED; OBSERVED: 0 of 10 fields differ A/B]
+    local_normal_form    ruled_out sweep expected_daily_vehicles across 50000.0 (own regulation): A/B agree at every point both sides of the edge; agreement here does not depend on nearness to it [OBSERVED]; with span_meters removed the same sweep has none (agree [45000.0, 49500.0, 50000.0, 50500.0, 55000.0], split []) [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]
+  USA_card_1_d_5_intent_None  tool reading: RESOLVED {'supported': ['shared_constraint']}
+    shared_constraint    supported no scope variable missing: the switch is never read, A/B/C run one code path [DERIVED; OBSERVED: 0 of 10 fields differ A/B]
+    local_normal_form    ruled_out sweep d across 10.0 (own regulation): A/B agree at every point both sides of the edge; agreement here does not depend on nearness to it [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]
+  USA_card_2_d_50_intent_False  tool reading: RESOLVED {'supported': ['shared_constraint']}
+    shared_constraint    supported no scope variable missing: the switch is never read, A/B/C run one code path [DERIVED; OBSERVED: 0 of 10 fields differ A/B]
+    local_normal_form    ruled_out sweep d across 10.0 (own regulation): A/B agree at every point both sides of the edge; agreement here does not depend on nearness to it [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]
+  USA_card_3_d_50_intent_True  tool reading: RESOLVED {'supported': ['shared_constraint']}
+    shared_constraint    supported no scope variable missing: the switch is never read, A/B/C run one code path [DERIVED; OBSERVED: 0 of 10 fields differ A/B]
+    local_normal_form    ruled_out sweep d across 10.0 (own regulation): A/B agree at every point both sides of the edge; agreement here does not depend on nearness to it [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]
+  USA_card_4_d_50_intent_None  tool reading: RESOLVED {'supported': ['shared_constraint']}
+    shared_constraint    supported no scope variable missing: the switch is never read, A/B/C run one code path [DERIVED; OBSERVED: 0 of 10 fields differ A/B]
+    local_normal_form    ruled_out sweep d across 10.0 (own regulation): A/B agree at every point both sides of the edge; agreement here does not depend on nearness to it [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]
+  USA_E2_d_50_e_missing_intent_None  tool reading: RESOLVED {'supported': ['shared_constraint', 'local_normal_form']}
+    shared_constraint    supported a measured variable is out of range, which settles scope as out before the switch is read [DERIVED: CHOICE S1]
+    local_normal_form    supported sweep d across 10.0 (own regulation): A/B agree at [10.1, 11.0], split at [9.0, 9.9, 10.0]; agreement is one side of the edge [OBSERVED]
+    statistical_artifact ruled_out no random draw in audit(); one run per arm is the whole population [DERIVED]
+    numerical_artifact   ruled_out edge test is <= on floats; each sweep includes the edge value exactly; any change falls between the points either side of the edge, not scattered [OBSERVED]
+    low_dim_projection   ruled_out all 10 fields equal A/B [OBSERVED]
+    none_of_above        ruled_out a named cause is supported [DERIVED]

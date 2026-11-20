@@ -48,8 +48,53 @@ License: CC0
 Stdlib only.
 """
 
+import os
 from dataclasses import dataclass, field
 from typing import Callable
+
+# -----------------------------------------------------------------------------
+# Undeclared-intent switch (BRANCH EXPERIMENT, 2026-11-10; default unchanged).
+#   baseline  current behaviour, unlabeled (control): absent intent_check
+#             is read as intent_still_applicable = True
+#   assumed   same value True, labeled PROPOSED on every output it reaches
+#   void      intent_still_applicable = None; every dependent output flagged
+# Applies ONLY when intent_check is None. Chosen per call, else from the
+# environment variable TAF_UNDECLARED_INTENT, else "baseline".
+# -----------------------------------------------------------------------------
+UNDECLARED_INTENT_MODES = ("baseline", "assumed", "void")
+UNDECLARED_INTENT_DEFAULT = "baseline"
+
+
+def _undeclared_mode(mode: "str | None") -> str:
+    m = mode or os.environ.get("TAF_UNDECLARED_INTENT") or UNDECLARED_INTENT_DEFAULT
+    if m not in UNDECLARED_INTENT_MODES:
+        raise ValueError(f"undeclared_intent must be one of {UNDECLARED_INTENT_MODES}, got {m!r}")
+    return m
+
+
+# -----------------------------------------------------------------------------
+# Undeclared-scope switch (BRANCH EXPERIMENT, 2026-11-10; default unchanged).
+# Default under test: Regulation.in_scope reads a scope variable MISSING
+# from the situation as out of scope.
+#   baseline  current behaviour, unlabeled (control)
+#   assumed   same value (out of scope), labeled PROPOSED on every output
+#             it reaches
+#   void      in_scope = None ("scope not determinable"); dependent
+#             outputs flagged
+# Applies ONLY when the missing variable is decisive: at least one scope
+# variable is missing AND no measured variable is out of range. A measured
+# exit settles the scope as out regardless of what is missing [CHOICE S1].
+# Chosen per call, else TAF_UNDECLARED_SCOPE, else "baseline".
+# -----------------------------------------------------------------------------
+UNDECLARED_SCOPE_MODES = ("baseline", "assumed", "void")
+UNDECLARED_SCOPE_DEFAULT = "baseline"
+
+
+def _undeclared_scope_mode(mode: "str | None") -> str:
+    m = mode or os.environ.get("TAF_UNDECLARED_SCOPE") or UNDECLARED_SCOPE_DEFAULT
+    if m not in UNDECLARED_SCOPE_MODES:
+        raise ValueError(f"undeclared_scope must be one of {UNDECLARED_SCOPE_MODES}, got {m!r}")
+    return m
 
 
 # =============================================================================
@@ -137,15 +182,42 @@ class Situation:
 class ScopeAudit:
     regulation: Regulation
     situation: Situation
-    in_scope: bool
+    in_scope: "bool | None"               # None only under undeclared_scope="void"
     scope_exits: list[dict]
-    intent_still_applicable: bool         # is the harm-prevention purpose still relevant?
+    intent_still_applicable: "bool | None"  # is the harm-prevention purpose still relevant?
+    intent_label: str = ""                # "" (declared or baseline) | "PROPOSED" | "VOID"
+    scope_label: str = ""                 # "" (measured or baseline) | "PROPOSED" | "VOID"
+
+    def missing_scope_vars(self) -> list[str]:
+        return [e["variable"] for e in self.scope_exits if e.get("reason") == "not_measured"]
 
     def summary(self) -> str:
+        if self.in_scope is None:
+            return (
+                f"[SCOPE NOT DETERMINABLE] {self.regulation.id} at "
+                f"{self.situation.location}: scope variable(s) not measured "
+                f"({', '.join(self.missing_scope_vars())}) and no measured "
+                f"variable is out of range. Whether the regulation applies "
+                f"is VOID (not read); intent not reached."
+            )
+        return self._summary_scoped() + (
+            " [PROPOSED: missing scope variable(s) read as out of scope: "
+            + ", ".join(self.missing_scope_vars()) + "]"
+            if self.scope_label == "PROPOSED" else "")
+
+    def _summary_scoped(self) -> str:
         if self.in_scope:
             return (
                 f"[IN SCOPE] {self.regulation.id} applies normally "
                 f"to {self.situation.location}."
+            )
+        if self.intent_still_applicable is None:
+            return (
+                f"[OUT OF SCOPE -- INTENT UNDECLARED] {self.regulation.id} "
+                f"is outside its operating envelope at {self.situation.location}. "
+                f"No intent check was supplied; whether "
+                f"'{self.regulation.first_principle_intent}' still applies "
+                f"is VOID (not read)."
             )
         if not self.intent_still_applicable:
             return (
@@ -159,7 +231,8 @@ class ScopeAudit:
             f"Local response should preserve the first-principle intent: "
             f"'{self.regulation.first_principle_intent}'. "
             f"Audit-after central authority retains validation right."
-        )
+        ) + (" [PROPOSED: intent assumed to apply; no intent_check supplied]"
+             if self.intent_label == "PROPOSED" else "")
 
     def deviations_human_readable(self) -> str:
         lines = []
@@ -180,20 +253,52 @@ class ScopeAudit:
 # =============================================================================
 
 def audit(reg: Regulation, sit: Situation,
-          intent_check: Callable | None = None) -> ScopeAudit:
+          intent_check: Callable | None = None,
+          undeclared_intent: "str | None" = None,
+          undeclared_scope: "str | None" = None) -> ScopeAudit:
+    """Scope audit with both branch-experiment switches (see the two
+    switch blocks at the top). Defaults reproduce the prior code."""
+    smode = _undeclared_scope_mode(undeclared_scope)   # validated even if unread
+    a = _audit_intent(reg, sit, intent_check, undeclared_intent)
+    if a.in_scope:
+        return a
+    missing = a.missing_scope_vars()
+    measured_exit = any(e.get("reason") != "not_measured" for e in a.scope_exits)
+    if not missing or measured_exit:
+        return a                          # the scope switch is not read
+    if smode == "void":
+        a.in_scope, a.scope_label = None, "VOID"
+    elif smode == "assumed":
+        a.scope_label = "PROPOSED"
+    return a
+
+
+def _audit_intent(reg: Regulation, sit: Situation,
+                  intent_check: Callable | None = None,
+                  undeclared_intent: "str | None" = None) -> ScopeAudit:
     """
     Run a scope audit. `intent_check` is an optional function
     that returns whether the original harm-prevention intent
-    still applies under the current situation.
+    still applies under the current situation. When it is None,
+    `undeclared_intent` (see UNDECLARED_INTENT_MODES) decides how
+    the absence is read; the default reproduces the prior code.
     """
     in_scope = reg.in_scope(sit.conditions)
     exits = reg.scope_exit_signature(sit.conditions)
-    intent_applicable = True if intent_check is None else intent_check(reg, sit)
-    return ScopeAudit(reg, sit, in_scope, exits, intent_applicable)
+    if intent_check is not None:
+        return ScopeAudit(reg, sit, in_scope, exits, intent_check(reg, sit))
+    mode = _undeclared_mode(undeclared_intent)
+    if mode == "void":
+        return ScopeAudit(reg, sit, in_scope, exits, None, "VOID")
+    label = "PROPOSED" if mode == "assumed" else ""
+    return ScopeAudit(reg, sit, in_scope, exits, True, label)
 
 
-def audit_many(regs: list[Regulation], sit: Situation) -> list[ScopeAudit]:
-    return [audit(r, sit) for r in regs]
+def audit_many(regs: list[Regulation], sit: Situation,
+               undeclared_intent: "str | None" = None,
+               undeclared_scope: "str | None" = None) -> list[ScopeAudit]:
+    return [audit(r, sit, undeclared_intent=undeclared_intent,
+                  undeclared_scope=undeclared_scope) for r in regs]
 
 
 # =============================================================================
@@ -215,9 +320,11 @@ class LocalResponseRecord:
     responder: str
     timestamp: str
     post_hoc_audit_due_by: str = ""
+    intent_undeclared: list = field(default_factory=list)  # void mode only
+    scope_undeterminable: list = field(default_factory=list)  # scope void mode only
 
     def serialize(self) -> dict:
-        return {
+        out = {
             "situation": self.situation_id,
             "regulations_evaluated": self.regulations_evaluated,
             "out_of_scope": self.out_of_scope_regulations,
@@ -228,6 +335,11 @@ class LocalResponseRecord:
             "timestamp": self.timestamp,
             "audit_due_by": self.post_hoc_audit_due_by,
         }
+        if self.intent_undeclared:
+            out["intent_undeclared"] = self.intent_undeclared
+        if self.scope_undeterminable:
+            out["scope_undeterminable"] = self.scope_undeterminable
+        return out
 
 
 def build_response_record(
@@ -237,11 +349,19 @@ def build_response_record(
     audit_due_by: str = "",
 ) -> LocalResponseRecord:
     evaluated = [a.regulation.id for a in audits]
-    oos = [a.regulation.id for a in audits if not a.in_scope]
+    oos = [a.regulation.id + (" [PROPOSED]" if a.scope_label == "PROPOSED" else "")
+           for a in audits if a.in_scope is False]
     preserved = [
-        a.regulation.first_principle_intent for a in audits
-        if not a.in_scope and a.intent_still_applicable
+        a.regulation.first_principle_intent
+        + (" [PROPOSED]" if a.intent_label == "PROPOSED" else "")
+        for a in audits
+        if a.in_scope is False and a.intent_still_applicable
     ]
+    undeclared = [
+        a.regulation.id for a in audits
+        if a.in_scope is False and a.intent_still_applicable is None
+    ]
+    undeterminable = [a.regulation.id for a in audits if a.in_scope is None]
     return LocalResponseRecord(
         situation_id=sit.id,
         regulations_evaluated=evaluated,
@@ -252,6 +372,8 @@ def build_response_record(
         responder=responder,
         timestamp=timestamp,
         post_hoc_audit_due_by=audit_due_by,
+        intent_undeclared=undeclared,
+        scope_undeterminable=undeterminable,
     )
 
 
