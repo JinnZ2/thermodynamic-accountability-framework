@@ -1,6 +1,6 @@
 # TAF cleanup, phase 1 inventory and phase 2 status
 
-Written 2026-11-11 (Kavik + Claude). The phase 1 table itself lived in a
+Written 2026-11-11 (JinnZ2 + Claude). The phase 1 table itself lived in a
 cleanup-session scratchpad and was never committed; this file is the
 re-created record: the approval list as proposed, and what phase 2 did.
 Tag pushes are refused from sessions, so "tag/archive" means a branch
