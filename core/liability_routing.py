@@ -1,7 +1,9 @@
 # DESIGN BASIS (requested by repo owner):
 #   property: provenance carried with values (source, locator, hash,
 #             derivation)
-#   reason:   UNSTATED -- ask owner
+#   reason:   "Precision honesty: no 3-sig-fig figures manufactured from
+#             assumptions. Ratios round to 2 places and carry their input
+#             provenance." (quoted from this file)
 #   attribute style judgments to this requirement,
 #   not to the authoring model.
 """
