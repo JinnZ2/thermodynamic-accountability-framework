@@ -1,3 +1,13 @@
+# DESIGN BASIS (requested by repo owner):
+#   property: provenance carried with values (source, locator, hash,
+#             derivation)
+#   reason:   "Provenance is structural. Every value carries its source."
+#             (quoted from this file)
+#   property: refuses malformed or unsupported input rather than defaulting
+#   reason:   "Unknowns are first-class. NaN and "instrument didn't exist"
+#             are different states." (quoted from this file)
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 """
 translation_layer.py
 

@@ -1,3 +1,9 @@
+# DESIGN BASIS (requested by repo owner):
+#   property: refuses malformed or unsupported input rather than defaulting
+#   reason:   "Scalar comparison is not a bug to be filtered; it is a
+#             malformed query." (quoted from this file)
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 """
 trait_waveform_validator
 
